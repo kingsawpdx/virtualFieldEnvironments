@@ -1,5 +1,7 @@
+import PhotoSphereViewer from "./PhotoSphereViewer.tsx";
+
 function App() {
-  return <></>
+  return <PhotoSphereViewer />;
 }
 
-export default App
+export default App;
