@@ -5,7 +5,7 @@ import {
 } from "react-photo-sphere-viewer";
 
 import sampleScene from "./assets/VFEdata/ERI_Scene6-IMG_20231006_081813_00_122.jpg";
-import paddlers from "./assets/VFEdata/Tide Lapse.mp4";
+import paddlers from "./assets/VFEdata/paddlers.mp4";
 import shorelineSOUTH from "./assets/VFEdata/shorelineSOUTH.mp4";
 
 function videoContent(src: string): string {
@@ -52,7 +52,7 @@ function PhotoSphereViewer() {
           },
           {
             id: "shorelineSOUTH",
-            image: baseUrl + "pictos/pin-blue.png",
+            image: baseUrl + "pictos/pin-red.png",
             size: { width: 64, height: 64 },
             position: { yaw: "172deg", pitch: "-32deg" },
             tooltip: "shorelineSOUTH.mp4",
@@ -60,7 +60,7 @@ function PhotoSphereViewer() {
           },
           {
             id: "paddlers",
-            image: baseUrl + "pictos/pin-blue.png",
+            image: baseUrl + "pictos/pin-red.png",
             size: { width: 64, height: 64 },
             position: { yaw: "-175deg", pitch: "-10deg" },
             tooltip: "paddlers.mp4",
