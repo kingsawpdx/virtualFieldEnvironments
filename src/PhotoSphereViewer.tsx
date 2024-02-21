@@ -5,9 +5,9 @@ import {
 } from "react-photo-sphere-viewer";
 
 import sampleScene from "./assets/VFEdata/ERI_Scene6-IMG_20231006_081813_00_122.jpg";
+import logNEARshorline from "./assets/VFEdata/logNEARshoreline.png";
 import paddlers from "./assets/VFEdata/paddlers.mp4";
 import shorelineSOUTH from "./assets/VFEdata/shorelineSOUTH.mp4";
-import logNEARshorline from "./assets/VFEdata/logNEARshoreline.png";
 import smallPool from "./assets/VFEdata/small_pool.jpg";
 
 function videoContent(src: string): string {
