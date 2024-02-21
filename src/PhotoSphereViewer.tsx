@@ -5,6 +5,7 @@ import {
 } from "react-photo-sphere-viewer";
 
 import sampleScene from "./assets/VFEdata/ERI_Scene6-IMG_20231006_081813_00_122.jpg";
+import rock from "./assets/VFEdata/basalt1-vein-SEMcloseup-BSE100x.jpeg";
 import coolLog from "./assets/VFEdata/cool_log.jpeg";
 import handSample from "./assets/VFEdata/hand_sample.png";
 import logNEARshorline from "./assets/VFEdata/logNEARshoreline.png";
@@ -126,6 +127,22 @@ function PhotoSphereViewer() {
             position: { yaw: "-19deg", pitch: "2deg" },
             content: pictureContent(mushroom),
             tooltip: "mushroom",
+          },
+          {
+            id: "image4",
+            image: baseUrl + "pictos/pin-blue.png",
+            size: { width: 64, height: 64 },
+            position: { yaw: "10deg", pitch: "-20deg" },
+            tooltip: "rock",
+            content: "This is the zoom in picture" + pictureContent(rock),
+          },
+          {
+            id: "image5",
+            image: baseUrl + "pictos/pin-blue.png",
+            size: { width: 64, height: 64 },
+            position: { yaw: "-60deg", pitch: "10deg" },
+            tooltip: "moutain",
+            content: "a beautiful mountain",
           },
         ],
       },
