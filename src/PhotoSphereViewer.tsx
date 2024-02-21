@@ -46,7 +46,7 @@ function PhotoSphereViewer() {
           },
           {
             id: "shorelineSOUTH",
-            image: baseUrl + "pictos/pin-blue.png",
+            image: baseUrl + "pictos/pin-red.png",
             size: { width: 64, height: 64 },
             position: { yaw: "172deg", pitch: "-32deg" },
             tooltip: "shorelineSOUTH.mp4",
@@ -54,7 +54,7 @@ function PhotoSphereViewer() {
           },
           {
             id: "paddlers",
-            image: baseUrl + "pictos/pin-blue.png",
+            image: baseUrl + "pictos/pin-red.png",
             size: { width: 64, height: 64 },
             position: { yaw: "-175deg", pitch: "-10deg" },
             tooltip: "paddlers.mp4",
