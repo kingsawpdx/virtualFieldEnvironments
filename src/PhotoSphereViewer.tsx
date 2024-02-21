@@ -5,13 +5,13 @@ import {
 } from "react-photo-sphere-viewer";
 
 import sampleScene from "./assets/VFEdata/ERI_Scene6-IMG_20231006_081813_00_122.jpg";
+import coolLog from "./assets/VFEdata/cool_log.jpeg";
+import handSample from "./assets/VFEdata/hand_sample.png";
 import logNEARshorline from "./assets/VFEdata/logNEARshoreline.png";
+import outcropTextures from "./assets/VFEdata/outcrop_textures.mp4";
 import paddlers from "./assets/VFEdata/paddlers.mp4";
 import shorelineSOUTH from "./assets/VFEdata/shorelineSOUTH.mp4";
 import smallPool from "./assets/VFEdata/small_pool.jpg";
-import coolLog from "./src/assets/VFEdata/cool_log.jpeg";
-import handSample from "./src/assets/VFEdata/hand_sample.png";
-import outcropTextures from "./src/assets/VFEdata/outcrop_textures.mp4";
 
 function videoContent(src: string): string {
   return `<video controls style="max-width: 100%; max-height: 100%">
