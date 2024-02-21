@@ -14,6 +14,12 @@ function videoContent(src: string): string {
 </video>`;
 }
 
+function pictureContent(imageSrc: string) {
+  return `
+    <img src="${imageSrc}" alt="Marker Image" style= "max-width:380px; max-height: 500px";/>
+    `;
+};
+
 function PhotoSphereViewer() {
   const baseUrl = "https://photo-sphere-viewer-data.netlify.app/assets/";
 
@@ -59,6 +65,22 @@ function PhotoSphereViewer() {
             position: { yaw: "-175deg", pitch: "-10deg" },
             tooltip: "paddlers.mp4",
             content: videoContent(paddlers),
+          },
+          {
+            id: "small pool",
+            image: baseUrl + "pictos/pin-bluepng",
+            size: { width: 64, height: 64 },
+            position: { yaw: "100deg", pitch: "-13deg" },
+            content: pictureContent("src/assets/VFEdata/small_pool.jpg"),
+            tooltip: "small pool",
+          },
+          {
+            id: "log near shoreline",
+            image: baseUrl + "pictos/pin-blue.png",
+            size: { width: 64, height: 64 },
+            position: { yaw: "-40deg", pitch: "-25deg" },
+            content: pictureContent("src/assets/VFEdata/logNEARshoreline.png"),
+            tooltip: "log near shoreline",
           },
         ],
       },
