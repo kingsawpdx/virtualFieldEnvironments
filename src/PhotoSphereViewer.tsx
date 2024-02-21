@@ -5,6 +5,14 @@ import {
 } from "react-photo-sphere-viewer";
 
 import sampleScene from "./assets/VFEdata/ERI_Scene6-IMG_20231006_081813_00_122.jpg";
+import paddlers from "./assets/VFEdata/Tide Lapse.mp4";
+import shorelineSOUTH from "./assets/VFEdata/shorelineSOUTH.mp4";
+
+function videoContent(src: string): string {
+  return `<video controls style="max-width: 100%; max-height: 100%">
+  <source src="${src}" type="video/mp4" />
+</video>`;
+}
 
 function PhotoSphereViewer() {
   const baseUrl = "https://photo-sphere-viewer-data.netlify.app/assets/";
@@ -35,6 +43,22 @@ function PhotoSphereViewer() {
             size: { width: 64, height: 64 },
             position: { yaw: "45deg", pitch: "10deg" },
             tooltip: "Modify!",
+          },
+          {
+            id: "shorelineSOUTH",
+            image: baseUrl + "pictos/pin-blue.png",
+            size: { width: 64, height: 64 },
+            position: { yaw: "172deg", pitch: "-32deg" },
+            tooltip: "shorelineSOUTH.mp4",
+            content: videoContent(shorelineSOUTH),
+          },
+          {
+            id: "paddlers",
+            image: baseUrl + "pictos/pin-blue.png",
+            size: { width: 64, height: 64 },
+            position: { yaw: "-175deg", pitch: "-10deg" },
+            tooltip: "paddlers.mp4",
+            content: videoContent(paddlers),
           },
         ],
       },
