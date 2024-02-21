@@ -5,7 +5,10 @@ import {
 } from "react-photo-sphere-viewer";
 
 import sampleScene from "./assets/VFEdata/ERI_Scene6-IMG_20231006_081813_00_122.jpg";
+import coolLog from "./assets/VFEdata/cool_log.jpeg";
+import handSample from "./assets/VFEdata/hand_sample.png";
 import logNEARshorline from "./assets/VFEdata/logNEARshoreline.png";
+import outcropTextures from "./assets/VFEdata/outcrop_textures.mp4";
 import paddlers from "./assets/VFEdata/paddlers.mp4";
 import shorelineSOUTH from "./assets/VFEdata/shorelineSOUTH.mp4";
 import smallPool from "./assets/VFEdata/small_pool.jpg";
@@ -89,7 +92,7 @@ function PhotoSphereViewer() {
             image: baseUrl + "pictos/pin-blue.png",
             size: { width: 64, height: 64 },
             position: { yaw: "-33deg", pitch: "-17deg" },
-            content: pictureContent("src/assets/VFEdata/cool_log.jpeg"),
+            content: pictureContent(coolLog),
             tooltip: "a cool log",
           },
           {
@@ -97,7 +100,7 @@ function PhotoSphereViewer() {
             image: baseUrl + "pictos/pin-blue.png",
             size: { width: 64, height: 64 },
             position: { yaw: "-44deg", pitch: "0deg" },
-            content: pictureContent("src/assets/VFEdata/hand_sample.png"),
+            content: pictureContent(handSample),
             tooltip: "hand sample of stone",
           },
           {
@@ -105,7 +108,7 @@ function PhotoSphereViewer() {
             image: baseUrl + "pictos/pin-red.png",
             size: { width: 64, height: 64 },
             position: { yaw: "5deg", pitch: "6deg" },
-            content: videoContent("src/assets/VFEdata/outcrop_textures.mp4"),
+            content: videoContent(outcropTextures),
             tooltip: "outcrop textures video",
           },
           {
