@@ -108,6 +108,13 @@ function PhotoSphereViewer() {
             content: videoContent("src/assets/VFEdata/outcrop_textures.mp4"),
             tooltip: "outcrop textures video",
           },
+          {
+            id: "logs",
+            image: baseUrl + "pictos/pin-blue.png",
+            size: { width: 64, height: 64 },
+            position: { yaw: "-37deg", pitch: "-12deg" },
+            tooltip: "How did these huge logs get here?"
+          }
         ],
       },
     ],
