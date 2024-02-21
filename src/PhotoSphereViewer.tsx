@@ -8,6 +8,7 @@ import sampleScene from "./assets/VFEdata/ERI_Scene6-IMG_20231006_081813_00_122.
 import coolLog from "./assets/VFEdata/cool_log.jpeg";
 import handSample from "./assets/VFEdata/hand_sample.png";
 import logNEARshorline from "./assets/VFEdata/logNEARshoreline.png";
+import mushroom from "./assets/VFEdata/mushroom.png";
 import outcropTextures from "./assets/VFEdata/outcrop_textures.mp4";
 import paddlers from "./assets/VFEdata/paddlers.mp4";
 import shorelineSOUTH from "./assets/VFEdata/shorelineSOUTH.mp4";
@@ -117,6 +118,14 @@ function PhotoSphereViewer() {
             size: { width: 64, height: 64 },
             position: { yaw: "-37deg", pitch: "-12deg" },
             tooltip: "How did these huge logs get here?",
+          },
+          {
+            id: "mushroom",
+            image: baseUrl + "pictos/pin-blue.png",
+            size: { width: 64, height: 64 },
+            position: { yaw: "-19deg", pitch: "2deg" },
+            content: pictureContent(mushroom),
+            tooltip: "mushroom",
           },
         ],
       },
