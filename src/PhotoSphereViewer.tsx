@@ -116,8 +116,8 @@ function PhotoSphereViewer() {
             image: baseUrl + "pictos/pin-blue.png",
             size: { width: 64, height: 64 },
             position: { yaw: "-37deg", pitch: "-12deg" },
-            tooltip: "How did these huge logs get here?"
-          }
+            tooltip: "How did these huge logs get here?",
+          },
         ],
       },
     ],
