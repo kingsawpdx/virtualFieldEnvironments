@@ -68,7 +68,7 @@ function PhotoSphereViewer() {
           },
           {
             id: "small pool",
-            image: baseUrl + "pictos/pin-bluepng",
+            image: baseUrl + "pictos/pin-blue.png",
             size: { width: 64, height: 64 },
             position: { yaw: "100deg", pitch: "-13deg" },
             content: pictureContent("src/assets/VFEdata/small_pool.jpg"),
