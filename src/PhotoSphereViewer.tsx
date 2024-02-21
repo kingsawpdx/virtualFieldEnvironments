@@ -18,7 +18,7 @@ function pictureContent(imageSrc: string) {
   return `
     <img src="${imageSrc}" alt="Marker Image" style= "max-width:380px; max-height: 500px";/>
     `;
-};
+}
 
 function PhotoSphereViewer() {
   const baseUrl = "https://photo-sphere-viewer-data.netlify.app/assets/";
