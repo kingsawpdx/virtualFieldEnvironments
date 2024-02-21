@@ -7,6 +7,8 @@ import {
 import sampleScene from "./assets/VFEdata/ERI_Scene6-IMG_20231006_081813_00_122.jpg";
 import paddlers from "./assets/VFEdata/paddlers.mp4";
 import shorelineSOUTH from "./assets/VFEdata/shorelineSOUTH.mp4";
+import logNEARshorline from "./assets/VFEdata/logNEARshoreline.png";
+import smallPool from "./assets/VFEdata/small_pool.jpg";
 
 function videoContent(src: string): string {
   return `<video controls style="max-width: 100%; max-height: 100%">
@@ -71,7 +73,7 @@ function PhotoSphereViewer() {
             image: baseUrl + "pictos/pin-blue.png",
             size: { width: 64, height: 64 },
             position: { yaw: "100deg", pitch: "-13deg" },
-            content: pictureContent("src/assets/VFEdata/small_pool.jpg"),
+            content: pictureContent(smallPool),
             tooltip: "small pool",
           },
           {
@@ -79,7 +81,7 @@ function PhotoSphereViewer() {
             image: baseUrl + "pictos/pin-blue.png",
             size: { width: 64, height: 64 },
             position: { yaw: "-40deg", pitch: "-25deg" },
-            content: pictureContent("src/assets/VFEdata/logNEARshoreline.png"),
+            content: pictureContent(logNEARshorline),
             tooltip: "log near shoreline",
           },
         ],
