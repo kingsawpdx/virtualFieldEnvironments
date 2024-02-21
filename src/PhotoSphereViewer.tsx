@@ -45,13 +45,13 @@ function PhotoSphereViewer() {
             content: "Look at these flowers",
             tooltip: "Flowers",
           },
-          {
-            id: "image3",
-            image: baseUrl + "pictos/pin-blue.png",
-            size: { width: 64, height: 64 },
-            position: { yaw: "45deg", pitch: "10deg" },
-            tooltip: "Modify!",
-          },
+          // {
+          //   id: "image3",
+          //   image: baseUrl + "pictos/pin-blue.png",
+          //   size: { width: 64, height: 64 },
+          //   position: { yaw: "45deg", pitch: "10deg" },
+          //   tooltip: "Modify!",
+          // },
           {
             id: "shorelineSOUTH",
             image: baseUrl + "pictos/pin-red.png",
