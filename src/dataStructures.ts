@@ -9,15 +9,15 @@
 
 // Virtual Field Environment: the total collection of photo sphere environments
 export interface VFE {
-  src: string;
-  hotspot: hotspot3d[];
+  name: string;
+  map: navMap;
+  photospere: photosphere[];
 }
 
 // Navigation map: a birdseye view of the various hotspots within a single 360-environment
 export interface navMap {
-  name: string;
-  map: Map<string, number>; // arguments <"imgURL", center_number>
-  photospere: photosphere[];
+  src: string;
+  hotspot: hotspot3d[];
 }
 
 // Photosphere: a single 360-environment
