@@ -15,19 +15,16 @@ export interface VFE {
 // Navigation map: a birdseye view of the various hotspots within a single 360-environment
 export interface navMap {
   src: string;
-  hotspot: hotspot[];
+  hotspot: hotspotData[];
 }
 
 // Photosphere: a single 360-environment
 export interface photosphere {
   id: string;
   src: string;
-  hotspot: hotspot[];
+  hotspot: hotspotData[];
   backgroundAudio: string;
 }
-
-// hotspot: can be a 2d-image (x,y) or 3d-image (pitch, yaw)
-export type hotspot = img2d | img3d;
 
 // hotSpotData: types of media resources for a hotspot within a photosphere
 export type hotspotData = img | audio | video | URL | doc | photosphereLink;
@@ -36,7 +33,7 @@ export type hotspotData = img | audio | video | URL | doc | photosphereLink;
 export interface img {
   tag: "img";
   src: string;
-  hotspot: hotspot[]; // can be 2d|3d
+  hotspot: img2d | img3d; // can be 2d|3d
 }
 
 export interface img2d {
