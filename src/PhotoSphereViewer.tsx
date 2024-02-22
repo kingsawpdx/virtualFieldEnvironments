@@ -7,9 +7,11 @@ import {
 import sampleScene from "./assets/VFEdata/ERI_Scene6-IMG_20231006_081813_00_122.jpg";
 import rock from "./assets/VFEdata/basalt1-vein-SEMcloseup-BSE100x.jpeg";
 import coolLog from "./assets/VFEdata/cool_log.jpeg";
+import flowers from "./assets/VFEdata/flowers.png";
 import handSample from "./assets/VFEdata/hand_sample.png";
 import logNEARshorline from "./assets/VFEdata/logNEARshoreline.png";
 import mushroom from "./assets/VFEdata/mushroom.png";
+import outcropWide from "./assets/VFEdata/outcropWideView.png";
 import outcropTextures from "./assets/VFEdata/outcrop_textures.mp4";
 import paddlers from "./assets/VFEdata/paddlers.mp4";
 import shorelineSOUTH from "./assets/VFEdata/shorelineSOUTH.mp4";
@@ -36,26 +38,20 @@ function PhotoSphereViewer() {
       {
         markers: [
           {
-            id: "image",
+            id: "outcropWideView",
             image: baseUrl + "pictos/pin-blue.png",
             size: { width: 64, height: 64 },
             position: { yaw: "-5deg", pitch: "5deg" },
             tooltip: "Outcrop wideview",
+            content: pictureContent(outcropWide),
           },
           {
-            id: "image2",
+            id: "flowers",
             image: baseUrl + "pictos/pin-blue.png",
             size: { width: 64, height: 64 },
             position: { yaw: "18deg", pitch: "-3deg" },
-            content: "Look at these flowers",
             tooltip: "Flowers",
-          },
-          {
-            id: "image3",
-            image: baseUrl + "pictos/pin-blue.png",
-            size: { width: 64, height: 64 },
-            position: { yaw: "45deg", pitch: "10deg" },
-            tooltip: "Modify!",
+            content: pictureContent(flowers),
           },
           {
             id: "shorelineSOUTH",
