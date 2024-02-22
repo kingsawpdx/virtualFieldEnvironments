@@ -5,7 +5,6 @@ import {
 } from "react-photo-sphere-viewer";
 
 import sampleScene from "./assets/VFEdata/ERI_Scene6-IMG_20231006_081813_00_122.jpg";
-import rock from "./assets/VFEdata/basalt1-vein-SEMcloseup-BSE100x.jpeg";
 import coolLog from "./assets/VFEdata/cool_log.jpeg";
 import flowers from "./assets/VFEdata/flowers.png";
 import handSample from "./assets/VFEdata/hand_sample.png";
