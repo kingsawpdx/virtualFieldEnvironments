@@ -5,6 +5,7 @@ import {
 } from "react-photo-sphere-viewer";
 
 import sampleScene from "./assets/VFEdata/ERI_Scene6-IMG_20231006_081813_00_122.jpg";
+import closerLook from "./assets/VFEdata/a-closer-look.jpg";
 import coolLog from "./assets/VFEdata/cool_log.jpeg";
 import flowers from "./assets/VFEdata/flowers.png";
 import handSample from "./assets/VFEdata/hand_sample.png";
@@ -15,6 +16,7 @@ import outcropTextures from "./assets/VFEdata/outcrop_textures.mp4";
 import paddlers from "./assets/VFEdata/paddlers.mp4";
 import shorelineSOUTH from "./assets/VFEdata/shorelineSOUTH.mp4";
 import smallPool from "./assets/VFEdata/small_pool.jpg";
+import SEMComp from "./assets/VFEdata/southSEMcomp.png";
 
 function videoContent(src: string): string {
   return `<video controls style="max-width: 100%; max-height: 100%">
@@ -122,6 +124,22 @@ function PhotoSphereViewer() {
             position: { yaw: "-19deg", pitch: "2deg" },
             content: pictureContent(mushroom),
             tooltip: "mushroom",
+          },
+          {
+            id: "closerLook",
+            image: baseUrl + "pictos/pin-blue.png",
+            size: { width: 64, height: 64 },
+            position: { yaw: "-46deg", pitch: "-2deg" },
+            content: pictureContent(closerLook),
+            tooltip: "A closer look",
+          },
+          {
+            id: "SEMComp",
+            image: baseUrl + "pictos/pin-blue.png",
+            size: { width: 64, height: 64 },
+            position: { yaw: "-48deg", pitch: "0deg" },
+            content: pictureContent(SEMComp),
+            tooltip: "South SEM Comparisson",
           },
         ],
       },
