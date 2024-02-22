@@ -2,28 +2,46 @@
                     Virtual Field Environment Software
    -----------------------------------------------------------------------
     Instantiation of the objects that will be used for interacting with 
-    Photo Sphere Viewer to build a virtual geology field guide.
+    Photo Sphere Viewer to build a virtual geology field guide. 
+    Order listed from big-picture environment collection 
+    to micro-environments and associated elements.
    ----------------------------------------------------------------------- */
 
 // Virtual Field Environment: the total collection of photo sphere environments
 export interface VFE {
-  name: string;
-  map: Map<string, number>; // arguments <"imgURL", center_number>
-  photospere: photosphere[];
+  src: string;
+  hotspot: hotspot3d[];
 }
 
 // Navigation map: a birdseye view of the various hotspots within a single 360-environment
 export interface navMap {
-  src: string;
-  hotspot: hotspotData[];
+  name: string;
+  map: Map<string, number>; // arguments <"imgURL", center_number>
+  photospere: photosphere[];
 }
 
 // Photosphere: a single 360-environment
 export interface photosphere {
   id: string;
   src: string;
-  hotspot: hotspotData[];
+  hotspot: hotspot3d[];
   backgroundAudio: string;
+}
+
+// hotspot: a clickable resource that is 2d (x, y)
+export interface hotspot2d {
+  x: number;
+  y: number;
+  toolTip: string;
+  hotspot: hotspot2d;
+}
+
+// hotspot: a clickable resource that is a 360 image (pitch, yaw)
+export interface hotspot3d {
+  pitch: number;
+  yaw: number;
+  toolTip: string;
+  hotspot: hotspot3d;
 }
 
 // hotSpotData: types of media resources for a hotspot within a photosphere
@@ -33,19 +51,7 @@ export type hotspotData = img | audio | video | URL | doc | photosphereLink;
 export interface img {
   tag: "img";
   src: string;
-  hotspot: img2d | img3d; // can be 2d|3d
-}
-
-export interface img2d {
-  x: number;
-  y: number;
-  toolTip: string;
-}
-
-export interface img3d {
-  pitch: number;
-  yaw: number;
-  toolTip: string;
+  hotspot: hotspot2d[];
 }
 
 export interface video {
