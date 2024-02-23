@@ -7,7 +7,7 @@
     to micro-environments and associated elements.
    ----------------------------------------------------------------------- */
 
-// Virtual Field Environment: the total collection of photo sphere environments
+// Virtual Field Environment: the total collection of photosphere environments
 export interface VFE {
   name: string;
   map: NavMap;
@@ -33,7 +33,7 @@ export interface HotSpot2d {
   x: number;
   y: number;
   toolTip: string;
-  hotspot: HotSpot2d;
+  data: HotSpotData;
 }
 
 // hotspot: a clickable resource that is a 360 image (pitch, yaw)
@@ -41,7 +41,7 @@ export interface HotSpot3d {
   pitch: number;
   yaw: number;
   toolTip: string;
-  hotspot: HotSpot3d;
+  data: HotSpotData;
 }
 
 // hotSpotData: types of media resources for a hotspot within a photosphere
