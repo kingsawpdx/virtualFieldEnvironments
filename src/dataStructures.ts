@@ -10,57 +10,57 @@
 // Virtual Field Environment: the total collection of photo sphere environments
 export interface VFE {
   name: string;
-  map: navMap;
-  photospere: photosphere[];
+  map: NavMap;
+  photospere: Photosphere[];
 }
 
 // Navigation map: a birdseye view of the various hotspots within a single 360-environment
-export interface navMap {
+export interface NavMap {
   src: string;
-  hotspot: hotspot3d[];
+  hotspot: HotSpot3d[];
 }
 
 // Photosphere: a single 360-environment
-export interface photosphere {
+export interface Photosphere {
   id: string;
   src: string;
-  hotspot: hotspot3d[];
+  hotspot: HotSpot3d[];
   backgroundAudio: string;
 }
 
 // hotspot: a clickable resource that is 2d (x, y)
-export interface hotspot2d {
+export interface HotSpot2d {
   x: number;
   y: number;
   toolTip: string;
-  hotspot: hotspot2d;
+  hotspot: HotSpot2d;
 }
 
 // hotspot: a clickable resource that is a 360 image (pitch, yaw)
-export interface hotspot3d {
+export interface HotSpot3d {
   pitch: number;
   yaw: number;
   toolTip: string;
-  hotspot: hotspot3d;
+  hotspot: HotSpot3d;
 }
 
 // hotSpotData: types of media resources for a hotspot within a photosphere
-export type hotspotData = img | audio | video | URL | doc | photosphereLink;
+export type HotSpotData = Image | Audio | Video | URL | Doc | PhotosphereLink;
 
 // media objects
-export interface img {
-  tag: "img";
+export interface Image {
+  tag: "Image";
   src: string;
-  hotspot: hotspot2d[];
+  hotspot: HotSpot2d[];
 }
 
-export interface video {
-  readonly tag: "video";
+export interface Video {
+  readonly tag: "Video";
   src: string;
 }
 
-export interface audio {
-  tag: "audio";
+export interface Audio {
+  tag: "Audio";
   src: string;
 }
 
@@ -69,12 +69,12 @@ export interface URL {
   src: string;
 }
 
-export interface doc {
-  tag: "doc";
+export interface Doc {
+  tag: "Doc";
   content: string;
 }
 
-export interface photosphereLink {
-  tag: "photosphereLink";
+export interface PhotosphereLink {
+  tag: "PhotosphereLink";
   photosphereId: string;
 }
