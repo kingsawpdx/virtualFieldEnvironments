@@ -1,19 +1,24 @@
 import { ViewerConfig } from "@photo-sphere-viewer/core";
 import {
+  MapPlugin,
   MarkersPlugin,
   ReactPhotoSphereViewer,
 } from "react-photo-sphere-viewer";
 
 import sampleScene from "./assets/VFEdata/ERI_Scene6-IMG_20231006_081813_00_122.jpg";
-import rock from "./assets/VFEdata/basalt1-vein-SEMcloseup-BSE100x.jpeg";
+import closerLook from "./assets/VFEdata/a-closer-look.jpg";
 import coolLog from "./assets/VFEdata/cool_log.jpeg";
+import flowers from "./assets/VFEdata/flowers.png";
 import handSample from "./assets/VFEdata/hand_sample.png";
 import logNEARshorline from "./assets/VFEdata/logNEARshoreline.png";
+import mapImage from "./assets/VFEdata/map.jpg";
 import mushroom from "./assets/VFEdata/mushroom.png";
+import outcropWide from "./assets/VFEdata/outcropWideView.png";
 import outcropTextures from "./assets/VFEdata/outcrop_textures.mp4";
 import paddlers from "./assets/VFEdata/paddlers.mp4";
 import shorelineSOUTH from "./assets/VFEdata/shorelineSOUTH.mp4";
 import smallPool from "./assets/VFEdata/small_pool.jpg";
+import SEMComp from "./assets/VFEdata/southSEMcomp.png";
 
 function videoContent(src: string): string {
   return `<video controls style="max-width: 100%; max-height: 100%">
@@ -29,33 +34,26 @@ function pictureContent(imageSrc: string) {
 
 function PhotoSphereViewer() {
   const baseUrl = "https://photo-sphere-viewer-data.netlify.app/assets/";
-
   const plugins: ViewerConfig["plugins"] = [
     [
       MarkersPlugin,
       {
         markers: [
           {
-            id: "image",
+            id: "outcropWideView",
             image: baseUrl + "pictos/pin-blue.png",
             size: { width: 64, height: 64 },
             position: { yaw: "-5deg", pitch: "5deg" },
             tooltip: "Outcrop wideview",
+            content: pictureContent(outcropWide),
           },
           {
-            id: "image2",
+            id: "flowers",
             image: baseUrl + "pictos/pin-blue.png",
             size: { width: 64, height: 64 },
             position: { yaw: "18deg", pitch: "-3deg" },
-            content: "Look at these flowers",
             tooltip: "Flowers",
-          },
-          {
-            id: "image3",
-            image: baseUrl + "pictos/pin-blue.png",
-            size: { width: 64, height: 64 },
-            position: { yaw: "45deg", pitch: "10deg" },
-            tooltip: "Modify!",
+            content: pictureContent(flowers),
           },
           {
             id: "shorelineSOUTH",
@@ -129,20 +127,66 @@ function PhotoSphereViewer() {
             tooltip: "mushroom",
           },
           {
-            id: "image4",
+            id: "closerLook",
             image: baseUrl + "pictos/pin-blue.png",
             size: { width: 64, height: 64 },
-            position: { yaw: "10deg", pitch: "-20deg" },
-            tooltip: "rock",
-            content: "This is the zoom in picture" + pictureContent(rock),
+            position: { yaw: "-46deg", pitch: "-2deg" },
+            content: pictureContent(closerLook),
+            tooltip: "A closer look",
           },
           {
-            id: "image5",
+            id: "SEMComp",
             image: baseUrl + "pictos/pin-blue.png",
             size: { width: 64, height: 64 },
-            position: { yaw: "-60deg", pitch: "10deg" },
-            tooltip: "moutain",
-            content: "a beautiful mountain",
+            position: { yaw: "-48deg", pitch: "0deg" },
+            content: pictureContent(SEMComp),
+            tooltip: "South SEM Comparisson",
+          },
+        ],
+      },
+    ],
+    [
+      MapPlugin,
+      {
+        imageUrl: mapImage,
+        center: { x: 450, y: 800 },
+        rotation: "0deg",
+        defaultZoom: 20,
+        hotspots: [
+          {
+            x: 95,
+            y: 530,
+            id: "West",
+            color: "yellow",
+            tooltip: "West",
+          },
+          {
+            x: 450,
+            y: 800,
+            id: "South",
+            color: "yellow",
+            tooltip: "South",
+          },
+          {
+            x: 650,
+            y: 930,
+            id: "Entrance",
+            color: "yellow",
+            tooltip: "Entrance",
+          },
+          {
+            x: 550,
+            y: 450,
+            id: "East",
+            color: "yellow",
+            tooltip: "East",
+          },
+          {
+            x: 390,
+            y: 50,
+            id: "North",
+            color: "yellow",
+            tooltip: "North",
           },
         ],
       },
