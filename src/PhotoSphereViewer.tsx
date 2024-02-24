@@ -5,7 +5,9 @@ import {
   ReactPhotoSphereViewer,
 } from "react-photo-sphere-viewer";
 
+import Contact from "./assets/VFEdata/Contact.png";
 import sampleScene from "./assets/VFEdata/ERI_Scene6-IMG_20231006_081813_00_122.jpg";
+import SouthwaterFront from "./assets/VFEdata/SouthwaterFront.png";
 import closerLook from "./assets/VFEdata/a-closer-look.jpg";
 import coolLog from "./assets/VFEdata/cool_log.jpeg";
 import flowers from "./assets/VFEdata/flowers.png";
@@ -141,6 +143,22 @@ function PhotoSphereViewer() {
             position: { yaw: "-48deg", pitch: "0deg" },
             content: pictureContent(SEMComp),
             tooltip: "South SEM Comparisson",
+          },
+          {
+            id: "Contact",
+            image: baseUrl + "pictos/pin-blue.png",
+            size: { width: 64, height: 64 },
+            position: { yaw: "-46deg", pitch: "2deg" },
+            content: pictureContent(Contact),
+            tooltip: "Contact",
+          },
+          {
+            id: "South Waterfront",
+            image: baseUrl + "pictos/pin-blue.png",
+            size: { width: 64, height: 64 },
+            position: { yaw: "-25deg", pitch: "-1deg" },
+            content: pictureContent(SouthwaterFront),
+            tooltip: "South Waterfront",
           },
         ],
       },
