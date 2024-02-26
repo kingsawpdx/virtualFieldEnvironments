@@ -1,4 +1,5 @@
 import { ViewerConfig } from "@photo-sphere-viewer/core";
+import { useEffect, useState } from "react";
 import {
   MapPlugin,
   MarkersPlugin,
@@ -7,6 +8,7 @@ import {
 
 import Contact from "./assets/VFEdata/Contact.png";
 import sampleScene from "./assets/VFEdata/ERI_Scene6-IMG_20231006_081813_00_122.jpg";
+import audioFile from "./assets/VFEdata/Scene12_UnevenStandTop_LS100146.mp3";
 import SouthwaterFront from "./assets/VFEdata/SouthwaterFront.png";
 import closerLook from "./assets/VFEdata/a-closer-look.jpg";
 import coolLog from "./assets/VFEdata/cool_log.jpeg";
@@ -35,6 +37,54 @@ function pictureContent(imageSrc: string) {
 }
 
 function PhotoSphereViewer() {
+  const [isUserInteracted, setIsUserInteracted] = useState(false);
+
+  useEffect(() => {
+    const audio = new Audio(audioFile);
+    // Check if theres user interaction
+    if (isUserInteracted) {
+      //Make a new audio object with the imported audio file
+      //Try to play the audio file, have to use void to indicate were not going to promise to handle the returned type
+      void audio.play().catch((e) => {
+        //Debug for errors
+        console.error("Error playing audio:", e);
+      });
+    }
+    //Cleanup function to pause audio when the component unmounts
+    return () => {
+      if (isUserInteracted) {
+        audio.pause();
+      }
+    };
+    //Depends on the isUserInteracted state, reruns if it changes
+  }, [isUserInteracted]);
+
+  //Handler function to set the state to true
+  function handleUserInteraction() {
+    setIsUserInteracted(true);
+  }
+
+  // If I cant get the user interaction forced I made the button
+  if (!isUserInteracted) {
+    return (
+      <div
+        style={{
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <button
+          onClick={handleUserInteraction}
+          style={{ padding: "10px 20px", fontSize: "16px" }}
+        >
+          Start Virtual Enviornment
+        </button>
+      </div>
+    );
+  }
+
   const baseUrl = "https://photo-sphere-viewer-data.netlify.app/assets/";
   const plugins: ViewerConfig["plugins"] = [
     [
