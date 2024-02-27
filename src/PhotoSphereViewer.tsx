@@ -23,6 +23,7 @@ import paddlers from "./assets/VFEdata/paddlers.mp4";
 import shorelineSOUTH from "./assets/VFEdata/shorelineSOUTH.mp4";
 import smallPool from "./assets/VFEdata/small_pool.jpg";
 import SEMComp from "./assets/VFEdata/southSEMcomp.png";
+import { VFE } from "./dataStructures";
 
 function videoContent(src: string): string {
   return `<video controls style="max-width: 100%; max-height: 100%">
@@ -36,7 +37,7 @@ function pictureContent(imageSrc: string) {
     `;
 }
 
-function PhotoSphereViewer() {
+function PhotoSphereViewer(data: VFE) {
   const [isUserInteracted, setIsUserInteracted] = useState(false);
 
   useEffect(() => {
@@ -262,6 +263,8 @@ function PhotoSphereViewer() {
   ];
 
   console.log({ plugins });
+  console.log(data);
+  console.log(data.name);
 
   return (
     <ReactPhotoSphereViewer
