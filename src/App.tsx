@@ -5,7 +5,7 @@ import outcropWide from "./assets/VFEdata/outcropWideView.png";
 import { HotSpot3d, NavMap, Photosphere, VFE } from "./dataStructures.ts";
 
 function App() {
-  let hotspotArray: HotSpot3d[] = [
+  const hotspotArray: HotSpot3d[] = [
     {
       pitch: 5,
       yaw: -5,
@@ -28,19 +28,19 @@ function App() {
     },
   ];
 
-  let prototype: Photosphere = {
+  const prototype: Photosphere = {
     id: "prototypeSphere",
     src: sampleScene,
     hotspot: hotspotArray,
     backgroundAudio: "",
   };
 
-  let map: NavMap = {
+  const map: NavMap = {
     src: "map src",
     hotspot: [],
   };
 
-  let data: VFE = {
+  const data: VFE = {
     name: "prototypeElkIslandVFE",
     map: map,
     photospere: [prototype],
