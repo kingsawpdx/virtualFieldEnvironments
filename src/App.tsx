@@ -1,4 +1,4 @@
-import PhotoSphereViewer from "./PhotoSphereViewer.tsx";
+import VFEViewer from "./VFEViewer.tsx";
 import sampleScene from "./assets/VFEdata/ERI_Scene6-IMG_20231006_081813_00_122.jpg";
 import flowers from "./assets/VFEdata/flowers.png";
 import outcropWide from "./assets/VFEdata/outcropWideView.png";
@@ -35,6 +35,13 @@ function App() {
     backgroundAudio: "",
   };
 
+  const alternative: Photosphere = {
+    id: "alternativeSphere",
+    src: outcropWide,
+    hotspot: [],
+    backgroundAudio: "",
+  };
+
   const map: NavMap = {
     src: "map src",
     hotspot: [],
@@ -43,10 +50,10 @@ function App() {
   const data: VFE = {
     name: "prototypeElkIslandVFE",
     map: map,
-    photospere: [prototype],
+    photospere: [prototype, alternative],
   };
 
-  return <PhotoSphereViewer {...data} />;
+  return <VFEViewer vfe={data} />;
 }
 
 export default App;
