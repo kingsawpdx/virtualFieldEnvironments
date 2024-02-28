@@ -9,6 +9,7 @@ import {
   ViewerAPI,
 } from "react-photo-sphere-viewer";
 
+import { Hotspot3D, NavMap, Photosphere } from "./DataStructures";
 import Contact from "./assets/VFEdata/Contact.png";
 import sampleScene from "./assets/VFEdata/ERI_Scene6-IMG_20231006_081813_00_122.jpg";
 import audioFile from "./assets/VFEdata/Scene12_UnevenStandTop_LS100146.mp3";
@@ -26,7 +27,6 @@ import paddlers from "./assets/VFEdata/paddlers.mp4";
 import shorelineSOUTH from "./assets/VFEdata/shorelineSOUTH.mp4";
 import smallPool from "./assets/VFEdata/small_pool.jpg";
 import SEMComp from "./assets/VFEdata/southSEMcomp.png";
-import { HotSpot3d, NavMap, Photosphere } from "./dataStructures";
 
 function videoContent(src: string): string {
   return `<video controls style="max-width: 100%; max-height: 100%">
@@ -42,7 +42,7 @@ function pictureContent(imageSrc: string) {
 
 const baseUrl = "https://photo-sphere-viewer-data.netlify.app/assets/";
 
-function convertHotspots(hotspots: HotSpot3d[]): MarkerConfig[] {
+function convertHotspots(hotspots: Hotspot3D[]): MarkerConfig[] {
   if (hotspots.length == 0) return [];
 
   // TODO: conversion from hotspots instead of hardcoding
@@ -148,7 +148,7 @@ function convertHotspots(hotspots: HotSpot3d[]): MarkerConfig[] {
       size: { width: 64, height: 64 },
       position: { yaw: "-48deg", pitch: "0deg" },
       content: pictureContent(SEMComp),
-      tooltip: "South SEM Comparisson",
+      tooltip: "South SEM Comparison",
     },
     {
       id: "Contact",
@@ -219,12 +219,12 @@ function convertMap(map: NavMap): MapPluginConfig {
     ],
   };
 }
-export interface PhotoSphereViewerProps {
+export interface PhotosphereViewerProps {
   photosphere: Photosphere;
   map: NavMap;
 }
 
-function PhotoSphereViewer(props: PhotoSphereViewerProps) {
+function PhotosphereViewer(props: PhotosphereViewerProps) {
   const [isUserInteracted, setIsUserInteracted] = useState(false);
   const photoSphereRef = React.createRef<ViewerAPI>();
 
@@ -237,8 +237,8 @@ function PhotoSphereViewer(props: PhotoSphereViewerProps) {
   useEffect(() => {
     const markers: MarkersPlugin | undefined =
       photoSphereRef.current?.getPlugin(MarkersPlugin);
-    markers?.setMarkers(convertHotspots(props.photosphere.hotspot));
-  }, [props.photosphere.hotspot, photoSphereRef]);
+    markers?.setMarkers(convertHotspots(props.photosphere.hotspots));
+  }, [props.photosphere.hotspots, photoSphereRef]);
 
   // handle change of map
   useEffect(() => {
@@ -292,14 +292,14 @@ function PhotoSphereViewer(props: PhotoSphereViewerProps) {
           onClick={handleUserInteraction}
           style={{ padding: "10px 20px", fontSize: "16px" }}
         >
-          Start Virtual Enviornment
+          Start Virtual Environment
         </button>
       </div>
     );
   }
 
   const plugins: ViewerConfig["plugins"] = [
-    [MarkersPlugin, { markers: convertHotspots(props.photosphere.hotspot) }],
+    [MarkersPlugin, { markers: convertHotspots(props.photosphere.hotspots) }],
     [MapPlugin, convertMap(props.map)],
   ];
 
@@ -318,4 +318,4 @@ function PhotoSphereViewer(props: PhotoSphereViewerProps) {
   );
 }
 
-export default PhotoSphereViewer;
+export default PhotosphereViewer;

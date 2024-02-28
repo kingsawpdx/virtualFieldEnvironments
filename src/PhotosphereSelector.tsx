@@ -1,10 +1,10 @@
-export interface PhotoSphereSelectorProps {
+export interface PhotosphereSelectorProps {
   options: string[];
   value: string | undefined;
   setValue: (value: string | undefined) => void;
 }
 
-function PhotoSphereSelector(props: PhotoSphereSelectorProps) {
+function PhotosphereSelector(props: PhotosphereSelectorProps) {
   return (
     <div
       style={{
@@ -41,4 +41,4 @@ function PhotoSphereSelector(props: PhotoSphereSelectorProps) {
   );
 }
 
-export default PhotoSphereSelector;
+export default PhotosphereSelector;

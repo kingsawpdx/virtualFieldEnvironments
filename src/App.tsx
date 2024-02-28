@@ -1,29 +1,29 @@
+import { Hotspot3D, NavMap, Photosphere, VFE } from "./DataStructures.ts";
 import VFEViewer from "./VFEViewer.tsx";
 import sampleScene from "./assets/VFEdata/ERI_Scene6-IMG_20231006_081813_00_122.jpg";
 import flowers from "./assets/VFEdata/flowers.png";
 import outcropWide from "./assets/VFEdata/outcropWideView.png";
-import { HotSpot3d, NavMap, Photosphere, VFE } from "./dataStructures.ts";
 
 function App() {
-  const hotspotArray: HotSpot3d[] = [
+  const hotspotArray: Hotspot3D[] = [
     {
       pitch: 5,
       yaw: -5,
-      toolTip: "Outcrop wideview",
+      tooltip: "Outcrop wideview",
       data: {
         tag: "Image",
         src: outcropWide,
-        hotspot: [],
+        hotspots: [],
       },
     },
     {
       pitch: -3,
       yaw: 18,
-      toolTip: "Flowers",
+      tooltip: "Flowers",
       data: {
         tag: "Image",
         src: flowers,
-        hotspot: [],
+        hotspots: [],
       },
     },
   ];
@@ -31,26 +31,26 @@ function App() {
   const prototype: Photosphere = {
     id: "prototypeSphere",
     src: sampleScene,
-    hotspot: hotspotArray,
+    hotspots: hotspotArray,
     backgroundAudio: "",
   };
 
   const alternative: Photosphere = {
     id: "alternativeSphere",
     src: outcropWide, // TODO: replace with an actual panoramic image that is different from sampleScene
-    hotspot: [],
+    hotspots: [],
     backgroundAudio: "",
   };
 
   const map: NavMap = {
     src: "map src",
-    hotspot: [],
+    hotspots: [],
   };
 
   const data: VFE = {
     name: "prototypeElkIslandVFE",
     map: map,
-    photospere: [prototype, alternative],
+    photospheres: [prototype, alternative],
   };
 
   return <VFEViewer vfe={data} />;

@@ -1,32 +1,32 @@
 import { useState } from "react";
 
-import PhotoSphereViewer from "./PhotoSphereViewer";
-import PhotoSphereSelector from "./PhotosphereSelector";
-import { Photosphere, VFE } from "./dataStructures";
+import { Photosphere, VFE } from "./DataStructures";
+import PhotosphereSelector from "./PhotosphereSelector";
+import PhotosphereViewer from "./PhotosphereViewer";
 
 export interface VFEViewerProps {
   vfe: VFE;
 }
 
 function VFEViewer({ vfe }: VFEViewerProps) {
-  const photoSphereMap: Record<string, Photosphere> = Object.fromEntries(
-    vfe.photospere.map((p) => [p.id, p]),
+  const photosphereMap: Record<string, Photosphere> = Object.fromEntries(
+    vfe.photospheres.map((p) => [p.id, p]),
   );
 
-  const [currentPhotoSphereID, setCurrentPhotoSphereID] = useState<
+  const [currentPhotosphereID, setCurrentPhotosphereID] = useState<
     string | undefined
-  >(vfe.photospere[0]?.id);
+  >(vfe.photospheres[0]?.id);
 
   return (
     <>
-      <PhotoSphereSelector
-        options={vfe.photospere.map((p) => p.id)}
-        value={currentPhotoSphereID}
-        setValue={setCurrentPhotoSphereID}
+      <PhotosphereSelector
+        options={vfe.photospheres.map((p) => p.id)}
+        value={currentPhotosphereID}
+        setValue={setCurrentPhotosphereID}
       />
-      {currentPhotoSphereID !== undefined ? (
-        <PhotoSphereViewer
-          photosphere={photoSphereMap[currentPhotoSphereID]}
+      {currentPhotosphereID !== undefined ? (
+        <PhotosphereViewer
+          photosphere={photosphereMap[currentPhotosphereID]}
           map={vfe.map}
         />
       ) : (
