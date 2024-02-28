@@ -35,7 +35,7 @@ function degToStr(val: number): string {
 function convertHotspots(hotspots: Hotspot3D[]): MarkerConfig[] {
   if (hotspots.length == 0) return [];
 
-  let markers: MarkerConfig[] = hotspots.map((hotspot) => {
+  const markers: MarkerConfig[] = hotspots.map((hotspot) => {
     let content: string | undefined = undefined;
     let icon =
       "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"; // default
@@ -47,7 +47,8 @@ function convertHotspots(hotspots: Hotspot3D[]): MarkerConfig[] {
         break;
       case "Video":
         content = videoContent(hotspot.data.src);
-        //icon = videoIcon;
+        icon =
+          "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png"; // changed to make linter happy until icons are ready
         break;
       case "Audio":
         break;
