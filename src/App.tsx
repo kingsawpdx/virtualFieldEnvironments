@@ -37,7 +37,7 @@ function App() {
 
   const alternative: Photosphere = {
     id: "alternativeSphere",
-    src: outcropWide,
+    src: outcropWide, // TODO: replace with an actual panoramic image that is different from sampleScene
     hotspot: [],
     backgroundAudio: "",
   };
