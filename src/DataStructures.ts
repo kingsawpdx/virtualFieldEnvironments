@@ -1,9 +1,9 @@
 /* -----------------------------------------------------------------------
                     Virtual Field Environment Software
    -----------------------------------------------------------------------
-    Instantiation of the objects that will be used for interacting with 
-    Photo Sphere Viewer to build a virtual geology field guide. 
-    Order listed from big-picture environment collection 
+    Instantiation of the objects that will be used for interacting with
+    Photo Sphere Viewer to build a virtual geology field guide.
+    Order listed from big-picture environment collection
     to micro-environments and associated elements.
    ----------------------------------------------------------------------- */
 
@@ -11,47 +11,47 @@
 export interface VFE {
   name: string;
   map: NavMap;
-  photospere: Photosphere[];
+  photospheres: Photosphere[];
 }
 
 // Navigation map: a birdseye view of the various hotspots within a single 360-environment
 export interface NavMap {
   src: string;
-  hotspot: HotSpot3d[];
+  hotspots: Hotspot2D[];
 }
 
 // Photosphere: a single 360-environment
 export interface Photosphere {
   id: string;
   src: string;
-  hotspot: HotSpot3d[];
+  hotspots: Hotspot3D[];
   backgroundAudio: string;
 }
 
-// hotspot: a clickable resource that is 2d (x, y)
-export interface HotSpot2d {
+// Hotspot2D: a clickable resource that is inside a 2D image (x, y)
+export interface Hotspot2D {
   x: number;
   y: number;
-  toolTip: string;
-  data: HotSpotData;
+  tooltip: string;
+  data: HotspotData;
 }
 
-// hotspot: a clickable resource that is a 360 image (pitch, yaw)
-export interface HotSpot3d {
+// Hotspot3D: a clickable resource that is inside a 360 photosphere (pitch, yaw)
+export interface Hotspot3D {
   pitch: number;
   yaw: number;
-  toolTip: string;
-  data: HotSpotData;
+  tooltip: string;
+  data: HotspotData;
 }
 
-// hotSpotData: types of media resources for a hotspot within a photosphere
-export type HotSpotData = Image | Audio | Video | URL | Doc | PhotosphereLink;
+// HotspotData: types of media resources for a hotspot within a photosphere
+export type HotspotData = Image | Audio | Video | URL | Doc | PhotosphereLink;
 
 // media objects
 export interface Image {
   tag: "Image";
   src: string;
-  hotspot: HotSpot2d[];
+  hotspots: Hotspot2D[];
 }
 
 export interface Video {
@@ -76,5 +76,5 @@ export interface Doc {
 
 export interface PhotosphereLink {
   tag: "PhotosphereLink";
-  photosphereId: string;
+  photosphereID: string;
 }
