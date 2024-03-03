@@ -2,6 +2,7 @@ import { Hotspot3D, NavMap, Photosphere, VFE } from "./DataStructures.ts";
 import VFEViewer from "./VFEViewer.tsx";
 import sampleScene from "./assets/VFEdata/ERI_Scene6-IMG_20231006_081813_00_122.jpg";
 import flowers from "./assets/VFEdata/flowers.png";
+import mapImage from "./assets/VFEdata/map.jpg";
 import outcropWide from "./assets/VFEdata/outcropWideView.png";
 
 function App() {
@@ -43,8 +44,20 @@ function App() {
   };
 
   const map: NavMap = {
-    src: "map src",
-    hotspots: [],
+    src: mapImage,
+    center: { x: 450, y: 800 },
+    rotation: "0deg",
+    defaultZoom: 20,
+    hotspots: [
+      {
+        x: 95,
+        y: 530,
+        id: "West",
+        color: "yellow",
+        tooltip: "West",
+        data: { tag: "PhotosphereLink", photosphereID: alternative.id },
+      },
+    ],
   };
 
   const data: VFE = {
