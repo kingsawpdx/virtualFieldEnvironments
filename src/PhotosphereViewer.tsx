@@ -317,28 +317,25 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
   return (
     //if user already interacted start, then display audio button
     <div>
-    {isUserInteracted && (
-      <button onClick={toggleAudio}
-      style= {{
-          position: 'absolute',
+      <button
+        onClick={toggleAudio}
+        style={{
+          position: "absolute",
           zIndex: 1000,
-          top: '18px', // Adjust this value to change the vertical position
-          left: '1325px', // Adjust this value to change the horizontal position
-      }}>
-        {isAudioPlaying ? 'Pause Audio' : 'Play Audio'}
+          top: "18px", // Adjust this value to change the vertical position
+          left: "1325px", // Adjust this value to change the horizontal position
+        }}
+      >
+        {isAudioPlaying ? "Pause Audio" : "Play Audio"}
       </button>
-    )}
-    
 
-    <ReactPhotoSphereViewer
-      ref={photoSphereRef}
-      src={sampleScene}
-      plugins={plugins}
-      height={"100vh"}
-      width={"100%"}
-
-      
-    />
+      <ReactPhotoSphereViewer
+        ref={photoSphereRef}
+        src={sampleScene}
+        plugins={plugins}
+        height={"100vh"}
+        width={"100%"}
+      />
     </div>
   );
 }
