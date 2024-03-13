@@ -3,6 +3,7 @@ import PhotosphereViewer from "./PhotosphereViewer.tsx";
 import Contact from "./assets/VFEdata/Contact.png";
 import SouthScene from "./assets/VFEdata/ERI_SouthScene_6-IMG_20231006_081813_00_122.jpg";
 import WestScene from "./assets/VFEdata/ERI_West-Scene7-IMG_20231006_084114_00_123.jpg";
+import audioFile from "./assets/VFEdata/Scene12_UnevenStandTop_LS100146.mp3";
 import SouthwaterFront from "./assets/VFEdata/SouthwaterFront.png";
 import CloserLook from "./assets/VFEdata/a-closer-look.jpg";
 import CoolLog from "./assets/VFEdata/cool_log.jpeg";
@@ -181,14 +182,13 @@ function App() {
     id: "South",
     src: SouthScene,
     hotspots: hotspotArray,
-    backgroundAudio: "",
+    backgroundAudio: audioFile,
   };
 
   const west: Photosphere = {
     id: "West",
     src: WestScene,
     hotspots: [],
-    backgroundAudio: "",
   };
 
   const map: NavMap = {
@@ -203,7 +203,7 @@ function App() {
         id: "West",
         color: "yellow",
         tooltip: "West",
-        data: { tag: "PhotosphereLink", photosphereID: alternative.id },
+        data: { tag: "PhotosphereLink", photosphereID: west.id },
       },
     ],
   };
@@ -211,7 +211,11 @@ function App() {
   const data: VFE = {
     name: "prototypeElkIslandVFE",
     map: map,
-    photospheres: [south, west],
+    defaultPhotosphereID: south.id,
+    photospheres: {
+      [south.id]: south,
+      [west.id]: west,
+    },
   };
 
   return <PhotosphereViewer vfe={data} />;

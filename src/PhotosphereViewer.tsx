@@ -4,7 +4,7 @@ import {
   VirtualTourLink,
   VirtualTourNode,
 } from "@photo-sphere-viewer/virtual-tour-plugin";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   GalleryPlugin,
   MapPlugin,
@@ -15,8 +15,8 @@ import {
   VirtualTourPlugin,
 } from "react-photo-sphere-viewer";
 
-import { Hotspot3D, NavMap, VFE } from "./DataStructures";
-import audioFile from "./assets/VFEdata/Scene12_UnevenStandTop_LS100146.mp3";
+import AudioToggleButton from "./AudioToggleButton";
+import { Hotspot3D, NavMap, Photosphere, VFE } from "./DataStructures";
 
 function videoContent(src: string): string {
   return `<video controls style="max-width: 100%; max-height: 100%">
@@ -122,73 +122,12 @@ export interface PhotosphereViewerProps {
 }
 
 function PhotosphereViewer(props: PhotosphereViewerProps) {
-  const [isUserInteracted, setIsUserInteracted] = useState(false);
   const photoSphereRef = React.createRef<ViewerAPI>();
-  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
 
-  // handle change of map
-  useEffect(() => {
-    const map: MapPlugin | undefined =
-      photoSphereRef.current?.getPlugin(MapPlugin);
-
-    const newOptions = convertMap(props.vfe.map);
-    if (newOptions.imageUrl) map?.setImage(newOptions.imageUrl);
-    if (newOptions.center) map?.setCenter(newOptions.center);
-    if (newOptions.hotspots) map?.setHotspots(newOptions.hotspots);
-    map?.setOption("rotation", newOptions.rotation);
-  }, [props.vfe.map, photoSphereRef]);
-
-  useEffect(() => {
-    const audio = new Audio(audioFile);
-    // Check if theres user interaction
-    if (isUserInteracted && isAudioPlaying) {
-      //Make a new audio object with the imported audio file
-      //Try to play the audio file, have to use void to indicate were not going to promise to handle the returned type
-      void audio.play().catch((e) => {
-        //Debug for errors
-        console.error("Error playing audio:", e);
-      });
-    }
-    //Cleanup function to pause audio when the component unmounts
-    return () => {
-      if (isUserInteracted) {
-        audio.pause();
-      }
-    };
-    //Depends on the isUserInteracted state, reruns if it changes
-  }, [isUserInteracted, isAudioPlaying]);
-
-  //Handler function to set the state to true
-  function handleUserInteraction() {
-    setIsUserInteracted(true);
-    setIsAudioPlaying(!isAudioPlaying);
-  }
-
-  //toggles state of audio upon button press
-  function toggleAudio() {
-    setIsAudioPlaying((prevIsAudioPlaying) => !prevIsAudioPlaying);
-  }
-
-  // If I cant get the user interaction forced I made the button
-  if (!isUserInteracted) {
-    return (
-      <div
-        style={{
-          height: "100vh",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <button
-          onClick={handleUserInteraction}
-          style={{ padding: "10px 20px", fontSize: "16px" }}
-        >
-          Start Virtual Environment
-        </button>
-      </div>
-    );
-  }
+  const defaultPhotosphere =
+    props.vfe.photospheres[props.vfe.defaultPhotosphereID];
+  const [currentPhotosphere, setCurrentPhotosphere] =
+    React.useState<Photosphere>(defaultPhotosphere);
 
   const plugins: ViewerConfig["plugins"] = [
     [MarkersPlugin, {}],
@@ -197,45 +136,41 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
     [VirtualTourPlugin, { renderMode: "markers" }],
   ];
 
-  console.log({ plugins });
-
   function onReady(instance: Viewer) {
     const virtualTour: VirtualTourPlugin =
       instance.getPlugin(VirtualTourPlugin);
 
-    const nodes: VirtualTourNode[] = props.vfe.photospheres.map((p) => {
-      return {
-        id: p.id,
-        panorama: p.src,
-        thumbnail: p.src,
-        name: p.id,
-        markers: convertHotspots(p.hotspots),
-        links: convertLinks(p.hotspots),
-      };
-    });
+    const nodes: VirtualTourNode[] = Object.values(props.vfe.photospheres).map(
+      (p) => {
+        return {
+          id: p.id,
+          panorama: p.src,
+          thumbnail: p.src,
+          name: p.id,
+          markers: convertHotspots(p.hotspots),
+          links: convertLinks(p.hotspots),
+        };
+      },
+    );
 
-    virtualTour.setNodes(nodes, nodes[0].id);
+    virtualTour.setNodes(nodes, defaultPhotosphere.id);
+    virtualTour.addEventListener("node-changed", ({ node }) => {
+      setCurrentPhotosphere(props.vfe.photospheres[node.id]);
+    });
   }
 
   return (
-    //if user already interacted start, then display audio button
-    <div>
-      <button
-        onClick={toggleAudio}
-        style={{
-          position: "absolute",
-          zIndex: 1000,
-          top: "18px", // Adjust this value to change the vertical position
-          left: "1325px", // Adjust this value to change the horizontal position
-        }}
-      >
-        {isAudioPlaying ? "Pause Audio" : "Play Audio"}
-      </button>
+    <>
+      {currentPhotosphere.backgroundAudio && (
+        <AudioToggleButton
+          src={currentPhotosphere.backgroundAudio}
+        ></AudioToggleButton>
+      )}
 
       <ReactPhotoSphereViewer
         onReady={onReady}
         ref={photoSphereRef}
-        src={props.vfe.photospheres[0].src}
+        src={defaultPhotosphere.src}
         plugins={plugins}
         height={"100vh"}
         width={"100%"}
@@ -248,7 +183,7 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
           "fullscreen",
         ]}
       />
-    </div>
+    </>
   );
 }
 
