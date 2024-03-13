@@ -10,7 +10,6 @@ import {
 } from "react-photo-sphere-viewer";
 
 import { Hotspot3D, NavMap, Photosphere } from "./DataStructures";
-import sampleScene from "./assets/VFEdata/ERI_Scene6-IMG_20231006_081813_00_122.jpg";
 import audioFile from "./assets/VFEdata/Scene12_UnevenStandTop_LS100146.mp3";
 
 function videoContent(src: string): string {
@@ -202,7 +201,7 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
 
       <ReactPhotoSphereViewer
         ref={photoSphereRef}
-        src={sampleScene}
+        src={props.photosphere.src}
         plugins={plugins}
         height={"100vh"}
         width={"100%"}

@@ -1,7 +1,7 @@
 import { Hotspot3D, NavMap, Photosphere, VFE } from "./DataStructures.ts";
 import VFEViewer from "./VFEViewer.tsx";
 import Contact from "./assets/VFEdata/Contact.png";
-import SampleScene from "./assets/VFEdata/ERI_Scene6-IMG_20231006_081813_00_122.jpg";
+import SampleScene from "./assets/VFEdata/ERI_SouthScene_6-IMG_20231006_081813_00_122.jpg";
 import SouthwaterFront from "./assets/VFEdata/SouthwaterFront.png";
 import CloserLook from "./assets/VFEdata/a-closer-look.jpg";
 import CoolLog from "./assets/VFEdata/cool_log.jpeg";
