@@ -4,7 +4,7 @@ import {
   VirtualTourLink,
   VirtualTourNode,
 } from "@photo-sphere-viewer/virtual-tour-plugin";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   GalleryPlugin,
   MapPlugin,
@@ -17,6 +17,7 @@ import {
 
 import AudioToggleButton from "./AudioToggleButton";
 import { Hotspot3D, NavMap, Photosphere, VFE } from "./DataStructures";
+import PhotosphereSelector from "./PhotosphereSelector";
 
 function videoContent(src: string): string {
   return `<video controls style="max-width: 100%; max-height: 100%">
@@ -129,6 +130,13 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
   const [currentPhotosphere, setCurrentPhotosphere] =
     React.useState<Photosphere>(defaultPhotosphere);
 
+  useEffect(() => {
+    const virtualTour =
+      photoSphereRef.current?.getPlugin<VirtualTourPlugin>(VirtualTourPlugin);
+
+    void virtualTour?.setCurrentNode(currentPhotosphere.id);
+  }, [currentPhotosphere, photoSphereRef]);
+
   const plugins: ViewerConfig["plugins"] = [
     [MarkersPlugin, {}],
     [GalleryPlugin, {}],
@@ -136,9 +144,9 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
     [VirtualTourPlugin, { renderMode: "markers" }],
   ];
 
-  function onReady(instance: Viewer) {
-    const virtualTour: VirtualTourPlugin =
-      instance.getPlugin(VirtualTourPlugin);
+  function handleReady(instance: Viewer) {
+    const virtualTour =
+      instance.getPlugin<VirtualTourPlugin>(VirtualTourPlugin);
 
     const nodes: VirtualTourNode[] = Object.values(props.vfe.photospheres).map(
       (p) => {
@@ -161,14 +169,20 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
 
   return (
     <>
+      <PhotosphereSelector
+        options={Object.keys(props.vfe.photospheres)}
+        value={currentPhotosphere.id}
+        setValue={(id) => {
+          setCurrentPhotosphere(props.vfe.photospheres[id]);
+        }}
+      />
+
       {currentPhotosphere.backgroundAudio && (
-        <AudioToggleButton
-          src={currentPhotosphere.backgroundAudio}
-        ></AudioToggleButton>
+        <AudioToggleButton src={currentPhotosphere.backgroundAudio} />
       )}
 
       <ReactPhotoSphereViewer
-        onReady={onReady}
+        onReady={handleReady}
         ref={photoSphereRef}
         src={defaultPhotosphere.src}
         plugins={plugins}

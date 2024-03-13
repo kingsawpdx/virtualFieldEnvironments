@@ -1,7 +1,7 @@
 export interface PhotosphereSelectorProps {
   options: string[];
-  value: string | undefined;
-  setValue: (value: string | undefined) => void;
+  value: string;
+  setValue: (value: string) => void;
 }
 
 function PhotosphereSelector(props: PhotosphereSelectorProps) {
