@@ -6,7 +6,6 @@ import {
 } from "@photo-sphere-viewer/virtual-tour-plugin";
 import React, { useEffect } from "react";
 import {
-  GalleryPlugin,
   MapPlugin,
   MapPluginConfig,
   MarkersPlugin,
@@ -145,7 +144,6 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
 
   const plugins: ViewerConfig["plugins"] = [
     [MarkersPlugin, {}],
-    [GalleryPlugin, {}],
     [MapPlugin, convertMap(props.vfe.map)],
     [
       VirtualTourPlugin,
@@ -167,7 +165,6 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
         return {
           id: p.id,
           panorama: p.src,
-          thumbnail: p.src,
           name: p.id,
           markers: convertHotspots(p.hotspots),
           links: convertLinks(p.hotspots),
@@ -202,14 +199,7 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
         plugins={plugins}
         height={"100vh"}
         width={"100%"}
-        navbar={[
-          "autorotate",
-          "zoom",
-          "gallery",
-          "caption",
-          "download",
-          "fullscreen",
-        ]}
+        navbar={["autorotate", "zoom", "caption", "download", "fullscreen"]}
       />
     </>
   );
