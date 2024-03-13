@@ -1,15 +1,21 @@
-import { ViewerConfig } from "@photo-sphere-viewer/core";
+import { Viewer, ViewerConfig } from "@photo-sphere-viewer/core";
 import { MarkerConfig } from "@photo-sphere-viewer/markers-plugin";
+import {
+  VirtualTourLink,
+  VirtualTourNode,
+} from "@photo-sphere-viewer/virtual-tour-plugin";
 import React, { useEffect, useState } from "react";
 import {
+  GalleryPlugin,
   MapPlugin,
   MapPluginConfig,
   MarkersPlugin,
   ReactPhotoSphereViewer,
   ViewerAPI,
+  VirtualTourPlugin,
 } from "react-photo-sphere-viewer";
 
-import { Hotspot3D, NavMap, Photosphere } from "./DataStructures";
+import { Hotspot3D, NavMap, VFE } from "./DataStructures";
 import audioFile from "./assets/VFEdata/Scene12_UnevenStandTop_LS100146.mp3";
 
 function videoContent(src: string): string {
@@ -29,11 +35,13 @@ function degToStr(val: number): string {
   return String(val) + "deg";
 }
 
-/** Convert hotspots to markers with type-based content/icons */
+/** Convert non-link hotspots to markers with type-based content/icons */
 function convertHotspots(hotspots: Hotspot3D[]): MarkerConfig[] {
-  if (hotspots.length == 0) return [];
+  const markers: MarkerConfig[] = [];
 
-  const markers: MarkerConfig[] = hotspots.map((hotspot) => {
+  for (const hotspot of hotspots) {
+    if (hotspot.data.tag === "PhotosphereLink") continue;
+
     let content: string | undefined = undefined;
     let icon =
       "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"; // default
@@ -52,25 +60,45 @@ function convertHotspots(hotspots: Hotspot3D[]): MarkerConfig[] {
         break;
       case "Doc":
         break;
-      case "PhotosphereLink":
-        break;
       case "URL":
         break;
       default:
         break;
     }
 
-    return {
+    markers.push({
       id: hotspot.tooltip,
       image: icon,
       size: { width: 64, height: 64 },
-      position: { yaw: degToStr(hotspot.yaw), pitch: degToStr(hotspot.pitch) },
+      position: {
+        yaw: degToStr(hotspot.yaw),
+        pitch: degToStr(hotspot.pitch),
+      },
       tooltip: hotspot.tooltip,
       content: content,
-    };
-  });
+    });
+  }
 
   return markers;
+}
+
+/** Convert photosphere-link hotspots to virtual tour links  */
+function convertLinks(hotspots: Hotspot3D[]): VirtualTourLink[] {
+  const links: VirtualTourLink[] = [];
+
+  for (const hotspot of hotspots) {
+    if (hotspot.data.tag !== "PhotosphereLink") continue;
+
+    links.push({
+      nodeId: hotspot.data.photosphereID,
+      position: {
+        pitch: degToStr(hotspot.pitch),
+        yaw: degToStr(hotspot.yaw),
+      },
+    });
+  }
+
+  return links;
 }
 
 function convertMap(map: NavMap): MapPluginConfig {
@@ -90,8 +118,7 @@ function convertMap(map: NavMap): MapPluginConfig {
 }
 
 export interface PhotosphereViewerProps {
-  photosphere: Photosphere;
-  map: NavMap;
+  vfe: VFE;
 }
 
 function PhotosphereViewer(props: PhotosphereViewerProps) {
@@ -99,29 +126,17 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
   const photoSphereRef = React.createRef<ViewerAPI>();
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
 
-  // handle change of panoramic image
-  useEffect(() => {
-    void photoSphereRef.current?.setPanorama(props.photosphere.src);
-  }, [props.photosphere.src, photoSphereRef]);
-
-  // handle change of hotspots
-  useEffect(() => {
-    const markers: MarkersPlugin | undefined =
-      photoSphereRef.current?.getPlugin(MarkersPlugin);
-    markers?.setMarkers(convertHotspots(props.photosphere.hotspots));
-  }, [props.photosphere.hotspots, photoSphereRef]);
-
   // handle change of map
   useEffect(() => {
     const map: MapPlugin | undefined =
       photoSphereRef.current?.getPlugin(MapPlugin);
 
-    const newOptions = convertMap(props.map);
+    const newOptions = convertMap(props.vfe.map);
     if (newOptions.imageUrl) map?.setImage(newOptions.imageUrl);
     if (newOptions.center) map?.setCenter(newOptions.center);
     if (newOptions.hotspots) map?.setHotspots(newOptions.hotspots);
     map?.setOption("rotation", newOptions.rotation);
-  }, [props.map, photoSphereRef]);
+  }, [props.vfe.map, photoSphereRef]);
 
   useEffect(() => {
     const audio = new Audio(audioFile);
@@ -176,13 +191,31 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
   }
 
   const plugins: ViewerConfig["plugins"] = [
-    [MarkersPlugin, { markers: convertHotspots(props.photosphere.hotspots) }],
-    [MapPlugin, convertMap(props.map)],
+    [MarkersPlugin, {}],
+    [GalleryPlugin, {}],
+    [MapPlugin, convertMap(props.vfe.map)],
+    [VirtualTourPlugin, { renderMode: "markers" }],
   ];
 
   console.log({ plugins });
-  console.log(props.photosphere);
-  console.log(props.map);
+
+  function onReady(instance: Viewer) {
+    const virtualTour: VirtualTourPlugin =
+      instance.getPlugin(VirtualTourPlugin);
+
+    const nodes: VirtualTourNode[] = props.vfe.photospheres.map((p) => {
+      return {
+        id: p.id,
+        panorama: p.src,
+        thumbnail: p.src,
+        name: p.id,
+        markers: convertHotspots(p.hotspots),
+        links: convertLinks(p.hotspots),
+      };
+    });
+
+    virtualTour.setNodes(nodes, nodes[0].id);
+  }
 
   return (
     //if user already interacted start, then display audio button
@@ -200,11 +233,20 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
       </button>
 
       <ReactPhotoSphereViewer
+        onReady={onReady}
         ref={photoSphereRef}
-        src={props.photosphere.src}
+        src={props.vfe.photospheres[0].src}
         plugins={plugins}
         height={"100vh"}
         width={"100%"}
+        navbar={[
+          "autorotate",
+          "zoom",
+          "gallery",
+          "caption",
+          "download",
+          "fullscreen",
+        ]}
       />
     </div>
   );

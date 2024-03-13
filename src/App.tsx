@@ -1,7 +1,8 @@
 import { Hotspot3D, NavMap, Photosphere, VFE } from "./DataStructures.ts";
-import VFEViewer from "./VFEViewer.tsx";
+import PhotosphereViewer from "./PhotosphereViewer.tsx";
 import Contact from "./assets/VFEdata/Contact.png";
-import SampleScene from "./assets/VFEdata/ERI_SouthScene_6-IMG_20231006_081813_00_122.jpg";
+import SouthScene from "./assets/VFEdata/ERI_SouthScene_6-IMG_20231006_081813_00_122.jpg";
+import WestScene from "./assets/VFEdata/ERI_West-Scene7-IMG_20231006_084114_00_123.jpg";
 import SouthwaterFront from "./assets/VFEdata/SouthwaterFront.png";
 import CloserLook from "./assets/VFEdata/a-closer-look.jpg";
 import CoolLog from "./assets/VFEdata/cool_log.jpeg";
@@ -165,18 +166,27 @@ function App() {
         hotspots: [],
       },
     },
+    {
+      pitch: 0,
+      yaw: -35,
+      tooltip: "SouthWaterfront",
+      data: {
+        tag: "PhotosphereLink",
+        photosphereID: "West",
+      },
+    },
   ];
 
-  const prototype: Photosphere = {
-    id: "prototypeSphere",
-    src: SampleScene,
+  const south: Photosphere = {
+    id: "South",
+    src: SouthScene,
     hotspots: hotspotArray,
     backgroundAudio: "",
   };
 
-  const alternative: Photosphere = {
-    id: "alternativeSphere",
-    src: OutcropWide, // TODO: replace with an actual panoramic image that is different from sampleScene
+  const west: Photosphere = {
+    id: "West",
+    src: WestScene,
     hotspots: [],
     backgroundAudio: "",
   };
@@ -201,10 +211,10 @@ function App() {
   const data: VFE = {
     name: "prototypeElkIslandVFE",
     map: map,
-    photospheres: [prototype, alternative],
+    photospheres: [south, west],
   };
 
-  return <VFEViewer vfe={data} />;
+  return <PhotosphereViewer vfe={data} />;
 }
 
 export default App;
