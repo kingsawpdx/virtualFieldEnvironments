@@ -1,6 +1,9 @@
 import { Hotspot3D, NavMap, Photosphere, VFE } from "./DataStructures.ts";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
 import Contact from "./assets/VFEdata/Contact.png";
+import EastScene from "./assets/VFEdata/ERI_East-Scene9-IMG_20231006_092207_00_125.jpg";
+import EntranceScene from "./assets/VFEdata/ERI_Entrance-Scene0-IMG_20231006_080232_00_120.jpg";
+import NorthScene from "./assets/VFEdata/ERI_North-Scene8-IMG_20231006_091050_00_124.jpg";
 import SouthScene from "./assets/VFEdata/ERI_SouthScene_6-IMG_20231006_081813_00_122.jpg";
 import WestScene from "./assets/VFEdata/ERI_West-Scene7-IMG_20231006_084114_00_123.jpg";
 import audioFile from "./assets/VFEdata/Scene12_UnevenStandTop_LS100146.mp3";
@@ -170,10 +173,19 @@ function App() {
     {
       pitch: 0,
       yaw: -35,
-      tooltip: "SouthWaterfront",
+      tooltip: "Go West",
       data: {
         tag: "PhotosphereLink",
         photosphereID: "West",
+      },
+    },
+    {
+      pitch: -7,
+      yaw: 125,
+      tooltip: "Go to Entrance",
+      data: {
+        tag: "PhotosphereLink",
+        photosphereID: "Entrance",
       },
     },
   ];
@@ -188,7 +200,101 @@ function App() {
   const west: Photosphere = {
     id: "West",
     src: WestScene,
-    hotspots: [],
+    hotspots: [
+      {
+        pitch: 0,
+        yaw: 10,
+        tooltip: "Go North",
+        data: {
+          tag: "PhotosphereLink",
+          photosphereID: "North",
+        },
+      },
+      {
+        pitch: -3,
+        yaw: 115,
+        tooltip: "Go South",
+        data: {
+          tag: "PhotosphereLink",
+          photosphereID: "South",
+        },
+      },
+    ],
+  };
+
+  const north: Photosphere = {
+    id: "North",
+    src: NorthScene,
+    hotspots: [
+      {
+        pitch: 0,
+        yaw: -130,
+        tooltip: "Go West",
+        data: {
+          tag: "PhotosphereLink",
+          photosphereID: "West",
+        },
+      },
+      {
+        pitch: 0,
+        yaw: 92,
+        tooltip: "Go East",
+        data: {
+          tag: "PhotosphereLink",
+          photosphereID: "East",
+        },
+      },
+    ],
+  };
+
+  const east: Photosphere = {
+    id: "East",
+    src: EastScene,
+    hotspots: [
+      {
+        pitch: 3,
+        yaw: 2,
+        tooltip: "Go North",
+        data: {
+          tag: "PhotosphereLink",
+          photosphereID: "North",
+        },
+      },
+      {
+        pitch: -2,
+        yaw: -167,
+        tooltip: "Go to Entrance",
+        data: {
+          tag: "PhotosphereLink",
+          photosphereID: "Entrance",
+        },
+      },
+    ],
+  };
+
+  const entrance: Photosphere = {
+    id: "Entrance",
+    src: EntranceScene,
+    hotspots: [
+      {
+        pitch: -2,
+        yaw: -4,
+        tooltip: "Go East",
+        data: {
+          tag: "PhotosphereLink",
+          photosphereID: "East",
+        },
+      },
+      {
+        pitch: -4,
+        yaw: -78,
+        tooltip: "Go South",
+        data: {
+          tag: "PhotosphereLink",
+          photosphereID: "South",
+        },
+      },
+    ],
   };
 
   const map: NavMap = {
@@ -213,8 +319,11 @@ function App() {
     map: map,
     defaultPhotosphereID: south.id,
     photospheres: {
+      [entrance.id]: entrance,
       [south.id]: south,
       [west.id]: west,
+      [north.id]: north,
+      [east.id]: east,
     },
   };
 

@@ -13,6 +13,7 @@ import {
   ReactPhotoSphereViewer,
   ViewerAPI,
   VirtualTourPlugin,
+  VirtualTourPluginConfig,
 } from "react-photo-sphere-viewer";
 
 import AudioToggleButton from "./AudioToggleButton";
@@ -83,6 +84,10 @@ function convertHotspots(hotspots: Hotspot3D[]): MarkerConfig[] {
   return markers;
 }
 
+interface LinkData {
+  tooltip: string;
+}
+
 /** Convert photosphere-link hotspots to virtual tour links  */
 function convertLinks(hotspots: Hotspot3D[]): VirtualTourLink[] {
   const links: VirtualTourLink[] = [];
@@ -96,6 +101,7 @@ function convertLinks(hotspots: Hotspot3D[]): VirtualTourLink[] {
         pitch: degToStr(hotspot.pitch),
         yaw: degToStr(hotspot.yaw),
       },
+      data: { tooltip: hotspot.tooltip } as LinkData,
     });
   }
 
@@ -141,7 +147,15 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
     [MarkersPlugin, {}],
     [GalleryPlugin, {}],
     [MapPlugin, convertMap(props.vfe.map)],
-    [VirtualTourPlugin, { renderMode: "markers" }],
+    [
+      VirtualTourPlugin,
+      {
+        renderMode: "markers",
+        getLinkTooltip(_content: string, link: VirtualTourLink): string {
+          return (link.data as LinkData).tooltip;
+        },
+      } as VirtualTourPluginConfig,
+    ],
   ];
 
   function handleReady(instance: Viewer) {
