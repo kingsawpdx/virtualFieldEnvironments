@@ -18,7 +18,7 @@ export interface VFE {
 export interface NavMap {
   src: string;
   center: { x: number; y: number };
-  rotation: string;
+  rotation: number;
   defaultZoom: number;
   hotspots: Hotspot2D[];
 }
