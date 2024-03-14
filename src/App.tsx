@@ -184,7 +184,7 @@ function App() {
   const map: NavMap = {
     src: mapImage,
     center: { x: 450, y: 800 },
-    rotation: parseInt("0deg"),
+    rotation: 0,
     defaultZoom: 20,
     hotspots: [
       {
