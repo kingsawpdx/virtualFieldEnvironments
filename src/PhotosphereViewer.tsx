@@ -1,4 +1,4 @@
-import { Viewer, ViewerConfig } from "@photo-sphere-viewer/core";
+import { Point, Viewer, ViewerConfig } from "@photo-sphere-viewer/core";
 import { MarkerConfig } from "@photo-sphere-viewer/markers-plugin";
 import {
   VirtualTourLink,
@@ -16,7 +16,13 @@ import {
 } from "react-photo-sphere-viewer";
 
 import AudioToggleButton from "./AudioToggleButton";
-import { Hotspot3D, NavMap, Photosphere, VFE } from "./DataStructures";
+import {
+  Hotspot2D,
+  Hotspot3D,
+  NavMap,
+  Photosphere,
+  VFE,
+} from "./DataStructures";
 import PhotosphereSelector from "./PhotosphereSelector";
 
 function videoContent(src: string): string {
@@ -107,10 +113,10 @@ function convertLinks(hotspots: Hotspot3D[]): VirtualTourLink[] {
   return links;
 }
 
-function convertMap(map: NavMap): MapPluginConfig {
+function convertMap(map: NavMap, center: Point): MapPluginConfig {
   return {
     imageUrl: map.src,
-    center: map.center,
+    center,
     rotation: map.rotation,
     defaultZoom: map.defaultZoom,
     hotspots: map.hotspots.map((hotspot) => ({
@@ -138,13 +144,15 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
   useEffect(() => {
     const virtualTour =
       photoSphereRef.current?.getPlugin<VirtualTourPlugin>(VirtualTourPlugin);
-
     void virtualTour?.setCurrentNode(currentPhotosphere.id);
+
+    const map = photoSphereRef.current?.getPlugin<MapPlugin>(MapPlugin);
+    map?.setCenter(currentPhotosphere.center);
   }, [currentPhotosphere, photoSphereRef]);
 
   const plugins: ViewerConfig["plugins"] = [
     [MarkersPlugin, {}],
-    [MapPlugin, convertMap(props.vfe.map)],
+    [MapPlugin, convertMap(props.vfe.map, defaultPhotosphere.center)],
     [
       VirtualTourPlugin,
       {
@@ -175,6 +183,18 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
     virtualTour.setNodes(nodes, defaultPhotosphere.id);
     virtualTour.addEventListener("node-changed", ({ node }) => {
       setCurrentPhotosphere(props.vfe.photospheres[node.id]);
+    });
+
+    const map = instance.getPlugin<MapPlugin>(MapPlugin);
+    map.addEventListener("select-hotspot", ({ hotspotId }) => {
+      const hotspot: Hotspot2D | undefined = props.vfe.map.hotspots.find(
+        (hotspot) => hotspot.id === hotspotId,
+      );
+      if (hotspot?.data.tag === "PhotosphereLink") {
+        setCurrentPhotosphere(
+          props.vfe.photospheres[hotspot.data.photosphereID],
+        );
+      }
     });
   }
 

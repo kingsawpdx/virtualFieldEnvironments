@@ -193,6 +193,7 @@ function App() {
   const south: Photosphere = {
     id: "South",
     src: SouthScene,
+    center: { x: 450, y: 800 },
     hotspots: hotspotArray,
     backgroundAudio: audioFile,
   };
@@ -200,6 +201,7 @@ function App() {
   const west: Photosphere = {
     id: "West",
     src: WestScene,
+    center: { x: 95, y: 530 },
     hotspots: [
       {
         pitch: 0,
@@ -225,6 +227,7 @@ function App() {
   const north: Photosphere = {
     id: "North",
     src: NorthScene,
+    center: { x: 390, y: 50 },
     hotspots: [
       {
         pitch: 0,
@@ -250,6 +253,7 @@ function App() {
   const east: Photosphere = {
     id: "East",
     src: EastScene,
+    center: { x: 550, y: 450 },
     hotspots: [
       {
         pitch: 3,
@@ -275,6 +279,7 @@ function App() {
   const entrance: Photosphere = {
     id: "Entrance",
     src: EntranceScene,
+    center: { x: 650, y: 930 },
     hotspots: [
       {
         pitch: -2,
@@ -297,34 +302,35 @@ function App() {
     ],
   };
 
+  const photospheres: Record<string, Photosphere> = {
+    [entrance.id]: entrance,
+    [south.id]: south,
+    [west.id]: west,
+    [north.id]: north,
+    [east.id]: east,
+  };
+
   const map: NavMap = {
     src: mapImage,
-    center: { x: 450, y: 800 },
     rotation: 0,
     defaultZoom: 20,
-    hotspots: [
-      {
-        x: 95,
-        y: 530,
-        id: "West",
+    hotspots: Object.values(photospheres).map((p) => {
+      return {
+        x: p.center.x,
+        y: p.center.y,
+        id: p.id,
         color: "yellow",
-        tooltip: "West",
-        data: { tag: "PhotosphereLink", photosphereID: west.id },
-      },
-    ],
+        tooltip: p.id,
+        data: { tag: "PhotosphereLink", photosphereID: p.id },
+      };
+    }),
   };
 
   const data: VFE = {
     name: "prototypeElkIslandVFE",
     map: map,
     defaultPhotosphereID: south.id,
-    photospheres: {
-      [entrance.id]: entrance,
-      [south.id]: south,
-      [west.id]: west,
-      [north.id]: north,
-      [east.id]: east,
-    },
+    photospheres,
   };
 
   return <PhotosphereViewer vfe={data} />;
