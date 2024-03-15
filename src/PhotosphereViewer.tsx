@@ -12,7 +12,6 @@ import {
 import { Hotspot3D, NavMap, Photosphere } from "./DataStructures";
 import sampleScene from "./assets/VFEdata/ERI_Scene6-IMG_20231006_081813_00_122.jpg";
 import audioFile from "./assets/VFEdata/Scene12_UnevenStandTop_LS100146.mp3";
-import mapImage from "./assets/VFEdata/map.jpg";
 
 function videoContent(src: string): string {
   return `<video controls style="max-width: 100%; max-height: 100%">
@@ -76,53 +75,18 @@ function convertHotspots(hotspots: Hotspot3D[]): MarkerConfig[] {
 }
 
 function convertMap(map: NavMap): MapPluginConfig {
-  // this line is so the map variable does not cause unused variable errors
-  // TODO: remove this line after conversion functionality is completed
-  void map;
-
-  // TODO: conversion from NavMap instead of hardcoding
   return {
-    imageUrl: mapImage,
-    center: { x: 450, y: 800 },
-    rotation: "0deg",
-    defaultZoom: 20,
-    hotspots: [
-      {
-        x: 95,
-        y: 530,
-        id: "West",
-        color: "yellow",
-        tooltip: "West",
-      },
-      {
-        x: 450,
-        y: 800,
-        id: "South",
-        color: "yellow",
-        tooltip: "South",
-      },
-      {
-        x: 650,
-        y: 930,
-        id: "Entrance",
-        color: "yellow",
-        tooltip: "Entrance",
-      },
-      {
-        x: 550,
-        y: 450,
-        id: "East",
-        color: "yellow",
-        tooltip: "East",
-      },
-      {
-        x: 390,
-        y: 50,
-        id: "North",
-        color: "yellow",
-        tooltip: "North",
-      },
-    ],
+    imageUrl: map.src,
+    center: map.center,
+    rotation: map.rotation,
+    defaultZoom: map.defaultZoom,
+    hotspots: map.hotspots.map((hotspot) => ({
+      x: hotspot.x,
+      y: hotspot.y,
+      id: hotspot.id,
+      color: hotspot.color,
+      tooltip: hotspot.tooltip,
+    })),
   };
 }
 

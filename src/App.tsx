@@ -8,6 +8,7 @@ import CoolLog from "./assets/VFEdata/cool_log.jpeg";
 import Flowers from "./assets/VFEdata/flowers.png";
 import HandSample from "./assets/VFEdata/hand_sample.png";
 import LogNearShoreline from "./assets/VFEdata/logNEARshoreline.png";
+import mapImage from "./assets/VFEdata/map.jpg";
 import Mushroom from "./assets/VFEdata/mushroom.png";
 import OutcropWide from "./assets/VFEdata/outcropWideView.png";
 import OutcropTextures from "./assets/VFEdata/outcrop_textures.mp4";
@@ -181,8 +182,20 @@ function App() {
   };
 
   const map: NavMap = {
-    src: "map src",
-    hotspots: [],
+    src: mapImage,
+    center: { x: 450, y: 800 },
+    rotation: 0,
+    defaultZoom: 20,
+    hotspots: [
+      {
+        x: 95,
+        y: 530,
+        id: "West",
+        color: "yellow",
+        tooltip: "West",
+        data: { tag: "PhotosphereLink", photosphereID: alternative.id },
+      },
+    ],
   };
 
   const data: VFE = {
