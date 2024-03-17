@@ -10,6 +10,7 @@ import {
 } from "react-photo-sphere-viewer";
 
 import { Hotspot3D, NavMap, Photosphere } from "./DataStructures";
+import PopOver from "./PopOver";
 import sampleScene from "./assets/VFEdata/ERI_Scene6-IMG_20231006_081813_00_122.jpg";
 import audioFile from "./assets/VFEdata/Scene12_UnevenStandTop_LS100146.mp3";
 import mapImage from "./assets/VFEdata/map.jpg";
@@ -29,6 +30,11 @@ function pictureContent(imageSrc: string) {
 /** Convert yaw/pitch degrees from numbers to strings ending in "deg" */
 function degToStr(val: number): string {
   return String(val) + "deg";
+}
+
+function matchHotspot(id: string, hotspots: Hotspot3D[]): Hotspot3D {
+  const returnMarker = hotspots.find((element) => element.tooltip == id);
+  return returnMarker!;
 }
 
 /** Convert hotspots to markers with type-based content/icons */
@@ -68,7 +74,7 @@ function convertHotspots(hotspots: Hotspot3D[]): MarkerConfig[] {
       size: { width: 64, height: 64 },
       position: { yaw: degToStr(hotspot.yaw), pitch: degToStr(hotspot.pitch) },
       tooltip: hotspot.tooltip,
-      content: content,
+      //content: content,
     };
   });
 
@@ -135,6 +141,8 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
   const [isUserInteracted, setIsUserInteracted] = useState(false);
   const photoSphereRef = React.createRef<ViewerAPI>();
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const [renderClickedMarker, setRenderClickedMarker] = useState(false);
+  const [renderHotspot, setRenderHotspot] = useState<Hotspot3D>();
 
   // handle change of panoramic image
   useEffect(() => {
@@ -217,9 +225,20 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
     [MapPlugin, convertMap(props.map)],
   ];
 
-  console.log({ plugins });
-  console.log(props.photosphere);
-  console.log(props.map);
+  function handleReady(instance: ViewerAPI) {
+    const markerTestPlugin: MarkersPlugin | undefined =
+      instance.getPlugin(MarkersPlugin);
+
+    markerTestPlugin.addEventListener("select-marker", ({ marker }) => {
+      const passMarker = matchHotspot(
+        marker.config.id,
+        props.photosphere.hotspots,
+      );
+
+      setRenderHotspot(passMarker);
+      setRenderClickedMarker(true);
+    });
+  }
 
   return (
     //if user already interacted start, then display audio button
@@ -236,7 +255,12 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
         {isAudioPlaying ? "Pause Audio" : "Play Audio"}
       </button>
 
+      {renderClickedMarker ? (
+        <PopOver renderComponent={true} hotspot={renderHotspot} />
+      ) : null}
+
       <ReactPhotoSphereViewer
+        onReady={handleReady}
         ref={photoSphereRef}
         src={sampleScene}
         plugins={plugins}
