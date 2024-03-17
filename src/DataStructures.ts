@@ -11,13 +11,13 @@
 export interface VFE {
   name: string;
   map: NavMap;
-  photospheres: Photosphere[];
+  defaultPhotosphereID: string;
+  photospheres: Record<string, Photosphere>;
 }
 
 // Navigation map: a birdseye view of the various hotspots within a single 360-environment
 export interface NavMap {
   src: string;
-  center: { x: number; y: number };
   rotation: number;
   defaultZoom: number;
   hotspots: Hotspot2D[];
@@ -27,8 +27,9 @@ export interface NavMap {
 export interface Photosphere {
   id: string;
   src: string;
+  center: { x: number; y: number };
   hotspots: Hotspot3D[];
-  backgroundAudio: string;
+  backgroundAudio?: string;
 }
 
 // Hotspot2D: a clickable resource that is inside a 2D image (x, y)

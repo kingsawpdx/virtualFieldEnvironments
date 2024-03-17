@@ -1,17 +1,29 @@
-import { ViewerConfig } from "@photo-sphere-viewer/core";
+import { Point, Viewer, ViewerConfig } from "@photo-sphere-viewer/core";
 import { MarkerConfig } from "@photo-sphere-viewer/markers-plugin";
-import React, { useEffect, useState } from "react";
+import {
+  VirtualTourLink,
+  VirtualTourNode,
+} from "@photo-sphere-viewer/virtual-tour-plugin";
+import React, { useEffect } from "react";
 import {
   MapPlugin,
   MapPluginConfig,
   MarkersPlugin,
   ReactPhotoSphereViewer,
   ViewerAPI,
+  VirtualTourPlugin,
+  VirtualTourPluginConfig,
 } from "react-photo-sphere-viewer";
 
-import { Hotspot3D, NavMap, Photosphere } from "./DataStructures";
-import sampleScene from "./assets/VFEdata/ERI_Scene6-IMG_20231006_081813_00_122.jpg";
-import audioFile from "./assets/VFEdata/Scene12_UnevenStandTop_LS100146.mp3";
+import AudioToggleButton from "./AudioToggleButton";
+import {
+  Hotspot2D,
+  Hotspot3D,
+  NavMap,
+  Photosphere,
+  VFE,
+} from "./DataStructures";
+import PhotosphereSelector from "./PhotosphereSelector";
 
 function videoContent(src: string): string {
   return `<video controls style="max-width: 100%; max-height: 100%">
@@ -30,11 +42,13 @@ function degToStr(val: number): string {
   return String(val) + "deg";
 }
 
-/** Convert hotspots to markers with type-based content/icons */
+/** Convert non-link hotspots to markers with type-based content/icons */
 function convertHotspots(hotspots: Hotspot3D[]): MarkerConfig[] {
-  if (hotspots.length == 0) return [];
+  const markers: MarkerConfig[] = [];
 
-  const markers: MarkerConfig[] = hotspots.map((hotspot) => {
+  for (const hotspot of hotspots) {
+    if (hotspot.data.tag === "PhotosphereLink") continue;
+
     let content: string | undefined = undefined;
     let icon =
       "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"; // default
@@ -53,31 +67,56 @@ function convertHotspots(hotspots: Hotspot3D[]): MarkerConfig[] {
         break;
       case "Doc":
         break;
-      case "PhotosphereLink":
-        break;
       case "URL":
         break;
       default:
         break;
     }
 
-    return {
+    markers.push({
       id: hotspot.tooltip,
       image: icon,
       size: { width: 64, height: 64 },
-      position: { yaw: degToStr(hotspot.yaw), pitch: degToStr(hotspot.pitch) },
+      position: {
+        yaw: degToStr(hotspot.yaw),
+        pitch: degToStr(hotspot.pitch),
+      },
       tooltip: hotspot.tooltip,
       content: content,
-    };
-  });
+    });
+  }
 
   return markers;
 }
 
-function convertMap(map: NavMap): MapPluginConfig {
+interface LinkData {
+  tooltip: string;
+}
+
+/** Convert photosphere-link hotspots to virtual tour links  */
+function convertLinks(hotspots: Hotspot3D[]): VirtualTourLink[] {
+  const links: VirtualTourLink[] = [];
+
+  for (const hotspot of hotspots) {
+    if (hotspot.data.tag !== "PhotosphereLink") continue;
+
+    links.push({
+      nodeId: hotspot.data.photosphereID,
+      position: {
+        pitch: degToStr(hotspot.pitch),
+        yaw: degToStr(hotspot.yaw),
+      },
+      data: { tooltip: hotspot.tooltip } as LinkData,
+    });
+  }
+
+  return links;
+}
+
+function convertMap(map: NavMap, center: Point): MapPluginConfig {
   return {
     imageUrl: map.src,
-    center: map.center,
+    center,
     rotation: map.rotation,
     defaultZoom: map.defaultZoom,
     hotspots: map.hotspots.map((hotspot) => ({
@@ -91,123 +130,98 @@ function convertMap(map: NavMap): MapPluginConfig {
 }
 
 export interface PhotosphereViewerProps {
-  photosphere: Photosphere;
-  map: NavMap;
+  vfe: VFE;
 }
 
 function PhotosphereViewer(props: PhotosphereViewerProps) {
-  const [isUserInteracted, setIsUserInteracted] = useState(false);
   const photoSphereRef = React.createRef<ViewerAPI>();
-  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
 
-  // handle change of panoramic image
-  useEffect(() => {
-    void photoSphereRef.current?.setPanorama(props.photosphere.src);
-  }, [props.photosphere.src, photoSphereRef]);
-
-  // handle change of hotspots
-  useEffect(() => {
-    const markers: MarkersPlugin | undefined =
-      photoSphereRef.current?.getPlugin(MarkersPlugin);
-    markers?.setMarkers(convertHotspots(props.photosphere.hotspots));
-  }, [props.photosphere.hotspots, photoSphereRef]);
-
-  // handle change of map
-  useEffect(() => {
-    const map: MapPlugin | undefined =
-      photoSphereRef.current?.getPlugin(MapPlugin);
-
-    const newOptions = convertMap(props.map);
-    if (newOptions.imageUrl) map?.setImage(newOptions.imageUrl);
-    if (newOptions.center) map?.setCenter(newOptions.center);
-    if (newOptions.hotspots) map?.setHotspots(newOptions.hotspots);
-    map?.setOption("rotation", newOptions.rotation);
-  }, [props.map, photoSphereRef]);
+  const defaultPhotosphere =
+    props.vfe.photospheres[props.vfe.defaultPhotosphereID];
+  const [currentPhotosphere, setCurrentPhotosphere] =
+    React.useState<Photosphere>(defaultPhotosphere);
 
   useEffect(() => {
-    const audio = new Audio(audioFile);
-    // Check if theres user interaction
-    if (isUserInteracted && isAudioPlaying) {
-      //Make a new audio object with the imported audio file
-      //Try to play the audio file, have to use void to indicate were not going to promise to handle the returned type
-      void audio.play().catch((e) => {
-        //Debug for errors
-        console.error("Error playing audio:", e);
-      });
-    }
-    //Cleanup function to pause audio when the component unmounts
-    return () => {
-      if (isUserInteracted) {
-        audio.pause();
-      }
-    };
-    //Depends on the isUserInteracted state, reruns if it changes
-  }, [isUserInteracted, isAudioPlaying]);
+    const virtualTour =
+      photoSphereRef.current?.getPlugin<VirtualTourPlugin>(VirtualTourPlugin);
+    void virtualTour?.setCurrentNode(currentPhotosphere.id);
 
-  //Handler function to set the state to true
-  function handleUserInteraction() {
-    setIsUserInteracted(true);
-    setIsAudioPlaying(!isAudioPlaying);
-  }
-
-  //toggles state of audio upon button press
-  function toggleAudio() {
-    setIsAudioPlaying((prevIsAudioPlaying) => !prevIsAudioPlaying);
-  }
-
-  // If I cant get the user interaction forced I made the button
-  if (!isUserInteracted) {
-    return (
-      <div
-        style={{
-          height: "100vh",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <button
-          onClick={handleUserInteraction}
-          style={{ padding: "10px 20px", fontSize: "16px" }}
-        >
-          Start Virtual Environment
-        </button>
-      </div>
-    );
-  }
+    const map = photoSphereRef.current?.getPlugin<MapPlugin>(MapPlugin);
+    map?.setCenter(currentPhotosphere.center);
+  }, [currentPhotosphere, photoSphereRef]);
 
   const plugins: ViewerConfig["plugins"] = [
-    [MarkersPlugin, { markers: convertHotspots(props.photosphere.hotspots) }],
-    [MapPlugin, convertMap(props.map)],
+    [MarkersPlugin, {}],
+    [MapPlugin, convertMap(props.vfe.map, defaultPhotosphere.center)],
+    [
+      VirtualTourPlugin,
+      {
+        renderMode: "markers",
+        getLinkTooltip(_content: string, link: VirtualTourLink): string {
+          return (link.data as LinkData).tooltip;
+        },
+      } as VirtualTourPluginConfig,
+    ],
   ];
 
-  console.log({ plugins });
-  console.log(props.photosphere);
-  console.log(props.map);
+  function handleReady(instance: Viewer) {
+    const virtualTour =
+      instance.getPlugin<VirtualTourPlugin>(VirtualTourPlugin);
+
+    const nodes: VirtualTourNode[] = Object.values(props.vfe.photospheres).map(
+      (p) => {
+        return {
+          id: p.id,
+          panorama: p.src,
+          name: p.id,
+          markers: convertHotspots(p.hotspots),
+          links: convertLinks(p.hotspots),
+        };
+      },
+    );
+
+    virtualTour.setNodes(nodes, defaultPhotosphere.id);
+    virtualTour.addEventListener("node-changed", ({ node }) => {
+      setCurrentPhotosphere(props.vfe.photospheres[node.id]);
+    });
+
+    const map = instance.getPlugin<MapPlugin>(MapPlugin);
+    map.addEventListener("select-hotspot", ({ hotspotId }) => {
+      const hotspot: Hotspot2D | undefined = props.vfe.map.hotspots.find(
+        (hotspot) => hotspot.id === hotspotId,
+      );
+      if (hotspot?.data.tag === "PhotosphereLink") {
+        setCurrentPhotosphere(
+          props.vfe.photospheres[hotspot.data.photosphereID],
+        );
+      }
+    });
+  }
 
   return (
-    //if user already interacted start, then display audio button
-    <div>
-      <button
-        onClick={toggleAudio}
-        style={{
-          position: "absolute",
-          zIndex: 1000,
-          top: "18px", // Adjust this value to change the vertical position
-          left: "1325px", // Adjust this value to change the horizontal position
+    <>
+      <PhotosphereSelector
+        options={Object.keys(props.vfe.photospheres)}
+        value={currentPhotosphere.id}
+        setValue={(id) => {
+          setCurrentPhotosphere(props.vfe.photospheres[id]);
         }}
-      >
-        {isAudioPlaying ? "Pause Audio" : "Play Audio"}
-      </button>
+      />
+
+      {currentPhotosphere.backgroundAudio && (
+        <AudioToggleButton src={currentPhotosphere.backgroundAudio} />
+      )}
 
       <ReactPhotoSphereViewer
+        onReady={handleReady}
         ref={photoSphereRef}
-        src={sampleScene}
+        src={defaultPhotosphere.src}
         plugins={plugins}
         height={"100vh"}
         width={"100%"}
+        navbar={["autorotate", "zoom", "caption", "download", "fullscreen"]}
       />
-    </div>
+    </>
   );
 }
 
