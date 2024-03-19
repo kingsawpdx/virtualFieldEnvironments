@@ -12,13 +12,13 @@ function videoContent(src: string): string {
 </video>`;
 }
 
-function pictureContent(imageSrc: string) {
-  return `
-    <img src="${imageSrc}" alt="Marker Image" style= "max-width:380px; max-height: 500px";/>
-    `;
-}
+// function pictureContent(imageSrc: string) {
+//   return `
+//     <img src="${imageSrc}" alt="Marker Image" style= "max-width:380px; max-height: 500px";/>
+//     `;
+// }
 
-function convertHotspot(hotspot: Hotspot3D) {
+function convertHotspot(hotspot?: Hotspot3D) {
   if (!hotspot) return undefined;
 
   let content: string | undefined;
@@ -94,7 +94,7 @@ export interface PopOverProps {
 }
 
 function PopOver(props: PopOverProps) {
-  const data = convertHotspot(props.hotspot!);
+  const data = convertHotspot(props.hotspot);
 
   return (
     <div>

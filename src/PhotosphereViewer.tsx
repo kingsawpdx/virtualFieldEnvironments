@@ -1,4 +1,4 @@
-import { ViewerConfig } from "@photo-sphere-viewer/core";
+import { Viewer, ViewerConfig } from "@photo-sphere-viewer/core";
 import { MarkerConfig } from "@photo-sphere-viewer/markers-plugin";
 import React, { useEffect, useState } from "react";
 import {
@@ -15,17 +15,17 @@ import sampleScene from "./assets/VFEdata/ERI_Scene6-IMG_20231006_081813_00_122.
 import audioFile from "./assets/VFEdata/Scene12_UnevenStandTop_LS100146.mp3";
 import mapImage from "./assets/VFEdata/map.jpg";
 
-function videoContent(src: string): string {
-  return `<video controls style="max-width: 100%; max-height: 100%">
-  <source src="${src}" type="video/mp4" />
-</video>`;
-}
+// function videoContent(src: string): string {
+//   return `<video controls style="max-width: 100%; max-height: 100%">
+//   <source src="${src}" type="video/mp4" />
+// </video>`;
+// }
 
-function pictureContent(imageSrc: string) {
-  return `
-    <img src="${imageSrc}" alt="Marker Image" style= "max-width:380px; max-height: 500px";/>
-    `;
-}
+// function pictureContent(imageSrc: string) {
+//   return `
+//     <img src="${imageSrc}" alt="Marker Image" style= "max-width:380px; max-height: 500px";/>
+//     `;
+// }
 
 /** Convert yaw/pitch degrees from numbers to strings ending in "deg" */
 function degToStr(val: number): string {
@@ -42,17 +42,17 @@ function convertHotspots(hotspots: Hotspot3D[]): MarkerConfig[] {
   if (hotspots.length == 0) return [];
 
   const markers: MarkerConfig[] = hotspots.map((hotspot) => {
-    let content: string | undefined = undefined;
+    // let content: string | undefined = undefined;
     let icon =
       "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"; // default
 
     switch (hotspot.data.tag) {
       case "Image":
-        content = pictureContent(hotspot.data.src);
+        // content = pictureContent(hotspot.data.src);
         //icon = imgIcon;
         break;
       case "Video":
-        content = videoContent(hotspot.data.src);
+        // content = videoContent(hotspot.data.src);
         icon =
           "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png"; // changed to make linter happy until icons are ready
         break;
@@ -225,9 +225,8 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
     [MapPlugin, convertMap(props.map)],
   ];
 
-  function handleReady(instance: ViewerAPI) {
-    const markerTestPlugin: MarkersPlugin | undefined =
-      instance.getPlugin(MarkersPlugin);
+  function handleReady(instance: Viewer) {
+    const markerTestPlugin = instance.getPlugin<MarkersPlugin>(MarkersPlugin);
 
     markerTestPlugin.addEventListener("select-marker", ({ marker }) => {
       const passMarker = matchHotspot(
