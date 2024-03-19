@@ -143,6 +143,7 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [renderClickedMarker, setRenderClickedMarker] = useState(false);
   const [renderHotspot, setRenderHotspot] = useState<Hotspot3D>();
+  const [disableMarker, setDisableMarker] = useState(true);
 
   // handle change of panoramic image
   useEffect(() => {
@@ -237,7 +238,14 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
 
       setRenderHotspot(passMarker);
       setRenderClickedMarker(true);
+      setDisableMarker(true);
     });
+  }
+
+  function hideMarker(event: MouseEvent) {
+    if (event.target === event.currentTarget) {
+      setRenderClickedMarker(false);
+    }
   }
 
   return (
@@ -254,9 +262,19 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
       >
         {isAudioPlaying ? "Pause Audio" : "Play Audio"}
       </button>
-
       {renderClickedMarker ? (
-        <PopOver renderComponent={true} hotspot={renderHotspot} />
+        <div
+          onClick={(event) => hideMarker(event)}
+          style={{
+            position: "absolute",
+            zIndex: 49,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0,0,0,0.4)",
+          }}
+        >
+          <PopOver hotspot={renderHotspot} />
+        </div>
       ) : null}
 
       <ReactPhotoSphereViewer

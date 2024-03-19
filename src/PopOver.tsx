@@ -57,51 +57,34 @@ function convertHotspot(hotspot: Hotspot3D) {
 
 export interface PopOverProps {
   hotspot: Hotspot3D | undefined;
-  renderComponent: boolean;
 }
 
 function PopOver(props: PopOverProps) {
   const data = convertHotspot(props.hotspot!);
-  const [displayContent, setDisplayContent] = useState(props.renderComponent);
-
-  function hideContent() {
-    setDisplayContent(false);
-  }
 
   return (
-    <div onClick={hideContent}>
-      {displayContent ? (
-        <div
-          style={{
-            position: "absolute",
-            zIndex: 50,
-            background: "rgba(0, 0, 0, 0.3)",
-            width: "100vh",
-            height: "100vh",
-          }}
-        >
-          <div
-            style={{
-              display: "block",
-              marginTop: "30%",
-              marginLeft: "auto",
-              marginRight: "auto",
-              padding: "20px",
-              backgroundColor: "rgb(255,250,250)",
-              width: "60%",
-              borderRadius: "5px",
-              maxHeight: "300px",
-              overflow: "scroll",
-            }}
-          >
-            <h1>{data?.id}</h1>
-            <img
-              style={{ width: "100%", objectFit: "contain" }}
-              src={data?.image}
-            ></img>
-          </div>
-        </div>
-      ) : null}
+    <div
+      style={{
+        position: "absolute",
+        zIndex: 50,
+        left: 0,
+        right: 0,
+        marginTop: "10%",
+        marginLeft: "auto",
+        marginRight: "auto",
+        padding: "20px",
+        backgroundColor: "rgb(255,250,250)",
+        width: "60%",
+        borderRadius: "5px",
+        maxHeight: "300px",
+        overflow: "scroll",
+      }}
+    >
+      <h1>{data?.id}</h1>
+      <img
+        style={{ width: "100%", objectFit: "contain" }}
+        src={data?.image}
+      ></img>
     </div>
   );
 }
