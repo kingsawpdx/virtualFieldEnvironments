@@ -87,16 +87,6 @@ function App() {
       },
     },
     {
-      pitch: 0,
-      yaw: -44,
-      tooltip: "HandSample",
-      data: {
-        tag: "Image",
-        src: HandSample,
-        hotspots: [],
-      },
-    },
-    {
       pitch: 6,
       yaw: 5,
       tooltip: "OutcropTextures",
@@ -125,33 +115,46 @@ function App() {
       },
     },
     {
-      pitch: -2,
-      yaw: -46,
-      tooltip: "CloserLook",
-      data: {
-        tag: "Image",
-        src: CloserLook,
-        hotspots: [],
-      },
-    },
-    {
-      pitch: 0,
-      yaw: -48,
-      tooltip: "SouthSEMComparison",
-      data: {
-        tag: "Image",
-        src: SEMComp,
-        hotspots: [],
-      },
-    },
-    {
       pitch: 2,
       yaw: -46,
       tooltip: "Contact",
       data: {
         tag: "Image",
         src: Contact,
-        hotspots: [],
+        hotspots: [
+          {
+            x: 0,
+            y: 0,
+            tooltip: "HandSample",
+            data: {
+              tag: "Image",
+              src: HandSample,
+              hotspots: [
+                {
+                  x: 0,
+                  y: 0,
+                  tooltip: "CloserLook",
+                  data: {
+                    tag: "Image",
+                    src: CloserLook,
+                    hotspots: [
+                      {
+                        x: 0,
+                        y: 0,
+                        tooltip: "SouthSEMComparison",
+                        data: {
+                          tag: "Image",
+                          src: SEMComp,
+                          hotspots: [],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
       },
     },
     {

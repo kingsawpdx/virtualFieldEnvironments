@@ -255,9 +255,13 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
         {isAudioPlaying ? "Pause Audio" : "Play Audio"}
       </button>
 
-      {renderClickedMarker ? (
-        <PopOver renderComponent={true} hotspot={renderHotspot} />
-      ) : null}
+      <PopOver
+        renderComponent={renderClickedMarker}
+        onClose={() => {
+          setRenderClickedMarker(false);
+        }}
+        hotspot={renderHotspot}
+      />
 
       <ReactPhotoSphereViewer
         onReady={handleReady}

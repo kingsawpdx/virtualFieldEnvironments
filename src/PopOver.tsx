@@ -55,25 +55,55 @@ function convertHotspot(hotspot: Hotspot3D) {
   };
 }
 
+function NestedHotspots(props: { hotspot?: Hotspot3D }) {
+  const [selectedNestedHotspot, setSelectedNestedHotspot] = useState<
+    Hotspot3D | undefined
+  >();
+
+  if (props.hotspot?.data.tag !== "Image") {
+    return <></>;
+  }
+
+  return (
+    <>
+      {props.hotspot.data.hotspots.map((hotspot2D) => (
+        <button
+          key={hotspot2D.tooltip}
+          onClick={() => {
+            setSelectedNestedHotspot({ ...hotspot2D, pitch: 0, yaw: 0 });
+          }}
+        >
+          Open Nested Hotspot: {hotspot2D.tooltip}
+        </button>
+      ))}
+      <PopOver
+        renderComponent={selectedNestedHotspot !== undefined}
+        onClose={() => {
+          setSelectedNestedHotspot(undefined);
+        }}
+        hotspot={selectedNestedHotspot}
+      />
+    </>
+  );
+}
+
 export interface PopOverProps {
   hotspot: Hotspot3D | undefined;
   renderComponent: boolean;
+  onClose: () => void;
 }
 
 function PopOver(props: PopOverProps) {
   const data = convertHotspot(props.hotspot!);
-  const [displayContent, setDisplayContent] = useState(props.renderComponent);
-
-  function hideContent() {
-    setDisplayContent(false);
-  }
 
   return (
-    <div onClick={hideContent}>
-      {displayContent ? (
+    <div>
+      {props.renderComponent ? (
         <div
           style={{
             position: "absolute",
+            left: 0,
+            top: 0,
             zIndex: 50,
             background: "rgba(0, 0, 0, 0.3)",
             width: "100vh",
@@ -83,17 +113,20 @@ function PopOver(props: PopOverProps) {
           <div
             style={{
               display: "block",
-              marginTop: "30%",
+              marginTop: "20%",
               marginLeft: "auto",
               marginRight: "auto",
               padding: "20px",
               backgroundColor: "rgb(255,250,250)",
               width: "60%",
               borderRadius: "5px",
-              maxHeight: "300px",
+              maxHeight: "60%",
               overflow: "scroll",
             }}
           >
+            <button onClick={props.onClose}>Close Hotspot</button>
+            <br />
+            <NestedHotspots hotspot={props.hotspot} />
             <h1>{data?.id}</h1>
             <img
               style={{ width: "100%", objectFit: "contain" }}
