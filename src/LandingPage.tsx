@@ -36,7 +36,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoadTestVFE, onCreateVFE })
         Load Test VFE
       </button>
       <button
-        onClick={onCreateVFE} // Assuming you want to trigger onCreateVFE when this button is clicked
+        onClick={onCreateVFE} 
         style={{
           padding: "10px 20px",
           fontSize: "1rem",

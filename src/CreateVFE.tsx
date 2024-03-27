@@ -1,34 +1,56 @@
 import React, { useState } from "react";
+import { Hotspot3D, NavMap, Photosphere, VFE } from "./DataStructures.ts";
+import PhotosphereViewer from "./PhotosphereViewer.tsx";
+import AppRoot from "./App.tsx";
+
 
 interface CreateVFEFormProps {
-  onCreateVFE: (vfeName: string, panoImage: File) => void;
+  onCreateVFE: (data: VFE) => void;
 }
 
 const CreateVFEForm: React.FC<CreateVFEFormProps> = ({ onCreateVFE }) => {
   const [vfeName, setVFEName] = useState("");
-  const [panoImage, setPanoImage] = useState<File | null>(null);
+  const [panoImage, setPanoImage] = useState("");
 
   const handleCreateVFE = () => {
-    // Here you can perform any necessary validation before creating the VFE
-    // For simplicity, we're just checking if the VFE name is not empty and an image is selected
     if (vfeName.trim() === "" || !panoImage) {
       alert("Please provide a VFE name and select a panorama image.");
       return;
     }
-
-    // Assuming you have a function to create a VFE and you pass the name and image to it
-    onCreateVFE(vfeName, panoImage);
-
+    const data: VFE = {
+      name: vfeName,
+      map: {
+        src: "", // Placeholder for map image
+        rotation: 0, // Placeholder for map rotation
+        defaultZoom: 0, // Placeholder for default zoom
+        hotspots: [], // Placeholder for map hotspots
+      },
+      defaultPhotosphereID: "default", // Placeholder for default photosphere ID
+      photospheres: {
+        default: {
+          id: "default", // Placeholder for photosphere ID
+          src: panoImage, // Panorama image provided by the user
+          center: { x: 0, y: 0 }, // Placeholder for panorama center
+          hotspots: [], // Placeholder for photosphere hotspots
+        },
+      },
+    };
+    onCreateVFE(data);
     // Reset form fields after creating the VFE
-    setVFEName("");
-    setPanoImage(null);
+    //setVFEName("");
+    //setPanoImage("");
+    return data;
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    // You can perform additional checks here if needed
     if (file) {
-      setPanoImage(file);
+      const reader = new FileReader();
+      reader.onload = () => {
+        const imageURL = reader.result as string;
+        setPanoImage(imageURL)
+      }
+      reader.readAsDataURL(file)
     }
   };
 
