@@ -2,9 +2,10 @@ import React from "react";
 
 interface LandingPageProps {
   onLoadTestVFE: () => void;
+  onCreateVFE: () => void;
 }
 
-const LandingPage: React.FC<LandingPageProps> = ({ onLoadTestVFE }) => {
+const LandingPage: React.FC<LandingPageProps> = ({ onLoadTestVFE, onCreateVFE }) => {
   return (
     <div
       style={{
@@ -33,6 +34,22 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoadTestVFE }) => {
         }}
       >
         Load Test VFE
+      </button>
+      <button
+        onClick={onCreateVFE} // Assuming you want to trigger onCreateVFE when this button is clicked
+        style={{
+          padding: "10px 20px",
+          fontSize: "1rem",
+          cursor: "pointer",
+          margin: "20px",
+          borderRadius: "5px",
+          border: "none",
+          background: "#4facfe",
+          color: "white",
+          boxShadow: "0 4px 14px 0 rgba(0, 0, 0, 0.1)",
+        }}
+      >
+        Create VFE
       </button>
     </div>
   );
