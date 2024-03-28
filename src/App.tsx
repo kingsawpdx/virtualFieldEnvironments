@@ -5,6 +5,7 @@ import { VFE } from "./DataStructures.ts";
 import LandingPage from "./LandingPage.tsx";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
 import App from "./Prototype.tsx";
+import PhotosphereEditor from "./PhotosphereEditor.tsx";
 
 // Main component acts as a main entry point for the application
 // Should decide what we are doing, going to LandingPage/Rendering VFE
@@ -36,7 +37,7 @@ const AppRoot = () => {
       {showCreateVFEForm ? (
     <CreateVFEForm onCreateVFE={loadCreatedVFE} />
   ) : vfeData && showApp ? (
-    <PhotosphereViewer vfe={vfeData} />
+    <PhotosphereEditor vfe={vfeData} />
   ) : !vfeData && showApp ? (
     <App />
   ) : (
