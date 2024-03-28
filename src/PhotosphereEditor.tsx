@@ -17,12 +17,15 @@ const PhotosphereEditor: React.FC<PhotosphereEditorProps> = ({ vfe }) => {
           top: "20px",
           display: "flex",
           flexDirection: "column",
+          background: "rgba(255, 255, 255, 0.8)",
+          borderRadius: "8px",
+          padding: "10px",
         }}
       >
         {/* Actual buttons */}
-        <button style={{ margin: "20px 0" }}>Add New Photosphere</button>
-        <button style={{ margin: "20px 0" }}>Add New NavMap</button>
-        <button style={{ margin: "20px 0" }}>Add New Hotspot</button>
+        <button style={{ margin: "10px 0" }}>Add New Photosphere</button>
+        <button style={{ margin: "10px 0" }}>Add New NavMap</button>
+        <button style={{ margin: "10px 0" }}>Add New Hotspot</button>
       </div>
       {/* PhotosphereViewer takes the full screen */}
       <div style={{ width: "100%", height: "100%" }}>
