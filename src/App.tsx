@@ -34,15 +34,17 @@ const AppRoot = () => {
   return (
     <div>
       {showCreateVFEForm ? (
-        <CreateVFEForm onCreateVFE={loadCreatedVFE} />
-      ) : vfeData && showApp ? (
-        <PhotosphereViewer vfe={vfeData} />
-      ) : (
-        <LandingPage
-          onLoadTestVFE={handleLoadTestVFE}
-          onCreateVFE={handleCreateVFE}
-        />
-      )}
+    <CreateVFEForm onCreateVFE={loadCreatedVFE} />
+  ) : vfeData && showApp ? (
+    <PhotosphereViewer vfe={vfeData} />
+  ) : !vfeData && showApp ? (
+    <App />
+  ) : (
+    <LandingPage
+      onLoadTestVFE={handleLoadTestVFE}
+      onCreateVFE={handleCreateVFE}
+    />
+  )}
     </div>
   );
 };
