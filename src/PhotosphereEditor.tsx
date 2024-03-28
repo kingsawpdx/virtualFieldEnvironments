@@ -12,11 +12,11 @@ const PhotosphereEditor: React.FC<PhotosphereEditorProps> = ({ vfe }) => {
       <div
         style={{
           position: "absolute",
-          zIndex: 1000, // Ensure the overlay content appears above the viewer
-          left: "20px", // Adjust as needed for desired overlay position
-          top: "20px", // Adjust as needed for desired overlay position
+          zIndex: 1000, //So this has to be high so it sits ontop of the viewer
+          left: "20px",
+          top: "20px",
           display: "flex",
-          flexDirection: "column", // Stack buttons vertically
+          flexDirection: "column",
         }}
       >
         {/* Actual buttons */}
@@ -24,7 +24,7 @@ const PhotosphereEditor: React.FC<PhotosphereEditorProps> = ({ vfe }) => {
         <button style={{ margin: "20px 0" }}>Add New NavMap</button>
         <button style={{ margin: "20px 0" }}>Add New Hotspot</button>
       </div>
-      {/* PhotosphereViewer taking the full screen */}
+      {/* PhotosphereViewer takes the full screen */}
       <div style={{ width: "100%", height: "100%" }}>
         <PhotosphereViewer vfe={vfe} />
       </div>
