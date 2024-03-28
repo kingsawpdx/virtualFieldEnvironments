@@ -25,10 +25,10 @@ const CreateVFEForm: React.FC<CreateVFEFormProps> = ({ onCreateVFE }) => {
         defaultZoom: 0, // Placeholder for default zoom
         hotspots: [], // Placeholder for map hotspots
       },
-      defaultPhotosphereID: "default", // Placeholder for default photosphere ID
+      defaultPhotosphereID: vfeName, // Placeholder for default photosphere ID
       photospheres: {
-        default: {
-          id: "default", // Placeholder for photosphere ID
+        [vfeName]: {
+          id: vfeName, // Placeholder for photosphere ID
           src: panoImage, // Panorama image provided by the user
           center: { x: 0, y: 0 }, // Placeholder for panorama center
           hotspots: [], // Placeholder for photosphere hotspots
@@ -39,7 +39,7 @@ const CreateVFEForm: React.FC<CreateVFEFormProps> = ({ onCreateVFE }) => {
     // Reset form fields after creating the VFE
     //setVFEName("");
     //setPanoImage("");
-    return data;
+    return <PhotosphereViewer vfe={data} />;
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,7 +60,7 @@ const CreateVFEForm: React.FC<CreateVFEFormProps> = ({ onCreateVFE }) => {
       <div>
         <label htmlFor="vfeName">VFE Name:</label>
         <input
-          type="text"
+          type="string"
           id="vfeName"
           value={vfeName}
           onChange={(e) => setVFEName(e.target.value)}
