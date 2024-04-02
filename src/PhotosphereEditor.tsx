@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 import { VFE } from "./DataStructures.ts";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
 
@@ -33,6 +35,10 @@ const PhotosphereEditor: React.FC<PhotosphereEditorProps> = ({ vfe }) => {
       </div>
     </div>
   );
+};
+
+PhotosphereEditor.propTypes = {
+  vfe: PropTypes.any,
 };
 
 export default PhotosphereEditor;
