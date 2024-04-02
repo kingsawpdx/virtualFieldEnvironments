@@ -4,7 +4,8 @@ import CreateVFEForm from "./CreateVFE.tsx";
 import { VFE } from "./DataStructures.ts";
 import LandingPage from "./LandingPage.tsx";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
-import App from "./Prototype.tsx";
+
+// import App from "./Prototype.tsx";
 
 // Main component acts as a main entry point for the application
 // Should decide what we are doing, going to LandingPage/Rendering VFE
