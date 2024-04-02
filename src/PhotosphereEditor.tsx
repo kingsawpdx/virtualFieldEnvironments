@@ -7,7 +7,7 @@ interface PhotosphereEditorProps {
   vfe: VFE;
 }
 
-const PhotosphereEditor: React.FC<PhotosphereEditorProps> = ({ vfe }) => {
+function PhotosphereEditor({ vfe }: PhotosphereEditorProps): JSX.Element {
   return (
     <div style={{ display: "flex", height: "100vh", position: "relative" }}>
       {/* Overlay container */}
@@ -35,7 +35,7 @@ const PhotosphereEditor: React.FC<PhotosphereEditorProps> = ({ vfe }) => {
       </div>
     </div>
   );
-};
+}
 
 PhotosphereEditor.propTypes = {
   vfe: PropTypes.any,
