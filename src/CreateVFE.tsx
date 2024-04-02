@@ -66,7 +66,9 @@ const CreateVFEForm: React.FC<CreateVFEFormProps> = ({ onCreateVFE }) => {
           type="string"
           id="vfeName"
           value={vfeName}
-          onChange={(e) => setVFEName(e.target.value)}
+          onChange={(e) => {
+            setVFEName(e.target.value);
+          }}
         />
       </div>
       <div>
@@ -75,7 +77,9 @@ const CreateVFEForm: React.FC<CreateVFEFormProps> = ({ onCreateVFE }) => {
           type="string"
           id="photosphereName"
           value={photosphereName}
-          onChange={(e) => setPhotosphereName(e.target.value)}
+          onChange={(e) => {
+            setPhotosphereName(e.target.value);
+          }}
         />
       </div>
       <div>
