@@ -1,11 +1,9 @@
-import React from "react";
-
 interface LandingPageProps {
   onLoadTestVFE: () => void;
   onCreateVFE: () => void;
 }
 
-const LandingPage: React.FC<LandingPageProps> = ({ onLoadTestVFE, onCreateVFE }) => {
+function LandingPage({ onLoadTestVFE, onCreateVFE }: LandingPageProps) {
   return (
     <div
       style={{
@@ -36,7 +34,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoadTestVFE, onCreateVFE })
         Load Test VFE
       </button>
       <button
-        onClick={onCreateVFE} 
+        onClick={onCreateVFE}
         style={{
           padding: "10px 20px",
           fontSize: "1rem",
@@ -53,6 +51,6 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoadTestVFE, onCreateVFE })
       </button>
     </div>
   );
-};
+}
 
 export default LandingPage;
