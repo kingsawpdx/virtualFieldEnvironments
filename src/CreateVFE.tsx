@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 
-import AppRoot from "./App.tsx";
-import { Hotspot3D, NavMap, Photosphere, VFE } from "./DataStructures.ts";
+import { VFE } from "./DataStructures.ts";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
 
 interface CreateVFEFormProps {
