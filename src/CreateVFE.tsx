@@ -7,12 +7,12 @@ interface CreateVFEFormProps {
   onCreateVFE: (data: VFE) => void;
 }
 
-const CreateVFEForm: React.FC<CreateVFEFormProps> = ({ onCreateVFE }) => {
+function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
   const [vfeName, setVFEName] = useState("");
   const [photosphereName, setPhotosphereName] = useState(""); // State for Photosphere Name
   const [panoImage, setPanoImage] = useState("");
 
-  const handleCreateVFE = () => {
+  function handleCreateVFE() {
     if (vfeName.trim() === "" || photosphereName.trim() === "" || !panoImage) {
       alert(
         "Please provide a VFE name, a Photosphere name, and select a panorama image.",
@@ -43,9 +43,9 @@ const CreateVFEForm: React.FC<CreateVFEFormProps> = ({ onCreateVFE }) => {
     //setPhotosphereName(""); // Reset Photosphere Name
     //setPanoImage("");
     return <PhotosphereViewer vfe={data} />;
-  };
+  }
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
@@ -55,7 +55,7 @@ const CreateVFEForm: React.FC<CreateVFEFormProps> = ({ onCreateVFE }) => {
       };
       reader.readAsDataURL(file);
     }
-  };
+  }
 
   return (
     <div>
@@ -94,6 +94,6 @@ const CreateVFEForm: React.FC<CreateVFEFormProps> = ({ onCreateVFE }) => {
       <button onClick={handleCreateVFE}>Create VFE</button>
     </div>
   );
-};
+}
 
 export default CreateVFEForm;
