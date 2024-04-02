@@ -3,11 +3,9 @@ import { useState } from "react";
 import CreateVFEForm from "./CreateVFE.tsx";
 import { VFE } from "./DataStructures.ts";
 import LandingPage from "./LandingPage.tsx";
-import PhotosphereViewer from "./PhotosphereViewer.tsx";
-
-import App from "./Prototype.tsx";
 import PhotosphereEditor from "./PhotosphereEditor.tsx";
->>>>>>> 174399fb7b59ada51981fa621f864fcde80b5577
+// import PhotosphereViewer from "./PhotosphereViewer.tsx";
+import App from "./Prototype.tsx";
 
 // Main component acts as a main entry point for the application
 // Should decide what we are doing, going to LandingPage/Rendering VFE
@@ -37,17 +35,17 @@ const AppRoot = () => {
   return (
     <div>
       {showCreateVFEForm ? (
-    <CreateVFEForm onCreateVFE={loadCreatedVFE} />
-  ) : vfeData && showApp ? (
-    <PhotosphereEditor vfe={vfeData} />
-  ) : !vfeData && showApp ? (
-    <App />
-  ) : (
-    <LandingPage
-      onLoadTestVFE={handleLoadTestVFE}
-      onCreateVFE={handleCreateVFE}
-    />
-  )}
+        <CreateVFEForm onCreateVFE={loadCreatedVFE} />
+      ) : vfeData && showApp ? (
+        <PhotosphereEditor vfe={vfeData} />
+      ) : !vfeData && showApp ? (
+        <App />
+      ) : (
+        <LandingPage
+          onLoadTestVFE={handleLoadTestVFE}
+          onCreateVFE={handleCreateVFE}
+        />
+      )}
     </div>
   );
 };
