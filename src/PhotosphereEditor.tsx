@@ -1,3 +1,6 @@
+import { useState } from "react";
+
+import AddPhotosphere from "./AddPhotosphere.tsx";
 import { VFE } from "./DataStructures.ts";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
 
@@ -6,13 +9,29 @@ interface PhotosphereEditorProps {
 }
 
 function PhotosphereEditor({ vfe }: PhotosphereEditorProps): JSX.Element {
+  //Basic states for each component, its basically just a boolean
+  const [showAddPhotosphere, setShowAddPhotosphere] = useState(false);
+  //Create a useState for your component
+
+  //Reset all states so we dont have issues with handling different components at the same time
+  function resetStates() {
+    setShowAddPhotosphere(false);
+    //Dont forget to reset your usestate!
+  }
+
+  //This function is where we render the actual component based on the useState
+  function renderActiveComponent() {
+    if (showAddPhotosphere) return <AddPhotosphere />;
+    //Below this you will have your conditional for your own component, ie AddNavmap/AddHotspot
+    return null;
+  }
+
   return (
     <div style={{ display: "flex", height: "100vh", position: "relative" }}>
-      {/* Overlay container */}
       <div
         style={{
           position: "absolute",
-          zIndex: 1000, //So this has to be high so it sits ontop of the viewer
+          zIndex: 1000,
           left: "20px",
           top: "20px",
           display: "flex",
@@ -22,14 +41,37 @@ function PhotosphereEditor({ vfe }: PhotosphereEditorProps): JSX.Element {
           padding: "10px",
         }}
       >
-        {/* Actual buttons */}
-        <button style={{ margin: "10px 0" }}>Add New Photosphere</button>
-        <button style={{ margin: "10px 0" }}>Add New NavMap</button>
-        <button style={{ margin: "10px 0" }}>Add New Hotspot</button>
+        <button
+          style={{ margin: "10px 0" }}
+          onClick={() => {
+            resetStates();
+            setShowAddPhotosphere(true);
+          }}
+        >
+          Add New Photosphere
+        </button>
+        <button
+          style={{ margin: "10px 0" }}
+          onClick={() => {
+            resetStates();
+            //Call your setShowAddNavmap function to set the state and display the function
+          }}
+        >
+          Add New NavMap
+        </button>
+        <button
+          style={{ margin: "10px 0" }}
+          onClick={() => {
+            resetStates();
+            //Call your setShowAddHotspot function to set the state and display the function
+          }}
+        >
+          Add New Hotspot
+        </button>
       </div>
-      {/* PhotosphereViewer takes the full screen */}
       <div style={{ width: "100%", height: "100%" }}>
         <PhotosphereViewer vfe={vfe} />
+        {renderActiveComponent()}
       </div>
     </div>
   );
