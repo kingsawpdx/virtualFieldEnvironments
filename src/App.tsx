@@ -31,22 +31,24 @@ function AppRoot() {
     setShowCreateVFEForm(false);
   }
 
-  return (
-    <div>
-      {showCreateVFEForm ? (
-        <CreateVFEForm onCreateVFE={loadCreatedVFE} />
-      ) : vfeData && showApp ? (
-        <PhotosphereEditor vfe={vfeData} />
-      ) : !vfeData && showApp ? (
-        <App />
-      ) : (
+  function renderComponent() {
+    if (showCreateVFEForm) {
+      return <CreateVFEForm onCreateVFE={loadCreatedVFE} />;
+    } else if (vfeData && showApp) {
+      return <PhotosphereEditor vfe={vfeData} />;
+    } else if (!vfeData && showApp) {
+      return <App />;
+    } else {
+      return (
         <LandingPage
           onLoadTestVFE={handleLoadTestVFE}
           onCreateVFE={handleCreateVFE}
         />
-      )}
-    </div>
-  );
+      );
+    }
+  }
+
+  return <div>{renderComponent()}</div>;
 }
 
 export default AppRoot;

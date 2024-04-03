@@ -1,5 +1,3 @@
-import PropTypes from "prop-types";
-
 import { VFE } from "./DataStructures.ts";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
 
@@ -36,9 +34,5 @@ function PhotosphereEditor({ vfe }: PhotosphereEditorProps): JSX.Element {
     </div>
   );
 }
-
-PhotosphereEditor.propTypes = {
-  vfe: PropTypes.any,
-};
 
 export default PhotosphereEditor;

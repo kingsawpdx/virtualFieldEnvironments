@@ -14,13 +14,3 @@ if (rootElement) {
 } else {
   console.error("root element is missing");
 }
-
-/*if (root !== null) {
-  ReactDOM.createRoot(root).render(
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>,
-  );
-} else {
-  console.error("root element is missing");
-}*/
