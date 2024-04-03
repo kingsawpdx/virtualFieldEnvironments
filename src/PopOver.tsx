@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Hotspot3D } from "./DataStructures";
+import { Hotspot2D, Hotspot3D, HotspotData } from "./DataStructures";
 
 function degToStr(val: number): string {
   return String(val) + "deg";
@@ -18,19 +18,27 @@ function pictureContent(imageSrc: string) {
     `;
 }
 
-function convertHotspot(hotspot: Hotspot3D) {
+function convertHotspot(hotspot: HotspotData) {
   if (!hotspot) return undefined;
 
   let content: string | undefined;
 
-  switch (hotspot.data.tag) {
+  switch (hotspot.tag) {
     case "Image":
       //content = pictureContent(hotspot.data.src);
-      content = hotspot.data.src;
-      //icon = imgIcon;
+      return (
+        <div>
+          <img>Next hotspot</img>
+          <img
+            style={{ width: "100%", objectFit: "contain" }}
+            src={hotspot?.src}
+          ></img>
+        </div>
+      );
+
       break;
     case "Video":
-      content = videoContent(hotspot.data.src);
+      content = videoContent(hotspot.src);
       //icon =
       //  "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png"; // changed to make linter happy until icons are ready
       break;
@@ -45,22 +53,15 @@ function convertHotspot(hotspot: Hotspot3D) {
     default:
       break;
   }
-
-  return {
-    id: hotspot.tooltip,
-    image: content,
-    size: { width: 64, height: 64 },
-    position: { yaw: degToStr(hotspot.yaw), pitch: degToStr(hotspot.pitch) },
-    tooltip: hotspot.tooltip,
-  };
 }
 
 export interface PopOverProps {
-  hotspot: Hotspot3D | undefined;
+  hotspotData: HotspotData;
+  title: string;
 }
 
 function PopOver(props: PopOverProps) {
-  const data = convertHotspot(props.hotspot!);
+  //const data = convertHotspot(props.hotspot!);
 
   return (
     <div
@@ -80,11 +81,9 @@ function PopOver(props: PopOverProps) {
         overflow: "scroll",
       }}
     >
-      <h1>{data?.id}</h1>
-      <img
-        style={{ width: "100%", objectFit: "contain" }}
-        src={data?.image}
-      ></img>
+      <h1>{props.title}</h1>
+
+      {convertHotspot(props.hotspotData)}
     </div>
   );
 }

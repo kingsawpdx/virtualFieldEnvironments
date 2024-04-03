@@ -9,7 +9,7 @@ import {
   ViewerAPI,
 } from "react-photo-sphere-viewer";
 
-import { Hotspot3D, NavMap, Photosphere } from "./DataStructures";
+import { Hotspot3D, HotspotData, NavMap, Photosphere } from "./DataStructures";
 import PopOver from "./PopOver";
 import sampleScene from "./assets/VFEdata/ERI_Scene6-IMG_20231006_081813_00_122.jpg";
 import audioFile from "./assets/VFEdata/Scene12_UnevenStandTop_LS100146.mp3";
@@ -237,7 +237,6 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
       );
 
       setRenderHotspot(passMarker);
-      setRenderClickedMarker(true);
       setDisableMarker(true);
     });
   }
@@ -262,9 +261,9 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
       >
         {isAudioPlaying ? "Pause Audio" : "Play Audio"}
       </button>
-      {renderClickedMarker ? (
+      {renderHotspot && (
         <div
-          onClick={(event) => hideMarker(event)}
+          onClick={() => setRenderHotspot(undefined)}
           style={{
             position: "absolute",
             zIndex: 49,
@@ -273,9 +272,12 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
             backgroundColor: "rgba(0,0,0,0.4)",
           }}
         >
-          <PopOver hotspot={renderHotspot} />
+          <PopOver
+            hotspotData={renderHotspot.data}
+            title={renderHotspot.tooltip}
+          />
         </div>
-      ) : null}
+      )}
 
       <ReactPhotoSphereViewer
         onReady={handleReady}
