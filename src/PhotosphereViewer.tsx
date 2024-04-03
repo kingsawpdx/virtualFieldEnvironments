@@ -263,7 +263,6 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
       </button>
       {renderHotspot && (
         <div
-          onClick={() => setRenderHotspot(undefined)}
           style={{
             position: "absolute",
             zIndex: 49,
@@ -272,6 +271,13 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
             backgroundColor: "rgba(0,0,0,0.4)",
           }}
         >
+          <button
+            onClick={() => {
+              setRenderHotspot(undefined);
+            }}
+          >
+            Close
+          </button>
           <PopOver
             hotspotData={renderHotspot.data}
             title={renderHotspot.tooltip}
