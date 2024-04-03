@@ -20,7 +20,7 @@ function PhotosphereEditor({ vfe }: PhotosphereEditorProps): JSX.Element {
   }
 
   //This function is where we render the actual component based on the useState
-  function renderActiveComponent() {
+  function ActiveComponent() {
     if (showAddPhotosphere) return <AddPhotosphere />;
     //Below this you will have your conditional for your own component, ie AddNavmap/AddHotspot
     return null;
@@ -71,7 +71,7 @@ function PhotosphereEditor({ vfe }: PhotosphereEditorProps): JSX.Element {
       </div>
       <div style={{ width: "100%", height: "100%" }}>
         <PhotosphereViewer vfe={vfe} />
-        {renderActiveComponent()}
+        <ActiveComponent />
       </div>
     </div>
   );
