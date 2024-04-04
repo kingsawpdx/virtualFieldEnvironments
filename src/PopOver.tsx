@@ -20,23 +20,20 @@ import { Hotspot2D, Hotspot3D, HotspotData } from "./DataStructures";
 
 interface HotspotContentProps {
   hotspot: HotspotData;
+  pushHotspot(add: Hotspot2D): void;
+  popHotspot(): void;
 }
 
 function HotspotContent(props: HotspotContentProps) {
-  const [selectedHotspot, setSelectedHotspot] = useState<Hotspot2D | undefined>(
-    undefined,
-  );
-
   switch (props.hotspot.tag) {
     case "Image": {
-      //content = pictureContent(hotspot.data.src);
       return (
         <>
           {props.hotspot.hotspots.map((hotspot2D) => (
             <button
               key={hotspot2D.tooltip}
               onClick={() => {
-                setSelectedHotspot(hotspot2D);
+                props.pushHotspot(hotspot2D);
               }}
             >
               Nested Hotspot: {hotspot2D.tooltip}
@@ -46,18 +43,10 @@ function HotspotContent(props: HotspotContentProps) {
             style={{ width: "100%", objectFit: "contain" }}
             src={props.hotspot.src}
           ></img>
-          {selectedHotspot && (
-            <PopOver
-              title={selectedHotspot.tooltip}
-              hotspotData={selectedHotspot.data}
-            ></PopOver>
-          )}
         </>
       );
     }
     case "Video":
-      // content = videoContent(hotspot.src);
-      //icon =
       //  "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png"; // changed to make linter happy until icons are ready
       break;
     case "Audio":
@@ -76,11 +65,11 @@ function HotspotContent(props: HotspotContentProps) {
 export interface PopOverProps {
   hotspotData: HotspotData;
   title: string;
+  pushHotspot(add: Hotspot2D): void;
+  popHotspot(): void;
 }
 
 function PopOver(props: PopOverProps) {
-  //const data = convertHotspot(props.hotspot!);
-
   return (
     <div
       style={{
@@ -102,7 +91,11 @@ function PopOver(props: PopOverProps) {
     >
       <h1>{props.title}</h1>
 
-      <HotspotContent hotspot={props.hotspotData} />
+      <HotspotContent
+        hotspot={props.hotspotData}
+        pushHotspot={props.pushHotspot}
+        popHotspot={props.popHotspot}
+      />
     </div>
   );
 }

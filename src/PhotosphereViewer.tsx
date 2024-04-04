@@ -1,6 +1,6 @@
 import { ViewerConfig } from "@photo-sphere-viewer/core";
 import { MarkerConfig } from "@photo-sphere-viewer/markers-plugin";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   MapPlugin,
   MapPluginConfig,
@@ -9,7 +9,13 @@ import {
   ViewerAPI,
 } from "react-photo-sphere-viewer";
 
-import { Hotspot3D, HotspotData, NavMap, Photosphere } from "./DataStructures";
+import {
+  Hotspot2D,
+  Hotspot3D,
+  HotspotData,
+  NavMap,
+  Photosphere,
+} from "./DataStructures";
 import PopOver from "./PopOver";
 import sampleScene from "./assets/VFEdata/ERI_Scene6-IMG_20231006_081813_00_122.jpg";
 import audioFile from "./assets/VFEdata/Scene12_UnevenStandTop_LS100146.mp3";
@@ -141,9 +147,10 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
   const [isUserInteracted, setIsUserInteracted] = useState(false);
   const photoSphereRef = React.createRef<ViewerAPI>();
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
-  const [renderClickedMarker, setRenderClickedMarker] = useState(false);
-  const [renderHotspot, setRenderHotspot] = useState<Hotspot3D>();
-  const [disableMarker, setDisableMarker] = useState(true);
+
+  const [hotspotArray, setHotspotArray] = useState<(Hotspot3D | Hotspot2D)[]>(
+    [],
+  );
 
   // handle change of panoramic image
   useEffect(() => {
@@ -236,16 +243,15 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
         props.photosphere.hotspots,
       );
 
-      setRenderHotspot(passMarker);
-      setDisableMarker(true);
+      setHotspotArray([passMarker]);
     });
   }
 
-  function hideMarker(event: MouseEvent) {
-    if (event.target === event.currentTarget) {
-      setRenderClickedMarker(false);
-    }
-  }
+  // function hideMarker(event: MouseEvent) {
+  //   if (event.target === event.currentTarget) {
+  //     setRenderClickedMarker(false);
+  //   }
+  // }
 
   return (
     //if user already interacted start, then display audio button
@@ -261,7 +267,7 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
       >
         {isAudioPlaying ? "Pause Audio" : "Play Audio"}
       </button>
-      {renderHotspot && (
+      {hotspotArray.length > 0 && (
         <div
           style={{
             position: "absolute",
@@ -273,14 +279,20 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
         >
           <button
             onClick={() => {
-              setRenderHotspot(undefined);
+              setHotspotArray(hotspotArray.slice(0, -1));
             }}
           >
             Close
           </button>
           <PopOver
-            hotspotData={renderHotspot.data}
-            title={renderHotspot.tooltip}
+            hotspotData={hotspotArray[hotspotArray.length - 1].data}
+            title={hotspotArray[hotspotArray.length - 1].tooltip}
+            pushHotspot={(add: Hotspot2D) => {
+              setHotspotArray([...hotspotArray, add]);
+            }}
+            popHotspot={() => {
+              setHotspotArray(hotspotArray.slice(0, -1));
+            }}
           />
         </div>
       )}
