@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import AddPhotosphere from "./AddPhotosphere.tsx";
+import AddPhotosphere from "./buttons/AddPhotosphere.tsx";
 import { VFE } from "./DataStructures.ts";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
 
@@ -67,6 +67,15 @@ function PhotosphereEditor({ vfe }: PhotosphereEditorProps): JSX.Element {
           }}
         >
           Add New Hotspot
+        </button>
+        <button
+          style={{ margin: "10px 0" }}
+          onClick={() => {
+            resetStates();
+            //Call your setShowAddNavmap function to set the state and display the function
+          }}
+        >
+          Add/Change Audio
         </button>
       </div>
       <div style={{ width: "100%", height: "100%" }}>

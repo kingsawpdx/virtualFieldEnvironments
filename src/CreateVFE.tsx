@@ -11,6 +11,7 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
   const [vfeName, setVFEName] = useState("");
   const [photosphereName, setPhotosphereName] = useState(""); // State for Photosphere Name
   const [panoImage, setPanoImage] = useState("");
+  const [audio, setAudio] = useState("")
 
   function handleCreateVFE() {
     if (vfeName.trim() === "" || photosphereName.trim() === "" || !panoImage) {
@@ -34,6 +35,7 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
           src: panoImage, // Panorama image provided by the user
           center: { x: 0, y: 0 }, // Placeholder for panorama center
           hotspots: [], // Placeholder for photosphere hotspots
+          backgroundAudio: audio
         },
       },
     };
@@ -89,6 +91,16 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
           id="panoImage"
           accept="image/*"
           onChange={handleImageChange}
+        />
+      </div>
+      <div>
+        <label htmlFor="panoImage">Add Audio (Optional):</label>
+        <input
+          type="file"
+          id="audio"
+          onChange={(e) => {
+            setAudio(e.target.value);
+          }}
         />
       </div>
       <button onClick={handleCreateVFE}>Create VFE</button>
