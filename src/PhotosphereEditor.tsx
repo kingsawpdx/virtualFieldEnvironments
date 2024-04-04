@@ -5,12 +5,16 @@ import { Photosphere, VFE } from "./DataStructures.ts";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
 
 interface PhotosphereEditorProps {
-  intialVFE: VFE;
+  initialVFE: VFE;
+  onUpdateVFE: (updatedVFE: VFE) => void;
 }
 
-function PhotosphereEditor({ intialVFE }: PhotosphereEditorProps): JSX.Element {
+function PhotosphereEditor({
+  initialVFE,
+  onUpdateVFE,
+}: PhotosphereEditorProps): JSX.Element {
   //Basic states for each component, its basically just a boolean
-  const [vfe, setVFE] = useState<VFE>(intialVFE);
+  const [vfe, setVFE] = useState<VFE>(initialVFE);
   const [showAddPhotosphere, setShowAddPhotosphere] = useState(false);
   //Create a useState for your component
 
@@ -22,8 +26,10 @@ function PhotosphereEditor({ intialVFE }: PhotosphereEditorProps): JSX.Element {
         [newPhotosphere.id]: newPhotosphere,
       },
     };
-    setVFE(updatedVFE); // Assuming you have a state setter named setVFE
-    setShowAddPhotosphere(false); // Assuming setShowAddPhotosphere is a state setter
+    console.log("Updated VFE (local state in PhotosphereEditor):", updatedVFE);
+    setVFE(updatedVFE); //Update the local VFE state
+    onUpdateVFE(updatedVFE); // Propagate the change to the AppRoot
+    setShowAddPhotosphere(false);
   }
 
   //Reset all states so we dont have issues with handling different components at the same time
@@ -84,7 +90,7 @@ function PhotosphereEditor({ intialVFE }: PhotosphereEditorProps): JSX.Element {
         </button>
       </div>
       <div style={{ width: "100%", height: "100%" }}>
-        <PhotosphereViewer vfe={vfe} />
+        <PhotosphereViewer key={vfe.name} vfe={vfe} />
         <ActiveComponent />
       </div>
     </div>

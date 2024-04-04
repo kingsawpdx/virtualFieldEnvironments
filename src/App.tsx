@@ -31,11 +31,18 @@ function AppRoot() {
     setShowCreateVFEForm(false);
   }
 
+  function handleUpdateVFE(updatedVFE: VFE) {
+    console.log("Updated VFE (in AppRoot):", updatedVFE);
+    setVFEData(updatedVFE);
+  }
+
   function renderComponent() {
     if (showCreateVFEForm) {
       return <CreateVFEForm onCreateVFE={loadCreatedVFE} />;
     } else if (vfeData && showApp) {
-      return <PhotosphereEditor intialVFE={vfeData} />;
+      return (
+        <PhotosphereEditor initialVFE={vfeData} onUpdateVFE={handleUpdateVFE} />
+      );
     } else if (!vfeData && showApp) {
       return <App />;
     } else {
