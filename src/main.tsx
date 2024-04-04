@@ -1,14 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 
-import App from "./App.tsx";
+import AppRoot from "./App.tsx";
 import "./index.css";
 
-const root = document.getElementById("root");
-if (root !== null) {
-  ReactDOM.createRoot(root).render(
+const rootElement = document.getElementById("root");
+if (rootElement) {
+  ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
-      <App />
+      <AppRoot /> {/* Updated component reference */}
     </React.StrictMode>,
   );
 } else {

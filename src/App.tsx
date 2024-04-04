@@ -1,202 +1,54 @@
-import { Hotspot3D, NavMap, Photosphere, VFE } from "./DataStructures.ts";
-import VFEViewer from "./VFEViewer.tsx";
-import Contact from "./assets/VFEdata/Contact.png";
-import SampleScene from "./assets/VFEdata/ERI_Scene6-IMG_20231006_081813_00_122.jpg";
-import SouthwaterFront from "./assets/VFEdata/SouthwaterFront.png";
-import CloserLook from "./assets/VFEdata/a-closer-look.jpg";
-import CoolLog from "./assets/VFEdata/cool_log.jpeg";
-import Flowers from "./assets/VFEdata/flowers.png";
-import HandSample from "./assets/VFEdata/hand_sample.png";
-import LogNearShoreline from "./assets/VFEdata/logNEARshoreline.png";
-import Mushroom from "./assets/VFEdata/mushroom.png";
-import OutcropWide from "./assets/VFEdata/outcropWideView.png";
-import OutcropTextures from "./assets/VFEdata/outcrop_textures.mp4";
-import Paddlers from "./assets/VFEdata/paddlers.mp4";
-import ShorelineSOUTH from "./assets/VFEdata/shorelineSOUTH.mp4";
-import SmallPool from "./assets/VFEdata/small_pool.jpg";
-import SEMComp from "./assets/VFEdata/southSEMcomp.png";
+import { useState } from "react";
 
-function App() {
-  const hotspotArray: Hotspot3D[] = [
-    {
-      pitch: 5,
-      yaw: -5,
-      tooltip: "OutcropWideView",
-      data: {
-        tag: "Image",
-        src: OutcropWide,
-        hotspots: {},
-      },
-    },
-    {
-      pitch: -3,
-      yaw: 18,
-      tooltip: "Flowers",
-      data: {
-        tag: "Image",
-        src: Flowers,
-        hotspots: {},
-      },
-    },
-    {
-      pitch: -32,
-      yaw: 172,
-      tooltip: "ShorelineSOUTH.mp4",
-      data: {
-        tag: "Video",
-        src: ShorelineSOUTH,
-      },
-    },
-    {
-      pitch: -10,
-      yaw: -175,
-      tooltip: "Paddlers.mp4",
-      data: {
-        tag: "Video",
-        src: Paddlers,
-      },
-    },
-    {
-      pitch: -13,
-      yaw: 100,
-      tooltip: "SmallPool",
-      data: {
-        tag: "Image",
-        src: SmallPool,
-        hotspots: {},
-      },
-    },
-    {
-      pitch: -25,
-      yaw: -40,
-      tooltip: "LogNearShoreline",
-      data: {
-        tag: "Image",
-        src: LogNearShoreline,
-        hotspots: {},
-      },
-    },
-    {
-      pitch: -17,
-      yaw: -33,
-      tooltip: "CoolLog",
-      data: {
-        tag: "Image",
-        src: CoolLog,
-        hotspots: {},
-      },
-    },
-    {
-      pitch: 6,
-      yaw: 5,
-      tooltip: "OutcropTextures",
-      data: {
-        tag: "Video",
-        src: OutcropTextures,
-      },
-    },
-    {
-      pitch: -12,
-      yaw: -37,
-      tooltip: "How did these huge logs get here?",
-      data: {
-        tag: "Doc",
-        content: "How did these huge logs get here?",
-      },
-    },
-    {
-      pitch: 2,
-      yaw: -19,
-      tooltip: "Mushroom",
-      data: {
-        tag: "Image",
-        src: Mushroom,
-        hotspots: {},
-      },
-    },
-    {
-      pitch: 2,
-      yaw: -46,
-      tooltip: "Contact",
-      data: {
-        tag: "Image",
-        src: Contact,
-        hotspots: {
-          HandSample: {
-            x: 0,
-            y: 0,
-            tooltip: "HandSample",
-            data: {
-              tag: "Image",
-              src: HandSample,
-              hotspots: {
-                CloserLook: {
-                  x: 0,
-                  y: 0,
-                  tooltip: "CloserLook",
-                  data: {
-                    tag: "Image",
-                    src: CloserLook,
-                    hotspots: {
-                      SouthSEMComparison: {
-                        x: 0,
-                        y: 0,
-                        tooltip: "SouthSEMComparison",
-                        data: {
-                          tag: "Image",
-                          src: SEMComp,
-                          hotspots: {},
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-    {
-      pitch: -1,
-      yaw: -25,
-      tooltip: "SouthWaterfront",
-      data: {
-        tag: "Image",
-        src: SouthwaterFront,
-        hotspots: {},
-      },
-    },
-  ];
+import CreateVFEForm from "./CreateVFE.tsx";
+import { VFE } from "./DataStructures.ts";
+import LandingPage from "./LandingPage.tsx";
+import PhotosphereEditor from "./PhotosphereEditor.tsx";
+import App from "./Prototype.tsx";
 
-  const prototype: Photosphere = {
-    id: "prototypeSphere",
-    src: SampleScene,
-    hotspots: Object.fromEntries(
-      hotspotArray.map((hotspot) => [hotspot.tooltip, hotspot]),
-    ),
-    backgroundAudio: "",
-  };
+// Main component acts as a main entry point for the application
+// Should decide what we are doing, going to LandingPage/Rendering VFE
+function AppRoot() {
+  // Decide state, should manage whether the VFE should be displayed or the LandingPage should be displayed
+  const [showApp, setShowApp] = useState(false);
+  const [showCreateVFEForm, setShowCreateVFEForm] = useState(false);
+  const [vfeData, setVFEData] = useState<VFE | null>(null);
 
-  const alternative: Photosphere = {
-    id: "alternativeSphere",
-    src: OutcropWide, // TODO: replace with an actual panoramic image that is different from sampleScene
-    hotspots: {},
-    backgroundAudio: "",
-  };
+  //Create a function to set useState true
+  function handleLoadTestVFE() {
+    setShowApp(true);
+    setShowCreateVFEForm(false);
+  }
 
-  const map: NavMap = {
-    src: "map src",
-    hotspots: [],
-  };
+  function handleCreateVFE() {
+    setShowCreateVFEForm(true);
+    setShowApp(false);
+  }
 
-  const data: VFE = {
-    name: "prototypeElkIslandVFE",
-    map: map,
-    photospheres: [prototype, alternative],
-  };
+  function loadCreatedVFE(data: VFE) {
+    setVFEData(data);
+    setShowApp(true);
+    setShowCreateVFEForm(false);
+  }
 
-  return <VFEViewer vfe={data} />;
+  function renderComponent() {
+    if (showCreateVFEForm) {
+      return <CreateVFEForm onCreateVFE={loadCreatedVFE} />;
+    } else if (vfeData && showApp) {
+      return <PhotosphereEditor vfe={vfeData} />;
+    } else if (!vfeData && showApp) {
+      return <App />;
+    } else {
+      return (
+        <LandingPage
+          onLoadTestVFE={handleLoadTestVFE}
+          onCreateVFE={handleCreateVFE}
+        />
+      );
+    }
+  }
+
+  return <div>{renderComponent()}</div>;
 }
 
-export default App;
+export default AppRoot;
