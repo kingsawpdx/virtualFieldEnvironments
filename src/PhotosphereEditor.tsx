@@ -16,6 +16,7 @@ function PhotosphereEditor({
   //Basic states for each component, its basically just a boolean
   const [vfe, setVFE] = useState<VFE>(initialVFE);
   const [showAddPhotosphere, setShowAddPhotosphere] = useState(false);
+  const [updateTrigger, setUpdateTrigger] = useState(0);
   //Create a useState for your component
 
   function handleAddPhotosphere(newPhotosphere: Photosphere) {
@@ -30,6 +31,7 @@ function PhotosphereEditor({
     setVFE(updatedVFE); //Update the local VFE state
     onUpdateVFE(updatedVFE); // Propagate the change to the AppRoot
     setShowAddPhotosphere(false);
+    setUpdateTrigger((prev) => prev + 1);
   }
 
   //Reset all states so we dont have issues with handling different components at the same time
@@ -90,7 +92,7 @@ function PhotosphereEditor({
         </button>
       </div>
       <div style={{ width: "100%", height: "100%" }}>
-        <PhotosphereViewer key={vfe.name} vfe={vfe} />
+        <PhotosphereViewer key={updateTrigger} vfe={vfe} />
         <ActiveComponent />
       </div>
     </div>
