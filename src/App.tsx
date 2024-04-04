@@ -35,7 +35,7 @@ function AppRoot() {
     if (showCreateVFEForm) {
       return <CreateVFEForm onCreateVFE={loadCreatedVFE} />;
     } else if (vfeData && showApp) {
-      return <PhotosphereEditor vfe={vfeData} />;
+      return <PhotosphereEditor intialVFE={vfeData} />;
     } else if (!vfeData && showApp) {
       return <App />;
     } else {
