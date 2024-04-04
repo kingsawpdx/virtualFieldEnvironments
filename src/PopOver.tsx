@@ -1,3 +1,6 @@
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { Button } from "@mui/material";
+
 import { Hotspot2D, HotspotData } from "./DataStructures";
 
 interface HotspotContentProps {
@@ -47,6 +50,7 @@ function HotspotContent(props: HotspotContentProps) {
 export interface PopOverProps {
   hotspotData: HotspotData;
   title: string;
+  arrayLength: number;
   pushHotspot: (add: Hotspot2D) => void;
   popHotspot: () => void;
 }
@@ -67,10 +71,27 @@ function PopOver(props: PopOverProps) {
         backgroundColor: "rgb(255,250,250)",
         width: "60vw",
         borderRadius: "5px",
-        maxHeight: "300px",
+        maxHeight: "400px",
         overflow: "scroll",
       }}
     >
+      {props.arrayLength > 1 && (
+        // <button
+        //   onClick={() => {
+        //     setHotspotArray(hotspotArray.slice(0, -1));
+        //   }}
+        // >
+        //   Close
+        // </button>
+        <Button
+          onClick={() => {
+            props.popHotspot();
+          }}
+          variant="contained"
+        >
+          <ArrowBackIcon />
+        </Button>
+      )}
       <h1>{props.title}</h1>
 
       <HotspotContent

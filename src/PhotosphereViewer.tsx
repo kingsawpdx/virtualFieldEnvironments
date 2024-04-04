@@ -193,6 +193,12 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
     });
   }
 
+  function closePopover(event: MouseEvent) {
+    if (event.target === event.currentTarget) {
+      setHotspotArray(hotspotArray.slice(hotspotArray.length));
+    }
+  }
+
   return (
     <>
       <PhotosphereSelector
@@ -205,6 +211,7 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
 
       {hotspotArray.length > 0 && (
         <div
+          onClick={(event) => closePopover(event)}
           style={{
             position: "absolute",
             zIndex: 49,
@@ -213,16 +220,28 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
             backgroundColor: "rgba(0,0,0,0.4)",
           }}
         >
-          <button
-            onClick={() => {
-              setHotspotArray(hotspotArray.slice(0, -1));
-            }}
-          >
-            Close
-          </button>
+          {/* {hotspotArray.length > 1 && (
+            // <button
+            //   onClick={() => {
+            //     setHotspotArray(hotspotArray.slice(0, -1));
+            //   }}
+            // >
+            //   Close
+            // </button>
+            <Button
+              onClick={() => {
+                setHotspotArray(hotspotArray.slice(0, -1));
+              }}
+              variant="contained"
+            >
+              Close
+            </Button>
+          )} */}
+
           <PopOver
             hotspotData={hotspotArray[hotspotArray.length - 1].data}
             title={hotspotArray[hotspotArray.length - 1].tooltip}
+            arrayLength={hotspotArray.length}
             pushHotspot={(add: Hotspot2D) => {
               setHotspotArray([...hotspotArray, add]);
             }}
