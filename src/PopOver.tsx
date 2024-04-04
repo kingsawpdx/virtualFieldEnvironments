@@ -1,27 +1,9 @@
-import { useState } from "react";
-
-import { Hotspot2D, Hotspot3D, HotspotData } from "./DataStructures";
-
-// function degToStr(val: number): string {
-//   return String(val) + "deg";
-// }
-
-// function videoContent(src: string): string {
-//   return `<video controls style="max-width: 100%; max-height: 100%">
-//   <source src="${src}" type="video/mp4" />
-// </video>`;
-// }
-
-// function pictureContent(imageSrc: string) {
-//   return `
-//     <img src="${imageSrc}" alt="Marker Image" style= "max-width:380px; max-height: 500px";/>
-//     `;
-// }
+import { Hotspot2D, HotspotData } from "./DataStructures";
 
 interface HotspotContentProps {
   hotspot: HotspotData;
-  pushHotspot(add: Hotspot2D): void;
-  popHotspot(): void;
+  pushHotspot: (add: Hotspot2D) => void;
+  popHotspot: () => void;
 }
 
 function HotspotContent(props: HotspotContentProps) {
@@ -65,8 +47,8 @@ function HotspotContent(props: HotspotContentProps) {
 export interface PopOverProps {
   hotspotData: HotspotData;
   title: string;
-  pushHotspot(add: Hotspot2D): void;
-  popHotspot(): void;
+  pushHotspot: (add: Hotspot2D) => void;
+  popHotspot: () => void;
 }
 
 function PopOver(props: PopOverProps) {
