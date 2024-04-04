@@ -177,6 +177,7 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
     virtualTour.setNodes(nodes, defaultPhotosphere.id);
     virtualTour.addEventListener("node-changed", ({ node }) => {
       setCurrentPhotosphere(props.vfe.photospheres[node.id]);
+      setHotspotArray([]); // clear popovers on scene change
     });
 
     const map = instance.getPlugin<MapPlugin>(MapPlugin);
