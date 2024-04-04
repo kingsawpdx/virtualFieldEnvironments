@@ -12,7 +12,30 @@ function AddPhotosphere({ vfe }: AddPhotosphereProps): JSX.Element {
   const [panoImage, setPanoImage] = useState("");
   const [audioFile, setAudiofile] = useState("");
 
-  // function to
+  // function to handle add photosphere 
+  const handlePhotosphereAdd = () => {
+    // error handling: check to make sure non-null values are inputted
+    if (!photosphereID || !panoImage) {
+      alert("Must provide Photo Sphere name and source file.");
+      return;
+    }
+    // If valid input, add photosphere to VFE
+    AddPhotosphere(vfe) {
+      id: photosphereID,
+      src: panoImage,
+      center: { x: 0, y: 0 },
+      hotspots: [],
+      backgroundAudio: audioFile
+    };
+
+    // Add the new photosphere to VFE
+    vfe.photospheres[photosphereID] = newPhotosphere;
+    
+    // Reset the form fields after adding the photosphere
+    setPhotosphereID("");
+    setPanoImage(null);
+    setAudioFile(null);
+  };
   return (
     <div
       style={{
