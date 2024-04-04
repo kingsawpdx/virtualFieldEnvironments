@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-
 import { VFE } from "./DataStructures.ts";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
-
 interface CreateVFEFormProps {
   onCreateVFE: (data: VFE) => void;
 }

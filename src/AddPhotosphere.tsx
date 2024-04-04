@@ -19,22 +19,23 @@ function AddPhotosphere({ vfe }: AddPhotosphereProps): JSX.Element {
       alert("Must provide Photo Sphere name and source file.");
       return;
     }
-    // If valid input, add photosphere to VFE
-    AddPhotosphere(vfe) {
+    // If valid input, create  a new photosphere object
+    const newPhotosphere: Photosphere = {
       id: photosphereID,
       src: panoImage,
       center: { x: 0, y: 0 },
       hotspots: [],
-      backgroundAudio: audioFile
+      backgroundAudio: audioFile // or null if not included
     };
 
     // Add the new photosphere to VFE
     vfe.photospheres[photosphereID] = newPhotosphere;
-    
+
     // Reset the form fields after adding the photosphere
-    setPhotosphereID("");
-    setPanoImage(null);
-    setAudioFile(null);
+    // can't set state to null
+    // setPhotosphereID("");
+    // setPanoImage(null);
+    // setAudioFile(null);
   };
   return (
     <div
