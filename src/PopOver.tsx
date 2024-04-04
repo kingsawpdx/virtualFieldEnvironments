@@ -11,7 +11,7 @@ function HotspotContent(props: HotspotContentProps) {
     case "Image": {
       return (
         <>
-          {props.hotspot.hotspots.map((hotspot2D) => (
+          {Object.values(props.hotspot.hotspots).map((hotspot2D) => (
             <button
               key={hotspot2D.tooltip}
               onClick={() => {

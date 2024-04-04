@@ -25,7 +25,7 @@ function App() {
       data: {
         tag: "Image",
         src: OutcropWide,
-        hotspots: [],
+        hotspots: {},
       },
     },
     {
@@ -35,7 +35,7 @@ function App() {
       data: {
         tag: "Image",
         src: Flowers,
-        hotspots: [],
+        hotspots: {},
       },
     },
     {
@@ -63,7 +63,7 @@ function App() {
       data: {
         tag: "Image",
         src: SmallPool,
-        hotspots: [],
+        hotspots: {},
       },
     },
     {
@@ -73,7 +73,7 @@ function App() {
       data: {
         tag: "Image",
         src: LogNearShoreline,
-        hotspots: [],
+        hotspots: {},
       },
     },
     {
@@ -83,7 +83,7 @@ function App() {
       data: {
         tag: "Image",
         src: CoolLog,
-        hotspots: [],
+        hotspots: {},
       },
     },
     {
@@ -111,7 +111,7 @@ function App() {
       data: {
         tag: "Image",
         src: Mushroom,
-        hotspots: [],
+        hotspots: {},
       },
     },
     {
@@ -121,40 +121,40 @@ function App() {
       data: {
         tag: "Image",
         src: Contact,
-        hotspots: [
-          {
+        hotspots: {
+          HandSample: {
             x: 0,
             y: 0,
             tooltip: "HandSample",
             data: {
               tag: "Image",
               src: HandSample,
-              hotspots: [
-                {
+              hotspots: {
+                CloserLook: {
                   x: 0,
                   y: 0,
                   tooltip: "CloserLook",
                   data: {
                     tag: "Image",
                     src: CloserLook,
-                    hotspots: [
-                      {
+                    hotspots: {
+                      SouthSEMComparison: {
                         x: 0,
                         y: 0,
                         tooltip: "SouthSEMComparison",
                         data: {
                           tag: "Image",
                           src: SEMComp,
-                          hotspots: [],
+                          hotspots: {},
                         },
                       },
-                    ],
+                    },
                   },
                 },
-              ],
+              },
             },
           },
-        ],
+        },
       },
     },
     {
@@ -164,7 +164,7 @@ function App() {
       data: {
         tag: "Image",
         src: SouthwaterFront,
-        hotspots: [],
+        hotspots: {},
       },
     },
   ];
@@ -172,14 +172,16 @@ function App() {
   const prototype: Photosphere = {
     id: "prototypeSphere",
     src: SampleScene,
-    hotspots: hotspotArray,
+    hotspots: Object.fromEntries(
+      hotspotArray.map((hotspot) => [hotspot.tooltip, hotspot]),
+    ),
     backgroundAudio: "",
   };
 
   const alternative: Photosphere = {
     id: "alternativeSphere",
     src: OutcropWide, // TODO: replace with an actual panoramic image that is different from sampleScene
-    hotspots: [],
+    hotspots: {},
     backgroundAudio: "",
   };
 

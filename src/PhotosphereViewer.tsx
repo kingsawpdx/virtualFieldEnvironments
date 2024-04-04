@@ -20,16 +20,9 @@ function degToStr(val: number): string {
   return String(val) + "deg";
 }
 
-function matchHotspot(id: string, hotspots: Hotspot3D[]): Hotspot3D {
-  const returnMarker = hotspots.find((element) => element.tooltip == id);
-  return returnMarker!;
-}
-
 /** Convert hotspots to markers with type-based content/icons */
-function convertHotspots(hotspots: Hotspot3D[]): MarkerConfig[] {
-  if (hotspots.length == 0) return [];
-
-  const markers: MarkerConfig[] = hotspots.map((hotspot) => {
+function convertHotspots(hotspots: Record<string, Hotspot3D>): MarkerConfig[] {
+  const markers: MarkerConfig[] = Object.values(hotspots).map((hotspot) => {
     let icon =
       "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"; // default
 
@@ -214,10 +207,7 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
     const markerTestPlugin: MarkersPlugin = instance.getPlugin(MarkersPlugin);
 
     markerTestPlugin.addEventListener("select-marker", ({ marker }) => {
-      const passMarker = matchHotspot(
-        marker.config.id,
-        props.photosphere.hotspots,
-      );
+      const passMarker = props.photosphere.hotspots[marker.config.id];
 
       setHotspotArray([passMarker]);
     });
