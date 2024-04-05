@@ -59,6 +59,19 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
     }
   }
 
+  function handleAudioChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const audioURL = reader.result as string; // Assuming the result is a string representing the URL
+        setAudio(audioURL); // Set audio state to the selected file URL
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+
   return (
     <div>
       <h2>Create a New Virtual Field Environment (VFE)</h2>
@@ -98,9 +111,7 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
         <input
           type="file"
           id="audio"
-          onChange={(e) => {
-            setAudio(e.target.value);
-          }}
+          onChange={handleAudioChange} 
         />
       </div>
       <button onClick={handleCreateVFE}>Create VFE</button>
