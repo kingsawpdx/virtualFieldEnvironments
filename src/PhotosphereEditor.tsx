@@ -3,6 +3,7 @@ import { useState } from "react";
 import AddPhotosphere from "./buttons/AddPhotosphere.tsx";
 import { VFE } from "./DataStructures.ts";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
+import AddAudio from "./buttons/AddAudio.tsx";
 
 interface PhotosphereEditorProps {
   vfe: VFE;
@@ -72,7 +73,7 @@ function PhotosphereEditor({ vfe }: PhotosphereEditorProps): JSX.Element {
           style={{ margin: "10px 0" }}
           onClick={() => {
             resetStates();
-            //Call your setShowAddNavmap function to set the state and display the function
+            AddAudio();
           }}
         >
           Add/Change Audio
