@@ -1,3 +1,4 @@
+import { Modal } from "@mui/material";
 import { Point, Viewer, ViewerConfig } from "@photo-sphere-viewer/core";
 import { MarkerConfig } from "@photo-sphere-viewer/markers-plugin";
 import {
@@ -127,6 +128,10 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
     [],
   );
 
+  const [open, setOpen] = useState(true);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   useEffect(() => {
     const virtualTour =
       photoSphereRef.current?.getPlugin<VirtualTourPlugin>(VirtualTourPlugin);
@@ -157,6 +162,7 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
       const passMarker = currentPhotosphere.hotspots[marker.config.id];
 
       setHotspotArray([passMarker]);
+      handleOpen();
     });
 
     const virtualTour =
@@ -193,12 +199,6 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
     });
   }
 
-  function closePopover(event: MouseEvent) {
-    if (event.target === event.currentTarget) {
-      setHotspotArray(hotspotArray.slice(hotspotArray.length));
-    }
-  }
-
   return (
     <>
       <PhotosphereSelector
@@ -210,45 +210,25 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
       />
 
       {hotspotArray.length > 0 && (
-        <div
-          onClick={(event) => closePopover(event)}
-          style={{
-            position: "absolute",
-            zIndex: 49,
-            width: "100%",
-            height: "100%",
-            backgroundColor: "rgba(0,0,0,0.4)",
-          }}
-        >
-          {/* {hotspotArray.length > 1 && (
-            // <button
-            //   onClick={() => {
-            //     setHotspotArray(hotspotArray.slice(0, -1));
-            //   }}
-            // >
-            //   Close
-            // </button>
-            <Button
-              onClick={() => {
+        <div>
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <PopOver
+              hotspotData={hotspotArray[hotspotArray.length - 1].data}
+              title={hotspotArray[hotspotArray.length - 1].tooltip}
+              arrayLength={hotspotArray.length}
+              pushHotspot={(add: Hotspot2D) => {
+                setHotspotArray([...hotspotArray, add]);
+              }}
+              popHotspot={() => {
                 setHotspotArray(hotspotArray.slice(0, -1));
               }}
-              variant="contained"
-            >
-              Close
-            </Button>
-          )} */}
-
-          <PopOver
-            hotspotData={hotspotArray[hotspotArray.length - 1].data}
-            title={hotspotArray[hotspotArray.length - 1].tooltip}
-            arrayLength={hotspotArray.length}
-            pushHotspot={(add: Hotspot2D) => {
-              setHotspotArray([...hotspotArray, add]);
-            }}
-            popHotspot={() => {
-              setHotspotArray(hotspotArray.slice(0, -1));
-            }}
-          />
+            />
+          </Modal>
         </div>
       )}
 

@@ -1,5 +1,7 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Button } from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 
 import { Hotspot2D, HotspotData } from "./DataStructures";
 
@@ -7,22 +9,54 @@ interface HotspotContentProps {
   hotspot: HotspotData;
   pushHotspot: (add: Hotspot2D) => void;
   popHotspot: () => void;
+  arrayLength: number;
 }
+
+const style = {
+  position: "absolute" as "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  borderRadius: "10px",
+  boxShadow: 24,
+  p: 4,
+};
+
+const buttonStyle = {
+  marginBottom: "6px",
+  marginRight: "6px",
+};
 
 function HotspotContent(props: HotspotContentProps) {
   switch (props.hotspot.tag) {
     case "Image": {
       return (
         <>
+          {props.arrayLength > 1 && (
+            <Button
+              onClick={() => {
+                props.popHotspot();
+              }}
+              variant="contained"
+              style={buttonStyle}
+            >
+              <ArrowBackIcon />
+            </Button>
+          )}
           {Object.values(props.hotspot.hotspots).map((hotspot2D) => (
-            <button
+            <Button
               key={hotspot2D.tooltip}
               onClick={() => {
                 props.pushHotspot(hotspot2D);
               }}
+              variant="contained"
+              style={buttonStyle}
             >
               Nested Hotspot: {hotspot2D.tooltip}
-            </button>
+            </Button>
           ))}
           <img
             style={{ width: "100%", objectFit: "contain" }}
@@ -57,49 +91,18 @@ export interface PopOverProps {
 
 function PopOver(props: PopOverProps) {
   return (
-    <div
-      style={{
-        position: "absolute",
-        zIndex: 50,
-        top: 0,
-        left: 0,
-        right: 0,
-        marginTop: "10%",
-        marginLeft: "auto",
-        marginRight: "auto",
-        padding: "20px",
-        backgroundColor: "rgb(255,250,250)",
-        width: "60vw",
-        borderRadius: "5px",
-        maxHeight: "400px",
-        overflow: "scroll",
-      }}
-    >
-      {props.arrayLength > 1 && (
-        // <button
-        //   onClick={() => {
-        //     setHotspotArray(hotspotArray.slice(0, -1));
-        //   }}
-        // >
-        //   Close
-        // </button>
-        <Button
-          onClick={() => {
-            props.popHotspot();
-          }}
-          variant="contained"
-        >
-          <ArrowBackIcon />
-        </Button>
-      )}
-      <h1>{props.title}</h1>
+    <Box sx={style}>
+      <Typography variant="h4" component={"h4"}>
+        {props.title}
+      </Typography>
 
       <HotspotContent
         hotspot={props.hotspotData}
         pushHotspot={props.pushHotspot}
         popHotspot={props.popHotspot}
+        arrayLength={props.arrayLength}
       />
-    </div>
+    </Box>
   );
 }
 
