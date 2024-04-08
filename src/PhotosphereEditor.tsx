@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import AddHotspot from "./AddHotspot.tsx";
 import AddPhotosphere from "./AddPhotosphere.tsx";
 import { VFE } from "./DataStructures.ts";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
@@ -12,17 +13,20 @@ function PhotosphereEditor({ vfe }: PhotosphereEditorProps): JSX.Element {
   //Basic states for each component, its basically just a boolean
   const [showAddPhotosphere, setShowAddPhotosphere] = useState(false);
   //Create a useState for your component
+  const [showAddHotspot, setShowAddHotspot] = useState(false);
 
   //Reset all states so we dont have issues with handling different components at the same time
   function resetStates() {
     setShowAddPhotosphere(false);
     //Dont forget to reset your usestate!
+    setShowAddHotspot(false);
   }
 
   //This function is where we render the actual component based on the useState
   function ActiveComponent() {
     if (showAddPhotosphere) return <AddPhotosphere />;
     //Below this you will have your conditional for your own component, ie AddNavmap/AddHotspot
+    if (showAddHotspot) return <AddHotspot vfe={vfe} />;
     return null;
   }
 
@@ -64,6 +68,7 @@ function PhotosphereEditor({ vfe }: PhotosphereEditorProps): JSX.Element {
           onClick={() => {
             resetStates();
             //Call your setShowAddHotspot function to set the state and display the function
+            setShowAddHotspot(true);
           }}
         >
           Add New Hotspot
