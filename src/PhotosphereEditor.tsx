@@ -24,7 +24,7 @@ function PhotosphereEditor({
   initialVFE,
   onUpdateVFE,
 }: PhotosphereEditorProps): JSX.Element {
-  // Base states 
+  // Base states
   const [vfe, setVFE] = useState<VFE>(initialVFE);
   const [showAddPhotosphere, setShowAddPhotosphere] = useState(false);
   const [updateTrigger, setUpdateTrigger] = useState(0);

@@ -13,7 +13,7 @@ import { Photosphere } from "./DataStructures";
     * Pass it back to parent to update the VFE with the newPhotosphere
    ----------------------------------------------------------------------- */
 
-// Properties passed down from parent 
+// Properties passed down from parent
 interface AddPhotosphereProps {
   onAddPhotosphere: (newPhotosphere: Photosphere) => void;
 }
@@ -22,7 +22,7 @@ interface AddPhotosphereProps {
 function AddPhotosphere({
   onAddPhotosphere,
 }: AddPhotosphereProps): JSX.Element {
-  // Base states 
+  // Base states
   const [photosphereID, setPhotosphereID] = useState("");
   const [panoImage, setPanoImage] = useState("");
   const [audioFile, setAudioFile] = useState("");
@@ -68,7 +68,7 @@ function AddPhotosphere({
     };
 
     // Pass newPhotosphere back to parent to update VFE
-    onAddPhotosphere(newPhotosphere);   
+    onAddPhotosphere(newPhotosphere);
 
     // Reset the form fields after adding the photosphere
     setPhotosphereID("");
