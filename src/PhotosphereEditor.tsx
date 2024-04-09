@@ -4,21 +4,32 @@ import AddPhotosphere from "./AddPhotosphere.tsx";
 import { Photosphere, VFE } from "./DataStructures.ts";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
 
+/* -----------------------------------------------------------------------
+    Update the Virtual Field Environment with an added Photosphere.
+
+    * Take the initial VFE from parent
+    * If a change has been made to the initialVFE -> updateTrigger === true
+    * Send the newPhotosphere back to parent 
+    * Parent updates the VFE with the newPhotosphere object
+   ----------------------------------------------------------------------- */
+
+// Properties passed down from parent
 interface PhotosphereEditorProps {
   initialVFE: VFE;
   onUpdateVFE: (updatedVFE: VFE) => void;
 }
 
+// If an update is triggered, add newPhotosphere, and update VFE
 function PhotosphereEditor({
   initialVFE,
   onUpdateVFE,
 }: PhotosphereEditorProps): JSX.Element {
-  //Basic states for each component, its basically just a boolean
+  // Base states 
   const [vfe, setVFE] = useState<VFE>(initialVFE);
   const [showAddPhotosphere, setShowAddPhotosphere] = useState(false);
   const [updateTrigger, setUpdateTrigger] = useState(0);
-  //Create a useState for your component
 
+  // Update the VFE
   function handleAddPhotosphere(newPhotosphere: Photosphere) {
     const updatedVFE: VFE = {
       ...vfe,
@@ -28,26 +39,25 @@ function PhotosphereEditor({
       },
     };
     console.log("Updated VFE (local state in PhotosphereEditor):", updatedVFE);
-    setVFE(updatedVFE); //Update the local VFE state
+    setVFE(updatedVFE); // Update the local VFE state
     onUpdateVFE(updatedVFE); // Propagate the change to the AppRoot
     setShowAddPhotosphere(false);
     setUpdateTrigger((prev) => prev + 1);
   }
 
-  //Reset all states so we dont have issues with handling different components at the same time
+  // Reset all states so we dont have issues with handling different components at the same time
   function resetStates() {
     setShowAddPhotosphere(false);
-    //Dont forget to reset your usestate!
   }
 
-  //This function is where we render the actual component based on the useState
+  // This function is where we render the actual component based on the useState
   function ActiveComponent() {
     if (showAddPhotosphere)
       return <AddPhotosphere onAddPhotosphere={handleAddPhotosphere} />;
-    //Below this you will have your conditional for your own component, ie AddNavmap/AddHotspot
+    // Below this you will have your conditional for your own component, ie AddNavmap/AddHotspot
     return null;
   }
-
+  // Add styling for inputting information
   return (
     <div style={{ display: "flex", height: "100vh", position: "relative" }}>
       <div

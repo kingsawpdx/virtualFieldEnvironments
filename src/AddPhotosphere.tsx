@@ -4,6 +4,7 @@ import { Photosphere } from "./DataStructures";
 
 /* -----------------------------------------------------------------------
     Add a photosphere to a Virtual Field Environment (VFE) using React.
+
     * Props object allows us to send the new Photosphere back to parent
     * Pass props object to AddPhotosphere function
     * Input data
@@ -12,7 +13,7 @@ import { Photosphere } from "./DataStructures";
     * Pass it back to parent to update the VFE with the newPhotosphere
    ----------------------------------------------------------------------- */
 
-// Props passed down from parent 
+// Properties passed down from parent 
 interface AddPhotosphereProps {
   onAddPhotosphere: (newPhotosphere: Photosphere) => void;
 }
@@ -21,6 +22,7 @@ interface AddPhotosphereProps {
 function AddPhotosphere({
   onAddPhotosphere,
 }: AddPhotosphereProps): JSX.Element {
+  // Base states 
   const [photosphereID, setPhotosphereID] = useState("");
   const [panoImage, setPanoImage] = useState("");
   const [audioFile, setAudioFile] = useState("");
@@ -68,12 +70,12 @@ function AddPhotosphere({
     // Pass newPhotosphere back to parent to update VFE
     onAddPhotosphere(newPhotosphere);   
 
-    // Optionally reset the form fields after adding the photosphere
+    // Reset the form fields after adding the photosphere
     setPhotosphereID("");
     setPanoImage("");
     setAudioFile("");
   }
-
+  // Add styling for inputting information
   return (
     <div
       style={{
