@@ -2,10 +2,22 @@ import { useState } from "react";
 
 import { Photosphere } from "./DataStructures";
 
+/* -----------------------------------------------------------------------
+    Add a photosphere to a Virtual Field Environment (VFE) using React.
+    * Props object allows us to send the new Photosphere back to parent
+    * Pass props object to AddPhotosphere function
+    * Input data
+    * Check for errors
+    * Create newPhotosphere object
+    * Pass it back to parent to update the VFE with the newPhotosphere
+   ----------------------------------------------------------------------- */
+
+// Props passed down from parent 
 interface AddPhotosphereProps {
   onAddPhotosphere: (newPhotosphere: Photosphere) => void;
 }
 
+// Create new photosphere
 function AddPhotosphere({
   onAddPhotosphere,
 }: AddPhotosphereProps): JSX.Element {
@@ -13,6 +25,7 @@ function AddPhotosphere({
   const [panoImage, setPanoImage] = useState("");
   const [audioFile, setAudioFile] = useState("");
 
+  // Add image data
   function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files ? e.target.files[0] : null;
     if (file) {
@@ -24,6 +37,7 @@ function AddPhotosphere({
     }
   }
 
+  // Add audio data
   function handleAudioChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files ? e.target.files[0] : null;
     if (file) {
@@ -35,11 +49,14 @@ function AddPhotosphere({
     }
   }
 
+  // Error handling: check to see if required data != null
   function handlePhotosphereAdd() {
     if (!photosphereID || !panoImage) {
-      alert("Must provide a Photosphere name and source file.");
+      alert("Please, provide a name and source file.");
       return;
     }
+
+    // Create new photosphere object
     const newPhotosphere: Photosphere = {
       id: photosphereID,
       src: panoImage,
@@ -48,7 +65,8 @@ function AddPhotosphere({
       backgroundAudio: audioFile,
     };
 
-    onAddPhotosphere(newPhotosphere);
+    // Pass newPhotosphere back to parent to update VFE
+    onAddPhotosphere(newPhotosphere);   
 
     // Optionally reset the form fields after adding the photosphere
     setPhotosphereID("");
