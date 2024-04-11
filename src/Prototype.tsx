@@ -129,31 +129,31 @@ function App() {
         src: Contact,
         hotspots: {
           HandSample: {
-            x: 0,
-            y: 0,
+            x: 50,
+            y: 90,
             id: "HandSample",
             tooltip: "HandSample",
-            color: "red",
+            color: "#FF0000",
             data: {
               tag: "Image",
               src: HandSample,
               hotspots: {
                 CloserLook: {
-                  x: 0,
-                  y: 0,
+                  x: 225,
+                  y: 175,
                   id: "CloserLook",
                   tooltip: "CloserLook",
-                  color: "blue",
+                  color: "#00FF00",
                   data: {
                     tag: "Image",
                     src: CloserLook,
                     hotspots: {
                       SouthSEMComparison: {
-                        x: 0,
-                        y: 0,
+                        x: 225,
+                        y: 125,
                         id: "SouthSEMComparison",
                         tooltip: "SouthSEMComparison",
-                        color: "green",
+                        color: "#00FFFF",
                         data: {
                           tag: "Image",
                           src: SEMComp,

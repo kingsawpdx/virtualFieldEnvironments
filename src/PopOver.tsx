@@ -1,5 +1,5 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { Button } from "@mui/material";
+import { Button, alpha, lighten } from "@mui/material";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
@@ -46,22 +46,33 @@ function HotspotContent(props: HotspotContentProps) {
               <ArrowBackIcon />
             </Button>
           )}
-          {Object.values(props.hotspot.hotspots).map((hotspot2D) => (
-            <Button
-              key={hotspot2D.tooltip}
-              onClick={() => {
-                props.pushHotspot(hotspot2D);
-              }}
-              variant="contained"
-              style={buttonStyle}
-            >
-              Nested Hotspot: {hotspot2D.tooltip}
-            </Button>
-          ))}
-          <img
-            style={{ width: "100%", objectFit: "contain" }}
-            src={props.hotspot.src}
-          ></img>
+          <Box position="relative">
+            {Object.values(props.hotspot.hotspots).map((hotspot2D) => (
+              <Box
+                key={hotspot2D.tooltip}
+                onClick={() => {
+                  props.pushHotspot(hotspot2D);
+                }}
+                position="absolute"
+                left={hotspot2D.x - 25}
+                top={hotspot2D.y - 25}
+                width={50}
+                height={50}
+                border={"5px solid"}
+                borderColor={alpha(hotspot2D.color, 0.5)}
+                sx={{
+                  "&:hover": {
+                    borderColor: lighten(hotspot2D.color, 0.5),
+                    backgroundColor: alpha(hotspot2D.color, 0.25),
+                  },
+                }}
+              />
+            ))}
+            <img
+              style={{ width: "100%", objectFit: "contain" }}
+              src={props.hotspot.src}
+            />
+          </Box>
         </>
       );
     }
