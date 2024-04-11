@@ -129,8 +129,12 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
   );
 
   const [open, setOpen] = useState(true);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  function handleOpen() {
+    setOpen(true);
+  }
+  function handleClose() {
+    setOpen(false);
+  }
 
   useEffect(() => {
     const virtualTour =
