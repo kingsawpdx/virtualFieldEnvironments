@@ -1,4 +1,3 @@
-import { Modal } from "@mui/material";
 import { Point, Viewer, ViewerConfig } from "@photo-sphere-viewer/core";
 import { MarkerConfig } from "@photo-sphere-viewer/markers-plugin";
 import {
@@ -128,14 +127,6 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
     [],
   );
 
-  const [open, setOpen] = useState(true);
-  function handleOpen() {
-    setOpen(true);
-  }
-  function handleClose() {
-    setOpen(false);
-  }
-
   useEffect(() => {
     const virtualTour =
       photoSphereRef.current?.getPlugin<VirtualTourPlugin>(VirtualTourPlugin);
@@ -166,7 +157,6 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
       const passMarker = currentPhotosphere.hotspots[marker.config.id];
 
       setHotspotArray([passMarker]);
-      handleOpen();
     });
 
     const virtualTour =
@@ -214,26 +204,20 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
       />
 
       {hotspotArray.length > 0 && (
-        <div>
-          <Modal
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
-            <PopOver
-              hotspotData={hotspotArray[hotspotArray.length - 1].data}
-              title={hotspotArray[hotspotArray.length - 1].tooltip}
-              arrayLength={hotspotArray.length}
-              pushHotspot={(add: Hotspot2D) => {
-                setHotspotArray([...hotspotArray, add]);
-              }}
-              popHotspot={() => {
-                setHotspotArray(hotspotArray.slice(0, -1));
-              }}
-            />
-          </Modal>
-        </div>
+        <PopOver
+          hotspotData={hotspotArray[hotspotArray.length - 1].data}
+          title={hotspotArray[hotspotArray.length - 1].tooltip}
+          arrayLength={hotspotArray.length}
+          pushHotspot={(add: Hotspot2D) => {
+            setHotspotArray([...hotspotArray, add]);
+          }}
+          popHotspot={() => {
+            setHotspotArray(hotspotArray.slice(0, -1));
+          }}
+          closeAll={() => {
+            setHotspotArray([]);
+          }}
+        />
       )}
 
       {currentPhotosphere.backgroundAudio && (

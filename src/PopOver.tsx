@@ -1,7 +1,15 @@
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { Button, alpha, lighten } from "@mui/material";
+import { ArrowBack, Close } from "@mui/icons-material";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  Stack,
+  Tooltip,
+  alpha,
+  lighten,
+} from "@mui/material";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 
 import { Hotspot2D, HotspotData } from "./DataStructures";
 
@@ -12,68 +20,41 @@ interface HotspotContentProps {
   arrayLength: number;
 }
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  borderRadius: "10px",
-  boxShadow: 24,
-  p: 4,
-};
-
-const buttonStyle = {
-  marginBottom: "6px",
-  marginRight: "6px",
-};
-
 function HotspotContent(props: HotspotContentProps) {
   switch (props.hotspot.tag) {
     case "Image": {
       return (
-        <>
-          {props.arrayLength > 1 && (
-            <Button
+        <Box position="relative">
+          {Object.values(props.hotspot.hotspots).map((hotspot2D) => (
+            <Box
+              key={hotspot2D.tooltip}
               onClick={() => {
-                props.popHotspot();
+                props.pushHotspot(hotspot2D);
               }}
-              variant="contained"
-              style={buttonStyle}
-            >
-              <ArrowBackIcon />
-            </Button>
-          )}
-          <Box position="relative">
-            {Object.values(props.hotspot.hotspots).map((hotspot2D) => (
-              <Box
-                key={hotspot2D.tooltip}
-                onClick={() => {
-                  props.pushHotspot(hotspot2D);
-                }}
-                position="absolute"
-                left={hotspot2D.x - 25}
-                top={hotspot2D.y - 25}
-                width={50}
-                height={50}
-                border={"5px solid"}
-                borderColor={alpha(hotspot2D.color, 0.5)}
-                sx={{
-                  "&:hover": {
-                    borderColor: lighten(hotspot2D.color, 0.5),
-                    backgroundColor: alpha(hotspot2D.color, 0.25),
-                  },
-                }}
-              />
-            ))}
-            <img
-              style={{ width: "100%", objectFit: "contain" }}
-              src={props.hotspot.src}
+              position="absolute"
+              left={`${hotspot2D.x}%`}
+              top={`${hotspot2D.y}%`}
+              width={50}
+              height={50}
+              border={"5px solid"}
+              borderColor={alpha(hotspot2D.color, 0.5)}
+              sx={{
+                "&:hover": {
+                  borderColor: lighten(hotspot2D.color, 0.5),
+                  backgroundColor: alpha(hotspot2D.color, 0.25),
+                },
+              }}
             />
-          </Box>
-        </>
+          ))}
+          <img
+            style={{
+              maxWidth: "100%",
+              maxHeight: "70vh",
+              objectFit: "contain",
+            }}
+            src={props.hotspot.src}
+          />
+        </Box>
       );
     }
     case "Video":
@@ -98,22 +79,49 @@ export interface PopOverProps {
   arrayLength: number;
   pushHotspot: (add: Hotspot2D) => void;
   popHotspot: () => void;
+  closeAll: () => void;
 }
 
 function PopOver(props: PopOverProps) {
   return (
-    <Box sx={style}>
-      <Typography variant="h4" component={"h4"}>
-        {props.title}
-      </Typography>
+    <Dialog
+      open={true}
+      onClose={props.closeAll}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle id="alert-dialog-title">
+        <Stack direction="row" alignItems="center">
+          <Box flexGrow={1}>{props.title}</Box>
 
-      <HotspotContent
-        hotspot={props.hotspotData}
-        pushHotspot={props.pushHotspot}
-        popHotspot={props.popHotspot}
-        arrayLength={props.arrayLength}
-      />
-    </Box>
+          {props.arrayLength > 1 && (
+            <Tooltip title="Back" placement="top">
+              <IconButton
+                onClick={() => {
+                  props.popHotspot();
+                }}
+              >
+                <ArrowBack />
+              </IconButton>
+            </Tooltip>
+          )}
+          <Tooltip title="Close" placement="top">
+            <IconButton onClick={props.closeAll}>
+              <Close />
+            </IconButton>
+          </Tooltip>
+        </Stack>
+      </DialogTitle>
+
+      <DialogContent>
+        <HotspotContent
+          hotspot={props.hotspotData}
+          pushHotspot={props.pushHotspot}
+          popHotspot={props.popHotspot}
+          arrayLength={props.arrayLength}
+        />
+      </DialogContent>
+    </Dialog>
   );
 }
 
