@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import AddHotspot from "./AddHotspot.tsx";
 import AddPhotosphere from "./AddPhotosphere.tsx";
-import { Photosphere, VFE } from "./DataStructures.ts";
+import { Hotspot3D, Photosphere, VFE } from "./DataStructures.ts";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
 
 /* -----------------------------------------------------------------------
@@ -16,12 +16,16 @@ import PhotosphereViewer from "./PhotosphereViewer.tsx";
 
 // Properties passed down from parent
 interface PhotosphereEditorProps {
+  currentPS: string;
+  onChangePS: (id: string) => void;
   parentVFE: VFE;
-  onUpdateVFE: (updatedVFE: VFE) => void;
+  onUpdateVFE: (updatedVFE: VFE, currentPS?: string) => void;
 }
 
 // If an update is triggered, add newPhotosphere, and update VFE
 function PhotosphereEditor({
+  currentPS,
+  onChangePS,
   parentVFE,
   onUpdateVFE,
 }: PhotosphereEditorProps): JSX.Element {
@@ -45,6 +49,19 @@ function PhotosphereEditor({
     setShowAddPhotosphere(false);
     setUpdateTrigger((prev) => prev + 1);
   }
+
+  function handleAddHotspot(newHotspot: Hotspot3D) {
+    // need to select correct photosphere
+    let photosphere: Photosphere = vfe.photospheres[currentPS];
+
+    photosphere.hotspots[newHotspot.tooltip] = newHotspot;
+
+    setVFE(vfe);
+    onUpdateVFE(vfe, currentPS);
+    setShowAddHotspot(false);
+    setUpdateTrigger((prev) => prev + 1);
+  }
+
   //Reset all states so we dont have issues with handling different components at the same time
   function resetStates() {
     setShowAddPhotosphere(false);
@@ -56,7 +73,10 @@ function PhotosphereEditor({
     if (showAddPhotosphere)
       return <AddPhotosphere onAddPhotosphere={handleAddPhotosphere} />;
     //Below this you will have your conditional for your own component, ie AddNavmap/AddHotspot
-    if (showAddHotspot) return <AddHotspot vfe={vfe} />;
+    if (showAddHotspot)
+      return (
+        <AddHotspot onCancel={resetStates} onAddHotspot={handleAddHotspot} />
+      );
     return null;
   }
   // Add styling for inputting information
@@ -105,7 +125,12 @@ function PhotosphereEditor({
         </button>
       </div>
       <div style={{ width: "100%", height: "100%" }}>
-        <PhotosphereViewer key={updateTrigger} vfe={vfe} />
+        <PhotosphereViewer
+          currentPS={currentPS}
+          onChangePS={onChangePS}
+          key={updateTrigger}
+          vfe={vfe}
+        />
         <ActiveComponent />
       </div>
     </div>

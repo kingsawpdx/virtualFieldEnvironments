@@ -1,12 +1,75 @@
 import React, { useState } from "react";
 
-import { Hotspot3D, HotspotData, VFE } from "./DataStructures.ts";
+import { Hotspot3D, HotspotData } from "./DataStructures.ts";
 
-interface AddHotspotProps {
-  vfe: VFE;
+interface ContentInputProps {
+  contentType: string;
+  onChangeContent: (content: string) => void;
 }
 
-function AddHotspot({ vfe }: AddHotspotProps) {
+function ContentInput({ contentType, onChangeContent }: ContentInputProps) {
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const URL = reader.result as string;
+        onChangeContent(URL);
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  let label;
+  let input;
+  switch (contentType) {
+    case "Image":
+    case "Video":
+    case "Audio":
+      label = <label htmlFor="content">Content: </label>;
+      input = <input type="file" id="content" onChange={handleFileChange} />;
+      break;
+    case "Doc":
+    case "URL":
+      label = <label htmlFor="content">Content: </label>;
+      input = (
+        <input
+          type="string"
+          id="content"
+          onChange={(e) => onChangeContent(e.target.value)}
+        />
+      );
+      break;
+    case "PhotosphereLink":
+      label = <label htmlFor="content">Photosphere Name: </label>;
+      input = (
+        <input
+          type="string"
+          id="content"
+          onChange={(e) => onChangeContent(e.target.value)}
+        />
+      );
+      break;
+    default:
+      label = <label htmlFor="content"></label>;
+      input = (
+        <span id="content">First select a content type to add content</span>
+      );
+  }
+
+  return (
+    <>
+      {label}
+      {input}
+    </>
+  );
+}
+interface AddHotspotProps {
+  onAddHotspot: (newHotspot: Hotspot3D) => void;
+  onCancel: () => void;
+}
+
+function AddHotspot({ onAddHotspot, onCancel }: AddHotspotProps) {
   // Placeholder content or logic can be added here later
   const [tooltip, setTooltip] = useState("");
   const [contentType, setContentType] = useState("invalid");
@@ -14,22 +77,10 @@ function AddHotspot({ vfe }: AddHotspotProps) {
   const [pitch, setPitch] = useState(0);
   const [yaw, setYaw] = useState(0);
 
-  function handleContentChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const URL = reader.result as string;
-        setContent(URL);
-      };
-      reader.readAsDataURL(file);
-    }
-  }
-
-  function handleSelectPosition() {
+  /*function handleSelectPosition() {
     // todo
     // get pitch/yaw off of click on viewer
-  }
+  }*/
 
   function handleAddHotspot() {
     if (tooltip.trim() == "" || contentType == "invalid") {
@@ -43,7 +94,7 @@ function AddHotspot({ vfe }: AddHotspotProps) {
         data = {
           tag: "Image",
           src: content,
-          hotspots: [],
+          hotspots: {},
         };
         break;
       case "Video":
@@ -73,7 +124,7 @@ function AddHotspot({ vfe }: AddHotspotProps) {
       case "PhotosphereLink":
         data = {
           tag: "PhotosphereLink",
-          photosphereID: tooltip,
+          photosphereID: content,
         };
         break;
       // should never actually get here
@@ -89,8 +140,7 @@ function AddHotspot({ vfe }: AddHotspotProps) {
       data: data,
     };
 
-    // todo
-    // need a way to know which photosphere is current so can add hotspots in correct spot
+    onAddHotspot(newHotspot);
   }
 
   return (
@@ -138,8 +188,7 @@ function AddHotspot({ vfe }: AddHotspotProps) {
         </select>
       </div>
       <div>
-        <label htmlFor="content">Content: </label>
-        <input type="file" id="content" onChange={handleContentChange} />
+        <ContentInput contentType={contentType} onChangeContent={setContent} />
       </div>
       <div>
         {/*<span>Pitch: </span>
@@ -169,7 +218,14 @@ function AddHotspot({ vfe }: AddHotspotProps) {
           }}
         />
       </div>
-      <button onClick={handleAddHotspot}>Create</button>
+      <div style={{ display: "flex", justifyContent: "space-around" }}>
+        <button style={{ width: "40%" }} onClick={handleAddHotspot}>
+          Create
+        </button>
+        <button style={{ width: "40%" }} onClick={onCancel}>
+          Cancel
+        </button>
+      </div>
     </div>
   );
 }

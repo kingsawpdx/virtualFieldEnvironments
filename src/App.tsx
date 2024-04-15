@@ -13,6 +13,9 @@ function AppRoot() {
   const [showApp, setShowApp] = useState(false);
   const [showCreateVFEForm, setShowCreateVFEForm] = useState(false);
   const [vfeData, setVFEData] = useState<VFE | null>(null);
+  const [currentPhotosphereID, setCurrentPhotosphereID] = useState(
+    vfeData ? vfeData.defaultPhotosphereID : "invalid",
+  );
 
   //Create a function to set useState true
   function handleLoadTestVFE() {
@@ -27,12 +30,20 @@ function AppRoot() {
 
   function loadCreatedVFE(data: VFE) {
     setVFEData(data);
+    setCurrentPhotosphereID(
+      currentPhotosphereID == "invalid"
+        ? data.defaultPhotosphereID
+        : currentPhotosphereID,
+    );
     setShowApp(true);
     setShowCreateVFEForm(false);
   }
 
-  function handleUpdateVFE(updatedVFE: VFE) {
+  function handleUpdateVFE(updatedVFE: VFE, currentPS?: string) {
     setVFEData(updatedVFE);
+    setCurrentPhotosphereID(
+      currentPS ? currentPS : updatedVFE.defaultPhotosphereID,
+    );
   }
 
   function renderComponent() {
@@ -40,7 +51,12 @@ function AppRoot() {
       return <CreateVFEForm onCreateVFE={loadCreatedVFE} />;
     } else if (vfeData && showApp) {
       return (
-        <PhotosphereEditor parentVFE={vfeData} onUpdateVFE={handleUpdateVFE} />
+        <PhotosphereEditor
+          currentPS={currentPhotosphereID}
+          onChangePS={setCurrentPhotosphereID}
+          parentVFE={vfeData}
+          onUpdateVFE={handleUpdateVFE}
+        />
       );
     } else if (!vfeData && showApp) {
       return <App />;

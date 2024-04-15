@@ -115,6 +115,8 @@ function convertMap(map: NavMap, center: Point): MapPluginConfig {
 
 export interface PhotosphereViewerProps {
   vfe: VFE;
+  currentPS?: string;
+  onChangePS?: (id: string) => void;
 }
 
 function PhotosphereViewer(props: PhotosphereViewerProps) {
@@ -174,9 +176,14 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
       },
     );
 
-    virtualTour.setNodes(nodes, defaultPhotosphere.id);
+    // need to have conditional so that scene doesn't change when adding hotspots
+    virtualTour.setNodes(
+      nodes,
+      props.currentPS ? props.currentPS : defaultPhotosphere.id,
+    );
     virtualTour.addEventListener("node-changed", ({ node }) => {
       setCurrentPhotosphere(props.vfe.photospheres[node.id]);
+      props.onChangePS?.(node.id);
       setHotspotArray([]); // clear popovers on scene change
     });
 
@@ -189,6 +196,7 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
         setCurrentPhotosphere(
           props.vfe.photospheres[hotspot.data.photosphereID],
         );
+        props.onChangePS?.(hotspot.data.photosphereID);
       }
     });
   }
@@ -200,6 +208,7 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
         value={currentPhotosphere.id}
         setValue={(id) => {
           setCurrentPhotosphere(props.vfe.photospheres[id]);
+          props.onChangePS?.(id);
         }}
       />
 
