@@ -32,7 +32,6 @@ function AppRoot() {
   }
 
   function handleUpdateVFE(updatedVFE: VFE) {
-    console.log("Updated VFE (in AppRoot):", updatedVFE);
     setVFEData(updatedVFE);
   }
 
@@ -41,7 +40,7 @@ function AppRoot() {
       return <CreateVFEForm onCreateVFE={loadCreatedVFE} />;
     } else if (vfeData && showApp) {
       return (
-        <PhotosphereEditor initialVFE={vfeData} onUpdateVFE={handleUpdateVFE} />
+        <PhotosphereEditor parentVFE={vfeData} onUpdateVFE={handleUpdateVFE} />
       );
     } else if (!vfeData && showApp) {
       return <App />;

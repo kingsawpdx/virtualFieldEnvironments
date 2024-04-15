@@ -8,24 +8,24 @@ import PhotosphereViewer from "./PhotosphereViewer.tsx";
     Update the Virtual Field Environment with an added Photosphere.
 
     * Take the initial VFE from parent
-    * If a change has been made to the initialVFE -> updateTrigger === true
+    * If a change has been made to the parentVFE -> updateTrigger === true
     * Send the newPhotosphere back to parent 
     * Parent updates the VFE with the newPhotosphere object
    ----------------------------------------------------------------------- */
 
 // Properties passed down from parent
 interface PhotosphereEditorProps {
-  initialVFE: VFE;
+  parentVFE: VFE;
   onUpdateVFE: (updatedVFE: VFE) => void;
 }
 
 // If an update is triggered, add newPhotosphere, and update VFE
 function PhotosphereEditor({
-  initialVFE,
+  parentVFE,
   onUpdateVFE,
 }: PhotosphereEditorProps): JSX.Element {
   // Base states
-  const [vfe, setVFE] = useState<VFE>(initialVFE);
+  const [vfe, setVFE] = useState<VFE>(parentVFE);
   const [showAddPhotosphere, setShowAddPhotosphere] = useState(false);
   const [updateTrigger, setUpdateTrigger] = useState(0);
 
@@ -38,7 +38,6 @@ function PhotosphereEditor({
         [newPhotosphere.id]: newPhotosphere,
       },
     };
-    console.log("Updated VFE (local state in PhotosphereEditor):", updatedVFE);
     setVFE(updatedVFE); // Update the local VFE state
     onUpdateVFE(updatedVFE); // Propagate the change to the AppRoot
     setShowAddPhotosphere(false);

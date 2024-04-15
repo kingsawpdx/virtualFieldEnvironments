@@ -29,7 +29,7 @@ function AddPhotosphere({
 
   // Add image data
   function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files ? e.target.files[0] : null;
+    const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = function () {
@@ -41,7 +41,7 @@ function AddPhotosphere({
 
   // Add audio data
   function handleAudioChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files ? e.target.files[0] : null;
+    const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = function () {
