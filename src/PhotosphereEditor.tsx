@@ -1,8 +1,13 @@
 import { useState } from "react";
-import AddNavmap from "./AddNavmap"; // Import the AddNavmap component
+
+import AddHotspot from "./AddHotspot";
+import AddNavmap from "./AddNavmap";
+// Import the AddNavmap component
 import AddPhotosphere from "./AddPhotosphere.tsx";
-import { VFE, NavMap } from "./DataStructures.ts";
+import { NavMap, VFE } from "./DataStructures.ts";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
+
+// Import the AddHotspot component
 
 interface PhotosphereEditorProps {
   vfe: VFE;
@@ -13,37 +18,56 @@ function PhotosphereEditor({ vfe }: PhotosphereEditorProps): JSX.Element {
   const [showAddPhotosphere, setShowAddPhotosphere] = useState(false);
   const [showAddNavMap, setShowAddNavMap] = useState(false); // State to manage whether to show AddNavmap
   //Create a useState for your component
+  const [showAddHotspot, setShowAddHotspot] = useState(false); // State to manage whether to show AddHotspot
   const [navMap, setNavMap] = useState<NavMap | null>(null); // State to store the new navigation map
-
 
   //Reset all states so we dont have issues with handling different components at the same time
   function resetStates() {
     setShowAddPhotosphere(false);
     setShowAddNavMap(false);
+    setShowAddHotspot(false);
     //Dont forget to reset your usestate!
   }
 
   //This function is where we render the actual component based on the useState
   function ActiveComponent() {
     if (showAddPhotosphere) return <AddPhotosphere />;
-    if (showAddNavMap) return <AddNavmap onCreateNavMap={handleCreateNavMap} onClose={resetStates} />;
+    if (showAddNavMap)
+      return (
+        <AddNavmap onCreateNavMap={handleCreateNavMap} onClose={resetStates} />
+      );
+    if (showAddHotspot) return <AddHotspot />;
     return null;
     //Below this you will have your conditional for your own component, ie AddNavmap/AddHotspot
   }
 
   function handleCreateNavMap(navMap: NavMap) {
-  setNavMap(navMap);
+    setNavMap(navMap);
     setShowAddNavMap(false);
-}
-<AddNavmap onCreateNavMap={handleCreateNavMap} onClose={resetStates} />
+  }
+  <AddNavmap onCreateNavMap={handleCreateNavMap} onClose={resetStates} />;
 
   return (
     <div style={{ display: "flex", height: "100vh", position: "relative" }}>
-      <div style={{ position: "absolute", bottom: "10px", left: "10px", zIndex: 10 }}>
+      <div
+        style={{
+          position: "absolute",
+          bottom: "10px",
+          left: "10px",
+          zIndex: 10,
+        }}
+      >
         {/* Render the navigation map */}
         {navMap && (
           <div>
-            <img src={navMap.src} alt="Nav Map" style={{ width: "200px", height: "auto" }} />
+            <img
+              src={navMap.src}
+              alt={navMap.id}
+              style={{
+                width: "200px",
+                height: "auto",
+              }}
+            />
           </div>
         )}
       </div>
@@ -83,6 +107,7 @@ function PhotosphereEditor({ vfe }: PhotosphereEditorProps): JSX.Element {
           style={{ margin: "10px 0" }}
           onClick={() => {
             resetStates();
+            setShowAddHotspot(true);
             //Call your setShowAddHotspot function to set the state and display the function
           }}
         >
