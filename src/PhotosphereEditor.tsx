@@ -51,8 +51,7 @@ function PhotosphereEditor({
   }
 
   function handleAddHotspot(newHotspot: Hotspot3D) {
-    // need to select correct photosphere
-    let photosphere: Photosphere = vfe.photospheres[currentPS];
+    const photosphere: Photosphere = vfe.photospheres[currentPS];
 
     photosphere.hotspots[newHotspot.tooltip] = newHotspot;
 

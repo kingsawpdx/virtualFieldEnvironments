@@ -36,7 +36,9 @@ function ContentInput({ contentType, onChangeContent }: ContentInputProps) {
         <input
           type="string"
           id="content"
-          onChange={(e) => onChangeContent(e.target.value)}
+          onChange={(e) => {
+            onChangeContent(e.target.value);
+          }}
         />
       );
       break;
@@ -46,7 +48,9 @@ function ContentInput({ contentType, onChangeContent }: ContentInputProps) {
         <input
           type="string"
           id="content"
-          onChange={(e) => onChangeContent(e.target.value)}
+          onChange={(e) => {
+            onChangeContent(e.target.value);
+          }}
         />
       );
       break;
