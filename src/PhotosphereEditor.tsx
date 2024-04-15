@@ -3,7 +3,8 @@ import { useState } from "react";
 import AddPhotosphere from "./buttons/AddPhotosphere.tsx";
 import { VFE } from "./DataStructures.ts";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
-import AddAudio from "./buttons/AddAudio.tsx";
+import  AddAudio from "./buttons/AddAudio.tsx"
+import AudioToggleButton from "./AudioToggleButton.tsx";
 
 interface PhotosphereEditorProps {
   vfe: VFE;
@@ -12,6 +13,7 @@ interface PhotosphereEditorProps {
 function PhotosphereEditor({ vfe }: PhotosphereEditorProps): JSX.Element {
   //Basic states for each component, its basically just a boolean
   const [showAddPhotosphere, setShowAddPhotosphere] = useState(false);
+  const [audio, setAudio] = useState<string>("");
   //Create a useState for your component
 
   //Reset all states so we dont have issues with handling different components at the same time
@@ -25,6 +27,10 @@ function PhotosphereEditor({ vfe }: PhotosphereEditorProps): JSX.Element {
     if (showAddPhotosphere) return <AddPhotosphere />;
     //Below this you will have your conditional for your own component, ie AddNavmap/AddHotspot
     return null;
+  }
+
+  function handleAudioChange(event: React.ChangeEvent<HTMLInputElement>) {
+    AddAudio(event, setAudio, vfe); // Call the AddAudio function to handle audio change
   }
 
   return (
@@ -69,18 +75,12 @@ function PhotosphereEditor({ vfe }: PhotosphereEditorProps): JSX.Element {
         >
           Add New Hotspot
         </button>
-        <button
-          style={{ margin: "10px 0" }}
-          onClick={() => {
-            resetStates();
-            AddAudio();
-          }}
-        >
-          Add/Change Audio
-        </button>
+        <label htmlFor="audio">Add Audio (Optional):</label>
+        <input type="file" id="audio" onChange={handleAudioChange} />
+        {audio !== "" && <AudioToggleButton src={audio} />}
       </div>
       <div style={{ width: "100%", height: "100%" }}>
-        <PhotosphereViewer vfe={vfe} />
+        <PhotosphereViewer vfe={vfe}/>
         <ActiveComponent />
       </div>
     </div>

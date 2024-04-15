@@ -7,7 +7,7 @@ interface CreateVFEFormProps {
   onCreateVFE: (data: VFE) => void;
 }
 
-function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
+export function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
   const [vfeName, setVFEName] = useState("");
   const [photosphereName, setPhotosphereName] = useState(""); // State for Photosphere Name
   const [panoImage, setPanoImage] = useState("");
@@ -44,7 +44,7 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
     //setVFEName("");
     //setPhotosphereName(""); // Reset Photosphere Name
     //setPanoImage("");
-    return <PhotosphereViewer vfe={data} />;
+    return <PhotosphereViewer vfe={data}/>;
   }
 
   function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {

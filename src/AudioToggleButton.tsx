@@ -39,7 +39,7 @@ function AudioToggleButton(props: AudioToggleButtonProps) {
         position: "absolute",
         zIndex: 1000,
         top: "18px", // Adjust this value to change the vertical position
-        left: "1100px", // Adjust this value to change the horizontal position
+        left: "1300px", // Adjust this value to change the horizontal position
       }}
     >
       {isAudioPlaying ? "Pause Audio" : "Play Audio"}
