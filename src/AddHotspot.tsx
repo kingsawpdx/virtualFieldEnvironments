@@ -71,24 +71,18 @@ function ContentInput({ contentType, onChangeContent }: ContentInputProps) {
 interface AddHotspotProps {
   onAddHotspot: (newHotspot: Hotspot3D) => void;
   onCancel: () => void;
+  pitch: number;
+  yaw: number;
 }
 
-function AddHotspot({ onAddHotspot, onCancel }: AddHotspotProps) {
-  // Placeholder content or logic can be added here later
+function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
   const [tooltip, setTooltip] = useState("");
   const [contentType, setContentType] = useState("invalid");
   const [content, setContent] = useState("");
-  const [pitch, setPitch] = useState(0);
-  const [yaw, setYaw] = useState(0);
-
-  /*function handleSelectPosition() {
-    // todo
-    // get pitch/yaw off of click on viewer
-  }*/
 
   function handleAddHotspot() {
     if (tooltip.trim() == "" || contentType == "invalid") {
-      alert("Please provide a tooltip, a valid content type, and location");
+      alert("Please provide a tooltip and a valid content type");
       return;
     }
 
@@ -195,32 +189,12 @@ function AddHotspot({ onAddHotspot, onCancel }: AddHotspotProps) {
         <ContentInput contentType={contentType} onChangeContent={setContent} />
       </div>
       <div>
-        {/*<span>Pitch: </span>
-        <span id="pitch">{String(pitch)}</span>
+        <span>Pitch: </span>
+        <span id="pitch">{String(pitch.toFixed(2))}</span>
         <span>Yaw: </span>
-        <span id="yaw">{String(yaw)}</span>
+        <span id="yaw">{String(yaw.toFixed(2))}</span>
         <br />
-        <button onClick={handleSelectPosition}>Select Position</button>*/}
-        <label htmlFor="pitch">Pitch: </label>
-        <input
-          style={{ width: 30 }}
-          type="string"
-          id="pitch"
-          value={pitch}
-          onChange={(e) => {
-            setPitch(parseInt(e.target.value));
-          }}
-        />
-        <label htmlFor="yaw">Yaw: </label>
-        <input
-          style={{ width: 30 }}
-          type="string"
-          id="yaw"
-          value={yaw}
-          onChange={(e) => {
-            setYaw(parseInt(e.target.value));
-          }}
-        />
+        <span>Click on viewer for pitch and yaw</span>
       </div>
       <div style={{ display: "flex", justifyContent: "space-around" }}>
         <button style={{ width: "40%" }} onClick={handleAddHotspot}>

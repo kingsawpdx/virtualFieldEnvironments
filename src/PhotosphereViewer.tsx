@@ -117,6 +117,7 @@ export interface PhotosphereViewerProps {
   vfe: VFE;
   currentPS?: string;
   onChangePS?: (id: string) => void;
+  onViewerClick?: (pitch: number, yaw: number) => void;
 }
 
 function PhotosphereViewer(props: PhotosphereViewerProps) {
@@ -159,6 +160,12 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
       const passMarker = currentPhotosphere.hotspots[marker.config.id];
 
       setHotspotArray([passMarker]);
+    });
+
+    instance.addEventListener("click", ({ data }) => {
+      if (!data.rightclick) {
+        props.onViewerClick?.(data.pitch, data.yaw);
+      }
     });
 
     const virtualTour =
