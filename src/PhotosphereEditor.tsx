@@ -1,31 +1,62 @@
 import { useState } from "react";
 
 import AddPhotosphere from "./AddPhotosphere.tsx";
-import { VFE } from "./DataStructures.ts";
+import { Photosphere, VFE } from "./DataStructures.ts";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
 
+/* -----------------------------------------------------------------------
+    Update the Virtual Field Environment with an added Photosphere.
+
+    * Take the initial VFE from parent
+    * If a change has been made to the parentVFE -> updateTrigger === true
+    * Send the newPhotosphere back to parent 
+    * Parent updates the VFE with the newPhotosphere object
+   ----------------------------------------------------------------------- */
+
+// Properties passed down from parent
 interface PhotosphereEditorProps {
-  vfe: VFE;
+  parentVFE: VFE;
+  onUpdateVFE: (updatedVFE: VFE) => void;
 }
 
-function PhotosphereEditor({ vfe }: PhotosphereEditorProps): JSX.Element {
-  //Basic states for each component, its basically just a boolean
+// If an update is triggered, add newPhotosphere, and update VFE
+function PhotosphereEditor({
+  parentVFE,
+  onUpdateVFE,
+}: PhotosphereEditorProps): JSX.Element {
+  // Base states
+  const [vfe, setVFE] = useState<VFE>(parentVFE);
   const [showAddPhotosphere, setShowAddPhotosphere] = useState(false);
-  //Create a useState for your component
+  const [updateTrigger, setUpdateTrigger] = useState(0);
 
-  //Reset all states so we dont have issues with handling different components at the same time
+  // Update the VFE
+  function handleAddPhotosphere(newPhotosphere: Photosphere) {
+    const updatedVFE: VFE = {
+      ...vfe,
+      photospheres: {
+        ...vfe.photospheres,
+        [newPhotosphere.id]: newPhotosphere,
+      },
+    };
+    setVFE(updatedVFE); // Update the local VFE state
+    onUpdateVFE(updatedVFE); // Propagate the change to the AppRoot
+    setShowAddPhotosphere(false);
+    setUpdateTrigger((prev) => prev + 1);
+  }
+
+  // Reset all states so we dont have issues with handling different components at the same time
   function resetStates() {
     setShowAddPhotosphere(false);
-    //Dont forget to reset your usestate!
   }
 
-  //This function is where we render the actual component based on the useState
+  // This function is where we render the actual component based on the useState
   function ActiveComponent() {
-    if (showAddPhotosphere) return <AddPhotosphere />;
-    //Below this you will have your conditional for your own component, ie AddNavmap/AddHotspot
+    if (showAddPhotosphere)
+      return <AddPhotosphere onAddPhotosphere={handleAddPhotosphere} />;
+    // Below this you will have your conditional for your own component, ie AddNavmap/AddHotspot
     return null;
   }
-
+  // Add styling for inputting information
   return (
     <div style={{ display: "flex", height: "100vh", position: "relative" }}>
       <div
@@ -70,7 +101,7 @@ function PhotosphereEditor({ vfe }: PhotosphereEditorProps): JSX.Element {
         </button>
       </div>
       <div style={{ width: "100%", height: "100%" }}>
-        <PhotosphereViewer vfe={vfe} />
+        <PhotosphereViewer key={updateTrigger} vfe={vfe} />
         <ActiveComponent />
       </div>
     </div>
