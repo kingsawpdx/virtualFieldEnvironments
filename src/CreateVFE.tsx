@@ -3,48 +3,60 @@ import React, { useState } from "react";
 import { VFE } from "./DataStructures.ts";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
 
+/* -----------------------------------------------------------------------
+    Create a Virtual Field Environment (VFE) that will contain many 
+    Photospheres.
+
+    * Props object allows us to send the new Photosphere back to parent
+    * Pass props object to AddPhotosphere function
+    * Input data
+    * Check for errors
+    * Create newPhotosphere object
+    * Pass it back to parent to update the VFE with the newPhotosphere
+   ----------------------------------------------------------------------- */
+
+// Properties passed down from parent
 interface CreateVFEFormProps {
   onCreateVFE: (data: VFE) => void;
 }
 
+// Add a new VFE
 function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
+  // Base states
   const [vfeName, setVFEName] = useState("");
   const [photosphereName, setPhotosphereName] = useState(""); // State for Photosphere Name
   const [panoImage, setPanoImage] = useState("");
 
+  // Error Handling: Ensure the data is not empty
   function handleCreateVFE() {
     if (vfeName.trim() === "" || photosphereName.trim() === "" || !panoImage) {
-      alert(
-        "Please provide a VFE name, a Photosphere name, and select a panorama image.",
-      );
+      alert("Please, provide a VFE name, Photosphere name, and an image.");
       return;
     }
+    // Input data into new VFE
     const data: VFE = {
       name: vfeName,
       map: {
-        src: "", // Placeholder for map image
-        rotation: 0, // Placeholder for map rotation
-        defaultZoom: 0, // Placeholder for default zoom
-        hotspots: [], // Placeholder for map hotspots
+        src: "",
+        rotation: 0,
+        defaultZoom: 0,
+        hotspots: [],
       },
-      defaultPhotosphereID: photosphereName, // Use Photosphere Name for default Photosphere ID
+      defaultPhotosphereID: photosphereName,
       photospheres: {
         [photosphereName]: {
-          id: photosphereName, // Use Photosphere Name for Photosphere ID
-          src: panoImage, // Panorama image provided by the user
-          center: { x: 0, y: 0 }, // Placeholder for panorama center
-          hotspots: {}, // Placeholder for photosphere hotspots
+          id: photosphereName,
+          src: panoImage,
+          center: { x: 0, y: 0 },
+          hotspots: {},
         },
       },
     };
     onCreateVFE(data);
-    // Reset form fields after creating the VFE
-    //setVFEName("");
-    //setPhotosphereName(""); // Reset Photosphere Name
-    //setPanoImage("");
     return <PhotosphereViewer vfe={data} />;
   }
 
+  // Ensure file is truthy
   function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (file) {
@@ -56,7 +68,7 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
       reader.readAsDataURL(file);
     }
   }
-
+  // Add styling to input interface
   return (
     <div>
       <h2>Create a New Virtual Field Environment (VFE)</h2>
