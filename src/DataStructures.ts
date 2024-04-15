@@ -57,7 +57,7 @@ export type HotspotData = Image | Audio | Video | URL | Doc | PhotosphereLink;
 export interface Image {
   tag: "Image";
   src: string;
-  hotspots: Hotspot2D[];
+  hotspots: Record<string, Hotspot2D>;
 }
 
 export interface Video {

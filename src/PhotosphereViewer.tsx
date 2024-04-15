@@ -4,7 +4,7 @@ import {
   VirtualTourLink,
   VirtualTourNode,
 } from "@photo-sphere-viewer/virtual-tour-plugin";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   MapPlugin,
   MapPluginConfig,
@@ -24,18 +24,7 @@ import {
   VFE,
 } from "./DataStructures";
 import PhotosphereSelector from "./PhotosphereSelector";
-
-function videoContent(src: string): string {
-  return `<video controls style="max-width: 100%; max-height: 100%">
-  <source src="${src}" type="video/mp4" />
-</video>`;
-}
-
-function pictureContent(imageSrc: string) {
-  return `
-    <img src="${imageSrc}" alt="Marker Image" style= "max-width:380px; max-height: 500px";/>
-    `;
-}
+import PopOver from "./PopOver";
 
 /** Convert yaw/pitch degrees from numbers to strings ending in "deg" */
 function degToStr(val: number): string {
@@ -43,23 +32,19 @@ function degToStr(val: number): string {
 }
 
 /** Convert non-link hotspots to markers with type-based content/icons */
-function convertHotspots(hotspots: Hotspot3D[]): MarkerConfig[] {
+function convertHotspots(hotspots: Record<string, Hotspot3D>): MarkerConfig[] {
   const markers: MarkerConfig[] = [];
 
-  for (const hotspot of hotspots) {
+  for (const hotspot of Object.values(hotspots)) {
     if (hotspot.data.tag === "PhotosphereLink") continue;
 
-    let content: string | undefined = undefined;
     let icon =
       "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"; // default
 
     switch (hotspot.data.tag) {
       case "Image":
-        content = pictureContent(hotspot.data.src);
-        //icon = imgIcon;
         break;
       case "Video":
-        content = videoContent(hotspot.data.src);
         icon =
           "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png"; // changed to make linter happy until icons are ready
         break;
@@ -82,7 +67,6 @@ function convertHotspots(hotspots: Hotspot3D[]): MarkerConfig[] {
         pitch: degToStr(hotspot.pitch),
       },
       tooltip: hotspot.tooltip,
-      content: content,
     });
   }
 
@@ -94,10 +78,10 @@ interface LinkData {
 }
 
 /** Convert photosphere-link hotspots to virtual tour links  */
-function convertLinks(hotspots: Hotspot3D[]): VirtualTourLink[] {
+function convertLinks(hotspots: Record<string, Hotspot3D>): VirtualTourLink[] {
   const links: VirtualTourLink[] = [];
 
-  for (const hotspot of hotspots) {
+  for (const hotspot of Object.values(hotspots)) {
     if (hotspot.data.tag !== "PhotosphereLink") continue;
 
     links.push({
@@ -135,11 +119,13 @@ export interface PhotosphereViewerProps {
 
 function PhotosphereViewer(props: PhotosphereViewerProps) {
   const photoSphereRef = React.createRef<ViewerAPI>();
-
   const defaultPhotosphere =
     props.vfe.photospheres[props.vfe.defaultPhotosphereID];
   const [currentPhotosphere, setCurrentPhotosphere] =
     React.useState<Photosphere>(defaultPhotosphere);
+  const [hotspotArray, setHotspotArray] = useState<(Hotspot3D | Hotspot2D)[]>(
+    [],
+  );
 
   useEffect(() => {
     const virtualTour =
@@ -165,6 +151,14 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
   ];
 
   function handleReady(instance: Viewer) {
+    const markerTestPlugin: MarkersPlugin = instance.getPlugin(MarkersPlugin);
+
+    markerTestPlugin.addEventListener("select-marker", ({ marker }) => {
+      const passMarker = currentPhotosphere.hotspots[marker.config.id];
+
+      setHotspotArray([passMarker]);
+    });
+
     const virtualTour =
       instance.getPlugin<VirtualTourPlugin>(VirtualTourPlugin);
 
@@ -183,6 +177,7 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
     virtualTour.setNodes(nodes, defaultPhotosphere.id);
     virtualTour.addEventListener("node-changed", ({ node }) => {
       setCurrentPhotosphere(props.vfe.photospheres[node.id]);
+      setHotspotArray([]); // clear popovers on scene change
     });
 
     const map = instance.getPlugin<MapPlugin>(MapPlugin);
@@ -207,6 +202,23 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
           setCurrentPhotosphere(props.vfe.photospheres[id]);
         }}
       />
+
+      {hotspotArray.length > 0 && (
+        <PopOver
+          hotspotData={hotspotArray[hotspotArray.length - 1].data}
+          title={hotspotArray[hotspotArray.length - 1].tooltip}
+          arrayLength={hotspotArray.length}
+          pushHotspot={(add: Hotspot2D) => {
+            setHotspotArray([...hotspotArray, add]);
+          }}
+          popHotspot={() => {
+            setHotspotArray(hotspotArray.slice(0, -1));
+          }}
+          closeAll={() => {
+            setHotspotArray([]);
+          }}
+        />
+      )}
 
       {currentPhotosphere.backgroundAudio && (
         <AudioToggleButton src={currentPhotosphere.backgroundAudio} />
