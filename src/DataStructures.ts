@@ -27,8 +27,8 @@ export interface NavMap {
 export interface Photosphere {
   id: string;
   src: string;
+  hotspots: Record<string, Hotspot3D>;
   center: { x: number; y: number };
-  hotspots: Hotspot3D[];
   backgroundAudio?: string;
 }
 
@@ -57,7 +57,7 @@ export type HotspotData = Image | Audio | Video | URL | Doc | PhotosphereLink;
 export interface Image {
   tag: "Image";
   src: string;
-  hotspots: Hotspot2D[];
+  hotspots: Record<string, Hotspot2D>;
 }
 
 export interface Video {

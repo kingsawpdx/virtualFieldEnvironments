@@ -31,7 +31,7 @@ function App() {
       data: {
         tag: "Image",
         src: OutcropWide,
-        hotspots: [],
+        hotspots: {},
       },
     },
     {
@@ -41,7 +41,7 @@ function App() {
       data: {
         tag: "Image",
         src: Flowers,
-        hotspots: [],
+        hotspots: {},
       },
     },
     {
@@ -69,7 +69,7 @@ function App() {
       data: {
         tag: "Image",
         src: SmallPool,
-        hotspots: [],
+        hotspots: {},
       },
     },
     {
@@ -79,7 +79,7 @@ function App() {
       data: {
         tag: "Image",
         src: LogNearShoreline,
-        hotspots: [],
+        hotspots: {},
       },
     },
     {
@@ -89,17 +89,7 @@ function App() {
       data: {
         tag: "Image",
         src: CoolLog,
-        hotspots: [],
-      },
-    },
-    {
-      pitch: 0,
-      yaw: -44,
-      tooltip: "HandSample",
-      data: {
-        tag: "Image",
-        src: HandSample,
-        hotspots: [],
+        hotspots: {},
       },
     },
     {
@@ -127,27 +117,7 @@ function App() {
       data: {
         tag: "Image",
         src: Mushroom,
-        hotspots: [],
-      },
-    },
-    {
-      pitch: -2,
-      yaw: -46,
-      tooltip: "CloserLook",
-      data: {
-        tag: "Image",
-        src: CloserLook,
-        hotspots: [],
-      },
-    },
-    {
-      pitch: 0,
-      yaw: -48,
-      tooltip: "SouthSEMComparison",
-      data: {
-        tag: "Image",
-        src: SEMComp,
-        hotspots: [],
+        hotspots: {},
       },
     },
     {
@@ -157,7 +127,46 @@ function App() {
       data: {
         tag: "Image",
         src: Contact,
-        hotspots: [],
+        hotspots: {
+          HandSample: {
+            x: 10,
+            y: 27.5,
+            id: "HandSample",
+            tooltip: "HandSample",
+            color: "#FF0000",
+            data: {
+              tag: "Image",
+              src: HandSample,
+              hotspots: {
+                CloserLook: {
+                  x: 50,
+                  y: 50,
+                  id: "CloserLook",
+                  tooltip: "CloserLook",
+                  color: "#00FF00",
+                  data: {
+                    tag: "Image",
+                    src: CloserLook,
+                    hotspots: {
+                      SouthSEMComparison: {
+                        x: 52.5,
+                        y: 37.5,
+                        id: "SouthSEMComparison",
+                        tooltip: "SouthSEMComparison",
+                        color: "#00FFFF",
+                        data: {
+                          tag: "Image",
+                          src: SEMComp,
+                          hotspots: {},
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       },
     },
     {
@@ -167,7 +176,7 @@ function App() {
       data: {
         tag: "Image",
         src: SouthwaterFront,
-        hotspots: [],
+        hotspots: {},
       },
     },
     {
@@ -194,7 +203,9 @@ function App() {
     id: "South",
     src: SouthScene,
     center: { x: 450, y: 800 },
-    hotspots: hotspotArray,
+    hotspots: Object.fromEntries(
+      hotspotArray.map((hotspot) => [hotspot.tooltip, hotspot]),
+    ),
     backgroundAudio: audioFile,
   };
 
@@ -202,8 +213,8 @@ function App() {
     id: "West",
     src: WestScene,
     center: { x: 95, y: 530 },
-    hotspots: [
-      {
+    hotspots: {
+      "Go North": {
         pitch: 0,
         yaw: 10,
         tooltip: "Go North",
@@ -212,7 +223,7 @@ function App() {
           photosphereID: "North",
         },
       },
-      {
+      "Go South": {
         pitch: -3,
         yaw: 115,
         tooltip: "Go South",
@@ -221,15 +232,15 @@ function App() {
           photosphereID: "South",
         },
       },
-    ],
+    },
   };
 
   const north: Photosphere = {
     id: "North",
     src: NorthScene,
     center: { x: 390, y: 50 },
-    hotspots: [
-      {
+    hotspots: {
+      "Go West": {
         pitch: 0,
         yaw: -130,
         tooltip: "Go West",
@@ -238,7 +249,7 @@ function App() {
           photosphereID: "West",
         },
       },
-      {
+      "Go East": {
         pitch: 0,
         yaw: 92,
         tooltip: "Go East",
@@ -247,15 +258,15 @@ function App() {
           photosphereID: "East",
         },
       },
-    ],
+    },
   };
 
   const east: Photosphere = {
     id: "East",
     src: EastScene,
     center: { x: 550, y: 450 },
-    hotspots: [
-      {
+    hotspots: {
+      "Go North": {
         pitch: 3,
         yaw: 2,
         tooltip: "Go North",
@@ -264,7 +275,7 @@ function App() {
           photosphereID: "North",
         },
       },
-      {
+      "Go to Entrance": {
         pitch: -2,
         yaw: -167,
         tooltip: "Go to Entrance",
@@ -273,15 +284,15 @@ function App() {
           photosphereID: "Entrance",
         },
       },
-    ],
+    },
   };
 
   const entrance: Photosphere = {
     id: "Entrance",
     src: EntranceScene,
     center: { x: 650, y: 930 },
-    hotspots: [
-      {
+    hotspots: {
+      "Go East": {
         pitch: -2,
         yaw: -4,
         tooltip: "Go East",
@@ -290,7 +301,7 @@ function App() {
           photosphereID: "East",
         },
       },
-      {
+      "Go South": {
         pitch: -4,
         yaw: -78,
         tooltip: "Go South",
@@ -299,7 +310,7 @@ function App() {
           photosphereID: "South",
         },
       },
-    ],
+    },
   };
 
   const photospheres: Record<string, Photosphere> = {
