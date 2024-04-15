@@ -63,7 +63,7 @@ function AddPhotosphere({
       id: photosphereID,
       src: panoImage,
       center: { x: 0, y: 0 },
-      hotspots: [],
+      hotspots: {},
       backgroundAudio: audioFile,
     };
 

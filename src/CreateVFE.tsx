@@ -33,7 +33,7 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
           id: photosphereName, // Use Photosphere Name for Photosphere ID
           src: panoImage, // Panorama image provided by the user
           center: { x: 0, y: 0 }, // Placeholder for panorama center
-          hotspots: [], // Placeholder for photosphere hotspots
+          hotspots: {}, // Placeholder for photosphere hotspots
         },
       },
     };
