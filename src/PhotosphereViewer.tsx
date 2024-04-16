@@ -124,8 +124,8 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
   const photoSphereRef = React.createRef<ViewerAPI>();
   const defaultPhotosphere =
     props.vfe.photospheres[props.vfe.defaultPhotosphereID];
-  const [currentPhotosphere, setCurrentPhotosphere] =
-    React.useState<Photosphere>(defaultPhotosphere);
+  // conditional fixes popover not rendering on non-default photosphere problem
+  const [currentPhotosphere, setCurrentPhotosphere] = React.useState<Photosphere>(props.currentPS ? props.vfe.photospheres[props.currentPS] : defaultPhotosphere)
   const [hotspotArray, setHotspotArray] = useState<(Hotspot3D | Hotspot2D)[]>(
     [],
   );
