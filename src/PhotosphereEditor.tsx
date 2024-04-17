@@ -4,7 +4,6 @@ import AddPhotosphere from "./buttons/AddPhotosphere.tsx";
 import { VFE } from "./DataStructures.ts";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
 import  AddAudio from "./buttons/AddAudio.tsx"
-import AudioToggleButton from "./AudioToggleButton.tsx";
 
 interface PhotosphereEditorProps {
   vfe: VFE;
@@ -75,9 +74,8 @@ function PhotosphereEditor({ vfe }: PhotosphereEditorProps): JSX.Element {
         >
           Add New Hotspot
         </button>
-        <label htmlFor="audio">Add Audio (Optional):</label>
+        <label htmlFor="audio">Add/Change Audio:</label>
         <input type="file" id="audio" onChange={handleAudioChange} />
-        {audio !== "" && <AudioToggleButton src={audio} />}
       </div>
       <div style={{ width: "100%", height: "100%" }}>
         <PhotosphereViewer vfe={vfe}/>
@@ -87,4 +85,5 @@ function PhotosphereEditor({ vfe }: PhotosphereEditorProps): JSX.Element {
   );
 }
 
+//console.log({vfe.photospheres[vfe.defaultPhotosphereID].backgroundAudio})
 export default PhotosphereEditor;

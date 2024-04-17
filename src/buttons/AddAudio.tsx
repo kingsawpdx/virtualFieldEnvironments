@@ -8,7 +8,10 @@ function AddAudio(event: ChangeEvent<HTMLInputElement>, setAudio: React.Dispatch
       reader.onload = () => {
         const audioURL = reader.result as string; // Assuming the result is a string representing the URL
         setAudio(audioURL); // Set audio state to the selected file URL
-        vfe.photospheres.backgroundAudio
+        //need to add logic to add current photospheres audio to this audioURL, how can we do that?
+        const currentPhotosphereId = vfe.defaultPhotosphereID;
+        vfe.photospheres[currentPhotosphereId].backgroundAudio = audioURL
+
       }; 
     reader.readAsDataURL(file);
   } else {
