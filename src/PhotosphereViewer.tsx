@@ -115,14 +115,22 @@ function convertMap(map: NavMap, center: Point): MapPluginConfig {
 
 export interface PhotosphereViewerProps {
   vfe: VFE;
+  currentPS?: string;
+  onChangePS?: (id: string) => void;
+  onViewerClick?: (pitch: number, yaw: number) => void;
 }
 
 function PhotosphereViewer(props: PhotosphereViewerProps) {
   const photoSphereRef = React.createRef<ViewerAPI>();
   const defaultPhotosphere =
     props.vfe.photospheres[props.vfe.defaultPhotosphereID];
+  // conditional fixes popover not rendering on non-default photosphere problem
   const [currentPhotosphere, setCurrentPhotosphere] =
-    React.useState<Photosphere>(defaultPhotosphere);
+    React.useState<Photosphere>(
+      props.currentPS
+        ? props.vfe.photospheres[props.currentPS]
+        : defaultPhotosphere,
+    );
   const [hotspotArray, setHotspotArray] = useState<(Hotspot3D | Hotspot2D)[]>(
     [],
   );
@@ -161,6 +169,12 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
       setHotspotArray([passMarker]);
     });
 
+    instance.addEventListener("click", ({ data }) => {
+      if (!data.rightclick) {
+        props.onViewerClick?.(data.pitch, data.yaw);
+      }
+    });
+
     const virtualTour =
       instance.getPlugin<VirtualTourPlugin>(VirtualTourPlugin);
 
@@ -176,9 +190,14 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
       },
     );
 
-    virtualTour.setNodes(nodes, defaultPhotosphere.id);
+    // need to have conditional so that scene doesn't change when adding hotspots
+    virtualTour.setNodes(
+      nodes,
+      props.currentPS ? props.currentPS : defaultPhotosphere.id,
+    );
     virtualTour.addEventListener("node-changed", ({ node }) => {
       setCurrentPhotosphere(props.vfe.photospheres[node.id]);
+      props.onChangePS?.(node.id);
       setHotspotArray([]); // clear popovers on scene change
     });
 
@@ -191,6 +210,7 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
         setCurrentPhotosphere(
           props.vfe.photospheres[hotspot.data.photosphereID],
         );
+        props.onChangePS?.(hotspot.data.photosphereID);
       }
     });
   }
@@ -202,6 +222,7 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
         value={currentPhotosphere.id}
         setValue={(id) => {
           setCurrentPhotosphere(props.vfe.photospheres[id]);
+          props.onChangePS?.(id);
         }}
       />
 
