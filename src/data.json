@@ -1,4 +1,6 @@
 {
+  "name": "prototypeElkIslandVFE",
+  "defaultID": "South",
   "vfeData": {
     "photospheres": {
       "south": {
@@ -284,6 +286,11 @@
           }
         }
       }
+    },
+    "map": {
+      "src": "src/assets/VFEdata/map.jpg",
+      "rotation": 0,
+      "defaultZoom": 20
     }
   }
 }
