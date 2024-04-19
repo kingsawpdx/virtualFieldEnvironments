@@ -55,7 +55,7 @@ export function PhotosphereCenterFieldset({
         <label htmlFor="photosphereCenterY">Y Coordinate:</label>
         <input
           type="number"
-          id="photosphereCenterX"
+          id="photosphereCenterY"
           value={photosphereCenterY}
           onChange={(e) => {
             setPhotosphereCenterY(e.target.value);
