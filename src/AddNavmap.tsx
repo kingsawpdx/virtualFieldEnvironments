@@ -9,7 +9,7 @@ interface AddNavMapProps {
 
 function AddNavMap({ onCreateNavMap, onClose }: AddNavMapProps): JSX.Element {
   const [navmapName, setNavmapName] = useState("");
-  const [navmapImage, setNavmapImage] = useState<File | null>(null);
+  const [navmapImage, setNavmapImage] = useState<string | null>(null);
 
   function handleNameChange(e: React.ChangeEvent<HTMLInputElement>) {
     setNavmapName(e.target.value);
@@ -18,7 +18,11 @@ function AddNavMap({ onCreateNavMap, onClose }: AddNavMapProps): JSX.Element {
   function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (file) {
-      setNavmapImage(file);
+      const reader = new FileReader();
+      reader.onloadend = function () {
+        setNavmapImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
     }
   }
 
@@ -28,7 +32,7 @@ function AddNavMap({ onCreateNavMap, onClose }: AddNavMapProps): JSX.Element {
       return;
     }
     const newNavMap: NavMap = {
-      src: URL.createObjectURL(navmapImage),
+      src: navmapImage,
       id: navmapName,
       rotation: 0,
       defaultZoom: 0,
