@@ -15,7 +15,9 @@ function App() {
   window.localStorage.setItem("vfeData", JSON.stringify(dataArray));
 
   //It does not work with VFEData as it has type any
-  const VFEData = JSON.parse(window.localStorage.getItem("vfeData") || "{}");
+  const VFEData = JSON.parse(
+    window.localStorage.getItem("vfeData") || "{}",
+  ) as VFE;
 
   //If nested hotspots, the nested data is returned as a record.
   function hotspotArrayExtract(
@@ -80,15 +82,12 @@ function App() {
         break;
     }
   }
-  console.log(typeof VFEData.vfeData.photospheres);
-  console.log(typeof dataArray.vfeData.photospheres);
+
   //Create a record of photospheres for each photosphere imported.
-  const photospheres: Record<string, Photosphere> = Object.values(
-    dataArray.vfeData.photospheres,
-  ).reduce((key, photosphere) => {
-    //Create a Hotspot3D[] for each photosphere
+  const photospheres: Record<string, Photosphere> = {};
+  for (const photosphere of Object.entries(VFEData.photospheres)) {
     const photosphereHotspotArray: Hotspot3D[] = Object.values(
-      photosphere.hotspots,
+      photosphere[1].hotspots,
     ).map((hotspot) => {
       return {
         pitch: Number(hotspot.pitch),
@@ -98,24 +97,23 @@ function App() {
       };
     });
 
-    key[photosphere.id] = {
-      id: photosphere.id,
-      src: photosphere.src,
+    photospheres[photosphere[1].id] = {
+      id: photosphere[1].id,
+      src: photosphere[1].src,
       center: {
-        x: Number(photosphere.center.x),
-        y: Number(photosphere.center.y),
+        x: photosphere[1].center.x,
+        y: photosphere[1].center.y,
       },
       hotspots: Object.fromEntries(
         photosphereHotspotArray.map((hotspot) => [hotspot.tooltip, hotspot]),
       ),
     };
-    return key;
-  }, {});
+  }
 
   const map: NavMap = {
-    src: dataArray.vfeData.map.src,
-    rotation: Number(dataArray.vfeData.map.rotation),
-    defaultZoom: Number(dataArray.vfeData.map.defaultZoom),
+    src: VFEData.map.src,
+    rotation: Number(VFEData.map.rotation),
+    defaultZoom: Number(VFEData.map.defaultZoom),
     hotspots: Object.values(photospheres).map((p) => {
       return {
         x: p.center.x,
@@ -129,9 +127,9 @@ function App() {
   };
 
   const data: VFE = {
-    name: dataArray.name,
+    name: VFEData.name,
     map: map,
-    defaultPhotosphereID: dataArray.defaultID,
+    defaultPhotosphereID: "South",
     photospheres,
   };
 
