@@ -1,9 +1,13 @@
+import AddPhotoAlternateSharpIcon from "@mui/icons-material/AddPhotoAlternateSharp";
 import DesktopWindowsSharpIcon from "@mui/icons-material/DesktopWindowsSharp";
+import EditLocationAltOutlinedIcon from "@mui/icons-material/EditLocationAltOutlined";
+import EditSharpIcon from "@mui/icons-material/EditSharp";
 import LibraryAddSharpIcon from "@mui/icons-material/LibraryAddSharp";
 import {
   AppBar,
   Box,
   CssBaseline,
+  Divider,
   Drawer,
   List,
   ListItem,
@@ -11,6 +15,8 @@ import {
   ListItemIcon,
   Toolbar,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 
 interface LandingPageProps {
@@ -19,7 +25,10 @@ interface LandingPageProps {
 }
 
 function LandingPage({ onLoadTestVFE, onCreateVFE }: LandingPageProps) {
-  const drawerWidth = 240;
+  // Responsive screen setup
+  const theme = useTheme();
+  const isSmallerScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const drawerWidth = isSmallerScreen ? "20%" : "20%";
 
   return (
     // MUI template for clipped drawer landing page layout
@@ -53,16 +62,34 @@ function LandingPage({ onLoadTestVFE, onCreateVFE }: LandingPageProps) {
             <List>
               {[
                 "View Prototype",
-                "Add Virtual Field Environment",
-                "Add Prototype",
+                "Add Field Environment",
+                "Edit Field Environment",
               ].map((text, index) => (
                 <ListItem key={text} disablePadding>
                   <ListItemButton>
                     <ListItemIcon>
-                      {index % 2 === 0 ? (
+                      {index % 3 === 0 ? (
                         <DesktopWindowsSharpIcon onClick={onLoadTestVFE} />
-                      ) : (
+                      ) : index % 3 === 1 ? (
                         <LibraryAddSharpIcon onClick={onCreateVFE} />
+                      ) : (
+                        <EditSharpIcon />
+                      )}
+                    </ListItemIcon>
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
+            <Divider />
+            <List>
+              {["Add Photo Sphere", "Edit Photo Sphere"].map((text, index) => (
+                <ListItem key={text} disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      {index % 2 === 0 ? (
+                        <AddPhotoAlternateSharpIcon />
+                      ) : (
+                        <EditLocationAltOutlinedIcon />
                       )}
                     </ListItemIcon>
                   </ListItemButton>
