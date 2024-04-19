@@ -56,7 +56,7 @@ function PhotosphereEditor({
       },
     };
     setVFE(updatedVFE); // Update the local VFE state
-    onUpdateVFE(updatedVFE); // Propagate the change to the AppRoot
+    onUpdateVFE(updatedVFE, newPhotosphere.id); // Propagate the change to the AppRoot
     setShowAddPhotosphere(false);
     setUpdateTrigger((prev) => prev + 1);
   }
@@ -67,7 +67,7 @@ function PhotosphereEditor({
       map: updatedNavMap,
     };
     setVFE(updatedVFE); // Update the local VFE state
-    onUpdateVFE(updatedVFE); // Propagate the change to the parent component
+    onUpdateVFE(updatedVFE, currentPS); // Propagate the change to the parent component
     setShowAddNavMap(false); // Close the AddNavMap component
     setUpdateTrigger((prev) => prev + 1);
   }
