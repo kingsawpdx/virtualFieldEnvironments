@@ -1,3 +1,6 @@
+import { Button, Stack } from "@mui/material";
+import React from "react";
+
 interface LandingPageProps {
   onLoadTestVFE: () => void;
   onCreateVFE: () => void;
@@ -17,38 +20,28 @@ function LandingPage({ onLoadTestVFE, onCreateVFE }: LandingPageProps) {
     >
       <h1> Welcome to the Virtual Field Enviornment (VFE) </h1>
       <p> Explore and create virtual field enviornments! </p>
-      <button
-        onClick={onLoadTestVFE}
-        style={{
-          padding: "10px 20px",
-          fontSize: "1rem",
-          cursor: "pointer",
-          margin: "20px",
-          borderRadius: "5px",
-          border: "none",
-          background: "#4facfe",
-          color: "white",
-          boxShadow: "0 4px 14px 0 rgba(0, 0, 0, 0.1)",
-        }}
-      >
-        Load Test VFE
-      </button>
-      <button
-        onClick={onCreateVFE}
-        style={{
-          padding: "10px 20px",
-          fontSize: "1rem",
-          cursor: "pointer",
-          margin: "20px",
-          borderRadius: "5px",
-          border: "none",
-          background: "#4facfe",
-          color: "white",
-          boxShadow: "0 4px 14px 0 rgba(0, 0, 0, 0.1)",
-        }}
-      >
-        Create VFE
-      </button>
+      <Stack direction={"column"} alignItems={"center"}>
+        <Button
+          variant="contained"
+          onClick={onLoadTestVFE}
+          style={{
+            padding: "10px 20px",
+            margin: "20px",
+          }}
+        >
+          Load Test VFE
+        </Button>
+        <Button
+          variant="contained"
+          onClick={onCreateVFE}
+          style={{
+            padding: "10px 20px",
+            margin: "20px",
+          }}
+        >
+          Create VFE
+        </Button>
+      </Stack>
     </div>
   );
 }
