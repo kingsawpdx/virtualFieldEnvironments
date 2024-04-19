@@ -7,6 +7,20 @@ interface AddNavMapProps {
   onClose: () => void; // Function to close the AddNavMap window
 }
 
+// Calculate image dimensions by creating an image element and waiting for it to load.
+// Since image loading isn't synchronous, it needs to be wrapped in a Promise.
+async function calculateImageDimensions(
+  url: string,
+): Promise<{ width: number; height: number }> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      resolve({ width: img.width, height: img.height });
+    };
+    img.src = url;
+  });
+}
+
 function AddNavMap({ onCreateNavMap, onClose }: AddNavMapProps): JSX.Element {
   const [navmapName, setNavmapName] = useState("");
   const [navmapImage, setNavmapImage] = useState<string | null>(null);
@@ -26,17 +40,22 @@ function AddNavMap({ onCreateNavMap, onClose }: AddNavMapProps): JSX.Element {
     }
   }
 
-  function handleCreateNavMap() {
+  async function handleCreateNavMap() {
     if (navmapName.trim() === "" || !navmapImage) {
       alert("Please provide a name and select an image for the Nav Map.");
       return;
     }
+
+    const navmapSize = 200;
+    const { width, height } = await calculateImageDimensions(navmapImage);
+    const maxDimension = Math.max(width, height);
     const newNavMap: NavMap = {
       src: navmapImage,
       id: navmapName,
       rotation: 0,
-      defaultZoom: 0,
-      hotspots: [],
+      defaultZoom: (navmapSize / maxDimension) * 100,
+      defaultCenter: { x: width / 2, y: height / 2 },
+      size: navmapSize,
     };
     onCreateNavMap(newNavMap); // Pass the new NavMap object directly
     onClose(); // Close the AddNavMap window after creating the Nav Map
@@ -81,7 +100,13 @@ function AddNavMap({ onCreateNavMap, onClose }: AddNavMapProps): JSX.Element {
           />
         </div>
         <div>
-          <button onClick={handleCreateNavMap}>Create</button>
+          <button
+            onClick={() => {
+              void handleCreateNavMap();
+            }}
+          >
+            Create
+          </button>
           <button onClick={onClose}>Cancel</button>
         </div>
       </form>

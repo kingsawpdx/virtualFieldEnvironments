@@ -69,6 +69,7 @@ function PhotosphereEditor({
     setVFE(updatedVFE); // Update the local VFE state
     onUpdateVFE(updatedVFE); // Propagate the change to the parent component
     setShowAddNavMap(false); // Close the AddNavMap component
+    setUpdateTrigger((prev) => prev + 1);
   }
 
   function handleAddHotspot(newHotspot: Hotspot3D) {

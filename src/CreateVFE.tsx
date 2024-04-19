@@ -4,7 +4,7 @@ import { VFE } from "./DataStructures.ts";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
 
 /* -----------------------------------------------------------------------
-    Create a Virtual Field Environment (VFE) that will contain many 
+    Create a Virtual Field Environment (VFE) that will contain many
     Photospheres.
 
     * Props object allows us to send the new Photosphere back to parent
@@ -40,15 +40,15 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
         src: "",
         id: "",
         rotation: 0,
-        defaultZoom: 0,
-        hotspots: [],
+        defaultZoom: 10,
+        defaultCenter: { x: 0, y: 0 },
+        size: 200,
       },
       defaultPhotosphereID: photosphereName,
       photospheres: {
         [photosphereName]: {
           id: photosphereName,
           src: panoImage,
-          center: { x: 0, y: 0 },
           hotspots: {},
         },
       },

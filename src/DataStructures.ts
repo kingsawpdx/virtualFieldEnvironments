@@ -21,7 +21,8 @@ export interface NavMap {
   id: string;
   rotation: number;
   defaultZoom: number;
-  hotspots: Hotspot2D[];
+  defaultCenter: { x: number; y: number };
+  size: number;
 }
 
 // Photosphere: a single 360-environment
@@ -29,7 +30,7 @@ export interface Photosphere {
   id: string;
   src: string;
   hotspots: Record<string, Hotspot3D>;
-  center: { x: number; y: number };
+  center?: { x: number; y: number };
   backgroundAudio?: string;
 }
 

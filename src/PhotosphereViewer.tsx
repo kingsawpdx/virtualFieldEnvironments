@@ -1,4 +1,5 @@
 import { Point, Viewer, ViewerConfig } from "@photo-sphere-viewer/core";
+import { MapHotspot } from "@photo-sphere-viewer/map-plugin";
 import { MarkerConfig } from "@photo-sphere-viewer/markers-plugin";
 import {
   VirtualTourLink,
@@ -29,6 +30,11 @@ import PopOver from "./PopOver";
 /** Convert yaw/pitch degrees from numbers to strings ending in "deg" */
 function degToStr(val: number): string {
   return String(val) + "deg";
+}
+
+/** Convert sizes from numbers to strings ending in "px" */
+function sizeToStr(val: number): string {
+  return String(val) + "px";
 }
 
 /** Convert non-link hotspots to markers with type-based content/icons */
@@ -97,19 +103,34 @@ function convertLinks(hotspots: Record<string, Hotspot3D>): VirtualTourLink[] {
   return links;
 }
 
-function convertMap(map: NavMap, center: Point): MapPluginConfig {
+function convertMap(
+  map: NavMap,
+  photospheres: Record<string, Photosphere>,
+  currentCenter?: Point,
+): MapPluginConfig {
+  const hotspots: MapHotspot[] = [];
+
+  for (const [id, photosphere] of Object.entries(photospheres)) {
+    if (photosphere.center === undefined) continue;
+
+    hotspots.push({
+      id: id,
+      tooltip: id,
+      x: photosphere.center.x,
+      y: photosphere.center.y,
+      color: "yellow",
+    });
+  }
+
   return {
     imageUrl: map.src,
-    center,
+    center: currentCenter ?? map.defaultCenter,
     rotation: map.rotation,
     defaultZoom: map.defaultZoom,
-    hotspots: map.hotspots.map((hotspot) => ({
-      x: hotspot.x,
-      y: hotspot.y,
-      id: hotspot.id,
-      color: hotspot.color,
-      tooltip: hotspot.tooltip,
-    })),
+    minZoom: 1,
+    maxZoom: 100,
+    size: sizeToStr(map.size),
+    hotspots,
   };
 }
 
@@ -136,42 +157,26 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
   );
 
   useEffect(() => {
-    const mapPlugin: MapPlugin | undefined =
-      photoSphereRef.current?.getPlugin(MapPlugin);
-
-    if (mapPlugin) {
-      const newMapConfig = convertMap(props.vfe.map, currentPhotosphere.center);
-
-      if (newMapConfig.imageUrl) {
-        mapPlugin.setImage(newMapConfig.imageUrl);
-      }
-
-      if (newMapConfig.center) {
-        mapPlugin.setCenter(newMapConfig.center);
-      }
-
-      if (newMapConfig.hotspots) {
-        mapPlugin.setHotspots(newMapConfig.hotspots);
-      }
-
-      if (newMapConfig.rotation !== undefined) {
-        mapPlugin.setOption("rotation", newMapConfig.rotation);
-      }
-    }
-  }, [props.vfe.map, currentPhotosphere.center, photoSphereRef]);
-
-  useEffect(() => {
     const virtualTour =
       photoSphereRef.current?.getPlugin<VirtualTourPlugin>(VirtualTourPlugin);
     void virtualTour?.setCurrentNode(currentPhotosphere.id);
 
     const map = photoSphereRef.current?.getPlugin<MapPlugin>(MapPlugin);
-    map?.setCenter(currentPhotosphere.center);
+    if (currentPhotosphere.center) {
+      map?.setCenter(currentPhotosphere.center);
+    }
   }, [currentPhotosphere, photoSphereRef]);
 
   const plugins: ViewerConfig["plugins"] = [
     [MarkersPlugin, {}],
-    [MapPlugin, convertMap(props.vfe.map, defaultPhotosphere.center)],
+    [
+      MapPlugin,
+      convertMap(
+        props.vfe.map,
+        props.vfe.photospheres,
+        defaultPhotosphere.center,
+      ),
+    ],
     [
       VirtualTourPlugin,
       {
@@ -228,15 +233,9 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
 
     const map = instance.getPlugin<MapPlugin>(MapPlugin);
     map.addEventListener("select-hotspot", ({ hotspotId }) => {
-      const hotspot: Hotspot2D | undefined = props.vfe.map.hotspots.find(
-        (hotspot) => hotspot.id === hotspotId,
-      );
-      if (hotspot?.data.tag === "PhotosphereLink") {
-        setCurrentPhotosphere(
-          props.vfe.photospheres[hotspot.data.photosphereID],
-        );
-        props.onChangePS?.(hotspot.data.photosphereID);
-      }
+      const photosphere = props.vfe.photospheres[hotspotId];
+      setCurrentPhotosphere(photosphere);
+      props.onChangePS?.(photosphere.id);
     });
   }
 

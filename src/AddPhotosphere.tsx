@@ -62,7 +62,6 @@ function AddPhotosphere({
     const newPhotosphere: Photosphere = {
       id: photosphereID,
       src: panoImage,
-      center: { x: 0, y: 0 },
       hotspots: {},
       backgroundAudio: audioFile,
     };
