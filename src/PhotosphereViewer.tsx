@@ -128,6 +128,31 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
   );
 
   useEffect(() => {
+    const mapPlugin: MapPlugin | undefined =
+      photoSphereRef.current?.getPlugin(MapPlugin);
+
+    if (mapPlugin) {
+      const newMapConfig = convertMap(props.vfe.map, currentPhotosphere.center);
+
+      if (newMapConfig.imageUrl) {
+        mapPlugin.setImage(newMapConfig.imageUrl);
+      }
+
+      if (newMapConfig.center) {
+        mapPlugin.setCenter(newMapConfig.center);
+      }
+
+      if (newMapConfig.hotspots) {
+        mapPlugin.setHotspots(newMapConfig.hotspots);
+      }
+
+      if (newMapConfig.rotation !== undefined) {
+        mapPlugin.setOption("rotation", newMapConfig.rotation);
+      }
+    }
+  }, [props.vfe.map, currentPhotosphere.center, photoSphereRef]);
+
+  useEffect(() => {
     const virtualTour =
       photoSphereRef.current?.getPlugin<VirtualTourPlugin>(VirtualTourPlugin);
     void virtualTour?.setCurrentNode(currentPhotosphere.id);

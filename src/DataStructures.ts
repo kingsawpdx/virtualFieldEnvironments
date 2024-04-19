@@ -18,6 +18,7 @@ export interface VFE {
 // Navigation map: a birdseye view of the various hotspots within a single 360-environment
 export interface NavMap {
   src: string;
+  id: string;
   rotation: number;
   defaultZoom: number;
   hotspots: Hotspot2D[];

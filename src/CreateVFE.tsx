@@ -38,6 +38,7 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
       name: vfeName,
       map: {
         src: "",
+        id: "",
         rotation: 0,
         defaultZoom: 0,
         hotspots: [],

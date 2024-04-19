@@ -1,7 +1,8 @@
 import { useState } from "react";
 
+import AddNavmap from "./AddNavmap";
 import AddPhotosphere from "./AddPhotosphere.tsx";
-import { Photosphere, VFE } from "./DataStructures.ts";
+import { NavMap, Photosphere, VFE } from "./DataStructures.ts";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
 
 /* -----------------------------------------------------------------------
@@ -28,6 +29,7 @@ function PhotosphereEditor({
   const [vfe, setVFE] = useState<VFE>(parentVFE);
   const [showAddPhotosphere, setShowAddPhotosphere] = useState(false);
   const [updateTrigger, setUpdateTrigger] = useState(0);
+  const [showAddNavMap, setShowAddNavMap] = useState(false); // State to manage whether to show AddNavmap
 
   // Update the VFE
   function handleAddPhotosphere(newPhotosphere: Photosphere) {
@@ -44,15 +46,31 @@ function PhotosphereEditor({
     setUpdateTrigger((prev) => prev + 1);
   }
 
+  function handleCreateNavMap(updatedNavMap: NavMap) {
+    const updatedVFE: VFE = {
+      ...vfe,
+      map: updatedNavMap,
+    };
+    setVFE(updatedVFE); // Update the local VFE state
+    onUpdateVFE(updatedVFE); // Propagate the change to the parent component
+    setShowAddNavMap(false); // Close the AddNavMap component
+  }
+
   // Reset all states so we dont have issues with handling different components at the same time
   function resetStates() {
     setShowAddPhotosphere(false);
+    setShowAddNavMap(false);
   }
 
+  
   // This function is where we render the actual component based on the useState
   function ActiveComponent() {
     if (showAddPhotosphere)
       return <AddPhotosphere onAddPhotosphere={handleAddPhotosphere} />;
+    if (showAddNavMap)
+      return (
+        <AddNavmap onCreateNavMap={handleCreateNavMap} onClose={resetStates} />
+      );
     // Below this you will have your conditional for your own component, ie AddNavmap/AddHotspot
     return null;
   }
@@ -85,6 +103,7 @@ function PhotosphereEditor({
           style={{ margin: "10px 0" }}
           onClick={() => {
             resetStates();
+            setShowAddNavMap(true); // Set state to show AddNavmap
             //Call your setShowAddNavmap function to set the state and display the function
           }}
         >
