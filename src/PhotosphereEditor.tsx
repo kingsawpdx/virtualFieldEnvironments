@@ -62,7 +62,6 @@ function PhotosphereEditor({
     setShowAddNavMap(false);
   }
 
-  
   // This function is where we render the actual component based on the useState
   function ActiveComponent() {
     if (showAddPhotosphere)
