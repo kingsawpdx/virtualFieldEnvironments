@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Photosphere } from "./DataStructures";
 
@@ -13,6 +13,59 @@ import { Photosphere } from "./DataStructures";
     * Pass it back to parent to update the VFE with the newPhotosphere
    ----------------------------------------------------------------------- */
 
+export interface PhotosphereCenterFormProps {
+  setPhotosphereCenter: (center: { x: number; y: number } | null) => void;
+}
+
+// Form inputs for setting the photosphere position on the map.
+export function PhotosphereCenterFieldset({
+  setPhotosphereCenter,
+}: PhotosphereCenterFormProps) {
+  const [photosphereCenterX, setPhotosphereCenterX] = useState("");
+  const [photosphereCenterY, setPhotosphereCenterY] = useState("");
+
+  useEffect(() => {
+    const center = {
+      x: parseFloat(photosphereCenterX),
+      y: parseFloat(photosphereCenterY),
+    };
+
+    if (!isNaN(center.x) && !isNaN(center.y)) {
+      setPhotosphereCenter(center);
+    } else {
+      setPhotosphereCenter(null);
+    }
+  }, [photosphereCenterX, photosphereCenterY, setPhotosphereCenter]);
+
+  return (
+    <fieldset>
+      <legend>Photosphere Map Position (Optional):</legend>
+      <div>
+        <label htmlFor="photosphereCenterX">X Coordinate:</label>
+        <input
+          type="number"
+          id="photosphereCenterX"
+          value={photosphereCenterX}
+          onChange={(e) => {
+            setPhotosphereCenterX(e.target.value);
+          }}
+        />
+      </div>
+      <div>
+        <label htmlFor="photosphereCenterY">Y Coordinate:</label>
+        <input
+          type="number"
+          id="photosphereCenterX"
+          value={photosphereCenterY}
+          onChange={(e) => {
+            setPhotosphereCenterY(e.target.value);
+          }}
+        />
+      </div>
+    </fieldset>
+  );
+}
+
 // Properties passed down from parent
 interface AddPhotosphereProps {
   onAddPhotosphere: (newPhotosphere: Photosphere) => void;
@@ -26,6 +79,10 @@ function AddPhotosphere({
   const [photosphereID, setPhotosphereID] = useState("");
   const [panoImage, setPanoImage] = useState("");
   const [audioFile, setAudioFile] = useState("");
+  const [photosphereCenter, setPhotosphereCenter] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
 
   // Add image data
   function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -62,6 +119,7 @@ function AddPhotosphere({
     const newPhotosphere: Photosphere = {
       id: photosphereID,
       src: panoImage,
+      center: photosphereCenter ?? undefined,
       hotspots: {},
       backgroundAudio: audioFile,
     };
@@ -123,6 +181,9 @@ function AddPhotosphere({
             onChange={handleAudioChange}
           />
         </div>
+        <PhotosphereCenterFieldset
+          setPhotosphereCenter={setPhotosphereCenter}
+        />
         <button type="button" onClick={handlePhotosphereAdd}>
           Add Photosphere
         </button>

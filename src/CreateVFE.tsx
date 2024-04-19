@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+import { PhotosphereCenterFieldset } from "./AddPhotosphere.tsx";
 import { VFE } from "./DataStructures.ts";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
 
@@ -26,6 +27,10 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
   const [vfeName, setVFEName] = useState("");
   const [photosphereName, setPhotosphereName] = useState(""); // State for Photosphere Name
   const [panoImage, setPanoImage] = useState("");
+  const [photosphereCenter, setPhotosphereCenter] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
 
   // Error Handling: Ensure the data is not empty
   function handleCreateVFE() {
@@ -49,6 +54,7 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
         [photosphereName]: {
           id: photosphereName,
           src: panoImage,
+          center: photosphereCenter ?? undefined,
           hotspots: {},
         },
       },
@@ -95,6 +101,7 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
           }}
         />
       </div>
+      <PhotosphereCenterFieldset setPhotosphereCenter={setPhotosphereCenter} />
       <div>
         <label htmlFor="panoImage">Panorama Image:</label>
         <input
