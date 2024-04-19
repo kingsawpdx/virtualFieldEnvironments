@@ -10,7 +10,7 @@
 // Virtual Field Environment: the total collection of photosphere environments
 export interface VFE {
   name: string;
-  map: NavMap;
+  map?: NavMap;
   defaultPhotosphereID: string;
   photospheres: Record<string, Photosphere>;
 }

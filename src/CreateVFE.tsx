@@ -41,14 +41,6 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
     // Input data into new VFE
     const data: VFE = {
       name: vfeName,
-      map: {
-        src: "",
-        id: "",
-        rotation: 0,
-        defaultZoom: 10,
-        defaultCenter: { x: 0, y: 0 },
-        size: 200,
-      },
       defaultPhotosphereID: photosphereName,
       photospheres: {
         [photosphereName]: {
@@ -101,7 +93,6 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
           }}
         />
       </div>
-      <PhotosphereCenterFieldset setPhotosphereCenter={setPhotosphereCenter} />
       <div>
         <label htmlFor="panoImage">Panorama Image:</label>
         <input
@@ -111,6 +102,7 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
           onChange={handleImageChange}
         />
       </div>
+      <PhotosphereCenterFieldset setPhotosphereCenter={setPhotosphereCenter} />
       <button onClick={handleCreateVFE}>Create VFE</button>
     </div>
   );

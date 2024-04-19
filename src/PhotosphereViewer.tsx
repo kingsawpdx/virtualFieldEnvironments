@@ -169,14 +169,7 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
 
   const plugins: ViewerConfig["plugins"] = [
     [MarkersPlugin, {}],
-    [
-      MapPlugin,
-      convertMap(
-        props.vfe.map,
-        props.vfe.photospheres,
-        defaultPhotosphere.center,
-      ),
-    ],
+
     [
       VirtualTourPlugin,
       {
@@ -187,6 +180,18 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
       } as VirtualTourPluginConfig,
     ],
   ];
+
+  // Only enable map plugin when VFE has a map
+  if (props.vfe.map) {
+    plugins.push([
+      MapPlugin,
+      convertMap(
+        props.vfe.map,
+        props.vfe.photospheres,
+        defaultPhotosphere.center,
+      ),
+    ]);
+  }
 
   function handleReady(instance: Viewer) {
     const markerTestPlugin: MarkersPlugin = instance.getPlugin(MarkersPlugin);

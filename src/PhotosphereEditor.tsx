@@ -151,7 +151,7 @@ function PhotosphereEditor({
             //Call your setShowAddNavmap function to set the state and display the function
           }}
         >
-          Add New NavMap
+          {vfe.map ? "Change NavMap" : "Add New NavMap"}
         </button>
         <button
           style={{ margin: "10px 0" }}
