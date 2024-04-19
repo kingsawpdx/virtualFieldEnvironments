@@ -1,5 +1,4 @@
 import { Button, Stack } from "@mui/material";
-import React from "react";
 
 interface LandingPageProps {
   onLoadTestVFE: () => void;
