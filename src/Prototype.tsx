@@ -322,6 +322,7 @@ function App() {
   };
 
   const map: NavMap = {
+    id: "navmap",
     src: mapImage,
     rotation: 0,
     defaultZoom: 20,
