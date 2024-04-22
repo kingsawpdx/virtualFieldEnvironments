@@ -1,10 +1,11 @@
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import { Box, Button, TextField } from "@mui/material";
 import { MuiFileInput } from "mui-file-input";
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { VFE } from "./DataStructures.ts";
-import PhotosphereViewer from "./PhotosphereViewer.tsx";
+
+//import PhotosphereViewer from "./PhotosphereViewer.tsx";
 
 /* -----------------------------------------------------------------------
     Create a Virtual Field Environment (VFE) that will contain many 
@@ -29,7 +30,7 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
   const [vfeName, setVFEName] = useState("");
   const [photosphereName, setPhotosphereName] = useState(""); // State for Photosphere Name
   const [panoImage, setPanoImage] = useState("");
-  const [panoFile, setPanoFile] = useState<File | null>(null);
+  const [panoFile, setPanoFile] = useState<File | null>(null); // needed for MuiFileInput
 
   // Error Handling: Ensure the data is not empty
   function handleCreateVFE() {
