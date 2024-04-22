@@ -322,19 +322,12 @@ function App() {
   };
 
   const map: NavMap = {
+    id: "navmap",
     src: mapImage,
     rotation: 0,
     defaultZoom: 20,
-    hotspots: Object.values(photospheres).map((p) => {
-      return {
-        x: p.center.x,
-        y: p.center.y,
-        id: p.id,
-        color: "yellow",
-        tooltip: p.id,
-        data: { tag: "PhotosphereLink", photosphereID: p.id },
-      };
-    }),
+    defaultCenter: { x: 0, y: 0 },
+    size: 200,
   };
 
   const data: VFE = {

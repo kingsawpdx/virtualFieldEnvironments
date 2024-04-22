@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 
+import { PhotosphereCenterFieldset } from "./AddPhotosphere.tsx";
 import { VFE } from "./DataStructures.ts";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
 
 /* -----------------------------------------------------------------------
-    Create a Virtual Field Environment (VFE) that will contain many 
+    Create a Virtual Field Environment (VFE) that will contain many
     Photospheres.
 
     * Props object allows us to send the new Photosphere back to parent
@@ -26,6 +27,10 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
   const [vfeName, setVFEName] = useState("");
   const [photosphereName, setPhotosphereName] = useState(""); // State for Photosphere Name
   const [panoImage, setPanoImage] = useState("");
+  const [photosphereCenter, setPhotosphereCenter] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
 
   // Error Handling: Ensure the data is not empty
   function handleCreateVFE() {
@@ -36,18 +41,12 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
     // Input data into new VFE
     const data: VFE = {
       name: vfeName,
-      map: {
-        src: "",
-        rotation: 0,
-        defaultZoom: 0,
-        hotspots: [],
-      },
       defaultPhotosphereID: photosphereName,
       photospheres: {
         [photosphereName]: {
           id: photosphereName,
           src: panoImage,
-          center: { x: 0, y: 0 },
+          center: photosphereCenter ?? undefined,
           hotspots: {},
         },
       },
@@ -103,6 +102,7 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
           onChange={handleImageChange}
         />
       </div>
+      <PhotosphereCenterFieldset setPhotosphereCenter={setPhotosphereCenter} />
       <button onClick={handleCreateVFE}>Create VFE</button>
     </div>
   );
