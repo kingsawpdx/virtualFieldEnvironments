@@ -1,0 +1,7 @@
+{
+  "rewrites": [
+    { "source": "/viewer", "destination": "/" },
+    { "source": "/create", "destination": "/" },
+    { "source": "/editor", "destination": "/" }
+  ]
+}

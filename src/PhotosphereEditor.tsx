@@ -1,8 +1,9 @@
 import { useState } from "react";
 
 import AddHotspot from "./AddHotspot.tsx";
+import AddNavmap from "./AddNavmap";
 import AddPhotosphere from "./AddPhotosphere.tsx";
-import { Hotspot3D, Photosphere, VFE } from "./DataStructures.ts";
+import { Hotspot3D, NavMap, Photosphere, VFE } from "./DataStructures.ts";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
 
 /* -----------------------------------------------------------------------
@@ -10,7 +11,7 @@ import PhotosphereViewer from "./PhotosphereViewer.tsx";
 
     * Take the initial VFE from parent
     * If a change has been made to the parentVFE -> updateTrigger === true
-    * Send the newPhotosphere back to parent 
+    * Send the newPhotosphere back to parent
     * Parent updates the VFE with the newPhotosphere object
    ----------------------------------------------------------------------- */
 
@@ -37,6 +38,7 @@ function PhotosphereEditor({
   const [vfe, setVFE] = useState<VFE>(parentVFE);
   const [showAddPhotosphere, setShowAddPhotosphere] = useState(false);
   const [updateTrigger, setUpdateTrigger] = useState(0);
+  const [showAddNavMap, setShowAddNavMap] = useState(false); // State to manage whether to show AddNavmap
 
   const [showAddHotspot, setShowAddHotspot] = useState(false);
   const [pitch, setPitch] = useState(0);
@@ -54,8 +56,19 @@ function PhotosphereEditor({
       },
     };
     setVFE(updatedVFE); // Update the local VFE state
-    onUpdateVFE(updatedVFE); // Propagate the change to the AppRoot
+    onUpdateVFE(updatedVFE, newPhotosphere.id); // Propagate the change to the AppRoot
     setShowAddPhotosphere(false);
+    setUpdateTrigger((prev) => prev + 1);
+  }
+
+  function handleCreateNavMap(updatedNavMap: NavMap) {
+    const updatedVFE: VFE = {
+      ...vfe,
+      map: updatedNavMap,
+    };
+    setVFE(updatedVFE); // Update the local VFE state
+    onUpdateVFE(updatedVFE, currentPS); // Propagate the change to the parent component
+    setShowAddNavMap(false); // Close the AddNavMap component
     setUpdateTrigger((prev) => prev + 1);
   }
 
@@ -75,9 +88,10 @@ function PhotosphereEditor({
     setYaw(radToDeg(vyaw));
   }
 
-  //Reset all states so we dont have issues with handling different components at the same time
+  // Reset all states so we dont have issues with handling different components at the same time
   function resetStates() {
     setShowAddPhotosphere(false);
+    setShowAddNavMap(false);
     setShowAddHotspot(false);
     setPitch(0);
     setYaw(0);
@@ -87,6 +101,11 @@ function PhotosphereEditor({
   function ActiveComponent() {
     if (showAddPhotosphere)
       return <AddPhotosphere onAddPhotosphere={handleAddPhotosphere} />;
+    if (showAddNavMap)
+      return (
+        <AddNavmap onCreateNavMap={handleCreateNavMap} onClose={resetStates} />
+      );
+    // Below this you will have your conditional for your own component, ie AddNavmap/AddHotspot
     //Below this you will have your conditional for your own component, ie AddNavmap/AddHotspot
     if (showAddHotspot)
       return (
@@ -128,10 +147,11 @@ function PhotosphereEditor({
           style={{ margin: "10px 0" }}
           onClick={() => {
             resetStates();
+            setShowAddNavMap(true); // Set state to show AddNavmap
             //Call your setShowAddNavmap function to set the state and display the function
           }}
         >
-          Add New NavMap
+          {vfe.map ? "Change NavMap" : "Add New NavMap"}
         </button>
         <button
           style={{ margin: "10px 0" }}

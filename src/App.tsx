@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 
 import CreateVFEForm from "./CreateVFE.tsx";
 import { VFE } from "./DataStructures.ts";
@@ -10,22 +11,20 @@ import App from "./Prototype.tsx";
 // Should decide what we are doing, going to LandingPage/Rendering VFE
 function AppRoot() {
   // Decide state, should manage whether the VFE should be displayed or the LandingPage should be displayed
-  const [showApp, setShowApp] = useState(false);
-  const [showCreateVFEForm, setShowCreateVFEForm] = useState(false);
   const [vfeData, setVFEData] = useState<VFE | null>(null);
   const [currentPhotosphereID, setCurrentPhotosphereID] = useState(
     vfeData ? vfeData.defaultPhotosphereID : "invalid",
   );
 
+  const navigate = useNavigate();
+
   //Create a function to set useState true
   function handleLoadTestVFE() {
-    setShowApp(true);
-    setShowCreateVFEForm(false);
+    navigate("/viewer");
   }
 
   function handleCreateVFE() {
-    setShowCreateVFEForm(true);
-    setShowApp(false);
+    navigate("/create");
   }
 
   function loadCreatedVFE(data: VFE) {
@@ -35,8 +34,7 @@ function AppRoot() {
         ? data.defaultPhotosphereID
         : currentPhotosphereID,
     );
-    setShowApp(true);
-    setShowCreateVFEForm(false);
+    navigate("/editor");
   }
 
   function handleUpdateVFE(updatedVFE: VFE, currentPS?: string) {
@@ -46,31 +44,40 @@ function AppRoot() {
     );
   }
 
-  function renderComponent() {
-    if (showCreateVFEForm) {
-      return <CreateVFEForm onCreateVFE={loadCreatedVFE} />;
-    } else if (vfeData && showApp) {
-      return (
-        <PhotosphereEditor
-          currentPS={currentPhotosphereID}
-          onChangePS={setCurrentPhotosphereID}
-          parentVFE={vfeData}
-          onUpdateVFE={handleUpdateVFE}
-        />
-      );
-    } else if (!vfeData && showApp) {
-      return <App />;
-    } else {
-      return (
-        <LandingPage
-          onLoadTestVFE={handleLoadTestVFE}
-          onCreateVFE={handleCreateVFE}
-        />
-      );
-    }
-  }
-
-  return <div>{renderComponent()}</div>;
+  return (
+    <Routes>
+      <Route
+        index
+        element={
+          <LandingPage
+            onLoadTestVFE={handleLoadTestVFE}
+            onCreateVFE={handleCreateVFE}
+          />
+        }
+      />
+      <Route path="/viewer" element={<App />} />
+      <Route
+        path="/create"
+        element={<CreateVFEForm onCreateVFE={loadCreatedVFE} />}
+      />
+      <Route
+        path="/editor"
+        element={
+          vfeData ? (
+            <PhotosphereEditor
+              currentPS={currentPhotosphereID}
+              onChangePS={setCurrentPhotosphereID}
+              parentVFE={vfeData}
+              onUpdateVFE={handleUpdateVFE}
+            />
+          ) : (
+            // redirect back to the create form if VFE hasn't been created yet
+            <Navigate to="/create" replace={true} />
+          )
+        }
+      />
+    </Routes>
+  );
 }
 
 export default AppRoot;
