@@ -1,5 +1,5 @@
 import AttachFileIcon from "@mui/icons-material/AttachFile";
-import { Box, Button, TextField } from "@mui/material";
+import { Button, Stack, TextField, Typography } from "@mui/material";
 import { MuiFileInput } from "mui-file-input";
 import { useState } from "react";
 
@@ -71,25 +71,27 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
   }
   // Add styling to input interface
   return (
-    <Box>
-      <h2>Create a New Virtual Field Environment</h2>
-      <TextField
-        required
-        label="VFE Name"
-        onChange={(e) => {
-          setVFEName(e.target.value);
-        }}
-      />
-      <TextField
-        required
-        label="Photosphere Name"
-        onChange={(e) => {
-          setPhotosphereName(e.target.value);
-        }}
-      />
+    <Stack sx={{ width: 450, margin: "auto", paddingTop: 20 }} spacing={3}>
+      <Typography variant="h4">Create a New VFE</Typography>
+      <Stack direction="row" spacing={"auto"}>
+        <TextField
+          required
+          label="VFE Name"
+          onChange={(e) => {
+            setVFEName(e.target.value);
+          }}
+        />
+        <TextField
+          required
+          label="Photosphere Name"
+          onChange={(e) => {
+            setPhotosphereName(e.target.value);
+          }}
+        />
+      </Stack>
       <MuiFileInput
         required
-        placeholder="Upload a Panorama"
+        placeholder="Upload a Panorama *"
         value={panoFile}
         onChange={handleImageChange}
         inputProps={{ accept: "image/*" }}
@@ -98,8 +100,14 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
         }}
       />
       <PhotosphereCenterFieldset setPhotosphereCenter={setPhotosphereCenter} />
-      <Button onClick={handleCreateVFE}>Create VFE</Button>
-    </Box>
+      <Button
+        sx={{ margin: "auto" }}
+        variant="contained"
+        onClick={handleCreateVFE}
+      >
+        Create
+      </Button>
+    </Stack>
   );
 }
 
