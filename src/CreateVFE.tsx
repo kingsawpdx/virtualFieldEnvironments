@@ -1,3 +1,6 @@
+import AttachFileIcon from "@mui/icons-material/AttachFile";
+import { Box, Button, TextField } from "@mui/material";
+import { MuiFileInput } from "mui-file-input";
 import React, { useState } from "react";
 
 import { VFE } from "./DataStructures.ts";
@@ -26,6 +29,7 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
   const [vfeName, setVFEName] = useState("");
   const [photosphereName, setPhotosphereName] = useState(""); // State for Photosphere Name
   const [panoImage, setPanoImage] = useState("");
+  const [panoFile, setPanoFile] = useState<File | null>(null);
 
   // Error Handling: Ensure the data is not empty
   function handleCreateVFE() {
@@ -53,13 +57,25 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
       },
     };
     onCreateVFE(data);
-    return <PhotosphereViewer vfe={data} />;
+    //return <PhotosphereViewer vfe={data} />;
   }
 
   // Ensure file is truthy
-  function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
+  // function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
+  //   const file = e.target.files?.[0];
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onload = () => {
+  //       const imageURL = reader.result as string;
+  //       setPanoImage(imageURL);
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // }
+
+  function handleImageChange(file: File | null) {
     if (file) {
+      setPanoFile(file);
       const reader = new FileReader();
       reader.onload = () => {
         const imageURL = reader.result as string;
@@ -67,44 +83,73 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
       };
       reader.readAsDataURL(file);
     }
+    return;
   }
   // Add styling to input interface
   return (
-    <div>
-      <h2>Create a New Virtual Field Environment (VFE)</h2>
-      <div>
-        <label htmlFor="vfeName">VFE Name:</label>
-        <input
-          type="string"
-          id="vfeName"
-          value={vfeName}
-          onChange={(e) => {
-            setVFEName(e.target.value);
-          }}
-        />
-      </div>
-      <div>
-        <label htmlFor="photosphereName">Photosphere Name:</label>
-        <input
-          type="string"
-          id="photosphereName"
-          value={photosphereName}
-          onChange={(e) => {
-            setPhotosphereName(e.target.value);
-          }}
-        />
-      </div>
-      <div>
-        <label htmlFor="panoImage">Panorama Image:</label>
-        <input
-          type="file"
-          id="panoImage"
-          accept="image/*"
-          onChange={handleImageChange}
-        />
-      </div>
-      <button onClick={handleCreateVFE}>Create VFE</button>
-    </div>
+    <Box>
+      <h2>Create a New Virtual Field Environment</h2>
+      <TextField
+        required
+        label="VFE Name"
+        onChange={(e) => {
+          setVFEName(e.target.value);
+        }}
+      />
+      <TextField
+        required
+        label="Photosphere Name"
+        onChange={(e) => {
+          setPhotosphereName(e.target.value);
+        }}
+      />
+      <MuiFileInput
+        required
+        placeholder="Upload a Panorama"
+        value={panoFile}
+        onChange={handleImageChange}
+        inputProps={{ accept: "image/*" }}
+        InputProps={{
+          startAdornment: <AttachFileIcon />,
+        }}
+      />
+      <Button onClick={handleCreateVFE}>Create VFE</Button>
+    </Box>
+    // <div>
+    //   <h2>Create a New Virtual Field Environment (VFE)</h2>
+    //   <div>
+    //     <label htmlFor="vfeName">VFE Name:</label>
+    //     <input
+    //       type="string"
+    //       id="vfeName"
+    //       value={vfeName}
+    //       onChange={(e) => {
+    //         setVFEName(e.target.value);
+    //       }}
+    //     />
+    //   </div>
+    //   <div>
+    //     <label htmlFor="photosphereName">Photosphere Name:</label>
+    //     <input
+    //       type="string"
+    //       id="photosphereName"
+    //       value={photosphereName}
+    //       onChange={(e) => {
+    //         setPhotosphereName(e.target.value);
+    //       }}
+    //     />
+    //   </div>
+    //   <div>
+    //     <label htmlFor="panoImage">Panorama Image:</label>
+    //     <input
+    //       type="file"
+    //       id="panoImage"
+    //       accept="image/*"
+    //       onChange={handleImageChange}
+    //     />
+    //   </div>
+    //   <button onClick={handleCreateVFE}>Create VFE</button>
+    // </div>
   );
 }
 
