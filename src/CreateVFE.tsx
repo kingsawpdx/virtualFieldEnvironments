@@ -6,8 +6,6 @@ import { useState } from "react";
 import { PhotosphereCenterFieldset } from "./AddPhotosphere.tsx";
 import { VFE } from "./DataStructures.ts";
 
-//import PhotosphereViewer from "./PhotosphereViewer.tsx";
-
 /* -----------------------------------------------------------------------
     Create a Virtual Field Environment (VFE) that will contain many
     Photospheres.
@@ -57,21 +55,7 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
       },
     };
     onCreateVFE(data);
-    //return <PhotosphereViewer vfe={data} />;
   }
-
-  // Ensure file is truthy
-  // function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
-  //   const file = e.target.files?.[0];
-  //   if (file) {
-  //     const reader = new FileReader();
-  //     reader.onload = () => {
-  //       const imageURL = reader.result as string;
-  //       setPanoImage(imageURL);
-  //     };
-  //     reader.readAsDataURL(file);
-  //   }
-  // }
 
   function handleImageChange(file: File | null) {
     if (file) {
@@ -116,41 +100,6 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
       <PhotosphereCenterFieldset setPhotosphereCenter={setPhotosphereCenter} />
       <Button onClick={handleCreateVFE}>Create VFE</Button>
     </Box>
-    // <div>
-    //   <h2>Create a New Virtual Field Environment (VFE)</h2>
-    //   <div>
-    //     <label htmlFor="vfeName">VFE Name:</label>
-    //     <input
-    //       type="string"
-    //       id="vfeName"
-    //       value={vfeName}
-    //       onChange={(e) => {
-    //         setVFEName(e.target.value);
-    //       }}
-    //     />
-    //   </div>
-    //   <div>
-    //     <label htmlFor="photosphereName">Photosphere Name:</label>
-    //     <input
-    //       type="string"
-    //       id="photosphereName"
-    //       value={photosphereName}
-    //       onChange={(e) => {
-    //         setPhotosphereName(e.target.value);
-    //       }}
-    //     />
-    //   </div>
-    //   <div>
-    //     <label htmlFor="panoImage">Panorama Image:</label>
-    //     <input
-    //       type="file"
-    //       id="panoImage"
-    //       accept="image/*"
-    //       onChange={handleImageChange}
-    //     />
-    //   </div>
-    //   <button onClick={handleCreateVFE}>Create VFE</button>
-    // </div>
   );
 }
 
