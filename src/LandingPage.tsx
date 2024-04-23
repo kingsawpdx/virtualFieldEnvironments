@@ -40,7 +40,12 @@ function LandingPage({ onLoadTestVFE, onCreateVFE }: LandingPageProps) {
         sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
       >
         <Toolbar>
-          <Typography variant="h2" noWrap component={"div"}>
+          <Typography
+            sx={{ fontSize: "16px" }}
+            variant="h1"
+            noWrap
+            component={"div"}
+          >
             Virtual Field Guide Editor
           </Typography>
         </Toolbar>
