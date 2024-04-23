@@ -5,6 +5,7 @@ import { useState } from "react";
 
 import { PhotosphereCenterFieldset } from "./AddPhotosphere.tsx";
 import { VFE } from "./DataStructures.ts";
+import Header from "./Header.tsx";
 
 /* -----------------------------------------------------------------------
     Create a Virtual Field Environment (VFE) that will contain many
@@ -72,6 +73,7 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
   // Add styling to input interface
   return (
     <Stack sx={{ width: 450, margin: "auto", paddingTop: 20 }} spacing={3}>
+      <Header />
       <Typography variant="h4">Create a New VFE</Typography>
       <Stack direction="row" spacing={"auto"}>
         <TextField
