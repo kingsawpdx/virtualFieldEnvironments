@@ -5,30 +5,49 @@ import {
   LockOutlined,
   TerrainSharp,
 } from "@mui/icons-material";
-import { Avatar, Box, IconButton, Stack, Typography } from "@mui/material";
-import React from "react";
+import {
+  AppBar,
+  Avatar,
+  Box,
+  IconButton,
+  Stack,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 
-export function Header() {
+interface HeaderProps {
+  onCreateVFE: () => void;
+}
+
+function Header({ onCreateVFE }: HeaderProps) {
   return (
-    <Stack direction="row">
-      <IconButton>
-        <TerrainSharp />
-      </IconButton>
-      <Typography variant="h1">Virtual Field Guides</Typography>
-      <Stack direction="row">
+    <AppBar>
+      <Stack direction="row" sx={{ justifyContent: "space-between" }}>
         <IconButton>
-          <DesktopWindowsSharp />
+          <TerrainSharp sx={{ color: "#fefefe", fontSize: "50px" }} />
         </IconButton>
-        <IconButton>
-          <LibraryAddSharp />
-        </IconButton>
-        <IconButton>
-          <EditSharp />
-        </IconButton>
-        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-          <LockOutlined />
-        </Avatar>
+        <Typography variant="h1" sx={{ fontSize: "50px" }}>
+          Virtual Field Guides
+        </Typography>
+        <Stack direction="row">
+          <IconButton>
+            <DesktopWindowsSharp sx={{ color: "#fefefe" }} />
+          </IconButton>
+          <IconButton>
+            <LibraryAddSharp sx={{ color: "#fefefe" }} />
+          </IconButton>
+          <IconButton>
+            <EditSharp sx={{ color: "#fefefe" }} />
+          </IconButton>
+          <Stack sx={{ justifyContent: "space-around" }}>
+            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+              <LockOutlined />
+            </Avatar>
+          </Stack>
+        </Stack>
       </Stack>
-    </Stack>
+    </AppBar>
   );
 }
+
+export default Header;
