@@ -19,6 +19,8 @@ import {
   useTheme,
 } from "@mui/material";
 
+import { Header } from "./Header";
+
 interface LandingPageProps {
   onLoadTestVFE: () => void;
   onCreateVFE: () => void;
