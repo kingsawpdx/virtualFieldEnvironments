@@ -1,3 +1,21 @@
+// import AddPhotoAlternateSharpIcon from "@mui/icons-material/AddPhotoAlternateSharp";
+// import DesktopWindowsSharpIcon from "@mui/icons-material/DesktopWindowsSharp";
+// import EditLocationAltOutlinedIcon from "@mui/icons-material/EditLocationAltOutlined";
+import EditSharpIcon from "@mui/icons-material/EditSharp";
+import LibraryAddSharpIcon from "@mui/icons-material/LibraryAddSharp";
+import {
+  // AppBar,
+  Box,
+  CssBaseline, // Divider,
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  Toolbar, // Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { useState } from "react";
 
 import AddHotspot from "./AddHotspot.tsx";
@@ -15,6 +33,7 @@ import PhotosphereViewer from "./PhotosphereViewer.tsx";
     * Parent updates the VFE with the newPhotosphere object
    ----------------------------------------------------------------------- */
 
+// Conversion
 function radToDeg(num: number): number {
   return num * (180 / Math.PI);
 }
@@ -45,6 +64,11 @@ function PhotosphereEditor({
   const [yaw, setYaw] = useState(0);
 
   console.log(vfe);
+
+  // Output: responsive screen setup
+  const theme = useTheme();
+  const isSmallerScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const drawerWidth = isSmallerScreen ? "6%" : "6%";
 
   // Update the VFE
   function handleAddPhotosphere(newPhotosphere: Photosphere) {
@@ -106,7 +130,6 @@ function PhotosphereEditor({
         <AddNavmap onCreateNavMap={handleCreateNavMap} onClose={resetStates} />
       );
     // Below this you will have your conditional for your own component, ie AddNavmap/AddHotspot
-    //Below this you will have your conditional for your own component, ie AddNavmap/AddHotspot
     if (showAddHotspot)
       return (
         <AddHotspot
@@ -120,51 +143,62 @@ function PhotosphereEditor({
   }
   // Add styling for inputting information
   return (
-    <div style={{ display: "flex", height: "100vh", position: "relative" }}>
-      <div
-        style={{
-          position: "absolute",
-          zIndex: 1000,
-          left: "20px",
-          top: "20px",
-          display: "flex",
-          flexDirection: "column",
-          background: "rgba(255, 255, 255, 0.8)",
-          borderRadius: "8px",
-          padding: "10px",
-        }}
-      >
-        <button
-          style={{ margin: "10px 0" }}
-          onClick={() => {
-            resetStates();
-            setShowAddPhotosphere(true);
+    <Box sx={{ display: "flex" }}>
+      <CssBaseline>
+        <Drawer
+          variant="permanent"
+          sx={{
+            width: drawerWidth,
+            flexShrink: 0,
+            [`& .MuiDrawer-paper`]: {
+              width: drawerWidth,
+              boxSizing: "border-box",
+              // marginTop: "70px",
+            },
           }}
         >
-          Add New Photosphere
-        </button>
-        <button
-          style={{ margin: "10px 0" }}
-          onClick={() => {
-            resetStates();
-            setShowAddNavMap(true); // Set state to show AddNavmap
-            //Call your setShowAddNavmap function to set the state and display the function
-          }}
-        >
-          {vfe.map ? "Change NavMap" : "Add New NavMap"}
-        </button>
-        <button
-          style={{ margin: "10px 0" }}
-          onClick={() => {
-            resetStates();
-            //Call your setShowAddHotspot function to set the state and display the function
-            setShowAddHotspot(true);
-          }}
-        >
-          Add New Hotspot
-        </button>
-      </div>
-      <div style={{ width: "100%", height: "100%" }}>
+          <Toolbar>
+            <Box sx={{ overflow: "auto" }}>
+              <List>
+                {["Add Photo Sphere", "Add Navigation Map", "Add Hotspot"].map(
+                  (text, index) => (
+                    <ListItem key={text} disablePadding>
+                      <ListItemButton>
+                        <ListItemIcon>
+                          {index % 3 === 0 ? (
+                            <LibraryAddSharpIcon
+                              onClick={() => {
+                                resetStates();
+                                setShowAddPhotosphere(true);
+                              }}
+                            />
+                          ) : index % 3 === 1 ? (
+                            <LibraryAddSharpIcon
+                              onClick={() => {
+                                resetStates();
+                                setShowAddNavMap(true); // Set state to show AddNavmap
+                                //Call your setShowAddNavmap function to set the state and display the function
+                              }}
+                            />
+                          ) : (
+                            <EditSharpIcon
+                              onClick={() => {
+                                resetStates();
+                                //Call your setShowAddHotspot function to set the state and display the function
+                                setShowAddHotspot(true);
+                              }}
+                            />
+                          )}
+                        </ListItemIcon>
+                      </ListItemButton>
+                    </ListItem>
+                  ),
+                )}
+              </List>
+              <ActiveComponent />
+            </Box>
+          </Toolbar>
+        </Drawer>
         <PhotosphereViewer
           currentPS={currentPS}
           onChangePS={onChangePS}
@@ -172,10 +206,67 @@ function PhotosphereEditor({
           key={updateTrigger}
           vfe={vfe}
         />
-        <ActiveComponent />
-      </div>
-    </div>
+      </CssBaseline>
+    </Box>
   );
 }
+
+// <div style={{ display: "flex", height: "100vh", position: "relative" }}>
+//   <div
+//     style={{
+//       position: "absolute",
+//       zIndex: 1000,
+//       left: "20px",
+//       top: "20px",
+//       display: "flex",
+//       flexDirection: "column",
+//       background: "rgba(255, 255, 255, 0.8)",
+//       borderRadius: "8px",
+//       padding: "10px",
+//     }}
+//   >
+//     <button
+//       style={{ margin: "10px 0" }}
+//       onClick={() => {
+//         resetStates();
+//         setShowAddPhotosphere(true);
+//       }}
+//     >
+//       Add New Photosphere
+//     </button>
+//     <button
+//       style={{ margin: "10px 0" }}
+//       onClick={() => {
+//         resetStates();
+//         setShowAddNavMap(true); // Set state to show AddNavmap
+//         //Call your setShowAddNavmap function to set the state and display the function
+//       }}
+//     >
+//       {vfe.map ? "Change NavMap" : "Add New NavMap"}
+//     </button>
+//     <button
+//       style={{ margin: "10px 0" }}
+//       onClick={() => {
+//         resetStates();
+//         //Call your setShowAddHotspot function to set the state and display the function
+//         setShowAddHotspot(true);
+//       }}
+//     >
+//       Add New Hotspot
+//     </button>
+//   </div>
+//   <div style={{ width: "100%", height: "100%" }}>
+//     <PhotosphereViewer
+//       currentPS={currentPS}
+//       onChangePS={onChangePS}
+//       onViewerClick={handleLocation}
+//       key={updateTrigger}
+//       vfe={vfe}
+//     />
+//     <ActiveComponent />
+//   </div>
+// </div>
+//   );
+// }
 
 export default PhotosphereEditor;
