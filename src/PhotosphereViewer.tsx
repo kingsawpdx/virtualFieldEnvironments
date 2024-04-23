@@ -154,8 +154,6 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
     const markerTestPlugin: MarkersPlugin = instance.getPlugin(MarkersPlugin);
 
     markerTestPlugin.addEventListener("select-marker", ({ marker }) => {
-      if (marker.config.id.includes("__tour-link")) return;
-
       const passMarker = currentPhotosphere.hotspots[marker.config.id];
 
       setHotspotArray([passMarker]);
