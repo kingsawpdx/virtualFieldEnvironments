@@ -1,6 +1,6 @@
 import { ChangeEvent } from "react";
 import { VFE } from "../DataStructures";
-function AddAudio(event: ChangeEvent<HTMLInputElement>, setAudio: React.Dispatch<React.SetStateAction<string>>, vfe:VFE) {
+function AddAudio(event: ChangeEvent<HTMLInputElement>, setAudio: React.Dispatch<React.SetStateAction<string>>, vfe:VFE, audio:string) {
   const file = event.target.files?.[0];
   if (file) {
     // Assuming you want to read the file content as a URL
@@ -11,6 +11,7 @@ function AddAudio(event: ChangeEvent<HTMLInputElement>, setAudio: React.Dispatch
         //need to add logic to add current photospheres audio to this audioURL, how can we do that?
         const currentPhotosphereId = vfe.defaultPhotosphereID;
         vfe.photospheres[currentPhotosphereId].backgroundAudio = audioURL
+        audio = audioURL
 
       }; 
     reader.readAsDataURL(file);
