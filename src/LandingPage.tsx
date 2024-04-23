@@ -19,6 +19,8 @@ import {
   useTheme,
 } from "@mui/material";
 
+import { Header } from "./Header";
+
 interface LandingPageProps {
   onLoadTestVFE: () => void;
   onCreateVFE: () => void;
@@ -39,11 +41,7 @@ function LandingPage({ onLoadTestVFE, onCreateVFE }: LandingPageProps) {
         position="fixed"
         sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
       >
-        <Toolbar>
-          <Typography variant="h2" noWrap component={"div"}>
-            Virtual Field Guide Editor
-          </Typography>
-        </Toolbar>
+        <Header />
       </AppBar>
       <Drawer
         variant="permanent"
