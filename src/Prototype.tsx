@@ -10,11 +10,8 @@ import PhotosphereViewer from "./PhotosphereViewer.tsx";
 import dataArray from "./data.json";
 
 function App() {
-  //It works with the imported data
-
   window.localStorage.setItem("vfeData", JSON.stringify(dataArray));
 
-  //It does not work with VFEData as it has type any
   const VFEData = JSON.parse(
     window.localStorage.getItem("vfeData") || "{}",
   ) as VFE;
