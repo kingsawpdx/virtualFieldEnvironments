@@ -7,6 +7,7 @@ import  AddAudio from "./buttons/AddAudio.tsx"
 
 interface PhotosphereEditorProps {
   vfe: VFE;
+  currentAudio?: string;
 }
 
 function PhotosphereEditor({ vfe }: PhotosphereEditorProps): JSX.Element {
@@ -31,6 +32,8 @@ function PhotosphereEditor({ vfe }: PhotosphereEditorProps): JSX.Element {
   function handleAudioChange(event: React.ChangeEvent<HTMLInputElement>) {
     AddAudio(event, setAudio, vfe); // Call the AddAudio function to handle audio change
   }
+
+  const currentAudio = vfe.photospheres[vfe.defaultPhotosphereID]?.backgroundAudio;
 
   return (
     <div style={{ display: "flex", height: "100vh", position: "relative" }}>
@@ -74,7 +77,9 @@ function PhotosphereEditor({ vfe }: PhotosphereEditorProps): JSX.Element {
         >
           Add New Hotspot
         </button>
-        <label htmlFor="audio">Add/Change Audio:</label>
+        <label htmlFor="audio">
+          {currentAudio !== "" ? "Change Audio:" : "Add Audio:"}
+        </label>
         <input type="file" id="audio" onChange={handleAudioChange} />
       </div>
       <div style={{ width: "100%", height: "100%" }}>
