@@ -1,3 +1,6 @@
+import AttachFileIcon from "@mui/icons-material/AttachFile";
+import { Box, Button, TextField, Typography } from "@mui/material";
+import { MuiFileInput } from "mui-file-input";
 import { useEffect, useState } from "react";
 
 import { Photosphere } from "./DataStructures";
@@ -78,16 +81,18 @@ function AddPhotosphere({
   // Base states
   const [photosphereID, setPhotosphereID] = useState("");
   const [panoImage, setPanoImage] = useState("");
-  const [audioFile, setAudioFile] = useState("");
+  const [panoFile, setPanoFile] = useState<File | null>(null); // for MuiFileInput
+  const [audioFileStr, setAudioFileStr] = useState("");
+  const [audioFile, setAudioFile] = useState<File | null>(null); // for MuiFileInput
   const [photosphereCenter, setPhotosphereCenter] = useState<{
     x: number;
     y: number;
   } | null>(null);
 
   // Add image data
-  function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
+  function handleImageChange(file: File | null) {
     if (file) {
+      setPanoFile(file);
       const reader = new FileReader();
       reader.onloadend = function () {
         setPanoImage(reader.result as string);
@@ -97,12 +102,12 @@ function AddPhotosphere({
   }
 
   // Add audio data
-  function handleAudioChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
+  function handleAudioChange(file: File | null) {
     if (file) {
+      setAudioFile(file);
       const reader = new FileReader();
       reader.onloadend = function () {
-        setAudioFile(reader.result as string);
+        setAudioFileStr(reader.result as string);
       };
       reader.readAsDataURL(file);
     }
@@ -121,7 +126,7 @@ function AddPhotosphere({
       src: panoImage,
       center: photosphereCenter ?? undefined,
       hotspots: {},
-      backgroundAudio: audioFile,
+      backgroundAudio: audioFileStr,
     };
 
     // Pass newPhotosphere back to parent to update VFE
@@ -130,12 +135,12 @@ function AddPhotosphere({
     // Reset the form fields after adding the photosphere
     setPhotosphereID("");
     setPanoImage("");
-    setAudioFile("");
+    setAudioFileStr("");
   }
   // Add styling for inputting information
   return (
-    <div
-      style={{
+    <Box
+      sx={{
         position: "fixed",
         zIndex: 1050,
         left: "50%",
@@ -146,49 +151,38 @@ function AddPhotosphere({
         padding: "10px",
       }}
     >
-      <h1>Add New Photosphere</h1>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
+      <Typography variant="h3">Add New Photosphere</Typography>
+      <TextField
+        required
+        label="Photosphere Name"
+        value={photosphereID}
+        onChange={(e) => {
+          setPhotosphereID(e.target.value);
         }}
-      >
-        <div>
-          <label htmlFor="photosphereID">Photosphere Name:</label>
-          <input
-            type="text"
-            id="photosphereID"
-            value={photosphereID}
-            onChange={(e) => {
-              setPhotosphereID(e.target.value);
-            }}
-          />
-        </div>
-        <div>
-          <label htmlFor="panoImage">Panoramic Image:</label>
-          <input
-            type="file"
-            id="panoImage"
-            accept="image/*"
-            onChange={handleImageChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="audioFile">Background Audio (optional):</label>
-          <input
-            type="file"
-            id="audioFile"
-            accept="audio/*"
-            onChange={handleAudioChange}
-          />
-        </div>
-        <PhotosphereCenterFieldset
-          setPhotosphereCenter={setPhotosphereCenter}
-        />
-        <button type="button" onClick={handlePhotosphereAdd}>
-          Add Photosphere
-        </button>
-      </form>
-    </div>
+      />
+      <MuiFileInput
+        required
+        placeholder="Upload Panorama *"
+        value={panoFile}
+        onChange={handleImageChange}
+        inputProps={{ accept: "image/*" }}
+        InputProps={{
+          startAdornment: <AttachFileIcon />,
+        }}
+      />
+      <MuiFileInput
+        required
+        placeholder="Upload Background Audio"
+        value={audioFile}
+        onChange={handleAudioChange}
+        inputProps={{ accept: "audio/*" }}
+        InputProps={{
+          startAdornment: <AttachFileIcon />,
+        }}
+      />
+      <PhotosphereCenterFieldset setPhotosphereCenter={setPhotosphereCenter} />
+      <Button onClick={handlePhotosphereAdd}>Add Photosphere</Button>
+    </Box>
   );
 }
 
