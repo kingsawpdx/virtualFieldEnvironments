@@ -2,6 +2,7 @@ import AttachFileIcon from "@mui/icons-material/AttachFile";
 import {
   Box,
   Button,
+  FormControl,
   InputLabel,
   MenuItem,
   Select,
@@ -217,23 +218,25 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
           setTooltip(e.target.value);
         }}
       />
-      <InputLabel id="contentType">Content Type</InputLabel>
-      <Select
-        labelId="contentType"
-        value={contentType}
-        label="Age"
-        onChange={(e) => {
-          setContentType(e.target.value);
-        }}
-      >
-        <MenuItem value="invalid">-- Select --</MenuItem>
-        <MenuItem value="Image">Image</MenuItem>
-        <MenuItem value="Video">Video</MenuItem>
-        <MenuItem value="Audio">Audio</MenuItem>
-        <MenuItem value="URL">URL</MenuItem>
-        <MenuItem value="Doc">Document</MenuItem>
-        <MenuItem value="PhotosphereLink">Photosphere Link</MenuItem>
-      </Select>
+      <FormControl>
+        <InputLabel id="contentType">Content Type</InputLabel>
+        <Select
+          labelId="contentType"
+          value={contentType}
+          label="Content Type"
+          onChange={(e) => {
+            setContentType(e.target.value);
+          }}
+        >
+          <MenuItem value="invalid">-- Select --</MenuItem>
+          <MenuItem value="Image">Image</MenuItem>
+          <MenuItem value="Video">Video</MenuItem>
+          <MenuItem value="Audio">Audio</MenuItem>
+          <MenuItem value="URL">URL</MenuItem>
+          <MenuItem value="Doc">Document</MenuItem>
+          <MenuItem value="PhotosphereLink">Photosphere Link</MenuItem>
+        </Select>
+      </FormControl>
       <ContentInput contentType={contentType} onChangeContent={setContent} />
       <Button style={{ width: "40%" }} onClick={handleAddHotspot}>
         Create
