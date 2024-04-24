@@ -1,3 +1,6 @@
+import AttachFileIcon from "@mui/icons-material/AttachFile";
+import { Box, Button, Stack, TextField, Typography } from "@mui/material";
+import { MuiFileInput } from "mui-file-input";
 import React, { useState } from "react";
 
 import { NavMap } from "./DataStructures";
@@ -24,14 +27,15 @@ async function calculateImageDimensions(
 function AddNavMap({ onCreateNavMap, onClose }: AddNavMapProps): JSX.Element {
   const [navmapName, setNavmapName] = useState("");
   const [navmapImage, setNavmapImage] = useState<string | null>(null);
+  const [navmapImgFile, setNavmapImgFile] = useState<File | null>(null); // for MuiFileInput
 
   function handleNameChange(e: React.ChangeEvent<HTMLInputElement>) {
     setNavmapName(e.target.value);
   }
 
-  function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
+  function handleImageChange(file: File | null) {
     if (file) {
+      setNavmapImgFile(file);
       const reader = new FileReader();
       reader.onloadend = function () {
         setNavmapImage(reader.result as string);
@@ -62,8 +66,8 @@ function AddNavMap({ onCreateNavMap, onClose }: AddNavMapProps): JSX.Element {
   }
 
   return (
-    <div
-      style={{
+    <Box
+      sx={{
         position: "fixed",
         zIndex: 1050,
         left: "50%",
@@ -75,42 +79,34 @@ function AddNavMap({ onCreateNavMap, onClose }: AddNavMapProps): JSX.Element {
         overflow: "hidden",
       }}
     >
-      <h1>Add New Nav Map</h1>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
+      <Typography variant="h3">Add New Nav Map</Typography>
+      <TextField
+        required
+        label="Map Name"
+        value={navmapName}
+        onChange={handleNameChange}
+      />
+      <MuiFileInput
+        required
+        placeholder="Upload Image *"
+        value={navmapImgFile}
+        onChange={handleImageChange}
+        inputProps={{ accept: "image/*" }}
+        InputProps={{
+          startAdornment: <AttachFileIcon />,
         }}
-      >
-        <div>
-          <label htmlFor="navmapName">Nav Map Name:</label>
-          <input
-            type="text"
-            id="navmapName"
-            value={navmapName}
-            onChange={handleNameChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="navmapImage">Upload Image:</label>
-          <input
-            type="file"
-            id="navmapImage"
-            accept="image/*"
-            onChange={handleImageChange}
-          />
-        </div>
-        <div>
-          <button
-            onClick={() => {
-              void handleCreateNavMap();
-            }}
-          >
-            Create
-          </button>
-          <button onClick={onClose}>Cancel</button>
-        </div>
-      </form>
-    </div>
+      />
+      <Stack direction="row">
+        <Button
+          onClick={() => {
+            void handleCreateNavMap();
+          }}
+        >
+          Create
+        </Button>
+        <Button onClick={onClose}>Cancel</Button>
+      </Stack>
+    </Box>
   );
 }
 
