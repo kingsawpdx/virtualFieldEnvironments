@@ -1,3 +1,4 @@
+import { Stack } from "@mui/material";
 import { Point, Viewer, ViewerConfig } from "@photo-sphere-viewer/core";
 import { MapHotspot } from "@photo-sphere-viewer/map-plugin";
 import { MarkerConfig } from "@photo-sphere-viewer/markers-plugin";
@@ -246,14 +247,39 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
 
   return (
     <>
-      <PhotosphereSelector
-        options={Object.keys(props.vfe.photospheres)}
-        value={currentPhotosphere.id}
-        setValue={(id) => {
-          setCurrentPhotosphere(props.vfe.photospheres[id]);
-          props.onChangePS?.(id);
+      <Stack
+        direction="row"
+        sx={{
+          position: "absolute",
+          top: "16px",
+          left: 0,
+          right: 0,
+          maxWidth: "295px",
+          width: "fit-content",
+          minWidth: "150px",
+          height: "45px",
+          padding: "4px",
+          margin: "auto",
+          backgroundColor: "white",
+          borderRadius: "4px",
+          boxShadow: "0 0 4px grey",
+          zIndex: 100,
+          justifyContent: "space-between",
         }}
-      />
+        spacing={1}
+      >
+        <PhotosphereSelector
+          options={Object.keys(props.vfe.photospheres)}
+          value={currentPhotosphere.id}
+          setValue={(id) => {
+            setCurrentPhotosphere(props.vfe.photospheres[id]);
+            props.onChangePS?.(id);
+          }}
+        />
+        {currentPhotosphere.backgroundAudio && (
+          <AudioToggleButton src={currentPhotosphere.backgroundAudio} />
+        )}
+      </Stack>
 
       {hotspotArray.length > 0 && (
         <PopOver
@@ -270,10 +296,6 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
             setHotspotArray([]);
           }}
         />
-      )}
-
-      {currentPhotosphere.backgroundAudio && (
-        <AudioToggleButton src={currentPhotosphere.backgroundAudio} />
       )}
 
       <ReactPhotoSphereViewer
