@@ -33,8 +33,6 @@ function PhotosphereEditor({ vfe }: PhotosphereEditorProps): JSX.Element {
     AddAudio(event, setAudio, vfe); // Call the AddAudio function to handle audio change
   }
 
-  //const currentAudio = vfe.photospheres[vfe.defaultPhotosphereID]?.backgroundAudio;
-
   return (
     <div style={{ display: "flex", height: "100vh", position: "relative" }}>
       <div
