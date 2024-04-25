@@ -27,7 +27,9 @@ function Header({ onCreateVFE, onLoadTestVFE }: HeaderProps) {
       <Stack direction="row" sx={{ justifyContent: "space-between" }}>
         <Stack direction="row">
           <IconButton>
-            <TerrainSharp sx={{ color: "#fefefe", fontSize: "50px" }} />
+            <TerrainSharp
+              sx={{ color: "primary.contrastText", fontSize: "50px" }}
+            />
           </IconButton>
           <Typography variant="h1" sx={{ fontSize: "50px", margin: "auto" }}>
             Virtual Field Guides
