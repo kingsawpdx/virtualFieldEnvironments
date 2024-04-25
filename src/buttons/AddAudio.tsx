@@ -1,6 +1,6 @@
 import { ChangeEvent } from "react";
 import { VFE } from "../DataStructures";
-function AddAudio(event: ChangeEvent<HTMLInputElement>, setAudio: React.Dispatch<React.SetStateAction<string>>, vfe:VFE, audio:string) {
+function AddAudio(event: ChangeEvent<HTMLInputElement>, setAudio: React.Dispatch<React.SetStateAction<string>>, vfe:VFE, audio?:string) {
   const file = event.target.files?.[0];
   if (file) {
     // Assuming you want to read the file content as a URL
