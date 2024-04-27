@@ -32,9 +32,9 @@ function degToStr(val: number): string {
   return String(val) + "deg";
 }
 
-/** Convert sizes from numbers to strings ending in "px" */
+/** Convert sizes from numbers to strings ending in "px", and increase the size slightly so the NavMap window is larger. */
 function sizeToStr(val: number): string {
-  return String(val) + "px";
+  return String(val + 100) + "px";
 }
 
 /** Convert non-link hotspots to markers with type-based content/icons */
@@ -107,6 +107,7 @@ function convertMap(
   map: NavMap,
   photospheres: Record<string, Photosphere>,
   currentCenter?: Point,
+  staticEnabled = false,
 ): MapPluginConfig {
   const hotspots: MapHotspot[] = [];
 
@@ -131,6 +132,7 @@ function convertMap(
     maxZoom: 100,
     size: sizeToStr(map.size),
     hotspots,
+    static: staticEnabled,
   };
 }
 
@@ -155,6 +157,7 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
   const [hotspotArray, setHotspotArray] = useState<(Hotspot3D | Hotspot2D)[]>(
     [],
   );
+  const [mapStatic, setMapStatic] = useState(false);
 
   useEffect(() => {
     const virtualTour =
@@ -189,6 +192,7 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
         props.vfe.map,
         props.vfe.photospheres,
         defaultPhotosphere.center,
+        mapStatic,
       ),
     ]);
   }
@@ -246,6 +250,15 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
 
   return (
     <>
+      <div style={{ padding: "10px 0" }}>
+        <button
+          onClick={() => {
+            setMapStatic(!mapStatic);
+          }}
+        >
+          {mapStatic ? "Enable Map Rotation" : "Disable Map Rotation"}
+        </button>
+      </div>
       <PhotosphereSelector
         options={Object.keys(props.vfe.photospheres)}
         value={currentPhotosphere.id}
@@ -277,6 +290,7 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
       )}
 
       <ReactPhotoSphereViewer
+        key={mapStatic ? "static" : "dynamic"}
         onReady={handleReady}
         ref={photoSphereRef}
         src={defaultPhotosphere.src}
