@@ -4,7 +4,7 @@
   "photospheres": {
     "south": {
       "id": "South",
-      "src": "src/assets/VFEdata/ERI_SouthScene_6-IMG_20231006_081813_00_122.jpg",
+      "src": "/VFEdata/ERI_SouthScene_6-IMG_20231006_081813_00_122.jpg",
       "center": { "x": 450, "y": 800 },
       "hotspots": [
         {
@@ -13,7 +13,7 @@
           "tooltip": "OutcropWideView",
           "data": {
             "tag": "Image",
-            "src": "src/assets/VFEdata/outcropWideView.png",
+            "src": "/VFEdata/outcropWideView.png",
             "hotspots": ""
           }
         },
@@ -23,7 +23,7 @@
           "tooltip": "Flowers",
           "data": {
             "tag": "Image",
-            "src": "src/assets/VFEdata/flowers.png",
+            "src": "/VFEdata/flowers.png",
             "hotspots": ""
           }
         },
@@ -33,7 +33,7 @@
           "tooltip": "ShorelineSOUTH.mp4",
           "data": {
             "tag": "Video",
-            "src": "src/assets/VFEdata/shorelineSOUTH.mp4"
+            "src": "/VFEdata/shorelineSOUTH.mp4"
           }
         },
         {
@@ -42,7 +42,7 @@
           "tooltip": "Paddlers.mp4",
           "data": {
             "tag": "Video",
-            "src": "src/assets/VFEdata/paddlers.mp4"
+            "src": "/VFEdata/paddlers.mp4"
           }
         },
         {
@@ -51,7 +51,7 @@
           "tooltip": "SmallPool",
           "data": {
             "tag": "Image",
-            "src": "src/assets/VFEdata/small_pool.jpg",
+            "src": "/VFEdata/small_pool.jpg",
             "hotspots": ""
           }
         },
@@ -61,7 +61,7 @@
           "tooltip": "LogNearShoreline",
           "data": {
             "tag": "Image",
-            "src": "src/assets/VFEdata/logNEARshoreline.png",
+            "src": "/VFEdata/logNEARshoreline.png",
             "hotspots": ""
           }
         },
@@ -71,7 +71,7 @@
           "tooltip": "CoolLog",
           "data": {
             "tag": "Image",
-            "src": "src/assets/VFEdata/cool_log.jpeg",
+            "src": "/VFEdata/cool_log.jpeg",
             "hotspots": ""
           }
         },
@@ -81,7 +81,7 @@
           "tooltip": "OutcropTextures",
           "data": {
             "tag": "Video",
-            "src": "src/assets/VFEdata/outcrop_textures.mp4"
+            "src": "/VFEdata/outcrop_textures.mp4"
           }
         },
         {
@@ -99,7 +99,7 @@
           "tooltip": "Mushroom",
           "data": {
             "tag": "Image",
-            "src": "src/assets/VFEdata/mushroom.png",
+            "src": "/VFEdata/mushroom.png",
             "hotspots": ""
           }
         },
@@ -109,7 +109,7 @@
           "tooltip": "Contact",
           "data": {
             "tag": "Image",
-            "src": "src/assets/VFEdata/Contact.png",
+            "src": "/VFEdata/Contact.png",
             "hotspots": {
               "HandSample": {
                 "x": "10",
@@ -119,7 +119,7 @@
                 "color": "#FF0000",
                 "data": {
                   "tag": "Image",
-                  "src": "src/assets/VFEdata/hand_sample.png",
+                  "src": "/VFEdata/hand_sample.png",
                   "hotspots": {
                     "CloserLook": {
                       "x": "50",
@@ -129,7 +129,7 @@
                       "color": "#00FF00",
                       "data": {
                         "tag": "Image",
-                        "src": "src/assets/VFEdata/a-closer-look.jpg",
+                        "src": "/VFEdata/a-closer-look.jpg",
                         "hotspots": {
                           "SouthSEMComparison": {
                             "x": "52.5",
@@ -139,7 +139,7 @@
                             "color": "#00FFFF",
                             "data": {
                               "tag": "Image",
-                              "src": "src/assets/VFEdata/southSEMcomp.png",
+                              "src": "/VFEdata/southSEMcomp.png",
                               "hotspots": ""
                             }
                           }
@@ -158,7 +158,7 @@
           "tooltip": "SouthWaterfront",
           "data": {
             "tag": "Image",
-            "src": "src/assets/VFEdata/SouthwaterFront.png",
+            "src": "/VFEdata/SouthwaterFront.png",
             "hotspots": ""
           }
         },
@@ -185,7 +185,7 @@
     },
     "entrance": {
       "id": "Entrance",
-      "src": "src/assets/VFEdata/ERI_Entrance-Scene0-IMG_20231006_080232_00_120.jpg",
+      "src": "/VFEdata/ERI_Entrance-Scene0-IMG_20231006_080232_00_120.jpg",
       "center": { "x": 650, "y": 930 },
       "hotspots": {
         "Go East": {
@@ -211,7 +211,7 @@
     },
     "west": {
       "id": "West",
-      "src": "src/assets/VFEdata/ERI_West-Scene7-IMG_20231006_084114_00_123.jpg",
+      "src": "/VFEdata/ERI_West-Scene7-IMG_20231006_084114_00_123.jpg",
       "center": { "x": 95, "y": 530 },
       "hotspots": {
         "Go North": {
@@ -237,7 +237,7 @@
     },
     "north:": {
       "id": "North",
-      "src": "src/assets/VFEdata/ERI_North-Scene8-IMG_20231006_091050_00_124.jpg",
+      "src": "/VFEdata/ERI_North-Scene8-IMG_20231006_091050_00_124.jpg",
       "center": { "x": 390, "y": 50 },
       "hotspots": {
         "Go West": {
@@ -262,7 +262,7 @@
     },
     "east": {
       "id": "East",
-      "src": "src/assets/VFEdata/ERI_East-Scene9-IMG_20231006_092207_00_125.jpg",
+      "src": "/VFEdata/ERI_East-Scene9-IMG_20231006_092207_00_125.jpg",
       "center": { "x": 550, "y": 450 },
       "hotspots": {
         "Go North": {
@@ -287,7 +287,7 @@
     }
   },
   "map": {
-    "src": "src/assets/VFEdata/map.jpg",
+    "src": "/VFEdata/map.jpg",
     "rotation": 0,
     "defaultZoom": 20
   }
