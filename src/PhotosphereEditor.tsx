@@ -43,6 +43,12 @@ function PhotosphereEditor({
   const [showAddHotspot, setShowAddHotspot] = useState(false);
   const [pitch, setPitch] = useState(0);
   const [yaw, setYaw] = useState(0);
+  
+  const [showAddFeatures, setShowAddFeatures] = useState(false); 
+  const [showChangeFeatures, setShowChangeFeatures] = useState(false); 
+
+  const [newName, setNewName] = useState(""); // State to hold the new name
+  const [newBackground, setNewBackground] = useState("");
 
   console.log(vfe);
 
@@ -118,6 +124,59 @@ function PhotosphereEditor({
       );
     return null;
   }
+
+  // Function to handle name change
+  function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setNewName(event.target.value); // Update the new name in the state
+  }
+
+  // Function to handle background change
+  function handleBackgroundChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (file) {
+      setNewBackground(URL.createObjectURL(file)); // Set the new background image URL
+    }
+  }
+
+  // Function to handle submit button click for name change
+  function handleSubmitName() {
+    if (newName.trim() !== "") { // Check if the new name is not empty
+
+   const currentPhotosphere = vfe.photospheres[currentPS];
+    if (currentPhotosphere) {
+      const updatedPhotospheres = { ...vfe.photospheres }; //straggling along the entire list, or else it gets rid of other ps
+
+      // Update the current photosphere's ID
+      updatedPhotospheres[newName] = { ...currentPhotosphere, id: newName };
+
+      delete updatedPhotospheres[currentPS];  // since the index for the currentPS is still there, it must get deleted
+
+      //const updatedDefaultPhotosphereID =
+      //  vfe.defaultPhotosphereID === currentPS ? newName : vfe.defaultPhotosphereID;
+
+      // Update the VFE with the modified photospheres object
+      const updatedVFE: VFE = {
+        ...vfe,
+        defaultPhotosphereID: newName, 
+        photospheres: updatedPhotospheres,
+      };
+  currentPS = newName
+  setVFE(updatedVFE); // Update the local VFE state
+  onUpdateVFE(updatedVFE, currentPS); // Propagate the change to the parent component
+  setUpdateTrigger((prev) => prev + 1);
+  setNewName(""); // Clear the input field 
+    }
+    }
+  }
+
+  // Function to handle submit button click for background change
+  function handleSubmitBackground() {
+    if (newBackground.trim() !== "") { // Check if the new background is not empty
+     // onChangePhotosphereBackground(newBackground); // Call the function to change the background image
+      setNewBackground(""); // Clear the input field
+    }
+  }
+
   // Add styling for inputting information
   return (
     <div style={{ display: "flex", height: "100vh", position: "relative" }}>
@@ -134,7 +193,19 @@ function PhotosphereEditor({
           padding: "10px",
         }}
       >
-        <button
+      {!showAddFeatures && !showChangeFeatures && (
+          <>
+            <button style={{ margin: "10px 0" }} onClick={() => setShowAddFeatures(true)}>
+              Add Features
+            </button>
+            <button style={{ margin: "10px 0" }} onClick={() => setShowChangeFeatures(true)}>
+              Change Features
+            </button>
+          </>
+        )}
+        {showAddFeatures && (
+          <>
+          <button
           style={{ margin: "10px 0" }}
           onClick={() => {
             resetStates();
@@ -143,6 +214,7 @@ function PhotosphereEditor({
         >
           Add New Photosphere
         </button>
+
         <button
           style={{ margin: "10px 0" }}
           onClick={() => {
@@ -163,6 +235,40 @@ function PhotosphereEditor({
         >
           Add New Hotspot
         </button>
+
+        <button
+          style={{margin: "10"}}
+          onClick={()=> setShowAddFeatures(false)}
+          >
+          Back
+        </button>
+            
+          </>
+        )}
+
+        {showChangeFeatures && (
+          <>
+            <button style={{ margin: "10px 470px 0 0" }} onClick={() => setShowChangeFeatures(false)}>
+              Back
+            </button>
+            {/* Buttons for changing features */}
+            <div style={{ margin: "10px 0" }}>
+              <label htmlFor="newName">New Photosphere Name:  </label>
+              <input type="text" id="newName" value={newName} onChange={handleNameChange} />
+              <button style={{ margin: "0px 5px 0 8px" }} onClick={handleSubmitName}>
+                Change Name 
+              </button>
+            </div>
+            <div style={{ margin: "10px 0" }}>
+              <label htmlFor="newBackground">New Background:  </label>
+              <input type="file" id="newBackground" onChange={handleBackgroundChange} />
+              <button style={{ margin: "0px 0 0 -55px" }} onClick={handleSubmitBackground}>
+                Change Background 
+              </button>
+            </div>
+          </>
+        )}
+        
       </div>
       <div style={{ width: "100%", height: "100%" }}>
         <PhotosphereViewer
