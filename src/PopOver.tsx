@@ -1,3 +1,4 @@
+import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import { ArrowBack, Close } from "@mui/icons-material";
 import {
   Dialog,
@@ -10,6 +11,9 @@ import {
   lighten,
 } from "@mui/material";
 import Box from "@mui/material/Box";
+import AudioPlayer from "react-h5-audio-player";
+import "react-h5-audio-player/lib/styles.css";
+import ReactPlayer from "react-player";
 
 import { Hotspot2D, HotspotData } from "./DataStructures";
 
@@ -58,16 +62,49 @@ function HotspotContent(props: HotspotContentProps) {
       );
     }
     case "Video":
+      return (
+        <ReactPlayer
+          url={props.hotspot.src}
+          controls={true}
+          style={{
+            maxWidth: "100%",
+            maxHeight: "70vh",
+          }}
+        />
+      );
       //  "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png"; // changed to make linter happy until icons are ready
       break;
     case "Audio":
-      break;
+      return (
+        <AudioPlayer
+          style={{ width: "50vh", maxHeight: "70vh" }}
+          showSkipControls={false}
+          showJumpControls={false}
+          showDownloadProgress={false}
+          src={props.hotspot.src}
+        />
+      );
     case "Doc":
-      break;
+      const docs = [{ uri: props.hotspot.content }];
+      return (
+        <Box>
+          <DocViewer
+            style={{ width: "100%" }}
+            documents={docs}
+            pluginRenderers={DocViewerRenderers}
+          />
+        </Box>
+      );
+
     case "PhotosphereLink":
       break;
     case "URL":
-      break;
+      return (
+        <a href={props.hotspot.src} target="_blank">
+          {" "}
+          URL{" "}
+        </a>
+      );
     default:
       break;
   }

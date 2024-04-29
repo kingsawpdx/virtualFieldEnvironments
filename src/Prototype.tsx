@@ -9,7 +9,10 @@ import WestScene from "./assets/VFEdata/ERI_West-Scene7-IMG_20231006_084114_00_1
 import audioFile from "./assets/VFEdata/Scene12_UnevenStandTop_LS100146.mp3";
 import SouthwaterFront from "./assets/VFEdata/SouthwaterFront.png";
 import CloserLook from "./assets/VFEdata/a-closer-look.jpg";
+import audioDemo from "./assets/VFEdata/audioDemo.mp3";
 import CoolLog from "./assets/VFEdata/cool_log.jpeg";
+import thirdVideo from "./assets/VFEdata/demoVideo.mp4";
+import docDemo from "./assets/VFEdata/docDemo.pdf";
 import Flowers from "./assets/VFEdata/flowers.png";
 import HandSample from "./assets/VFEdata/hand_sample.png";
 import LogNearShoreline from "./assets/VFEdata/logNEARshoreline.png";
@@ -32,6 +35,60 @@ function App() {
         tag: "Image",
         src: OutcropWide,
         hotspots: {},
+      },
+    },
+    {
+      pitch: -15,
+      yaw: -10,
+      tooltip: "URL Test",
+      data: {
+        tag: "URL",
+        src: "https://www.rickastley.co.uk/",
+      },
+    },
+    {
+      pitch: -10,
+      yaw: -15,
+      tooltip: "Document test",
+      data: {
+        tag: "Doc",
+        content: docDemo,
+      },
+    },
+    {
+      pitch: -5,
+      yaw: 5,
+      tooltip: "Audio test",
+      data: {
+        tag: "Audio",
+        src: audioDemo,
+      },
+    },
+    {
+      pitch: 10,
+      yaw: -10,
+      tooltip: "Video test",
+      data: {
+        tag: "Video",
+        src: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      },
+    },
+    {
+      pitch: 15,
+      yaw: -15,
+      tooltip: "Video test 2",
+      data: {
+        tag: "Video",
+        src: "https://vimeo.com/676247342",
+      },
+    },
+    {
+      pitch: 20,
+      yaw: -20,
+      tooltip: "Video test 3",
+      data: {
+        tag: "Video",
+        src: thirdVideo,
       },
     },
     {
