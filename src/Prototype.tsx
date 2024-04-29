@@ -108,19 +108,13 @@ function App() {
   }
 
   const map: NavMap = {
+    id: "navmap",
     src: VFEData.map.src,
     rotation: Number(VFEData.map.rotation),
+    defaultZoom: 20,
+    defaultCenter: { x: 0, y: 0 },
     defaultZoom: Number(VFEData.map.defaultZoom),
-    hotspots: Object.values(photospheres).map((p) => {
-      return {
-        x: p.center.x,
-        y: p.center.y,
-        id: p.id,
-        color: "yellow",
-        tooltip: p.id,
-        data: { tag: "PhotosphereLink", photosphereID: p.id },
-      };
-    }),
+    size: 200,
   };
 
   const data: VFE = {

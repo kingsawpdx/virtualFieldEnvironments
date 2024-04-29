@@ -1,4 +1,5 @@
 import { Point, Viewer, ViewerConfig } from "@photo-sphere-viewer/core";
+import { MapHotspot } from "@photo-sphere-viewer/map-plugin";
 import { MarkerConfig } from "@photo-sphere-viewer/markers-plugin";
 import {
   VirtualTourLink,
@@ -29,6 +30,11 @@ import PopOver from "./PopOver";
 /** Convert yaw/pitch degrees from numbers to strings ending in "deg" */
 function degToStr(val: number): string {
   return String(val) + "deg";
+}
+
+/** Convert sizes from numbers to strings ending in "px" */
+function sizeToStr(val: number): string {
+  return String(val) + "px";
 }
 
 /** Convert non-link hotspots to markers with type-based content/icons */
@@ -97,32 +103,55 @@ function convertLinks(hotspots: Record<string, Hotspot3D>): VirtualTourLink[] {
   return links;
 }
 
-function convertMap(map: NavMap, center: Point): MapPluginConfig {
+function convertMap(
+  map: NavMap,
+  photospheres: Record<string, Photosphere>,
+  currentCenter?: Point,
+): MapPluginConfig {
+  const hotspots: MapHotspot[] = [];
+
+  for (const [id, photosphere] of Object.entries(photospheres)) {
+    if (photosphere.center === undefined) continue;
+
+    hotspots.push({
+      id: id,
+      tooltip: id,
+      x: photosphere.center.x,
+      y: photosphere.center.y,
+      color: "yellow",
+    });
+  }
+
   return {
     imageUrl: map.src,
-    center,
+    center: currentCenter ?? map.defaultCenter,
     rotation: map.rotation,
     defaultZoom: map.defaultZoom,
-    hotspots: map.hotspots.map((hotspot) => ({
-      x: hotspot.x,
-      y: hotspot.y,
-      id: hotspot.id,
-      color: hotspot.color,
-      tooltip: hotspot.tooltip,
-    })),
+    minZoom: 1,
+    maxZoom: 100,
+    size: sizeToStr(map.size),
+    hotspots,
   };
 }
 
 export interface PhotosphereViewerProps {
   vfe: VFE;
+  currentPS?: string;
+  onChangePS?: (id: string) => void;
+  onViewerClick?: (pitch: number, yaw: number) => void;
 }
 
 function PhotosphereViewer(props: PhotosphereViewerProps) {
   const photoSphereRef = React.createRef<ViewerAPI>();
   const defaultPhotosphere =
     props.vfe.photospheres[props.vfe.defaultPhotosphereID];
+  // conditional fixes popover not rendering on non-default photosphere problem
   const [currentPhotosphere, setCurrentPhotosphere] =
-    React.useState<Photosphere>(defaultPhotosphere);
+    React.useState<Photosphere>(
+      props.currentPS
+        ? props.vfe.photospheres[props.currentPS]
+        : defaultPhotosphere,
+    );
   const [hotspotArray, setHotspotArray] = useState<(Hotspot3D | Hotspot2D)[]>(
     [],
   );
@@ -133,12 +162,14 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
     void virtualTour?.setCurrentNode(currentPhotosphere.id);
 
     const map = photoSphereRef.current?.getPlugin<MapPlugin>(MapPlugin);
-    map?.setCenter(currentPhotosphere.center);
+    if (currentPhotosphere.center) {
+      map?.setCenter(currentPhotosphere.center);
+    }
   }, [currentPhotosphere, photoSphereRef]);
 
   const plugins: ViewerConfig["plugins"] = [
     [MarkersPlugin, {}],
-    [MapPlugin, convertMap(props.vfe.map, defaultPhotosphere.center)],
+
     [
       VirtualTourPlugin,
       {
@@ -150,13 +181,33 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
     ],
   ];
 
+  // Only enable map plugin when VFE has a map
+  if (props.vfe.map) {
+    plugins.push([
+      MapPlugin,
+      convertMap(
+        props.vfe.map,
+        props.vfe.photospheres,
+        defaultPhotosphere.center,
+      ),
+    ]);
+  }
+
   function handleReady(instance: Viewer) {
     const markerTestPlugin: MarkersPlugin = instance.getPlugin(MarkersPlugin);
 
     markerTestPlugin.addEventListener("select-marker", ({ marker }) => {
+      if (marker.config.id.includes("__tour-link")) return;
+
       const passMarker = currentPhotosphere.hotspots[marker.config.id];
 
       setHotspotArray([passMarker]);
+    });
+
+    instance.addEventListener("click", ({ data }) => {
+      if (!data.rightclick) {
+        props.onViewerClick?.(data.pitch, data.yaw);
+      }
     });
 
     const virtualTour =
@@ -174,22 +225,22 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
       },
     );
 
-    virtualTour.setNodes(nodes, defaultPhotosphere.id);
+    // need to have conditional so that scene doesn't change when adding hotspots
+    virtualTour.setNodes(
+      nodes,
+      props.currentPS ? props.currentPS : defaultPhotosphere.id,
+    );
     virtualTour.addEventListener("node-changed", ({ node }) => {
       setCurrentPhotosphere(props.vfe.photospheres[node.id]);
+      props.onChangePS?.(node.id);
       setHotspotArray([]); // clear popovers on scene change
     });
 
     const map = instance.getPlugin<MapPlugin>(MapPlugin);
     map.addEventListener("select-hotspot", ({ hotspotId }) => {
-      const hotspot: Hotspot2D | undefined = props.vfe.map.hotspots.find(
-        (hotspot) => hotspot.id === hotspotId,
-      );
-      if (hotspot?.data.tag === "PhotosphereLink") {
-        setCurrentPhotosphere(
-          props.vfe.photospheres[hotspot.data.photosphereID],
-        );
-      }
+      const photosphere = props.vfe.photospheres[hotspotId];
+      setCurrentPhotosphere(photosphere);
+      props.onChangePS?.(photosphere.id);
     });
   }
 
@@ -200,6 +251,7 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
         value={currentPhotosphere.id}
         setValue={(id) => {
           setCurrentPhotosphere(props.vfe.photospheres[id]);
+          props.onChangePS?.(id);
         }}
       />
 
