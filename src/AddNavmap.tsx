@@ -32,11 +32,7 @@ function AddNavMap({ onCreateNavMap, onClose }: AddNavMapProps): JSX.Element {
   function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = function () {
-        setNavmapImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+      setNavmapImage(URL.createObjectURL(file));
     }
   }
 

@@ -11,12 +11,7 @@ function ContentInput({ contentType, onChangeContent }: ContentInputProps) {
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const URL = reader.result as string;
-        onChangeContent(URL);
-      };
-      reader.readAsDataURL(file);
+      onChangeContent(URL.createObjectURL(file));
     }
   }
 

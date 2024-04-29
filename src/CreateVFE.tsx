@@ -59,12 +59,7 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
   function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const imageURL = reader.result as string;
-        setPanoImage(imageURL);
-      };
-      reader.readAsDataURL(file);
+      setPanoImage(URL.createObjectURL(file));
     }
   }
   // Add styling to input interface
