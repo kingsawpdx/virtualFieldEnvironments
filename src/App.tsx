@@ -13,9 +13,6 @@ import Prototype from "./Prototype.tsx";
 function AppRoot() {
   // Decide state, should manage whether the VFE should be displayed or the LandingPage should be displayed
   const [vfeData, setVFEData] = useState<VFE | null>(null);
-  const [currentPhotosphereID, setCurrentPhotosphereID] = useState(
-    vfeData ? vfeData.defaultPhotosphereID : "invalid",
-  );
 
   const navigate = useNavigate();
 
@@ -30,19 +27,11 @@ function AppRoot() {
 
   function loadCreatedVFE(data: VFE) {
     setVFEData(data);
-    setCurrentPhotosphereID(
-      currentPhotosphereID == "invalid"
-        ? data.defaultPhotosphereID
-        : currentPhotosphereID,
-    );
-    navigate("/editor");
+    navigate(`/editor/${data.name}/${data.defaultPhotosphereID}`);
   }
 
-  function handleUpdateVFE(updatedVFE: VFE, currentPS?: string) {
+  function handleUpdateVFE(updatedVFE: VFE) {
     setVFEData(updatedVFE);
-    setCurrentPhotosphereID(
-      currentPS ? currentPS : updatedVFE.defaultPhotosphereID,
-    );
   }
 
   return (
@@ -56,7 +45,11 @@ function AppRoot() {
           />
         }
       />
-      <Route path="/viewer" element={<Prototype />} />
+      <Route
+        path="/viewer"
+        // TODO: replace with a way to select a VFE from a list
+        element={<Prototype />}
+      />
       <Route path="/viewer/:vfeID" element={<PhotosphereLoader />}>
         <Route path=":sceneID" element={<></>} />
       </Route>
@@ -66,11 +59,14 @@ function AppRoot() {
       />
       <Route
         path="/editor"
+        // TODO: replace with a way to select a VFE from a list
+        element={<Navigate to="/create" replace={true} />}
+      />
+      <Route
+        path="/editor/:vfeID"
         element={
           vfeData ? (
             <PhotosphereEditor
-              currentPS={currentPhotosphereID}
-              onChangePS={setCurrentPhotosphereID}
               parentVFE={vfeData}
               onUpdateVFE={handleUpdateVFE}
             />
@@ -79,7 +75,9 @@ function AppRoot() {
             <Navigate to="/create" replace={true} />
           )
         }
-      />
+      >
+        <Route path=":sceneID" element={<></>} />
+      </Route>
     </Routes>
   );
 }
