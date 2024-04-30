@@ -179,19 +179,19 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
         },
       } as VirtualTourPluginConfig,
     ],
-  ];
 
-  // Only enable map plugin when VFE has a map
-  if (props.vfe.map) {
-    plugins.push([
+    // Only fill map plugin config when VFE has a map
+    [
       MapPlugin,
-      convertMap(
-        props.vfe.map,
-        props.vfe.photospheres,
-        defaultPhotosphere.center,
-      ),
-    ]);
-  }
+      props.vfe.map
+        ? convertMap(
+            props.vfe.map,
+            props.vfe.photospheres,
+            defaultPhotosphere.center,
+          )
+        : {},
+    ],
+  ];
 
   function handleReady(instance: Viewer) {
     const markerTestPlugin: MarkersPlugin = instance.getPlugin(MarkersPlugin);
