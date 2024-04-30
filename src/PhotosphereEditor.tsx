@@ -151,28 +151,42 @@ function PhotosphereEditor({
 
       delete updatedPhotospheres[currentPS];  // since the index for the currentPS is still there, it must get deleted
 
-      //const updatedDefaultPhotosphereID =
-      //  vfe.defaultPhotosphereID === currentPS ? newName : vfe.defaultPhotosphereID;
-
       // Update the VFE with the modified photospheres object
       const updatedVFE: VFE = {
         ...vfe,
         defaultPhotosphereID: newName, 
         photospheres: updatedPhotospheres,
       };
-  currentPS = newName
-  setVFE(updatedVFE); // Update the local VFE state
-  onUpdateVFE(updatedVFE, currentPS); // Propagate the change to the parent component
-  setUpdateTrigger((prev) => prev + 1);
-  setNewName(""); // Clear the input field 
-    }
+
+      currentPS = newName //set currentPS index to new name to access it correctly moving forward
+      setVFE(updatedVFE); // Update the local VFE state
+      onUpdateVFE(updatedVFE, currentPS); // Propagate the change to the parent component
+      setUpdateTrigger((prev) => prev + 1);
+      setNewName(""); // Clear the input field 
+      }
     }
   }
 
   // Function to handle submit button click for background change
   function handleSubmitBackground() {
     if (newBackground.trim() !== "") { // Check if the new background is not empty
-     // onChangePhotosphereBackground(newBackground); // Call the function to change the background image
+      const currentPhotosphere = vfe.photospheres[currentPS];
+      if (currentPhotosphere) {
+        const updatedPhotospheres = { ...vfe.photospheres }; // Create a copy of the photospheres object
+
+        // Update the current photosphere's background image
+        updatedPhotospheres[currentPS] = { ...currentPhotosphere, src: newBackground};
+
+        // Update the VFE with the modified photospheres object
+        const updatedVFE: VFE = {
+          ...vfe,
+          photospheres: updatedPhotospheres,
+        };
+
+        setVFE(updatedVFE); // Update the local VFE state
+        onUpdateVFE(updatedVFE, currentPS); // Propagate the change to the parent component
+        setUpdateTrigger((prev) => prev + 1);
+      }
       setNewBackground(""); // Clear the input field
     }
   }
