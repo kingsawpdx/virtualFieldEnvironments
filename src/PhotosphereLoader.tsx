@@ -5,7 +5,10 @@ import { VFE } from "./DataStructures";
 import PhotosphereViewer from "./PhotosphereViewer";
 
 function PhotosphereLoader() {
-  const { vfeID, sceneID } = useParams() as { vfeID: string; sceneID?: string };
+  const { vfeID, photosphereID } = useParams() as {
+    vfeID: string;
+    photosphereID?: string;
+  };
 
   const vfeData = window.localStorage.getItem(vfeID);
 
@@ -23,7 +26,7 @@ function PhotosphereLoader() {
   return (
     <PhotosphereViewer
       vfe={data}
-      currentPS={sceneID}
+      currentPS={photosphereID}
       onChangePS={(id) => {
         history.replaceState(null, "", id); // change path without forcing a rerender
       }}

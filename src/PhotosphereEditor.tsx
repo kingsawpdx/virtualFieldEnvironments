@@ -31,7 +31,10 @@ function PhotosphereEditor({
   parentVFE,
   onUpdateVFE,
 }: PhotosphereEditorProps): JSX.Element {
-  const { sceneID } = useParams() as { vfeID: string; sceneID: string };
+  const { photosphereID } = useParams() as {
+    vfeID: string;
+    photosphereID: string;
+  };
   const navigate = useNavigate();
 
   // Base states
@@ -79,7 +82,7 @@ function PhotosphereEditor({
   }
 
   function handleAddHotspot(newHotspot: Hotspot3D) {
-    const photosphere: Photosphere = vfe.photospheres[sceneID];
+    const photosphere: Photosphere = vfe.photospheres[photosphereID];
 
     photosphere.hotspots[newHotspot.tooltip] = newHotspot;
 
@@ -172,7 +175,7 @@ function PhotosphereEditor({
       </div>
       <div style={{ width: "100%", height: "100%" }}>
         <PhotosphereViewer
-          currentPS={sceneID}
+          currentPS={photosphereID}
           onChangePS={onChangePS}
           onViewerClick={handleLocation}
           key={updateTrigger}
