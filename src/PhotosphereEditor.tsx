@@ -43,9 +43,9 @@ function PhotosphereEditor({
   const [showAddHotspot, setShowAddHotspot] = useState(false);
   const [pitch, setPitch] = useState(0);
   const [yaw, setYaw] = useState(0);
-  
-  const [showAddFeatures, setShowAddFeatures] = useState(false); 
-  const [showChangeFeatures, setShowChangeFeatures] = useState(false); 
+
+  const [showAddFeatures, setShowAddFeatures] = useState(false);
+  const [showChangeFeatures, setShowChangeFeatures] = useState(false);
 
   const [newName, setNewName] = useState(""); // State to hold the new name
   const [newBackground, setNewBackground] = useState("");
@@ -127,61 +127,64 @@ function PhotosphereEditor({
 
   // Function to handle name change
   function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setNewName(event.target.value); 
+    setNewName(event.target.value);
   }
 
   // Function to handle background change
   function handleBackgroundChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (file) {
-      setNewBackground(URL.createObjectURL(file)); 
+      setNewBackground(URL.createObjectURL(file));
     }
   }
 
   // Function to handle submit button click for name change
   function handleSubmitName() {
-    if (newName.trim() !== "") { 
-
+    if (newName.trim() !== "") {
       const currentPhotosphere = vfe.photospheres[currentPS];
       //making updated photosphere list minus the currentPS
-      const updatedPhotospheres: Record<string, Photosphere> = Object.fromEntries(
-        Object.entries(vfe.photospheres).filter(([key]) => key !== currentPS)
-    );
+      const updatedPhotospheres: Record<string, Photosphere> =
+        Object.fromEntries(
+          Object.entries(vfe.photospheres).filter(([key]) => key !== currentPS),
+        );
       //making currentPS entry with newName
-      updatedPhotospheres[newName] = { ...currentPhotosphere, id: newName }; 
+      updatedPhotospheres[newName] = { ...currentPhotosphere, id: newName };
 
       const updatedVFE: VFE = {
         ...vfe,
-        defaultPhotosphereID: newName, 
+        defaultPhotosphereID: newName,
         photospheres: updatedPhotospheres,
       };
 
-      currentPS = newName //set currentPS index to new name to access it correctly moving forward
-      setVFE(updatedVFE); 
-      onUpdateVFE(updatedVFE, currentPS); 
+      currentPS = newName; //set currentPS index to new name to access it correctly moving forward
+      setVFE(updatedVFE);
+      onUpdateVFE(updatedVFE, currentPS);
       setUpdateTrigger((prev) => prev + 1);
-      setNewName(""); 
+      setNewName("");
     }
   }
 
   // Function to handle submit button click for background change
   function handleSubmitBackground() {
-    if (newBackground.trim() !== "") { 
+    if (newBackground.trim() !== "") {
       const currentPhotosphere = vfe.photospheres[currentPS];
-        const updatedPhotospheres = { ...vfe.photospheres }; 
+      const updatedPhotospheres = { ...vfe.photospheres };
 
-        updatedPhotospheres[currentPS] = { ...currentPhotosphere, src: newBackground};
+      updatedPhotospheres[currentPS] = {
+        ...currentPhotosphere,
+        src: newBackground,
+      };
 
-        const updatedVFE: VFE = {
-          ...vfe,
-          photospheres: updatedPhotospheres,
-        };
+      const updatedVFE: VFE = {
+        ...vfe,
+        photospheres: updatedPhotospheres,
+      };
 
-        setVFE(updatedVFE); 
-        onUpdateVFE(updatedVFE, currentPS); 
-        setUpdateTrigger((prev) => prev + 1);
-      }
-      setNewBackground("");
+      setVFE(updatedVFE);
+      onUpdateVFE(updatedVFE, currentPS);
+      setUpdateTrigger((prev) => prev + 1);
+    }
+    setNewBackground("");
   }
 
   // Add styling for inputting information
@@ -200,82 +203,112 @@ function PhotosphereEditor({
           padding: "10px",
         }}
       >
-      {!showAddFeatures && !showChangeFeatures && (
+        {!showAddFeatures && !showChangeFeatures && (
           <>
-            <button style={{ margin: "10px 0" }} onClick={() => {setShowAddFeatures(true)}}>
+            <button
+              style={{ margin: "10px 0" }}
+              onClick={() => {
+                setShowAddFeatures(true);
+              }}
+            >
               Add Features
             </button>
-            <button style={{ margin: "10px 0" }} onClick={() => {setShowChangeFeatures(true)}}>
+            <button
+              style={{ margin: "10px 0" }}
+              onClick={() => {
+                setShowChangeFeatures(true);
+              }}
+            >
               Change Features
             </button>
           </>
         )}
         {showAddFeatures && (
           <>
-          <button
-          style={{ margin: "10px 0" }}
-          onClick={() => {
-            resetStates();
-            setShowAddPhotosphere(true);
-          }}
-        >
-          Add New Photosphere
-        </button>
+            <button
+              style={{ margin: "10px 0" }}
+              onClick={() => {
+                resetStates();
+                setShowAddPhotosphere(true);
+              }}
+            >
+              Add New Photosphere
+            </button>
 
-        <button
-          style={{ margin: "10px 0" }}
-          onClick={() => {
-            resetStates();
-            setShowAddNavMap(true); // Set state to show AddNavmap
-            //Call your setShowAddNavmap function to set the state and display the function
-          }}
-        >
-          {vfe.map ? "Change NavMap" : "Add New NavMap"}
-        </button>
-        <button
-          style={{ margin: "10px 0" }}
-          onClick={() => {
-            resetStates();
-            //Call your setShowAddHotspot function to set the state and display the function
-            setShowAddHotspot(true);
-          }}
-        >
-          Add New Hotspot
-        </button>
+            <button
+              style={{ margin: "10px 0" }}
+              onClick={() => {
+                resetStates();
+                setShowAddNavMap(true); // Set state to show AddNavmap
+                //Call your setShowAddNavmap function to set the state and display the function
+              }}
+            >
+              {vfe.map ? "Change NavMap" : "Add New NavMap"}
+            </button>
+            <button
+              style={{ margin: "10px 0" }}
+              onClick={() => {
+                resetStates();
+                //Call your setShowAddHotspot function to set the state and display the function
+                setShowAddHotspot(true);
+              }}
+            >
+              Add New Hotspot
+            </button>
 
-        <button
-          style={{margin: "10"}}
-          onClick={()=> {setShowAddFeatures(false)}}
-          >
-          Back
-        </button>
-            
+            <button
+              style={{ margin: "10" }}
+              onClick={() => {
+                setShowAddFeatures(false);
+              }}
+            >
+              Back
+            </button>
           </>
         )}
 
         {showChangeFeatures && (
           <>
-            <button style={{ margin: "10px 470px 0 0" }} onClick={() => {setShowChangeFeatures(false)}}>
+            <button
+              style={{ margin: "10px 470px 0 0" }}
+              onClick={() => {
+                setShowChangeFeatures(false);
+              }}
+            >
               Back
             </button>
             {/* Buttons for changing features */}
             <div style={{ margin: "10px 0" }}>
-              <label htmlFor="newName">New Photosphere Name:  </label>
-              <input type="text" id="newName" value={newName} onChange={handleNameChange} />
-              <button style={{ margin: "0px 5px 0 8px" }} onClick={handleSubmitName}>
-                Change Name 
+              <label htmlFor="newName">New Photosphere Name: </label>
+              <input
+                type="text"
+                id="newName"
+                value={newName}
+                onChange={handleNameChange}
+              />
+              <button
+                style={{ margin: "0px 5px 0 8px" }}
+                onClick={handleSubmitName}
+              >
+                Change Name
               </button>
             </div>
             <div style={{ margin: "10px 0" }}>
-              <label htmlFor="newBackground">New Background:  </label>
-              <input type="file" id="newBackground" onChange={handleBackgroundChange} />
-              <button style={{ margin: "0px 0 0 -55px" }} onClick={handleSubmitBackground}>
-                Change Background 
+              <label htmlFor="newBackground">New Background: </label>
+              <input
+                type="file"
+                id="newBackground"
+                onChange={handleBackgroundChange}
+              />
+              <button
+                style={{ margin: "0px 0 0 -55px" }}
+                onClick={handleSubmitBackground}
+              >
+                Change Background
               </button>
             </div>
           </>
         )}
-        
       </div>
       <div style={{ width: "100%", height: "100%" }}>
         <PhotosphereViewer
