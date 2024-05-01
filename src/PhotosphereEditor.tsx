@@ -4,8 +4,9 @@ import AddHotspot from "./AddHotspot.tsx";
 import AddNavmap from "./AddNavmap";
 import AddPhotosphere from "./AddPhotosphere.tsx";
 import { Hotspot3D, NavMap, Photosphere, VFE } from "./DataStructures.ts";
+import { save } from "./FileOperations.ts";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
-import { convertLocalToNetwork, convertVFE } from "./VFEConversion.ts";
+import { convertNetworkToLocal, convertVFE } from "./VFEConversion.ts";
 
 /* -----------------------------------------------------------------------
     Update the Virtual Field Environment with an added Photosphere.
@@ -121,7 +122,8 @@ function PhotosphereEditor({
   }
 
   async function handleSave() {
-    convertVFE(vfe, convertLocalToNetwork);
+    const convertedVFE = await convertVFE(vfe, convertNetworkToLocal);
+    save(convertedVFE);
   }
   // Add styling for inputting information
   return (

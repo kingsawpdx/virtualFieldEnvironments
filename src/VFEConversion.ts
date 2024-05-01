@@ -1,3 +1,5 @@
+import { ContentCutRounded } from "@mui/icons-material";
+
 import {
   Asset,
   Hotspot2D,
@@ -11,20 +13,20 @@ import {
 
 export async function convertLocalToNetwork(asset: Asset): Promise<Asset> {
   let path = asset.path;
-  if (path.startsWith("blob:")) {
+  if (path.startsWith("data:")) {
     const result = await fetch(asset.path);
     const blob = await result.blob();
-    path = await convertBlobToData(blob);
+    path = URL.createObjectURL(blob);
   }
   return { tag: "Network", path };
 }
 
 export async function convertNetworkToLocal(asset: Asset): Promise<Asset> {
   let path = asset.path;
-  if (path.startsWith("data:")) {
+  if (path.startsWith("blob:")) {
     const result = await fetch(asset.path);
     const blob = await result.blob();
-    path = URL.createObjectURL(blob);
+    path = await convertBlobToData(blob);
   }
   return { tag: "Local", path };
 }
@@ -80,6 +82,7 @@ async function convertPhotosphere(
 
   return {
     ...photosphere,
+    src: await convert(photosphere.src),
     hotspots: Object.fromEntries(hotspots),
   };
 }
@@ -111,6 +114,7 @@ async function convertImage(
 
   return {
     ...image,
+    src: await convert(image.src),
     hotspots: Object.fromEntries(hotspots),
   };
 }

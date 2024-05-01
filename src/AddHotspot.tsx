@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Asset, Hotspot3D, HotspotData } from "./DataStructures.ts";
+import { Hotspot3D, HotspotData } from "./DataStructures.ts";
 
 interface ContentInputProps {
   contentType: string;
