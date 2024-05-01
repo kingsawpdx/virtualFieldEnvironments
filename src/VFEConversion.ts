@@ -9,12 +9,48 @@ import {
   VFE,
 } from "./DataStructures";
 
-export type ConversionFunction = (a: Asset) => Promise<Asset>;
+export async function convertVFENetworkToLocal(vfe: VFE): Promise<VFE> {
+  async function convert(asset: Asset): Promise<Asset> {
+    let path = asset.path;
+    if (path.startsWith("data:")) {
+      const result = await fetch(asset.path);
+      const blob = await result.blob();
+      path = URL.createObjectURL(blob);
+    }
+    return { tag: "Local", path };
+  }
 
-export async function convertVFE(
-  vfe: VFE,
-  convert: ConversionFunction,
-): Promise<VFE> {
+  return convertVFE(vfe, convert);
+}
+
+export async function convertVFELocalToNetwork(vfe: VFE): Promise<VFE> {
+  async function convert(asset: Asset): Promise<Asset> {
+    let path = asset.path;
+    if (path.startsWith("blob:")) {
+      const result = await fetch(asset.path);
+      const blob = await result.blob();
+      path = await convertBlobToData(blob);
+    }
+    return { tag: "Network", path };
+  }
+
+  return convertVFE(vfe, convert);
+}
+
+async function convertBlobToData(blob: Blob): Promise<string> {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const URL = reader.result as string;
+      resolve(URL);
+    };
+    reader.readAsDataURL(blob);
+  });
+}
+
+type ConversionFunction = (a: Asset) => Promise<Asset>;
+
+async function convertVFE(vfe: VFE, convert: ConversionFunction): Promise<VFE> {
   const photospheres: [string, Photosphere][] = await Promise.all(
     Object.entries(vfe.photospheres).map(async ([id, p]) => [
       id,
