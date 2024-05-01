@@ -123,7 +123,7 @@ function convertMap(
   }
 
   return {
-    imageUrl: map.src,
+    imageUrl: map.src.path,
     center: currentCenter ?? map.defaultCenter,
     rotation: map.rotation,
     defaultZoom: map.defaultZoom,
@@ -273,13 +273,13 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
       )}
 
       {currentPhotosphere.backgroundAudio && (
-        <AudioToggleButton src={currentPhotosphere.backgroundAudio} />
+        <AudioToggleButton src={currentPhotosphere.backgroundAudio.path} />
       )}
 
       <ReactPhotoSphereViewer
         onReady={handleReady}
         ref={photoSphereRef}
-        src={defaultPhotosphere.src}
+        src={defaultPhotosphere.src.path}
         plugins={plugins}
         height={"100vh"}
         width={"100%"}
