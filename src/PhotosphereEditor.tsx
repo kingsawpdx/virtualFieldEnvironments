@@ -112,7 +112,7 @@ function PhotosphereEditor({
         <AddNavmap onCreateNavMap={handleCreateNavMap} onClose={resetStates} />
       );
     // Below this you will have your conditional for your own component, ie AddNavmap/AddHotspot
-    //Below this you will have your conditional for your own component, ie AddNavmap/AddHotspot
+    // Below this you will have your conditional for your own component, ie AddNavmap/AddHotspot
     if (showAddHotspot)
       return (
         <AddHotspot
@@ -127,31 +127,29 @@ function PhotosphereEditor({
 
   // Function to handle name change
   function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setNewName(event.target.value); // Update the new name in the state
+    setNewName(event.target.value); 
   }
 
   // Function to handle background change
   function handleBackgroundChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (file) {
-      setNewBackground(URL.createObjectURL(file)); // Set the new background image URL
+      setNewBackground(URL.createObjectURL(file)); 
     }
   }
 
   // Function to handle submit button click for name change
   function handleSubmitName() {
-    if (newName.trim() !== "") { // Check if the new name is not empty
+    if (newName.trim() !== "") { 
 
-   const currentPhotosphere = vfe.photospheres[currentPS];
-    if (currentPhotosphere) {
-      const updatedPhotospheres = { ...vfe.photospheres }; //straggling along the entire list, or else it gets rid of other ps
+      const currentPhotosphere = vfe.photospheres[currentPS];
+      //making updated photosphere list minus the currentPS
+      const updatedPhotospheres: Record<string, Photosphere> = Object.fromEntries(
+        Object.entries(vfe.photospheres).filter(([key]) => key !== currentPS)
+    );
+      //making currentPS entry with newName
+      updatedPhotospheres[newName] = { ...currentPhotosphere, id: newName }; 
 
-      // Update the current photosphere's ID
-      updatedPhotospheres[newName] = { ...currentPhotosphere, id: newName };
-
-      delete updatedPhotospheres[currentPS];  // since the index for the currentPS is still there, it must get deleted
-
-      // Update the VFE with the modified photospheres object
       const updatedVFE: VFE = {
         ...vfe,
         defaultPhotosphereID: newName, 
@@ -159,36 +157,31 @@ function PhotosphereEditor({
       };
 
       currentPS = newName //set currentPS index to new name to access it correctly moving forward
-      setVFE(updatedVFE); // Update the local VFE state
-      onUpdateVFE(updatedVFE, currentPS); // Propagate the change to the parent component
+      setVFE(updatedVFE); 
+      onUpdateVFE(updatedVFE, currentPS); 
       setUpdateTrigger((prev) => prev + 1);
-      setNewName(""); // Clear the input field 
-      }
+      setNewName(""); 
     }
   }
 
   // Function to handle submit button click for background change
   function handleSubmitBackground() {
-    if (newBackground.trim() !== "") { // Check if the new background is not empty
+    if (newBackground.trim() !== "") { 
       const currentPhotosphere = vfe.photospheres[currentPS];
-      if (currentPhotosphere) {
-        const updatedPhotospheres = { ...vfe.photospheres }; // Create a copy of the photospheres object
+        const updatedPhotospheres = { ...vfe.photospheres }; 
 
-        // Update the current photosphere's background image
         updatedPhotospheres[currentPS] = { ...currentPhotosphere, src: newBackground};
 
-        // Update the VFE with the modified photospheres object
         const updatedVFE: VFE = {
           ...vfe,
           photospheres: updatedPhotospheres,
         };
 
-        setVFE(updatedVFE); // Update the local VFE state
-        onUpdateVFE(updatedVFE, currentPS); // Propagate the change to the parent component
+        setVFE(updatedVFE); 
+        onUpdateVFE(updatedVFE, currentPS); 
         setUpdateTrigger((prev) => prev + 1);
       }
-      setNewBackground(""); // Clear the input field
-    }
+      setNewBackground("");
   }
 
   // Add styling for inputting information
@@ -209,10 +202,10 @@ function PhotosphereEditor({
       >
       {!showAddFeatures && !showChangeFeatures && (
           <>
-            <button style={{ margin: "10px 0" }} onClick={() => setShowAddFeatures(true)}>
+            <button style={{ margin: "10px 0" }} onClick={() => {setShowAddFeatures(true)}}>
               Add Features
             </button>
-            <button style={{ margin: "10px 0" }} onClick={() => setShowChangeFeatures(true)}>
+            <button style={{ margin: "10px 0" }} onClick={() => {setShowChangeFeatures(true)}}>
               Change Features
             </button>
           </>
@@ -252,7 +245,7 @@ function PhotosphereEditor({
 
         <button
           style={{margin: "10"}}
-          onClick={()=> setShowAddFeatures(false)}
+          onClick={()=> {setShowAddFeatures(false)}}
           >
           Back
         </button>
@@ -262,7 +255,7 @@ function PhotosphereEditor({
 
         {showChangeFeatures && (
           <>
-            <button style={{ margin: "10px 470px 0 0" }} onClick={() => setShowChangeFeatures(false)}>
+            <button style={{ margin: "10px 470px 0 0" }} onClick={() => {setShowChangeFeatures(false)}}>
               Back
             </button>
             {/* Buttons for changing features */}
