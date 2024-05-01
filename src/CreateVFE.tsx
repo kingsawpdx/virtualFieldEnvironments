@@ -45,7 +45,7 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
       photospheres: {
         [photosphereName]: {
           id: photosphereName,
-          src: panoImage,
+          src: { tag: "Network", path: panoImage },
           center: photosphereCenter ?? undefined,
           hotspots: {},
         },

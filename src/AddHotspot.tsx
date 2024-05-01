@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Hotspot3D, HotspotData } from "./DataStructures.ts";
+import { Asset, Hotspot3D, HotspotData } from "./DataStructures.ts";
 
 interface ContentInputProps {
   contentType: string;
@@ -86,20 +86,20 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
       case "Image":
         data = {
           tag: "Image",
-          src: content,
+          src: { tag: "Network", path: content },
           hotspots: {},
         };
         break;
       case "Video":
         data = {
           tag: "Video",
-          src: content,
+          src: { tag: "Network", path: content },
         };
         break;
       case "Audio":
         data = {
           tag: "Audio",
-          src: content,
+          src: { tag: "Network", path: content },
         };
         break;
       case "Doc":

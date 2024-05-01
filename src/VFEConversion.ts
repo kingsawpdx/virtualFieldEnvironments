@@ -9,32 +9,24 @@ import {
   VFE,
 } from "./DataStructures";
 
-export async function convertVFENetworkToLocal(vfe: VFE): Promise<VFE> {
-  async function convert(asset: Asset): Promise<Asset> {
-    let path = asset.path;
-    if (path.startsWith("data:")) {
-      const result = await fetch(asset.path);
-      const blob = await result.blob();
-      path = URL.createObjectURL(blob);
-    }
-    return { tag: "Local", path };
+export async function convertLocalToNetwork(asset: Asset): Promise<Asset> {
+  let path = asset.path;
+  if (path.startsWith("blob:")) {
+    const result = await fetch(asset.path);
+    const blob = await result.blob();
+    path = await convertBlobToData(blob);
   }
-
-  return convertVFE(vfe, convert);
+  return { tag: "Network", path };
 }
 
-export async function convertVFELocalToNetwork(vfe: VFE): Promise<VFE> {
-  async function convert(asset: Asset): Promise<Asset> {
-    let path = asset.path;
-    if (path.startsWith("blob:")) {
-      const result = await fetch(asset.path);
-      const blob = await result.blob();
-      path = await convertBlobToData(blob);
-    }
-    return { tag: "Network", path };
+export async function convertNetworkToLocal(asset: Asset): Promise<Asset> {
+  let path = asset.path;
+  if (path.startsWith("data:")) {
+    const result = await fetch(asset.path);
+    const blob = await result.blob();
+    path = URL.createObjectURL(blob);
   }
-
-  return convertVFE(vfe, convert);
+  return { tag: "Local", path };
 }
 
 async function convertBlobToData(blob: Blob): Promise<string> {
@@ -48,9 +40,12 @@ async function convertBlobToData(blob: Blob): Promise<string> {
   });
 }
 
-type ConversionFunction = (a: Asset) => Promise<Asset>;
+export type ConversionFunction = (a: Asset) => Promise<Asset>;
 
-async function convertVFE(vfe: VFE, convert: ConversionFunction): Promise<VFE> {
+export async function convertVFE(
+  vfe: VFE,
+  convert: ConversionFunction,
+): Promise<VFE> {
   const photospheres: [string, Photosphere][] = await Promise.all(
     Object.entries(vfe.photospheres).map(async ([id, p]) => [
       id,

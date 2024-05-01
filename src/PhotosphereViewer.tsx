@@ -217,7 +217,7 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
       (p) => {
         return {
           id: p.id,
-          panorama: p.src,
+          panorama: p.src.path,
           name: p.id,
           markers: convertHotspots(p.hotspots),
           links: convertLinks(p.hotspots),
