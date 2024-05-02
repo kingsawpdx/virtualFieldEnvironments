@@ -149,14 +149,12 @@ function PhotosphereEditor({
         );
       //making currentPS entry with newName
       updatedPhotospheres[newName] = { ...currentPhotosphere, id: newName };
-      var dID = ''
-      
-      if (currentPS == vfe.defaultPhotosphereID)
-      {
-          dID = newName
-      }
-      else {
-        dID = vfe.defaultPhotosphereID
+      let dID = "";
+
+      if (currentPS == vfe.defaultPhotosphereID) {
+        dID = newName;
+      } else {
+        dID = vfe.defaultPhotosphereID;
       }
       const updatedVFE: VFE = {
         ...vfe,
