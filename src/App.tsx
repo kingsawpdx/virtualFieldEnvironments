@@ -1,4 +1,5 @@
 import JSZip from "jszip";
+import localforage from "localforage";
 import { useState } from "react";
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 
@@ -64,8 +65,8 @@ function AppRoot() {
     const zip: JSZip = await JSZip.loadAsync(file);
     const data = await zip.file("data.json")?.async("string");
     if (data) {
-      window.localStorage.setItem("loaded", data);
-      const vfeData = window.localStorage.getItem("loaded")!;
+      await localforage.setItem("loaded", data);
+      const vfeData: string = (await localforage.getItem("loaded"))!;
 
       const vfe = JSON.parse(vfeData) as VFE;
       const convertedVFE = await convertVFE(vfe, convertLocalToNetwork);
