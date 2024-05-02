@@ -9,5 +9,5 @@ export async function save(vfe: VFE) {
   zip.file("data.json", data);
 
   const blob = await zip.generateAsync({ type: "blob" });
-  saveAs(blob, "vfe.zip");
+  saveAs(blob, `${vfe.name}.zip`);
 }
