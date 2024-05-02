@@ -182,7 +182,11 @@ function PhotosphereViewer({
     [
       MapPlugin,
       vfe.map
-        ? convertMap(vfe.map, vfe.photospheres, vfe.map.defaultCenter)
+        ? convertMap(
+            vfe.map,
+            vfe.photospheres,
+            currentPhotosphere.center ?? vfe.map.defaultCenter,
+          )
         : {},
     ],
   ];
