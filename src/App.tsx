@@ -7,6 +7,7 @@ import { VFE } from "./DataStructures.ts";
 import LandingPage from "./LandingPage.tsx";
 import PhotosphereEditor from "./PhotosphereEditor.tsx";
 import App from "./Prototype.tsx";
+import { convertLocalToNetwork, convertVFE } from "./VFEConversion.ts";
 
 // Main component acts as a main entry point for the application
 // Should decide what we are doing, going to LandingPage/Rendering VFE
@@ -60,23 +61,25 @@ function AppRoot() {
 
   async function handleLoadVFE(file: File) {
     // setLoadFile(file);
-    // const zip: JSZip = await JSZip.loadAsync(file);
-    // const data = await zip.file("data.json")?.async("string");
-    // if (data) {
-    //   const vfe = JSON.parse(data) as VFE;
-    //   loadCreatedVFE(vfe);
-    // }
-    JSZip.loadAsync(file).then((zip) => {
-      zip
-        .file("data.json")
-        ?.async("string")
-        .then((data) => {
-          const vfe = JSON.parse(data) as VFE;
-          //const dataLinks = getURLs();
+    const zip: JSZip = await JSZip.loadAsync(file);
+    const data = await zip.file("data.json")?.async("string");
+    if (data) {
+      const vfe = JSON.parse(data) as VFE;
+      const convertedVFE = await convertVFE(vfe, convertLocalToNetwork);
+      loadCreatedVFE(convertedVFE);
+    }
 
-          loadCreatedVFE(vfe);
-        });
-    });
+    // JSZip.loadAsync(file).then((zip) => {
+    //   zip
+    //     .file("data.json")
+    //     ?.async("string")
+    //     .then((data) => {
+    //       const vfe = JSON.parse(data) as VFE;
+    //       //const dataLinks = getURLs();
+
+    //       loadCreatedVFE(vfe);
+    //     });
+    // });
   }
 
   return (

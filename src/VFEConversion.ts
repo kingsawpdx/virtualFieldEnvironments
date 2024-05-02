@@ -1,5 +1,3 @@
-import { ContentCutRounded } from "@mui/icons-material";
-
 import {
   Asset,
   Hotspot2D,
