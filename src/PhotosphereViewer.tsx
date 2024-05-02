@@ -249,7 +249,18 @@ function PhotosphereViewer({
 
   return (
     <>
-      <div style={{ padding: "10px 0" }}>
+      <div
+        style={{
+          position: "absolute",
+          top: "16px",
+          left: "400px",
+          right: 0,
+          marginLeft: "auto",
+          marginRight: "auto",
+          zIndex: 100,
+          textAlign: "center",
+        }}
+      >
         <button
           onClick={() => {
             setMapStatic(!mapStatic);
