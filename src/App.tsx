@@ -37,43 +37,20 @@ function AppRoot() {
     setVFEData(updatedVFE);
   }
 
-  async function getURLs(): Promise<Record<string, string>> {
-    return new Promise((resolve) => {
-      if (loadFile) {
-      }
-      const file = loadFile;
-      let urls: Record<string, string> = {};
-      JSZip.loadAsync(file).then((zip) => {
-        zip.folder("assets")?.forEach((path, f) => {});
-      });
-    });
-  }
-
   async function handleLoadVFE(file: File) {
-    // setLoadFile(file);
     const zip: JSZip = await JSZip.loadAsync(file);
     const data = await zip.file("data.json")?.async("string");
     if (data) {
       await localforage.setItem("loaded", data);
-      const vfeData: string = (await localforage.getItem("loaded"))!;
+      //const vfeData: string = (await localforage.getItem("loaded"))!;
+      const vfeData: string | null = await localforage.getItem("loaded");
+      if (vfeData) {
+        const vfe = JSON.parse(vfeData) as VFE;
+        const convertedVFE = await convertVFE(vfe, convertLocalToNetwork);
 
-      const vfe = JSON.parse(vfeData) as VFE;
-      const convertedVFE = await convertVFE(vfe, convertLocalToNetwork);
-
-      loadCreatedVFE(convertedVFE);
+        loadCreatedVFE(convertedVFE);
+      }
     }
-
-    // JSZip.loadAsync(file).then((zip) => {
-    //   zip
-    //     .file("data.json")
-    //     ?.async("string")
-    //     .then((data) => {
-    //       const vfe = JSON.parse(data) as VFE;
-    //       //const dataLinks = getURLs();
-
-    //       loadCreatedVFE(vfe);
-    //     });
-    // });
   }
 
   return (
@@ -84,7 +61,9 @@ function AppRoot() {
           <LandingPage
             onLoadTestVFE={handleLoadTestVFE}
             onCreateVFE={handleCreateVFE}
-            onLoadVFE={handleLoadVFE}
+            onLoadVFE={(file) => {
+              void handleLoadVFE(file);
+            }}
           />
         }
       />

@@ -132,7 +132,7 @@ function PhotosphereEditor({
 
   async function handleSave() {
     const convertedVFE = await convertVFE(vfe, convertNetworkToLocal);
-    save(convertedVFE);
+    await save(convertedVFE);
   }
   // Add styling for inputting information
   return (
@@ -179,7 +179,12 @@ function PhotosphereEditor({
         >
           Add New Hotspot
         </button>
-        <button style={{ margin: "10px 0" }} onClick={handleSave}>
+        <button
+          style={{ margin: "10px 0" }}
+          onClick={() => {
+            void handleSave();
+          }}
+        >
           Save
         </button>
       </div>

@@ -4,7 +4,7 @@ import JSZip from "jszip";
 import { VFE } from "./DataStructures";
 
 export async function save(vfe: VFE) {
-  var zip = new JSZip();
+  const zip = new JSZip();
   const data = JSON.stringify(vfe);
   zip.file("data.json", data);
 
