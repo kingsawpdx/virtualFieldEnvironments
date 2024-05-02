@@ -171,18 +171,18 @@ function PhotosphereEditor({
   // Function to handle submit button click for name change
   function handleSubmitName() {
     if (newName.trim() !== "") {
-      const currentPhotosphere = vfe.photospheres[currentPS];
+      const currentPhotosphere = vfe.photospheres[photosphereID];
 
       //making updated photosphere list minus the currentPS
       const updatedPhotospheres: Record<string, Photosphere> =
         Object.fromEntries(
           Object.entries(vfe.photospheres)
-            .filter(([key]) => key !== currentPS)
+            .filter(([key]) => key !== photosphereID)
             .map(([key, photosphere]) => {
               // update hotspots in the current photosphere
               const updatedPhotosphere = updateHotspots(
                 photosphere,
-                currentPS,
+                photosphereID,
                 newName,
               );
               return [key, updatedPhotosphere];
@@ -193,7 +193,7 @@ function PhotosphereEditor({
       updatedPhotospheres[newName] = { ...currentPhotosphere, id: newName };
 
       const updatedDefaultPhotosphereID =
-        vfe.defaultPhotosphereID === currentPS
+        vfe.defaultPhotosphereID === photosphereID
           ? newName
           : vfe.defaultPhotosphereID;
 
@@ -203,9 +203,9 @@ function PhotosphereEditor({
         photospheres: updatedPhotospheres,
       };
 
-      currentPS = newName; //set currentPS index to new name to access it correctly moving forward
+      onChangePS(newName); //set currentPS index to new name to access it correctly moving forward
       setVFE(updatedVFE);
-      onUpdateVFE(updatedVFE, currentPS);
+      onUpdateVFE(updatedVFE);
       setUpdateTrigger((prev) => prev + 1);
       setNewName("");
     }
@@ -214,10 +214,10 @@ function PhotosphereEditor({
   // Function to handle submit button click for background change
   function handleSubmitBackground() {
     if (newBackground.trim() !== "") {
-      const currentPhotosphere = vfe.photospheres[currentPS];
+      const currentPhotosphere = vfe.photospheres[photosphereID];
       const updatedPhotospheres = { ...vfe.photospheres };
 
-      updatedPhotospheres[currentPS] = {
+      updatedPhotospheres[photosphereID] = {
         ...currentPhotosphere,
         src: newBackground,
       };
@@ -228,7 +228,7 @@ function PhotosphereEditor({
       };
 
       setVFE(updatedVFE);
-      onUpdateVFE(updatedVFE, currentPS);
+      onUpdateVFE(updatedVFE);
       setUpdateTrigger((prev) => prev + 1);
     }
     setNewBackground("");
