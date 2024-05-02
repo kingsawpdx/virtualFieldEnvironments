@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {useState } from "react";
 
 import AddPhotosphere from "./buttons/AddPhotosphere.tsx";
 import { VFE } from "./DataStructures.ts";
@@ -7,10 +7,9 @@ import  AddAudio from "./buttons/AddAudio.tsx"
 
 interface PhotosphereEditorProps {
   vfe: VFE;
-  currentAudio?: string;
 }
 
-function PhotosphereEditor({ vfe }: PhotosphereEditorProps): JSX.Element {
+function PhotosphereEditor({ vfe}: PhotosphereEditorProps): JSX.Element {
   //Basic states for each component, its basically just a boolean
   const [showAddPhotosphere, setShowAddPhotosphere] = useState(false);
   const [audio, setAudio] = useState<string>("");
@@ -76,12 +75,12 @@ function PhotosphereEditor({ vfe }: PhotosphereEditorProps): JSX.Element {
           Add New Hotspot
         </button>
         <label htmlFor="audio">
-          {audio !== "" ? "Change Audio: " : "Add Audio:"}
+          {(audio !== "" || vfe.photospheres[vfe.defaultPhotosphereID].backgroundAudio) ? "Change Audio: " : "Add Audio:"}
         </label>
         <input type="file" id="audio" onChange={handleAudioChange} />
       </div>
       <div style={{ width: "100%", height: "100%" }}>
-        <PhotosphereViewer vfe={vfe}/>
+        {<PhotosphereViewer vfe={vfe} />}
         <ActiveComponent />
       </div>
     </div>
