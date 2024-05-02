@@ -184,22 +184,17 @@ function PhotosphereViewer({
     // Only fill map plugin config when VFE has a map
     [
       MapPlugin,
-<<<<<<< HEAD
-      convertMap(
-        props.vfe.map,
-        props.vfe.photospheres,
-        defaultPhotosphere.center,
-        mapStatic,
-      ),
-    ]);
-  }
-=======
+
       vfe.map
-        ? convertMap(vfe.map, vfe.photospheres, vfe.map.defaultCenter)
+        ? convertMap(
+            vfe.map,
+            vfe.photospheres,
+            vfe.map.defaultCenter,
+            mapStatic,
+          )
         : {},
     ],
   ];
->>>>>>> c35f3d47bde7fb228d51c7eab24bf7421e1f87e6
 
   function handleReady(instance: Viewer) {
     const markerTestPlugin: MarkersPlugin = instance.getPlugin(MarkersPlugin);
