@@ -1,10 +1,11 @@
 import { Alert, Stack } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { VFE } from "./DataStructures";
 import PhotosphereViewer from "./PhotosphereViewer";
 
 function PhotosphereLoader() {
+  const navigate = useNavigate();
   const { vfeID, photosphereID } = useParams() as {
     vfeID: string;
     photosphereID?: string;
@@ -26,9 +27,9 @@ function PhotosphereLoader() {
   return (
     <PhotosphereViewer
       vfe={data}
-      currentPS={photosphereID}
+      currentPS={photosphereID ?? data.defaultPhotosphereID}
       onChangePS={(id) => {
-        history.replaceState(null, "", id); // change path without forcing a rerender
+        navigate(id, { replace: true });
       }}
     />
   );
