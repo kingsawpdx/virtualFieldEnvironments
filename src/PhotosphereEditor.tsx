@@ -138,17 +138,24 @@ function PhotosphereEditor({
     }
   }
 
-  function updateHotspots(photosphere: Photosphere, currentPS: string, newName: string): Photosphere {
+  function updateHotspots(
+    photosphere: Photosphere,
+    currentPS: string,
+    newName: string,
+  ): Photosphere {
     // updating photosphere
     const updatedPhotosphere: Photosphere = { ...photosphere };
-  
+
     // iterate through hotspots in the current ps
-    Object.values(updatedPhotosphere.hotspots).forEach(hotspot => {
-      if (hotspot.data.tag === "PhotosphereLink" && hotspot.data.photosphereID === currentPS) {
+    Object.values(updatedPhotosphere.hotspots).forEach((hotspot) => {
+      if (
+        hotspot.data.tag === "PhotosphereLink" &&
+        hotspot.data.photosphereID === currentPS
+      ) {
         hotspot.data.photosphereID = newName;
       }
     });
-  
+
     return updatedPhotosphere;
   }
 
@@ -157,23 +164,29 @@ function PhotosphereEditor({
     if (newName.trim() !== "") {
       const currentPhotosphere = vfe.photospheres[currentPS];
 
-    //making updated photosphere list minus the currentPS
+      //making updated photosphere list minus the currentPS
       const updatedPhotospheres: Record<string, Photosphere> =
         Object.fromEntries(
-        Object.entries(vfe.photospheres).filter(([key]) => key !== currentPS).map(([key, photosphere]) => {
-          // update hotspots in the current photosphere
-          const updatedPhotosphere = updateHotspots(photosphere, currentPS, newName);
-          return [key, updatedPhotosphere]; 
-        }) 
+          Object.entries(vfe.photospheres)
+            .filter(([key]) => key !== currentPS)
+            .map(([key, photosphere]) => {
+              // update hotspots in the current photosphere
+              const updatedPhotosphere = updateHotspots(
+                photosphere,
+                currentPS,
+                newName,
+              );
+              return [key, updatedPhotosphere];
+            }),
         );
 
-      
       //making currentPS entry with newName
       updatedPhotospheres[newName] = { ...currentPhotosphere, id: newName };
-      //let dID = "";
 
       const updatedDefaultPhotosphereID =
-      vfe.defaultPhotosphereID === currentPS ? newName : vfe.defaultPhotosphereID;
+        vfe.defaultPhotosphereID === currentPS
+          ? newName
+          : vfe.defaultPhotosphereID;
 
       const updatedVFE: VFE = {
         ...vfe,
