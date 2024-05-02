@@ -41,13 +41,10 @@ function AppRoot() {
     const zip: JSZip = await JSZip.loadAsync(file);
     const data = await zip.file("data.json")?.async("string");
     if (data) {
-      await localforage.setItem("loaded", data);
-      //const vfeData: string = (await localforage.getItem("loaded"))!;
-      const vfeData: string | null = await localforage.getItem("loaded");
-      if (vfeData) {
-        const vfe = JSON.parse(vfeData) as VFE;
+      await localforage.setItem("loaded", JSON.parse(data) as VFE);
+      const vfe: VFE | null = await localforage.getItem("loaded");
+      if (vfe) {
         const convertedVFE = await convertVFE(vfe, convertLocalToNetwork);
-
         loadCreatedVFE(convertedVFE);
       }
     }
