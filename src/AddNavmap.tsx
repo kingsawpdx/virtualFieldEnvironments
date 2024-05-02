@@ -42,7 +42,7 @@ function AddNavMap({ onCreateNavMap, onClose }: AddNavMapProps): JSX.Element {
       return;
     }
 
-    const navmapSize = 200;
+    const navmapSize = 300;
     const { width, height } = await calculateImageDimensions(navmapImage);
     const maxDimension = Math.max(width, height);
     const newNavMap: NavMap = {

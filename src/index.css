@@ -1,3 +1,11 @@
 body {
   margin: 0;
 }
+/*Makes the map a square*/
+.psv-map__container {
+  border-radius: 0 !important;
+}
+/* Hides the overlay */
+.psv-map__overlay {
+  display: none;
+}
