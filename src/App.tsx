@@ -64,8 +64,12 @@ function AppRoot() {
     const zip: JSZip = await JSZip.loadAsync(file);
     const data = await zip.file("data.json")?.async("string");
     if (data) {
-      const vfe = JSON.parse(data) as VFE;
+      window.localStorage.setItem("loaded", data);
+      const vfeData = window.localStorage.getItem("loaded")!;
+
+      const vfe = JSON.parse(vfeData) as VFE;
       const convertedVFE = await convertVFE(vfe, convertLocalToNetwork);
+
       loadCreatedVFE(convertedVFE);
     }
 
