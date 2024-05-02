@@ -2,7 +2,6 @@ import React, { useState } from "react";
 
 import { PhotosphereCenterFieldset } from "./AddPhotosphere.tsx";
 import { VFE } from "./DataStructures.ts";
-import PhotosphereViewer from "./PhotosphereViewer.tsx";
 
 /* -----------------------------------------------------------------------
     Create a Virtual Field Environment (VFE) that will contain many
@@ -52,7 +51,6 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
       },
     };
     onCreateVFE(data);
-    return <PhotosphereViewer vfe={data} />;
   }
 
   // Ensure file is truthy
