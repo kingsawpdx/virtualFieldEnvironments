@@ -82,6 +82,9 @@ async function convertPhotosphere(
     ...photosphere,
     src: await convert(photosphere.src),
     hotspots: Object.fromEntries(hotspots),
+    backgroundAudio: photosphere.backgroundAudio
+      ? await convert(photosphere.backgroundAudio)
+      : undefined,
   };
 }
 

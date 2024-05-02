@@ -52,7 +52,7 @@ function HotspotContent(props: HotspotContentProps) {
               maxHeight: "70vh",
               objectFit: "contain",
             }}
-            src={props.hotspot.src}
+            src={props.hotspot.src.path}
           />
         </Box>
       );
