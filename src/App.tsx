@@ -51,7 +51,7 @@ function AppRoot() {
         element={<Prototype />}
       />
       <Route path="/viewer/:vfeID" element={<PhotosphereLoader />}>
-        <Route path=":photosphereID" element={<></>} />
+        <Route path=":photosphereID" element={null} />
       </Route>
       <Route
         path="/create"
@@ -76,7 +76,7 @@ function AppRoot() {
           )
         }
       >
-        <Route path=":photosphereID" element={<></>} />
+        <Route path=":photosphereID" element={null} />
       </Route>
     </Routes>
   );
