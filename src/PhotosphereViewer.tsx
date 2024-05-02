@@ -199,9 +199,13 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
     markerTestPlugin.addEventListener("select-marker", ({ marker }) => {
       if (marker.config.id.includes("__tour-link")) return;
 
-      const passMarker = currentPhotosphere.hotspots[marker.config.id];
-
-      setHotspotArray([passMarker]);
+      // setCurrentPhotosphere has to be used to get the current state value because
+      // the value of currentPhotosphere does not get updated in an event listener
+      setCurrentPhotosphere((currentState) => {
+        const passMarker = currentState.hotspots[marker.config.id];
+        setHotspotArray([passMarker]);
+        return currentState;
+      });
     });
 
     instance.addEventListener("click", ({ data }) => {
