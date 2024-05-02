@@ -2,7 +2,6 @@ import React, { useState } from "react";
 
 import { PhotosphereCenterFieldset } from "./AddPhotosphere.tsx";
 import { VFE } from "./DataStructures.ts";
-import PhotosphereViewer from "./PhotosphereViewer.tsx";
 
 /* -----------------------------------------------------------------------
     Create a Virtual Field Environment (VFE) that will contain many
@@ -52,19 +51,13 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
       },
     };
     onCreateVFE(data);
-    return <PhotosphereViewer vfe={data} />;
   }
 
   // Ensure file is truthy
   function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const imageURL = reader.result as string;
-        setPanoImage(imageURL);
-      };
-      reader.readAsDataURL(file);
+      setPanoImage(URL.createObjectURL(file));
     }
   }
   // Add styling to input interface

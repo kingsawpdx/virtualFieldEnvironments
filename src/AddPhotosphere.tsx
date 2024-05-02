@@ -88,11 +88,7 @@ function AddPhotosphere({
   function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = function () {
-        setPanoImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+      setPanoImage(URL.createObjectURL(file));
     }
   }
 
@@ -100,11 +96,7 @@ function AddPhotosphere({
   function handleAudioChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = function () {
-        setAudioFile(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+      setAudioFile(URL.createObjectURL(file));
     }
   }
 
