@@ -1,10 +1,12 @@
 {
   "name": "prototypeElkIslandVFE",
-
   "defaultPhotosphereID": "South",
   "map": {
     "id": "navmap",
-    "src": "/VFEdata/map.jpg",
+    "src": {
+      "tag": "Network",
+      "path": "/VFEdata/map.jpg"
+    },
     "rotation": 0,
     "defaultZoom": 20,
     "defaultCenter": { "x": 0, "y": 0 },
@@ -13,7 +15,10 @@
   "photospheres": {
     "South": {
       "id": "South",
-      "src": "/VFEdata/ERI_SouthScene_6-IMG_20231006_081813_00_122.jpg",
+      "src": {
+        "tag": "Network",
+        "path": "/VFEdata/ERI_SouthScene_6-IMG_20231006_081813_00_122.jpg"
+      },
       "center": { "x": 450, "y": 800 },
       "hotspots": {
         "OutcropWideView": {
@@ -22,7 +27,10 @@
           "tooltip": "OutcropWideView",
           "data": {
             "tag": "Image",
-            "src": "/VFEdata/outcropWideView.png",
+            "src": {
+              "tag": "Network",
+              "path": "/VFEdata/outcropWideView.png"
+            },
             "hotspots": {}
           }
         },
@@ -32,7 +40,10 @@
           "tooltip": "Flowers",
           "data": {
             "tag": "Image",
-            "src": "/VFEdata/flowers.png",
+            "src": {
+              "tag": "Network",
+              "path": "/VFEdata/flowers.png"
+            },
             "hotspots": {}
           }
         },
@@ -60,7 +71,10 @@
           "tooltip": "SmallPool",
           "data": {
             "tag": "Image",
-            "src": "/VFEdata/small_pool.jpg",
+            "src": {
+              "tag": "Network",
+              "path": "/VFEdata/small_pool.jpg"
+            },
             "hotspots": {}
           }
         },
@@ -70,7 +84,10 @@
           "tooltip": "LogNearShoreline",
           "data": {
             "tag": "Image",
-            "src": "/VFEdata/logNEARshoreline.png",
+            "src": {
+              "tag": "Network",
+              "path": "/VFEdata/logNEARshoreline.png"
+            },
             "hotspots": {}
           }
         },
@@ -80,7 +97,10 @@
           "tooltip": "CoolLog",
           "data": {
             "tag": "Image",
-            "src": "/VFEdata/cool_log.jpeg",
+            "src": {
+              "tag": "Network",
+              "path": "/VFEdata/cool_log.jpeg"
+            },
             "hotspots": {}
           }
         },
@@ -108,7 +128,10 @@
           "tooltip": "Mushroom",
           "data": {
             "tag": "Image",
-            "src": "/VFEdata/mushroom.png",
+            "src": {
+              "tag": "Network",
+              "path": "/VFEdata/mushroom.png"
+            },
             "hotspots": {}
           }
         },
@@ -118,7 +141,10 @@
           "tooltip": "Contact",
           "data": {
             "tag": "Image",
-            "src": "/VFEdata/Contact.png",
+            "src": {
+              "tag": "Network",
+              "path": "/VFEdata/Contact.png"
+            },
             "hotspots": {
               "HandSample": {
                 "x": 10,
@@ -128,7 +154,10 @@
                 "color": "#FF0000",
                 "data": {
                   "tag": "Image",
-                  "src": "/VFEdata/hand_sample.png",
+                  "src": {
+                    "tag": "Network",
+                    "path": "/VFEdata/hand_sample.png"
+                  },
                   "hotspots": {
                     "CloserLook": {
                       "x": 50,
@@ -138,7 +167,10 @@
                       "color": "#00FF00",
                       "data": {
                         "tag": "Image",
-                        "src": "/VFEdata/a-closer-look.jpg",
+                        "src": {
+                          "tag": "Network",
+                          "path": "/VFEdata/a-closer-look.jpg"
+                        },
                         "hotspots": {
                           "SouthSEMComparison": {
                             "x": 52.5,
@@ -148,7 +180,10 @@
                             "color": "#00FFFF",
                             "data": {
                               "tag": "Image",
-                              "src": "/VFEdata/southSEMcomp.png",
+                              "src": {
+                                "tag": "Network",
+                                "path": "/VFEdata/southSEMcomp.png"
+                              },
                               "hotspots": {}
                             }
                           }
@@ -167,7 +202,10 @@
           "tooltip": "SouthWaterfront",
           "data": {
             "tag": "Image",
-            "src": "/VFEdata/SouthwaterFront.png",
+            "src": {
+              "tag": "Network",
+              "path": "/VFEdata/SouthwaterFront.png"
+            },
             "hotspots": {}
           }
         },
@@ -194,7 +232,10 @@
     },
     "Entrance": {
       "id": "Entrance",
-      "src": "/VFEdata/ERI_Entrance-Scene0-IMG_20231006_080232_00_120.jpg",
+      "src": {
+        "tag": "Network",
+        "path": "/VFEdata/ERI_Entrance-Scene0-IMG_20231006_080232_00_120.jpg"
+      },
       "center": { "x": 650, "y": 930 },
       "hotspots": {
         "Go East": {
@@ -219,7 +260,10 @@
     },
     "West": {
       "id": "West",
-      "src": "/VFEdata/ERI_West-Scene7-IMG_20231006_084114_00_123.jpg",
+      "src": {
+        "tag": "Network",
+        "path": "/VFEdata/ERI_West-Scene7-IMG_20231006_084114_00_123.jpg"
+      },
       "center": { "x": 95, "y": 530 },
       "hotspots": {
         "Go North": {
@@ -244,7 +288,10 @@
     },
     "North": {
       "id": "North",
-      "src": "/VFEdata/ERI_North-Scene8-IMG_20231006_091050_00_124.jpg",
+      "src": {
+        "tag": "Network",
+        "path": "/VFEdata/ERI_North-Scene8-IMG_20231006_091050_00_124.jpg"
+      },
       "center": { "x": 390, "y": 50 },
       "hotspots": {
         "Go West": {
@@ -269,7 +316,10 @@
     },
     "East": {
       "id": "East",
-      "src": "/VFEdata/ERI_East-Scene9-IMG_20231006_092207_00_125.jpg",
+      "src": {
+        "tag": "Network",
+        "path": "/VFEdata/ERI_East-Scene9-IMG_20231006_092207_00_125.jpg"
+      },
       "center": { "x": 550, "y": 450 },
       "hotspots": {
         "Go North": {
