@@ -138,27 +138,46 @@ function PhotosphereEditor({
     }
   }
 
+  function updateHotspots(photosphere: Photosphere, currentPS: string, newName: string): Photosphere {
+    // updating photosphere
+    const updatedPhotosphere: Photosphere = { ...photosphere };
+  
+    // iterate through hotspots in the current ps
+    Object.values(updatedPhotosphere.hotspots).forEach(hotspot => {
+      if (hotspot.data.tag === "PhotosphereLink" && hotspot.data.photosphereID === currentPS) {
+        hotspot.data.photosphereID = newName;
+      }
+    });
+  
+    return updatedPhotosphere;
+  }
+
   // Function to handle submit button click for name change
   function handleSubmitName() {
     if (newName.trim() !== "") {
       const currentPhotosphere = vfe.photospheres[currentPS];
-      //making updated photosphere list minus the currentPS
+
+    //making updated photosphere list minus the currentPS
       const updatedPhotospheres: Record<string, Photosphere> =
         Object.fromEntries(
-          Object.entries(vfe.photospheres).filter(([key]) => key !== currentPS),
+        Object.entries(vfe.photospheres).filter(([key]) => key !== currentPS).map(([key, photosphere]) => {
+          // update hotspots in the current photosphere
+          const updatedPhotosphere = updateHotspots(photosphere, currentPS, newName);
+          return [key, updatedPhotosphere]; 
+        }) 
         );
+
+      
       //making currentPS entry with newName
       updatedPhotospheres[newName] = { ...currentPhotosphere, id: newName };
-      let dID = "";
+      //let dID = "";
 
-      if (currentPS == vfe.defaultPhotosphereID) {
-        dID = newName;
-      } else {
-        dID = vfe.defaultPhotosphereID;
-      }
+      const updatedDefaultPhotosphereID =
+      vfe.defaultPhotosphereID === currentPS ? newName : vfe.defaultPhotosphereID;
+
       const updatedVFE: VFE = {
         ...vfe,
-        defaultPhotosphereID: dID,
+        defaultPhotosphereID: updatedDefaultPhotosphereID,
         photospheres: updatedPhotospheres,
       };
 
