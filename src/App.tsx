@@ -5,16 +5,14 @@ import CreateVFEForm from "./CreateVFE.tsx";
 import { VFE } from "./DataStructures.ts";
 import LandingPage from "./LandingPage.tsx";
 import PhotosphereEditor from "./PhotosphereEditor.tsx";
-import App from "./Prototype.tsx";
+import PhotosphereLoader from "./PhotosphereLoader.tsx";
+import Prototype from "./Prototype.tsx";
 
 // Main component acts as a main entry point for the application
 // Should decide what we are doing, going to LandingPage/Rendering VFE
 function AppRoot() {
   // Decide state, should manage whether the VFE should be displayed or the LandingPage should be displayed
   const [vfeData, setVFEData] = useState<VFE | null>(null);
-  const [currentPhotosphereID, setCurrentPhotosphereID] = useState(
-    vfeData ? vfeData.defaultPhotosphereID : "invalid",
-  );
 
   const navigate = useNavigate();
 
@@ -29,19 +27,11 @@ function AppRoot() {
 
   function loadCreatedVFE(data: VFE) {
     setVFEData(data);
-    setCurrentPhotosphereID(
-      currentPhotosphereID == "invalid"
-        ? data.defaultPhotosphereID
-        : currentPhotosphereID,
-    );
-    navigate("/editor");
+    navigate(`/editor/${data.name}/${data.defaultPhotosphereID}`);
   }
 
-  function handleUpdateVFE(updatedVFE: VFE, currentPS?: string) {
+  function handleUpdateVFE(updatedVFE: VFE) {
     setVFEData(updatedVFE);
-    setCurrentPhotosphereID(
-      currentPS ? currentPS : updatedVFE.defaultPhotosphereID,
-    );
   }
 
   return (
@@ -55,18 +45,28 @@ function AppRoot() {
           />
         }
       />
-      <Route path="/viewer" element={<App />} />
+      <Route
+        path="/viewer"
+        // TODO: replace with a way to select a VFE from a list
+        element={<Prototype />}
+      />
+      <Route path="/viewer/:vfeID" element={<PhotosphereLoader />}>
+        <Route path=":photosphereID" element={null} />
+      </Route>
       <Route
         path="/create"
         element={<CreateVFEForm onCreateVFE={loadCreatedVFE} />}
       />
       <Route
         path="/editor"
+        // TODO: replace with a way to select a VFE from a list
+        element={<Navigate to="/create" replace={true} />}
+      />
+      <Route
+        path="/editor/:vfeID"
         element={
           vfeData ? (
             <PhotosphereEditor
-              currentPS={currentPhotosphereID}
-              onChangePS={setCurrentPhotosphereID}
               parentVFE={vfeData}
               onUpdateVFE={handleUpdateVFE}
             />
@@ -75,7 +75,9 @@ function AppRoot() {
             <Navigate to="/create" replace={true} />
           )
         }
-      />
+      >
+        <Route path=":photosphereID" element={null} />
+      </Route>
     </Routes>
   );
 }

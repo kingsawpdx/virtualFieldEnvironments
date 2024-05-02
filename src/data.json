@@ -1,0 +1,296 @@
+{
+  "name": "prototypeElkIslandVFE",
+
+  "defaultPhotosphereID": "South",
+  "map": {
+    "id": "navmap",
+    "src": "/VFEdata/map.jpg",
+    "rotation": 0,
+    "defaultZoom": 20,
+    "defaultCenter": { "x": 0, "y": 0 },
+    "size": 200
+  },
+  "photospheres": {
+    "South": {
+      "id": "South",
+      "src": "/VFEdata/ERI_SouthScene_6-IMG_20231006_081813_00_122.jpg",
+      "center": { "x": 450, "y": 800 },
+      "hotspots": {
+        "OutcropWideView": {
+          "pitch": 5,
+          "yaw": -5,
+          "tooltip": "OutcropWideView",
+          "data": {
+            "tag": "Image",
+            "src": "/VFEdata/outcropWideView.png",
+            "hotspots": {}
+          }
+        },
+        "Flowers": {
+          "pitch": -3,
+          "yaw": 18,
+          "tooltip": "Flowers",
+          "data": {
+            "tag": "Image",
+            "src": "/VFEdata/flowers.png",
+            "hotspots": {}
+          }
+        },
+        "ShorelineSOUTH.mp4": {
+          "pitch": -32,
+          "yaw": 172,
+          "tooltip": "ShorelineSOUTH.mp4",
+          "data": {
+            "tag": "Video",
+            "src": "/VFEdata/shorelineSOUTH.mp4"
+          }
+        },
+        "Paddlers.mp4": {
+          "pitch": -10,
+          "yaw": -175,
+          "tooltip": "Paddlers.mp4",
+          "data": {
+            "tag": "Video",
+            "src": "/VFEdata/paddlers.mp4"
+          }
+        },
+        "SmallPool": {
+          "pitch": -13,
+          "yaw": 100,
+          "tooltip": "SmallPool",
+          "data": {
+            "tag": "Image",
+            "src": "/VFEdata/small_pool.jpg",
+            "hotspots": {}
+          }
+        },
+        "LogNearShoreline": {
+          "pitch": -25,
+          "yaw": -40,
+          "tooltip": "LogNearShoreline",
+          "data": {
+            "tag": "Image",
+            "src": "/VFEdata/logNEARshoreline.png",
+            "hotspots": {}
+          }
+        },
+        "CoolLog": {
+          "pitch": -17,
+          "yaw": -33,
+          "tooltip": "CoolLog",
+          "data": {
+            "tag": "Image",
+            "src": "/VFEdata/cool_log.jpeg",
+            "hotspots": {}
+          }
+        },
+        "OutcropTextures": {
+          "pitch": 6,
+          "yaw": 5,
+          "tooltip": "OutcropTextures",
+          "data": {
+            "tag": "Video",
+            "src": "/VFEdata/outcrop_textures.mp4"
+          }
+        },
+        "How did these huge logs get here?": {
+          "pitch": -12,
+          "yaw": -37,
+          "tooltip": "How did these huge logs get here?",
+          "data": {
+            "tag": "Doc",
+            "content": "How did these huge logs get here?"
+          }
+        },
+        "Mushroom": {
+          "pitch": 2,
+          "yaw": -19,
+          "tooltip": "Mushroom",
+          "data": {
+            "tag": "Image",
+            "src": "/VFEdata/mushroom.png",
+            "hotspots": {}
+          }
+        },
+        "Contact": {
+          "pitch": 2,
+          "yaw": -46,
+          "tooltip": "Contact",
+          "data": {
+            "tag": "Image",
+            "src": "/VFEdata/Contact.png",
+            "hotspots": {
+              "HandSample": {
+                "x": 10,
+                "y": 27.5,
+                "id": "HandSample",
+                "tooltip": "HandSample",
+                "color": "#FF0000",
+                "data": {
+                  "tag": "Image",
+                  "src": "/VFEdata/hand_sample.png",
+                  "hotspots": {
+                    "CloserLook": {
+                      "x": 50,
+                      "y": 50,
+                      "id": "CloserLook",
+                      "tooltip": "CloserLook",
+                      "color": "#00FF00",
+                      "data": {
+                        "tag": "Image",
+                        "src": "/VFEdata/a-closer-look.jpg",
+                        "hotspots": {
+                          "SouthSEMComparison": {
+                            "x": 52.5,
+                            "y": 37.5,
+                            "id": "SouthSEMComparison",
+                            "tooltip": "SouthSEMComparison",
+                            "color": "#00FFFF",
+                            "data": {
+                              "tag": "Image",
+                              "src": "/VFEdata/southSEMcomp.png",
+                              "hotspots": {}
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "SouthWaterfront": {
+          "pitch": -1,
+          "yaw": -25,
+          "tooltip": "SouthWaterfront",
+          "data": {
+            "tag": "Image",
+            "src": "/VFEdata/SouthwaterFront.png",
+            "hotspots": {}
+          }
+        },
+        "Go West": {
+          "pitch": 0,
+          "yaw": -35,
+          "tooltip": "Go West",
+          "data": {
+            "tag": "PhotosphereLink",
+            "photosphereID": "West"
+          }
+        },
+        "Go to Entrance": {
+          "pitch": -7,
+          "yaw": 125,
+          "tooltip": "Go to Entrance",
+          "data": {
+            "tag": "PhotosphereLink",
+            "photosphereID": "Entrance"
+          }
+        }
+      },
+      "backgroundAudio": "/VFEdata/Scene12_UnevenStandTop_LS100146.mp3"
+    },
+    "Entrance": {
+      "id": "Entrance",
+      "src": "/VFEdata/ERI_Entrance-Scene0-IMG_20231006_080232_00_120.jpg",
+      "center": { "x": 650, "y": 930 },
+      "hotspots": {
+        "Go East": {
+          "pitch": -2,
+          "yaw": -4,
+          "tooltip": "Go East",
+          "data": {
+            "tag": "PhotosphereLink",
+            "photosphereID": "East"
+          }
+        },
+        "Go South": {
+          "pitch": -4,
+          "yaw": -78,
+          "tooltip": "Go South",
+          "data": {
+            "tag": "PhotosphereLink",
+            "photosphereID": "South"
+          }
+        }
+      }
+    },
+    "West": {
+      "id": "West",
+      "src": "/VFEdata/ERI_West-Scene7-IMG_20231006_084114_00_123.jpg",
+      "center": { "x": 95, "y": 530 },
+      "hotspots": {
+        "Go North": {
+          "pitch": 0,
+          "yaw": 10,
+          "tooltip": "Go North",
+          "data": {
+            "tag": "PhotosphereLink",
+            "photosphereID": "North"
+          }
+        },
+        "Go South": {
+          "pitch": -3,
+          "yaw": 115,
+          "tooltip": "Go South",
+          "data": {
+            "tag": "PhotosphereLink",
+            "photosphereID": "South"
+          }
+        }
+      }
+    },
+    "North": {
+      "id": "North",
+      "src": "/VFEdata/ERI_North-Scene8-IMG_20231006_091050_00_124.jpg",
+      "center": { "x": 390, "y": 50 },
+      "hotspots": {
+        "Go West": {
+          "pitch": 0,
+          "yaw": -130,
+          "tooltip": "Go West",
+          "data": {
+            "tag": "PhotosphereLink",
+            "photosphereID": "West"
+          }
+        },
+        "Go East": {
+          "pitch": 0,
+          "yaw": 92,
+          "tooltip": "Go East",
+          "data": {
+            "tag": "PhotosphereLink",
+            "photosphereID": "East"
+          }
+        }
+      }
+    },
+    "East": {
+      "id": "East",
+      "src": "/VFEdata/ERI_East-Scene9-IMG_20231006_092207_00_125.jpg",
+      "center": { "x": 550, "y": 450 },
+      "hotspots": {
+        "Go North": {
+          "pitch": 3,
+          "yaw": 2,
+          "tooltip": "Go North",
+          "data": {
+            "tag": "PhotosphereLink",
+            "photosphereID": "North"
+          }
+        },
+        "Go to Entrance": {
+          "pitch": -2,
+          "yaw": -167,
+          "tooltip": "Go to Entrance",
+          "data": {
+            "tag": "PhotosphereLink",
+            "photosphereID": "Entrance"
+          }
+        }
+      }
+    }
+  }
+}
