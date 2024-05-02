@@ -34,7 +34,7 @@ function degToStr(val: number): string {
 
 /** Convert sizes from numbers to strings ending in "px", and increase the size slightly so the NavMap window is larger. */
 function sizeToStr(val: number): string {
-  return String(val + 100) + "px";
+  return String(val) + "px";
 }
 
 /** Convert non-link hotspots to markers with type-based content/icons */
