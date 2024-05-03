@@ -1,7 +1,3 @@
 {
-  "rewrites": [
-    { "source": "/viewer", "destination": "/" },
-    { "source": "/create", "destination": "/" },
-    { "source": "/editor", "destination": "/" }
-  ]
+  "rewrites": [{ "source": "/(.*)", "destination": "/" }]
 }

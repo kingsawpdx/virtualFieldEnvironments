@@ -1,9 +1,6 @@
-import AttachFileIcon from "@mui/icons-material/AttachFile";
-import { Box, Button, TextField, Typography } from "@mui/material";
-import { MuiFileInput } from "mui-file-input";
 import { useEffect, useState } from "react";
 
-import { Photosphere } from "./DataStructures";
+import { Photosphere } from "../DataStructures";
 
 /* -----------------------------------------------------------------------
     Add a photosphere to a Virtual Field Environment (VFE) using React.
@@ -81,35 +78,25 @@ function AddPhotosphere({
   // Base states
   const [photosphereID, setPhotosphereID] = useState("");
   const [panoImage, setPanoImage] = useState("");
-  const [panoFile, setPanoFile] = useState<File | null>(null); // for MuiFileInput
-  const [audioFileStr, setAudioFileStr] = useState("");
-  const [audioFile, setAudioFile] = useState<File | null>(null); // for MuiFileInput
+  const [audioFile, setAudioFile] = useState("");
   const [photosphereCenter, setPhotosphereCenter] = useState<{
     x: number;
     y: number;
   } | null>(null);
 
   // Add image data
-  function handleImageChange(file: File | null) {
+  function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
     if (file) {
-      setPanoFile(file);
-      const reader = new FileReader();
-      reader.onloadend = function () {
-        setPanoImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+      setPanoImage(URL.createObjectURL(file));
     }
   }
 
   // Add audio data
-  function handleAudioChange(file: File | null) {
+  function handleAudioChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
     if (file) {
-      setAudioFile(file);
-      const reader = new FileReader();
-      reader.onloadend = function () {
-        setAudioFileStr(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+      setAudioFile(URL.createObjectURL(file));
     }
   }
 
@@ -126,7 +113,7 @@ function AddPhotosphere({
       src: panoImage,
       center: photosphereCenter ?? undefined,
       hotspots: {},
-      backgroundAudio: audioFileStr,
+      backgroundAudio: audioFile,
     };
 
     // Pass newPhotosphere back to parent to update VFE
@@ -135,12 +122,12 @@ function AddPhotosphere({
     // Reset the form fields after adding the photosphere
     setPhotosphereID("");
     setPanoImage("");
-    setAudioFileStr("");
+    setAudioFile("");
   }
   // Add styling for inputting information
   return (
-    <Box
-      sx={{
+    <div
+      style={{
         position: "fixed",
         zIndex: 1050,
         left: "50%",
@@ -151,38 +138,49 @@ function AddPhotosphere({
         padding: "10px",
       }}
     >
-      <Typography variant="h3">Add New Photosphere</Typography>
-      <TextField
-        required
-        label="Photosphere Name"
-        value={photosphereID}
-        onChange={(e) => {
-          setPhotosphereID(e.target.value);
+      <h1>Add New Photosphere</h1>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
         }}
-      />
-      <MuiFileInput
-        required
-        placeholder="Upload Panorama *"
-        value={panoFile}
-        onChange={handleImageChange}
-        inputProps={{ accept: "image/*" }}
-        InputProps={{
-          startAdornment: <AttachFileIcon />,
-        }}
-      />
-      <MuiFileInput
-        required
-        placeholder="Upload Background Audio"
-        value={audioFile}
-        onChange={handleAudioChange}
-        inputProps={{ accept: "audio/*" }}
-        InputProps={{
-          startAdornment: <AttachFileIcon />,
-        }}
-      />
-      <PhotosphereCenterFieldset setPhotosphereCenter={setPhotosphereCenter} />
-      <Button onClick={handlePhotosphereAdd}>Add Photosphere</Button>
-    </Box>
+      >
+        <div>
+          <label htmlFor="photosphereID">Photosphere Name:</label>
+          <input
+            type="text"
+            id="photosphereID"
+            value={photosphereID}
+            onChange={(e) => {
+              setPhotosphereID(e.target.value);
+            }}
+          />
+        </div>
+        <div>
+          <label htmlFor="panoImage">Panoramic Image:</label>
+          <input
+            type="file"
+            id="panoImage"
+            accept="image/*"
+            onChange={handleImageChange}
+          />
+        </div>
+        <div>
+          <label htmlFor="audioFile">Background Audio (optional):</label>
+          <input
+            type="file"
+            id="audioFile"
+            accept="audio/*"
+            onChange={handleAudioChange}
+          />
+        </div>
+        <PhotosphereCenterFieldset
+          setPhotosphereCenter={setPhotosphereCenter}
+        />
+        <button type="button" onClick={handlePhotosphereAdd}>
+          Add Photosphere
+        </button>
+      </form>
+    </div>
   );
 }
 

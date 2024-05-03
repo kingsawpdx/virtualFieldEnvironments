@@ -34,17 +34,17 @@ function AudioToggleButton(props: AudioToggleButtonProps) {
   }
 
   return (
-    <Stack sx={{ justifyContent: "space-around", padding: "0 5px" }}>
-      <Button
-        onClick={toggleAudio}
-        variant="outlined"
-        sx={{
-          height: "35px",
-        }}
-      >
-        {isAudioPlaying ? "Pause Audio" : "Play Audio"}
-      </Button>
-    </Stack>
+    <button
+      onClick={toggleAudio}
+      style={{
+        position: "absolute",
+        zIndex: 1000,
+        top: "18px", // Adjust this value to change the vertical position
+        left: "1300px", // Adjust this value to change the horizontal position
+      }}
+    >
+      {isAudioPlaying ? "Pause Audio" : "Play Audio"}
+    </button>
   );
 }
 

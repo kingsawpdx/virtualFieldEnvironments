@@ -3,9 +3,8 @@ import { Button, Stack, TextField, Typography } from "@mui/material";
 import { MuiFileInput } from "mui-file-input";
 import { useState } from "react";
 
-import { PhotosphereCenterFieldset } from "./AddPhotosphere.tsx";
 import { VFE } from "./DataStructures.ts";
-import Header from "./Header.tsx";
+import { PhotosphereCenterFieldset } from "./buttons/AddPhotosphere.tsx";
 
 /* -----------------------------------------------------------------------
     Create a Virtual Field Environment (VFE) that will contain many
@@ -30,7 +29,7 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
   const [vfeName, setVFEName] = useState("");
   const [photosphereName, setPhotosphereName] = useState(""); // State for Photosphere Name
   const [panoImage, setPanoImage] = useState("");
-  const [panoFile, setPanoFile] = useState<File | null>(null); // needed for MuiFileInput
+  const [audio, setAudio] = useState("");
   const [photosphereCenter, setPhotosphereCenter] = useState<{
     x: number;
     y: number;
@@ -52,6 +51,7 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
           src: panoImage,
           center: photosphereCenter ?? undefined,
           hotspots: {},
+          backgroundAudio: audio,
         },
       },
     };
@@ -60,16 +60,18 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
 
   function handleImageChange(file: File | null) {
     if (file) {
-      setPanoFile(file);
-      const reader = new FileReader();
-      reader.onload = () => {
-        const imageURL = reader.result as string;
-        setPanoImage(imageURL);
-      };
-      reader.readAsDataURL(file);
+      setPanoImage(URL.createObjectURL(file));
+    }
+  }
+
+  function handleAudioChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (file) {
+      setAudio(URL.createObjectURL(file));
     }
     return;
   }
+
   // Add styling to input interface
   return (
     <Stack sx={{ width: 450, margin: "auto", paddingTop: 20 }} spacing={3}>
@@ -90,17 +92,20 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
             setPhotosphereName(e.target.value);
           }}
         />
-      </Stack>
-      <MuiFileInput
-        required
-        placeholder="Upload a Panorama *"
-        value={panoFile}
-        onChange={handleImageChange}
-        inputProps={{ accept: "image/*" }}
-        InputProps={{
-          startAdornment: <AttachFileIcon />,
-        }}
-      />
+      </div>
+      <div>
+        <label htmlFor="panoImage">Panorama Image:</label>
+        <input
+          type="file"
+          id="panoImage"
+          accept="image/*"
+          onChange={handleImageChange}
+        />
+      </div>
+      <div>
+        <label htmlFor="audio">Add Audio (Optional):</label>
+        <input type="file" id="audio" onChange={handleAudioChange} />
+      </div>
       <PhotosphereCenterFieldset setPhotosphereCenter={setPhotosphereCenter} />
       <Button
         sx={{ margin: "auto" }}
