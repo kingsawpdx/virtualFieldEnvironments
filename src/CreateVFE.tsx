@@ -106,7 +106,7 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
         />
       </div>
       <div>
-        <label htmlFor="panoImage">Add Audio (Optional):</label>
+        <label htmlFor="audio">Add Audio (Optional):</label>
         <input type="file" id="audio" onChange={handleAudioChange} />
       </div>
       <PhotosphereCenterFieldset setPhotosphereCenter={setPhotosphereCenter} />

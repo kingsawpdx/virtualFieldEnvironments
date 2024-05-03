@@ -384,5 +384,4 @@ function PhotosphereEditor({
   );
 }
 
-//console.log({vfe.photospheres[vfe.defaultPhotosphereID].backgroundAudio})
 export default PhotosphereEditor;
