@@ -4,7 +4,11 @@ import { ReactElement, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { VFE } from "./DataStructures";
-import { convertLocalToNetwork, convertVFE } from "./VFEConversion";
+import {
+  convertLocalToNetwork,
+  convertNetworkToLocal,
+  convertVFE,
+} from "./VFEConversion";
 
 export interface ElementProps {
   vfe: VFE;
@@ -37,6 +41,11 @@ function VFELoader({ render }: PhotosphereLoaderProps) {
     void load();
   }, [vfeID]);
 
+  async function saveVFE(networkVFE: VFE) {
+    const localVFE = await convertVFE(networkVFE, convertNetworkToLocal);
+    await localforage.setItem(localVFE.name, localVFE);
+  }
+
   if (!vfe) {
     return (
       <Stack minHeight="100vh" alignItems="center" justifyContent="center">
@@ -51,6 +60,7 @@ function VFELoader({ render }: PhotosphereLoaderProps) {
     vfe,
     onUpdateVFE: (updatedVFE) => {
       setVFE(updatedVFE);
+      void saveVFE(updatedVFE);
     },
     currentPS: vfe.defaultPhotosphereID,
     onChangePS: (id) => {
