@@ -48,7 +48,7 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
           src: { tag: "Network", path: panoImage },
           center: photosphereCenter ?? undefined,
           hotspots: {},
-          backgroundAudio: audio,
+          backgroundAudio: { tag: "Network", path: audio },
         },
       },
     };
