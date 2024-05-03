@@ -1,61 +1,65 @@
 import React, { useState } from "react";
 
 import { VFE } from "./DataStructures.ts";
-import PhotosphereViewer from "./PhotosphereViewer.tsx";
+import { PhotosphereCenterFieldset } from "./buttons/AddPhotosphere.tsx";
 
+/* -----------------------------------------------------------------------
+    Create a Virtual Field Environment (VFE) that will contain many
+    Photospheres.
+
+    * Props object allows us to send the new Photosphere back to parent
+    * Pass props object to AddPhotosphere function
+    * Input data
+    * Check for errors
+    * Create newPhotosphere object
+    * Pass it back to parent to update the VFE with the newPhotosphere
+   ----------------------------------------------------------------------- */
+
+// Properties passed down from parent
 interface CreateVFEFormProps {
   onCreateVFE: (data: VFE) => void;
 }
 
-export function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
+// Add a new VFE
+function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
+  // Base states
   const [vfeName, setVFEName] = useState("");
   const [photosphereName, setPhotosphereName] = useState(""); // State for Photosphere Name
   const [panoImage, setPanoImage] = useState("");
-  const [audio, setAudio] = useState("")
+  const [audio, setAudio] = useState("");
+  const [photosphereCenter, setPhotosphereCenter] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
 
+  // Error Handling: Ensure the data is not empty
   function handleCreateVFE() {
     if (vfeName.trim() === "" || photosphereName.trim() === "" || !panoImage) {
-      alert(
-        "Please provide a VFE name, a Photosphere name, and select a panorama image.",
-      );
+      alert("Please, provide a VFE name, Photosphere name, and an image.");
       return;
     }
+    // Input data into new VFE
     const data: VFE = {
       name: vfeName,
-      map: {
-        src: "", // Placeholder for map image
-        rotation: 0, // Placeholder for map rotation
-        defaultZoom: 0, // Placeholder for default zoom
-        hotspots: [], // Placeholder for map hotspots
-      },
-      defaultPhotosphereID: photosphereName, // Use Photosphere Name for default Photosphere ID
+      defaultPhotosphereID: photosphereName,
       photospheres: {
         [photosphereName]: {
-          id: photosphereName, // Use Photosphere Name for Photosphere ID
-          src: panoImage, // Panorama image provided by the user
-          center: { x: 0, y: 0 }, // Placeholder for panorama center
-          hotspots: [], // Placeholder for photosphere hotspots
-          backgroundAudio: audio
+          id: photosphereName,
+          src: panoImage,
+          center: photosphereCenter ?? undefined,
+          hotspots: {},
+          backgroundAudio: audio,
         },
       },
     };
     onCreateVFE(data);
-    // Reset form fields after creating the VFE
-    //setVFEName("");
-    //setPhotosphereName(""); // Reset Photosphere Name
-    //setPanoImage("");
-    return <PhotosphereViewer vfe={data}/>;
   }
 
+  // Ensure file is truthy
   function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const imageURL = reader.result as string;
-        setPanoImage(imageURL);
-      };
-      reader.readAsDataURL(file);
+      setPanoImage(URL.createObjectURL(file));
     }
   }
 
@@ -66,7 +70,7 @@ export function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
     }
   }
 
-
+  // Add styling to input interface
   return (
     <div>
       <h2>Create a New Virtual Field Environment (VFE)</h2>
@@ -103,12 +107,9 @@ export function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
       </div>
       <div>
         <label htmlFor="panoImage">Add Audio (Optional):</label>
-        <input
-          type="file"
-          id="audio"
-          onChange={handleAudioChange} 
-        />
+        <input type="file" id="audio" onChange={handleAudioChange} />
       </div>
+      <PhotosphereCenterFieldset setPhotosphereCenter={setPhotosphereCenter} />
       <button onClick={handleCreateVFE}>Create VFE</button>
     </div>
   );

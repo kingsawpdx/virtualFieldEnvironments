@@ -10,7 +10,7 @@
 // Virtual Field Environment: the total collection of photosphere environments
 export interface VFE {
   name: string;
-  map: NavMap;
+  map?: NavMap;
   defaultPhotosphereID: string;
   photospheres: Record<string, Photosphere>;
 }
@@ -18,17 +18,19 @@ export interface VFE {
 // Navigation map: a birdseye view of the various hotspots within a single 360-environment
 export interface NavMap {
   src: string;
+  id: string;
   rotation: number;
   defaultZoom: number;
-  hotspots: Hotspot2D[];
+  defaultCenter: { x: number; y: number };
+  size: number;
 }
 
 // Photosphere: a single 360-environment
 export interface Photosphere {
   id: string;
   src: string;
-  center: { x: number; y: number };
-  hotspots: Hotspot3D[];
+  hotspots: Record<string, Hotspot3D>;
+  center?: { x: number; y: number };
   backgroundAudio?: string;
 }
 
@@ -57,7 +59,7 @@ export type HotspotData = Image | Audio | Video | URL | Doc | PhotosphereLink;
 export interface Image {
   tag: "Image";
   src: string;
-  hotspots: Hotspot2D[];
+  hotspots: Record<string, Hotspot2D>;
 }
 
 export interface Video {
