@@ -53,7 +53,10 @@
           "tooltip": "ShorelineSOUTH.mp4",
           "data": {
             "tag": "Video",
-            "src": "/VFEdata/shorelineSOUTH.mp4"
+            "src": {
+              "tag": "Network",
+              "path": "/VFEdata/shorelineSOUTH.mp4"
+            }
           }
         },
         "Paddlers.mp4": {
@@ -62,7 +65,10 @@
           "tooltip": "Paddlers.mp4",
           "data": {
             "tag": "Video",
-            "src": "/VFEdata/paddlers.mp4"
+            "src": {
+              "tag": "Network",
+              "path": "/VFEdata/paddlers.mp4"
+            }
           }
         },
         "SmallPool": {
@@ -110,7 +116,10 @@
           "tooltip": "OutcropTextures",
           "data": {
             "tag": "Video",
-            "src": "/VFEdata/outcrop_textures.mp4"
+            "src": {
+              "tag": "Network",
+              "path": "/VFEdata/outcrop_textures.mp4"
+            }
           }
         },
         "How did these huge logs get here?": {
@@ -228,7 +237,10 @@
           }
         }
       },
-      "backgroundAudio": "/VFEdata/Scene12_UnevenStandTop_LS100146.mp3"
+      "backgroundAudio": {
+        "tag": "Network",
+        "path": "/VFEdata/Scene12_UnevenStandTop_LS100146.mp3"
+      }
     },
     "Entrance": {
       "id": "Entrance",
