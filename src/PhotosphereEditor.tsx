@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import AddHotspot from "./AddHotspot.tsx";
-import AddNavmap from "./AddNavmap";
-import AddPhotosphere from "./AddPhotosphere.tsx";
 import { Hotspot3D, NavMap, Photosphere, VFE } from "./DataStructures.ts";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
+import AddAudio from "./buttons/AddAudio.tsx";
+import AddHotspot from "./buttons/AddHotspot.tsx";
+import AddNavmap from "./buttons/AddNavmap";
+import AddPhotosphere from "./buttons/AddPhotosphere.tsx";
 
 /* -----------------------------------------------------------------------
     Update the Virtual Field Environment with an added Photosphere.
@@ -52,6 +53,7 @@ function PhotosphereEditor({
 
   const [newName, setNewName] = useState(""); // State to hold the new name
   const [newBackground, setNewBackground] = useState("");
+  const [audio, setAudio] = useState<string>("");
 
   console.log(vfe);
 
@@ -132,6 +134,10 @@ function PhotosphereEditor({
         />
       );
     return null;
+  }
+
+  function handleAudioChange(event: React.ChangeEvent<HTMLInputElement>) {
+    AddAudio(event, setAudio, vfe); // Call the AddAudio function to handle audio change
   }
 
   // Function to handle name change
@@ -303,6 +309,13 @@ function PhotosphereEditor({
               Add New Hotspot
             </button>
 
+            <label htmlFor="audio">
+              {audio !== "" ||
+              vfe.photospheres[vfe.defaultPhotosphereID].backgroundAudio
+                ? "Change Audio: "
+                : "Add Audio:"}
+            </label>
+            <input type="file" id="audio" onChange={handleAudioChange} />
             <button
               style={{ margin: "10" }}
               onClick={() => {

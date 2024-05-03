@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { NavMap } from "./DataStructures";
+import { NavMap } from "../DataStructures";
 
 interface AddNavMapProps {
   onCreateNavMap: (navMap: NavMap) => void;
