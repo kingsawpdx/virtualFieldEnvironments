@@ -27,9 +27,7 @@ function AppRoot() {
 
   async function loadCreatedVFE(networkVFE: VFE) {
     const localVFE = await convertVFE(networkVFE, convertNetworkToLocal);
-    console.log(localVFE);
     await localforage.setItem(localVFE.name, localVFE);
-
     navigate(`/editor/${localVFE.name}/${localVFE.defaultPhotosphereID}`);
   }
 
@@ -39,9 +37,6 @@ function AppRoot() {
     if (data) {
       const localVFE = JSON.parse(data) as VFE;
       await localforage.setItem(localVFE.name, localVFE);
-      // const convertedVFE = await convertVFE(vfe, convertLocalToNetwork);
-      // await loadCreatedVFE(convertedVFE);
-
       navigate(`/editor/${localVFE.name}/${localVFE.defaultPhotosphereID}`);
     }
   }
