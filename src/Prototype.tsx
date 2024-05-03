@@ -1,11 +1,22 @@
-import { Navigate } from "react-router-dom";
+import localforage from "localforage";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-import dataArray from "./data.json";
+import vfeData from "./data.json";
 
 function Prototype() {
-  window.localStorage.setItem("prototype", JSON.stringify(dataArray));
+  const navigate = useNavigate();
 
-  return <Navigate to="/viewer/prototype/" replace={true} />;
+  useEffect(() => {
+    async function load() {
+      await localforage.setItem("prototype", vfeData);
+      navigate("/viewer/prototype/", { replace: true });
+    }
+
+    void load();
+  }, [navigate]);
+
+  return <></>;
 }
 
 export default Prototype;

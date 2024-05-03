@@ -5,7 +5,7 @@ import {
   VirtualTourLink,
   VirtualTourNode,
 } from "@photo-sphere-viewer/virtual-tour-plugin";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   MapPlugin,
   MapPluginConfig,
@@ -157,14 +157,19 @@ function PhotosphereViewer({
   );
   const [mapStatic, setMapStatic] = useState(false);
 
-  useEffect(() => {
-    const virtualTour =
-      photoSphereRef.current?.getPlugin<VirtualTourPlugin>(VirtualTourPlugin);
-    void virtualTour?.setCurrentNode(currentPhotosphere.id);
+  // The variable is set to true after handleReady has finished
+  const ready = useRef(false);
 
-    const map = photoSphereRef.current?.getPlugin<MapPlugin>(MapPlugin);
-    if (currentPhotosphere.center) {
-      map?.setCenter(currentPhotosphere.center);
+  useEffect(() => {
+    if (ready.current) {
+      const virtualTour =
+        photoSphereRef.current?.getPlugin<VirtualTourPlugin>(VirtualTourPlugin);
+      void virtualTour?.setCurrentNode(currentPhotosphere.id);
+
+      const map = photoSphereRef.current?.getPlugin<MapPlugin>(MapPlugin);
+      if (currentPhotosphere.center) {
+        map?.setCenter(currentPhotosphere.center);
+      }
     }
   }, [currentPhotosphere, photoSphereRef]);
 
@@ -184,7 +189,6 @@ function PhotosphereViewer({
     // Only fill map plugin config when VFE has a map
     [
       MapPlugin,
-
       vfe.map
         ? convertMap(
             vfe.map,
@@ -245,6 +249,8 @@ function PhotosphereViewer({
       setCurrentPhotosphere(photosphere);
       onChangePS(photosphere.id);
     });
+
+    ready.current = true;
   }
 
   return (
