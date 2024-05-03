@@ -65,7 +65,6 @@ function VFELoader({ render }: PhotosphereLoaderProps) {
     currentPS: vfe.defaultPhotosphereID,
     onChangePS: (id) => {
       navigate(id, { replace: true });
-      history.replaceState(null, "", id);
     },
   });
 }
