@@ -195,9 +195,9 @@ function PhotosphereEditor({
                   ),
                 )}
               </List>
-              <ActiveComponent />
             </Box>
           </Toolbar>
+          <ActiveComponent />
         </Drawer>
         <PhotosphereViewer
           currentPS={currentPS}
