@@ -4,6 +4,7 @@ import { ReactElement, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { VFE } from "./DataStructures";
+import { convertLocalToNetwork, convertVFE } from "./VFEConversion";
 
 export interface ElementProps {
   vfe: VFE;
@@ -27,7 +28,10 @@ function VFELoader({ render }: PhotosphereLoaderProps) {
   useEffect(() => {
     async function load() {
       const vfe = await localforage.getItem<VFE>(vfeID);
-      if (vfe) setVFE(vfe);
+      if (vfe) {
+        const networkVFE = await convertVFE(vfe, convertLocalToNetwork);
+        setVFE(networkVFE);
+      }
     }
 
     void load();
@@ -51,6 +55,7 @@ function VFELoader({ render }: PhotosphereLoaderProps) {
     currentPS: vfe.defaultPhotosphereID,
     onChangePS: (id) => {
       navigate(id, { replace: true });
+      history.replaceState(null, "", id);
     },
   });
 }
