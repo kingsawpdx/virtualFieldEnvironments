@@ -8,7 +8,7 @@ import LandingPage from "./LandingPage.tsx";
 import PhotosphereEditor from "./PhotosphereEditor.tsx";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
 import Prototype from "./Prototype.tsx";
-import { convertLocalToNetwork, convertVFE } from "./VFEConversion.ts";
+import { convertNetworkToLocal, convertVFE } from "./VFEConversion.ts";
 import VFELoader from "./VFELoader.tsx";
 
 // Main component acts as a main entry point for the application
@@ -25,18 +25,24 @@ function AppRoot() {
     navigate("/create");
   }
 
-  async function loadCreatedVFE(vfe: VFE) {
-    await localforage.setItem(vfe.name, vfe);
-    navigate(`/editor/${vfe.name}/${vfe.defaultPhotosphereID}`);
+  async function loadCreatedVFE(networkVFE: VFE) {
+    const localVFE = await convertVFE(networkVFE, convertNetworkToLocal);
+    console.log(localVFE);
+    await localforage.setItem(localVFE.name, localVFE);
+
+    navigate(`/editor/${localVFE.name}/${localVFE.defaultPhotosphereID}`);
   }
 
   async function handleLoadVFE(file: File) {
     const zip: JSZip = await JSZip.loadAsync(file);
     const data = await zip.file("data.json")?.async("string");
     if (data) {
-      const vfe = JSON.parse(data) as VFE;
-      const convertedVFE = await convertVFE(vfe, convertLocalToNetwork);
-      await loadCreatedVFE(convertedVFE);
+      const localVFE = JSON.parse(data) as VFE;
+      await localforage.setItem(localVFE.name, localVFE);
+      // const convertedVFE = await convertVFE(vfe, convertLocalToNetwork);
+      // await loadCreatedVFE(convertedVFE);
+
+      navigate(`/editor/${localVFE.name}/${localVFE.defaultPhotosphereID}`);
     }
   }
 
