@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import AddHotspot from "./AddHotspot.tsx";
-import AddNavmap from "./AddNavmap";
-import AddPhotosphere from "./AddPhotosphere.tsx";
 import { Hotspot3D, NavMap, Photosphere, VFE } from "./DataStructures.ts";
 import { save } from "./FileOperations.ts";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
 import { convertNetworkToLocal, convertVFE } from "./VFEConversion.ts";
+import AddAudio from "./buttons/AddAudio.tsx";
+import AddHotspot from "./buttons/AddHotspot.tsx";
+import AddNavmap from "./buttons/AddNavmap";
+import AddPhotosphere from "./buttons/AddPhotosphere.tsx";
 
 /* -----------------------------------------------------------------------
     Update the Virtual Field Environment with an added Photosphere.
@@ -48,6 +49,13 @@ function PhotosphereEditor({
   const [showAddHotspot, setShowAddHotspot] = useState(false);
   const [pitch, setPitch] = useState(0);
   const [yaw, setYaw] = useState(0);
+
+  const [showAddFeatures, setShowAddFeatures] = useState(false);
+  const [showChangeFeatures, setShowChangeFeatures] = useState(false);
+
+  const [newName, setNewName] = useState(""); // State to hold the new name
+  const [newBackground, setNewBackground] = useState("");
+  const [audio, setAudio] = useState<string>("");
 
   console.log(vfe);
 
@@ -117,7 +125,7 @@ function PhotosphereEditor({
         <AddNavmap onCreateNavMap={handleCreateNavMap} onClose={resetStates} />
       );
     // Below this you will have your conditional for your own component, ie AddNavmap/AddHotspot
-    //Below this you will have your conditional for your own component, ie AddNavmap/AddHotspot
+    // Below this you will have your conditional for your own component, ie AddNavmap/AddHotspot
     if (showAddHotspot)
       return (
         <AddHotspot
@@ -134,6 +142,111 @@ function PhotosphereEditor({
     const convertedVFE = await convertVFE(vfe, convertNetworkToLocal);
     await save(convertedVFE);
   }
+
+  function handleAudioChange(event: React.ChangeEvent<HTMLInputElement>) {
+    AddAudio(event, setAudio, vfe); // Call the AddAudio function to handle audio change
+  }
+
+  // Function to handle name change
+  function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setNewName(event.target.value);
+  }
+
+  // Function to handle background change
+  function handleBackgroundChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (file) {
+      setNewBackground(URL.createObjectURL(file));
+    }
+  }
+
+  function updateHotspots(
+    photosphere: Photosphere,
+    currentPS: string,
+    newName: string,
+  ): Photosphere {
+    // updating photosphere
+    const updatedPhotosphere: Photosphere = { ...photosphere };
+
+    // iterate through hotspots in the current ps
+    Object.values(updatedPhotosphere.hotspots).forEach((hotspot) => {
+      if (
+        hotspot.data.tag === "PhotosphereLink" &&
+        hotspot.data.photosphereID === currentPS
+      ) {
+        hotspot.data.photosphereID = newName;
+      }
+    });
+
+    return updatedPhotosphere;
+  }
+
+  // Function to handle submit button click for name change
+  function handleSubmitName() {
+    if (newName.trim() !== "") {
+      const currentPhotosphere = vfe.photospheres[photosphereID];
+
+      //making updated photosphere list minus the currentPS
+      const updatedPhotospheres: Record<string, Photosphere> =
+        Object.fromEntries(
+          Object.entries(vfe.photospheres)
+            .filter(([key]) => key !== photosphereID)
+            .map(([key, photosphere]) => {
+              // update hotspots in the current photosphere
+              const updatedPhotosphere = updateHotspots(
+                photosphere,
+                photosphereID,
+                newName,
+              );
+              return [key, updatedPhotosphere];
+            }),
+        );
+
+      //making currentPS entry with newName
+      updatedPhotospheres[newName] = { ...currentPhotosphere, id: newName };
+
+      const updatedDefaultPhotosphereID =
+        vfe.defaultPhotosphereID === photosphereID
+          ? newName
+          : vfe.defaultPhotosphereID;
+
+      const updatedVFE: VFE = {
+        ...vfe,
+        defaultPhotosphereID: updatedDefaultPhotosphereID,
+        photospheres: updatedPhotospheres,
+      };
+
+      onChangePS(newName); //set currentPS index to new name to access it correctly moving forward
+      setVFE(updatedVFE);
+      onUpdateVFE(updatedVFE);
+      setUpdateTrigger((prev) => prev + 1);
+      setNewName("");
+    }
+  }
+
+  // Function to handle submit button click for background change
+  function handleSubmitBackground() {
+    if (newBackground.trim() !== "") {
+      const currentPhotosphere = vfe.photospheres[photosphereID];
+      const updatedPhotospheres = { ...vfe.photospheres };
+
+      updatedPhotospheres[photosphereID] = {
+        ...currentPhotosphere,
+        src: { tag: "Network", path: newBackground },
+      };
+
+      const updatedVFE: VFE = {
+        ...vfe,
+        photospheres: updatedPhotospheres,
+      };
+
+      setVFE(updatedVFE);
+      onUpdateVFE(updatedVFE);
+      setUpdateTrigger((prev) => prev + 1);
+    }
+    setNewBackground("");
+  }
+
   // Add styling for inputting information
   return (
     <div style={{ display: "flex", height: "100vh", position: "relative" }}>
@@ -150,43 +263,127 @@ function PhotosphereEditor({
           padding: "10px",
         }}
       >
-        <button
-          style={{ margin: "10px 0" }}
-          onClick={() => {
-            resetStates();
-            setShowAddPhotosphere(true);
-          }}
-        >
-          Add New Photosphere
-        </button>
-        <button
-          style={{ margin: "10px 0" }}
-          onClick={() => {
-            resetStates();
-            setShowAddNavMap(true); // Set state to show AddNavmap
-            //Call your setShowAddNavmap function to set the state and display the function
-          }}
-        >
-          {vfe.map ? "Change NavMap" : "Add New NavMap"}
-        </button>
-        <button
-          style={{ margin: "10px 0" }}
-          onClick={() => {
-            resetStates();
-            //Call your setShowAddHotspot function to set the state and display the function
-            setShowAddHotspot(true);
-          }}
-        >
-          Add New Hotspot
-        </button>
-        <button
-          style={{ margin: "10px 0" }}
-          onClick={() => {
-            void handleSave();
-          }}
-        >
-          Save
-        </button>
+        {!showAddFeatures && !showChangeFeatures && (
+          <>
+            <button
+              style={{ margin: "10px 0" }}
+              onClick={() => {
+                setShowAddFeatures(true);
+              }}
+            >
+              Add Features
+            </button>
+            <button
+              style={{ margin: "10px 0" }}
+              onClick={() => {
+                setShowChangeFeatures(true);
+              }}
+            >
+              Change Features
+            </button>
+            <button
+              style={{ margin: "10px 0" }}
+              onClick={() => {
+                void handleSave();
+              }}
+            >
+              Save
+            </button>
+          </>
+        )}
+        {showAddFeatures && (
+          <>
+            <button
+              style={{ margin: "10px 0" }}
+              onClick={() => {
+                resetStates();
+                setShowAddPhotosphere(true);
+              }}
+            >
+              Add New Photosphere
+            </button>
+
+            <button
+              style={{ margin: "10px 0" }}
+              onClick={() => {
+                resetStates();
+                setShowAddNavMap(true); // Set state to show AddNavmap
+                //Call your setShowAddNavmap function to set the state and display the function
+              }}
+            >
+              {vfe.map ? "Change NavMap" : "Add New NavMap"}
+            </button>
+            <button
+              style={{ margin: "10px 0" }}
+              onClick={() => {
+                resetStates();
+                //Call your setShowAddHotspot function to set the state and display the function
+                setShowAddHotspot(true);
+              }}
+            >
+              Add New Hotspot
+            </button>
+
+            <label htmlFor="audio">
+              {audio !== "" ||
+              vfe.photospheres[vfe.defaultPhotosphereID].backgroundAudio
+                ? "Change Audio: "
+                : "Add Audio:"}
+            </label>
+            <input type="file" id="audio" onChange={handleAudioChange} />
+            <button
+              style={{ margin: "10" }}
+              onClick={() => {
+                setShowAddFeatures(false);
+              }}
+            >
+              Back
+            </button>
+          </>
+        )}
+
+        {showChangeFeatures && (
+          <>
+            <button
+              style={{ margin: "10px 470px 0 0" }}
+              onClick={() => {
+                setShowChangeFeatures(false);
+              }}
+            >
+              Back
+            </button>
+            {/* Buttons for changing features */}
+            <div style={{ margin: "10px 0" }}>
+              <label htmlFor="newName">New Photosphere Name: </label>
+              <input
+                type="text"
+                id="newName"
+                value={newName}
+                onChange={handleNameChange}
+              />
+              <button
+                style={{ margin: "0px 5px 0 8px" }}
+                onClick={handleSubmitName}
+              >
+                Change Name
+              </button>
+            </div>
+            <div style={{ margin: "10px 0" }}>
+              <label htmlFor="newBackground">New Background: </label>
+              <input
+                type="file"
+                id="newBackground"
+                onChange={handleBackgroundChange}
+              />
+              <button
+                style={{ margin: "0px 0 0 -55px" }}
+                onClick={handleSubmitBackground}
+              >
+                Change Background
+              </button>
+            </div>
+          </>
+        )}
       </div>
       <div style={{ width: "100%", height: "100%" }}>
         <PhotosphereViewer

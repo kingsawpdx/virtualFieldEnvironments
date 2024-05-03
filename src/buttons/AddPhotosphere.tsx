@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { Photosphere } from "./DataStructures";
+import { Photosphere } from "../DataStructures";
 
 /* -----------------------------------------------------------------------
     Add a photosphere to a Virtual Field Environment (VFE) using React.
