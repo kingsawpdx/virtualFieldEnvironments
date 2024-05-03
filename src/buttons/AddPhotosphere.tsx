@@ -110,10 +110,10 @@ function AddPhotosphere({
     // Create new photosphere object
     const newPhotosphere: Photosphere = {
       id: photosphereID,
-      src: panoImage,
+      src: { tag: "Network", path: panoImage },
       center: photosphereCenter ?? undefined,
       hotspots: {},
-      backgroundAudio: audioFile,
+      backgroundAudio: { tag: "Network", path: audioFile },
     };
 
     // Pass newPhotosphere back to parent to update VFE

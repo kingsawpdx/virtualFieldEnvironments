@@ -45,10 +45,10 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
       photospheres: {
         [photosphereName]: {
           id: photosphereName,
-          src: panoImage,
+          src: { tag: "Network", path: panoImage },
           center: photosphereCenter ?? undefined,
           hotspots: {},
-          backgroundAudio: audio,
+          backgroundAudio: { tag: "Network", path: audio },
         },
       },
     };

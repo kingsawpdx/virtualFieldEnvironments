@@ -32,7 +32,7 @@ function degToStr(val: number): string {
   return String(val) + "deg";
 }
 
-/** Convert sizes from numbers to strings ending in "px", and increase the size slightly so the NavMap window is larger. */
+/** Convert sizes from numbers to strings ending in "px" */
 function sizeToStr(val: number): string {
   return String(val) + "px";
 }
@@ -124,7 +124,7 @@ function convertMap(
   }
 
   return {
-    imageUrl: map.src,
+    imageUrl: map.src.path,
     center: currentCenter ?? map.defaultCenter,
     rotation: map.rotation,
     defaultZoom: map.defaultZoom,
@@ -189,7 +189,7 @@ function PhotosphereViewer({
         ? convertMap(
             vfe.map,
             vfe.photospheres,
-            vfe.map.defaultCenter,
+            currentPhotosphere.center ?? vfe.map.defaultCenter,
             mapStatic,
           )
         : {},
@@ -224,7 +224,7 @@ function PhotosphereViewer({
       (p) => {
         return {
           id: p.id,
-          panorama: p.src,
+          panorama: p.src.path,
           name: p.id,
           markers: convertHotspots(p.hotspots),
           links: convertLinks(p.hotspots),
@@ -296,14 +296,14 @@ function PhotosphereViewer({
       )}
 
       {currentPhotosphere.backgroundAudio && (
-        <AudioToggleButton src={currentPhotosphere.backgroundAudio} />
+        <AudioToggleButton src={currentPhotosphere.backgroundAudio.path} />
       )}
 
       <ReactPhotoSphereViewer
         key={mapStatic ? "static" : "dynamic"}
         onReady={handleReady}
         ref={photoSphereRef}
-        src={vfe.photospheres[vfe.defaultPhotosphereID].src}
+        src={vfe.photospheres[vfe.defaultPhotosphereID].src.path}
         plugins={plugins}
         height={"100vh"}
         width={"100%"}
