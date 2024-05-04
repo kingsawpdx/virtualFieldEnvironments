@@ -42,7 +42,7 @@ function convertHotspots(hotspots: Record<string, Hotspot3D>): MarkerConfig[] {
   const markers: MarkerConfig[] = [];
 
   for (const hotspot of Object.values(hotspots)) {
-    if (hotspot.data.tag === "PhotosphereLink") continue;
+    if (hotspot.data.tag === "PhotosphereLink" || !hotspot.isEnabled) continue;
 
     let icon =
       "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"; // default
@@ -88,7 +88,7 @@ function convertLinks(hotspots: Record<string, Hotspot3D>): VirtualTourLink[] {
   const links: VirtualTourLink[] = [];
 
   for (const hotspot of Object.values(hotspots)) {
-    if (hotspot.data.tag !== "PhotosphereLink") continue;
+    if (hotspot.data.tag !== "PhotosphereLink" || !hotspot.isEnabled) continue; //todo: change to GameLogicService.isHotspotEnabled(hotspot.id)
 
     links.push({
       nodeId: hotspot.data.photosphereID,
