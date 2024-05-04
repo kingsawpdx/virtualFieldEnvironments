@@ -52,6 +52,7 @@ function PhotosphereEditor({
 
   const [showAddFeatures, setShowAddFeatures] = useState(false);
   const [showChangeFeatures, setShowChangeFeatures] = useState(false);
+  const [showRemoveFeatures, setRemoveFeatures] = useState(false);
 
   const [newName, setNewName] = useState(""); // State to hold the new name
   const [newBackground, setNewBackground] = useState("");
@@ -263,7 +264,7 @@ function PhotosphereEditor({
           padding: "10px",
         }}
       >
-        {!showAddFeatures && !showChangeFeatures && (
+        {!showAddFeatures && !showChangeFeatures && showRemoveFeatures && (
           <>
             <button
               style={{ margin: "10px 0" }}
@@ -280,6 +281,14 @@ function PhotosphereEditor({
               }}
             >
               Change Features
+            </button>
+            <button
+              style={{ margin: "10px 0" }}
+              onClick={() => {
+                setRemoveFeatures(true);
+              }}
+            >
+              Remove Features
             </button>
             <button
               style={{ margin: "10px 0" }}
@@ -382,6 +391,34 @@ function PhotosphereEditor({
                 Change Background
               </button>
             </div>
+          </>
+        )}
+        {showRemoveFeatures && (
+          <>
+            <button
+              style={{ margin: "10px 470px 0 0" }}
+              onClick={() => {
+                //remove hotspots
+              }}
+            >
+              Back
+            </button>
+            <button
+              style={{ margin: "10px 470px 0 0" }}
+              onClick={() => {
+                //remove nav map
+              }}
+            >
+              Back
+            </button>
+            <button
+              style={{ margin: "10px 470px 0 0" }}
+              onClick={() => {
+                //remove photosphere
+              }}
+            >
+              Back
+            </button>
           </>
         )}
       </div>
