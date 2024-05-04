@@ -73,8 +73,7 @@ function HotspotContent(props: HotspotContentProps) {
           }}
         />
       );
-      //  "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png"; // changed to make linter happy until icons are ready
-      break;
+
     case "Audio":
       return (
         <AudioPlayer
