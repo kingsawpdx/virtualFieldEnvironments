@@ -157,12 +157,9 @@ function PhotosphereViewer({
   );
   const [mapStatic, setMapStatic] = useState(false);
 
-  const defaultPanorama = useRef(
-    vfe.photospheres[vfe.defaultPhotosphereID].src.path,
-  );
-
   // The variable is set to true after handleReady has finished
   const ready = useRef(false);
+  const defaultPanorama = useRef(vfe.photospheres[currentPS].src.path);
 
   useEffect(() => {
     if (ready.current) {

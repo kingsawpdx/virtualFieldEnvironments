@@ -23,7 +23,7 @@ export interface PhotosphereLoaderProps {
 
 function VFELoader({ render }: PhotosphereLoaderProps) {
   const navigate = useNavigate();
-  const { vfeID } = useParams() as {
+  const { vfeID, photosphereID } = useParams() as {
     vfeID: string;
     photosphereID?: string;
   };
@@ -62,7 +62,7 @@ function VFELoader({ render }: PhotosphereLoaderProps) {
       setVFE(updatedVFE);
       void saveVFE(updatedVFE);
     },
-    currentPS: vfe.defaultPhotosphereID,
+    currentPS: photosphereID ?? vfe.defaultPhotosphereID,
     onChangePS: (id) => {
       navigate(id, { replace: true });
     },
