@@ -9,6 +9,7 @@ import AddAudio from "./buttons/AddAudio.tsx";
 import AddHotspot from "./buttons/AddHotspot.tsx";
 import AddNavmap from "./buttons/AddNavmap";
 import AddPhotosphere from "./buttons/AddPhotosphere.tsx";
+import RemovePhotosphere from "./buttons/RemovePhotosphere.tsx";
 
 /* -----------------------------------------------------------------------
     Update the Virtual Field Environment with an added Photosphere.
@@ -57,6 +58,8 @@ function PhotosphereEditor({
   const [newName, setNewName] = useState(""); // State to hold the new name
   const [newBackground, setNewBackground] = useState("");
   const [audio, setAudio] = useState<string>("");
+
+  const [showRemovePhotosphere, setShowRemovePhotosphere] = useState(false);
 
   console.log(vfe);
 
@@ -136,6 +139,10 @@ function PhotosphereEditor({
           yaw={yaw}
         />
       );
+    if (showRemovePhotosphere)
+      return (
+        <RemovePhotosphere onClose={handleCloseRemovePhotosphere} vfe={vfe} />
+      );
     return null;
   }
 
@@ -159,6 +166,16 @@ function PhotosphereEditor({
     if (file) {
       setNewBackground(URL.createObjectURL(file));
     }
+  }
+
+  // Function to handle clicking on the "Remove photosphere" button
+  function handleRemovePhotosphereClick() {
+    setShowRemovePhotosphere(true); // Set the state to true to show the RemovePhotosphere component
+  }
+
+  // Function to handle closing the RemovePhotosphere component
+  function handleCloseRemovePhotosphere() {
+    setShowRemovePhotosphere(false); // Set the state to false to hide the RemovePhotosphere component
   }
 
   function updateHotspots(
@@ -373,6 +390,7 @@ function PhotosphereEditor({
               style={{ margin: "10px 0" }}
               onClick={() => {
                 //remove photosphere
+                handleRemovePhotosphereClick();
               }}
             >
               Remove photosphere
