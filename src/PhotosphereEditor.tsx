@@ -351,6 +351,43 @@ function PhotosphereEditor({
           </>
         )}
 
+        {showRemoveFeatures && (
+          <>
+            <button
+              style={{ margin: "10px 0" }}
+              onClick={() => {
+                //remove hotspots
+              }}
+            >
+              Remove hotpost
+            </button>
+            <button
+              style={{ margin: "10px 0" }}
+              onClick={() => {
+                //remove nav map
+              }}
+            >
+              Remove nav map
+            </button>
+            <button
+              style={{ margin: "10px 0" }}
+              onClick={() => {
+                //remove photosphere
+              }}
+            >
+              Remove photosphere
+            </button>
+            <button
+              style={{ margin: "10px 0" }}
+              onClick={() => {
+                setShowRemoveFeatures(false);
+              }}
+            >
+              Back
+            </button>
+          </>
+        )}
+
         {showChangeFeatures && (
           <>
             <button
@@ -391,42 +428,6 @@ function PhotosphereEditor({
                 Change Background
               </button>
             </div>
-          </>
-        )}
-        {showRemoveFeatures && (
-          <>
-            <button
-              style={{ margin: "10px 470px 0 0" }}
-              onClick={() => {
-                //remove hotspots
-              }}
-            >
-              Remove hotpost
-            </button>
-            <button
-              style={{ margin: "10px 470px 0 0" }}
-              onClick={() => {
-                //remove nav map
-              }}
-            >
-              Remove nav map
-            </button>
-            <button
-              style={{ margin: "10px 470px 0 0" }}
-              onClick={() => {
-                //remove photosphere
-              }}
-            >
-              Remove photosphere
-            </button>
-            <button
-              style={{ margin: "10px 470px 0 0" }}
-              onClick={() => {
-                setShowRemoveFeatures(false);
-              }}
-            >
-              Back
-            </button>
           </>
         )}
       </div>
