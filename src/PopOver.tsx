@@ -13,6 +13,7 @@ import {
 import Box from "@mui/material/Box";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
+import Iframe from "react-iframe";
 import ReactPlayer from "react-player";
 
 import { Hotspot2D, HotspotData } from "./DataStructures";
@@ -87,23 +88,24 @@ function HotspotContent(props: HotspotContentProps) {
     case "Doc":
       const docs = [{ uri: props.hotspot.content }];
       return (
-        <Box>
-          <DocViewer
-            style={{ width: "100%" }}
-            documents={docs}
-            pluginRenderers={DocViewerRenderers}
-          />
-        </Box>
+        <DocViewer
+          style={{ width: "80vw", height: "70vh" }}
+          documents={docs}
+          pluginRenderers={DocViewerRenderers}
+        />
       );
 
     case "PhotosphereLink":
       break;
     case "URL":
       return (
-        <a href={props.hotspot.src} target="_blank">
-          {" "}
-          URL{" "}
-        </a>
+        <Iframe
+          styles={{
+            width: "80vw",
+            height: "70vh",
+          }}
+          url={props.hotspot.src}
+        />
       );
     default:
       break;
@@ -126,6 +128,7 @@ function PopOver(props: PopOverProps) {
       onClose={props.closeAll}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
+      maxWidth={false}
     >
       <DialogTitle id="alert-dialog-title">
         <Stack direction="row" alignItems="center">

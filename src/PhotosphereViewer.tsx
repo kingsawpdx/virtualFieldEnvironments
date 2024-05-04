@@ -55,10 +55,16 @@ function convertHotspots(hotspots: Record<string, Hotspot3D>): MarkerConfig[] {
           "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png"; // changed to make linter happy until icons are ready
         break;
       case "Audio":
+        icon =
+          "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png";
         break;
       case "Doc":
+        icon =
+          "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png";
         break;
       case "URL":
+        icon =
+          "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png";
         break;
       default:
         break;

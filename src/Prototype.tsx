@@ -67,7 +67,7 @@ function App() {
     {
       pitch: 10,
       yaw: -10,
-      tooltip: "Video test",
+      tooltip: "Video test - Youtube",
       data: {
         tag: "Video",
         src: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
@@ -76,7 +76,7 @@ function App() {
     {
       pitch: 15,
       yaw: -15,
-      tooltip: "Video test 2",
+      tooltip: "Video test 2 - Vimeo",
       data: {
         tag: "Video",
         src: "https://vimeo.com/676247342",
@@ -85,7 +85,7 @@ function App() {
     {
       pitch: 20,
       yaw: -20,
-      tooltip: "Video test 3",
+      tooltip: "Video test 3 - local video",
       data: {
         tag: "Video",
         src: thirdVideo,
