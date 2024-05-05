@@ -1,3 +1,5 @@
+import VFEList from "./VFEList";
+
 interface LandingPageProps {
   onLoadTestVFE: () => void;
   onCreateVFE: () => void;
@@ -75,6 +77,7 @@ function LandingPage({
         }}
         type="file"
       />
+      <VFEList />
     </div>
   );
 }

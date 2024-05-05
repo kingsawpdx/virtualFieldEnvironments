@@ -1,6 +1,6 @@
 import JSZip from "jszip";
 import localforage from "localforage";
-import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 
 import CreateVFEForm from "./CreateVFE.tsx";
 import { VFE } from "./DataStructures.ts";
@@ -18,7 +18,7 @@ function AppRoot() {
 
   //Create a function to set useState true
   function handleLoadTestVFE() {
-    navigate("/viewer");
+    navigate("/prototype");
   }
 
   function handleCreateVFE() {
@@ -55,11 +55,7 @@ function AppRoot() {
           />
         }
       />
-      <Route
-        path="/viewer"
-        // TODO: replace with a way to select a VFE from a list
-        element={<Prototype />}
-      />
+      <Route path="/prototype" element={<Prototype />} />
       <Route
         path="/viewer/:vfeID"
         element={
@@ -77,11 +73,6 @@ function AppRoot() {
             }}
           />
         }
-      />
-      <Route
-        path="/editor"
-        // TODO: replace with a way to select a VFE from a list
-        element={<Navigate to="/create" replace={true} />}
       />
       <Route
         path="/editor/:vfeID"
