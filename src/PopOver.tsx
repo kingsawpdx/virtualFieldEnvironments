@@ -13,7 +13,6 @@ import {
 import Box from "@mui/material/Box";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
-import Iframe from "react-iframe";
 import ReactPlayer from "react-player";
 
 import { Hotspot2D, HotspotData } from "./DataStructures";
@@ -98,13 +97,17 @@ function HotspotContent(props: HotspotContentProps) {
       break;
     case "URL":
       return (
-        <Iframe
-          styles={{
-            width: "80vw",
-            height: "70vh",
-          }}
-          url={props.hotspot.src}
-        />
+        <Box width={"80vw"} height={"70vh"} fontFamily={"Helvetica"}>
+          To view the link in a new tab, click the title.
+          <iframe
+            style={{
+              marginTop: "10px",
+              width: "80vw",
+              height: "70vh",
+            }}
+            src={props.hotspot.src}
+          />
+        </Box>
       );
     default:
       break;
@@ -131,7 +134,15 @@ function PopOver(props: PopOverProps) {
     >
       <DialogTitle id="alert-dialog-title">
         <Stack direction="row" alignItems="center">
-          <Box flexGrow={1}>{props.title}</Box>
+          {props.hotspotData.tag == "URL" ? (
+            <Box flexGrow={1}>
+              <a href={props.hotspotData.src} target="_blank">
+                {props.title}
+              </a>
+            </Box>
+          ) : (
+            <Box flexGrow={1}>{props.title}</Box>
+          )}
 
           {props.arrayLength > 1 && (
             <Tooltip title="Back" placement="top">
