@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Hotspot3D, HotspotData } from "./DataStructures.ts";
+import { Hotspot3D, HotspotData } from "../DataStructures.ts";
 
 interface ContentInputProps {
   contentType: string;
@@ -11,12 +11,7 @@ function ContentInput({ contentType, onChangeContent }: ContentInputProps) {
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const URL = reader.result as string;
-        onChangeContent(URL);
-      };
-      reader.readAsDataURL(file);
+      onChangeContent(URL.createObjectURL(file));
     }
   }
 
@@ -91,20 +86,20 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
       case "Image":
         data = {
           tag: "Image",
-          src: content,
+          src: { tag: "Network", path: content },
           hotspots: {},
         };
         break;
       case "Video":
         data = {
           tag: "Video",
-          src: content,
+          src: { tag: "Network", path: content },
         };
         break;
       case "Audio":
         data = {
           tag: "Audio",
-          src: content,
+          src: { tag: "Network", path: content },
         };
         break;
       case "Doc":

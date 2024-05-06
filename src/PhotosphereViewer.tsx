@@ -113,6 +113,7 @@ function convertMap(
   map: NavMap,
   photospheres: Record<string, Photosphere>,
   currentCenter?: Point,
+  staticEnabled = false,
 ): MapPluginConfig {
   const hotspots: MapHotspot[] = [];
 
@@ -129,7 +130,7 @@ function convertMap(
   }
 
   return {
-    imageUrl: map.src,
+    imageUrl: map.src.path,
     center: currentCenter ?? map.defaultCenter,
     rotation: map.rotation,
     defaultZoom: map.defaultZoom,
@@ -137,30 +138,30 @@ function convertMap(
     maxZoom: 100,
     size: sizeToStr(map.size),
     hotspots,
+    static: staticEnabled,
   };
 }
 
 export interface PhotosphereViewerProps {
   vfe: VFE;
-  currentPS?: string;
-  onChangePS?: (id: string) => void;
+  currentPS: string;
+  onChangePS: (id: string) => void;
   onViewerClick?: (pitch: number, yaw: number) => void;
 }
 
-function PhotosphereViewer(props: PhotosphereViewerProps) {
+function PhotosphereViewer({
+  vfe,
+  currentPS,
+  onChangePS,
+  onViewerClick,
+}: PhotosphereViewerProps) {
   const photoSphereRef = React.createRef<ViewerAPI>();
-  const defaultPhotosphere =
-    props.vfe.photospheres[props.vfe.defaultPhotosphereID];
-  // conditional fixes popover not rendering on non-default photosphere problem
   const [currentPhotosphere, setCurrentPhotosphere] =
-    React.useState<Photosphere>(
-      props.currentPS
-        ? props.vfe.photospheres[props.currentPS]
-        : defaultPhotosphere,
-    );
+    React.useState<Photosphere>(vfe.photospheres[currentPS]);
   const [hotspotArray, setHotspotArray] = useState<(Hotspot3D | Hotspot2D)[]>(
     [],
   );
+  const [mapStatic, setMapStatic] = useState(false);
 
   useEffect(() => {
     const virtualTour =
@@ -185,19 +186,21 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
         },
       } as VirtualTourPluginConfig,
     ],
-  ];
 
-  // Only enable map plugin when VFE has a map
-  if (props.vfe.map) {
-    plugins.push([
+    // Only fill map plugin config when VFE has a map
+    [
       MapPlugin,
-      convertMap(
-        props.vfe.map,
-        props.vfe.photospheres,
-        defaultPhotosphere.center,
-      ),
-    ]);
-  }
+
+      vfe.map
+        ? convertMap(
+            vfe.map,
+            vfe.photospheres,
+            currentPhotosphere.center ?? vfe.map.defaultCenter,
+            mapStatic,
+          )
+        : {},
+    ],
+  ];
 
   function handleReady(instance: Viewer) {
     const markerTestPlugin: MarkersPlugin = instance.getPlugin(MarkersPlugin);
@@ -205,25 +208,29 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
     markerTestPlugin.addEventListener("select-marker", ({ marker }) => {
       if (marker.config.id.includes("__tour-link")) return;
 
-      const passMarker = currentPhotosphere.hotspots[marker.config.id];
-
-      setHotspotArray([passMarker]);
+      // setCurrentPhotosphere has to be used to get the current state value because
+      // the value of currentPhotosphere does not get updated in an event listener
+      setCurrentPhotosphere((currentState) => {
+        const passMarker = currentState.hotspots[marker.config.id];
+        setHotspotArray([passMarker]);
+        return currentState;
+      });
     });
 
     instance.addEventListener("click", ({ data }) => {
       if (!data.rightclick) {
-        props.onViewerClick?.(data.pitch, data.yaw);
+        onViewerClick?.(data.pitch, data.yaw);
       }
     });
 
     const virtualTour =
       instance.getPlugin<VirtualTourPlugin>(VirtualTourPlugin);
 
-    const nodes: VirtualTourNode[] = Object.values(props.vfe.photospheres).map(
+    const nodes: VirtualTourNode[] = Object.values(vfe.photospheres).map(
       (p) => {
         return {
           id: p.id,
-          panorama: p.src,
+          panorama: p.src.path,
           name: p.id,
           markers: convertHotspots(p.hotspots),
           links: convertLinks(p.hotspots),
@@ -231,33 +238,49 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
       },
     );
 
-    // need to have conditional so that scene doesn't change when adding hotspots
-    virtualTour.setNodes(
-      nodes,
-      props.currentPS ? props.currentPS : defaultPhotosphere.id,
-    );
+    virtualTour.setNodes(nodes, currentPS);
     virtualTour.addEventListener("node-changed", ({ node }) => {
-      setCurrentPhotosphere(props.vfe.photospheres[node.id]);
-      props.onChangePS?.(node.id);
+      setCurrentPhotosphere(vfe.photospheres[node.id]);
+      onChangePS(node.id);
       setHotspotArray([]); // clear popovers on scene change
     });
 
     const map = instance.getPlugin<MapPlugin>(MapPlugin);
     map.addEventListener("select-hotspot", ({ hotspotId }) => {
-      const photosphere = props.vfe.photospheres[hotspotId];
+      const photosphere = vfe.photospheres[hotspotId];
       setCurrentPhotosphere(photosphere);
-      props.onChangePS?.(photosphere.id);
+      onChangePS(photosphere.id);
     });
   }
 
   return (
     <>
+      <div
+        style={{
+          position: "absolute",
+          top: "16px",
+          left: "400px",
+          right: 0,
+          marginLeft: "auto",
+          marginRight: "auto",
+          zIndex: 100,
+          textAlign: "center",
+        }}
+      >
+        <button
+          onClick={() => {
+            setMapStatic(!mapStatic);
+          }}
+        >
+          {mapStatic ? "Enable Map Rotation" : "Disable Map Rotation"}
+        </button>
+      </div>
       <PhotosphereSelector
-        options={Object.keys(props.vfe.photospheres)}
+        options={Object.keys(vfe.photospheres)}
         value={currentPhotosphere.id}
         setValue={(id) => {
-          setCurrentPhotosphere(props.vfe.photospheres[id]);
-          props.onChangePS?.(id);
+          setCurrentPhotosphere(vfe.photospheres[id]);
+          onChangePS(id);
         }}
       />
 
@@ -279,13 +302,14 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
       )}
 
       {currentPhotosphere.backgroundAudio && (
-        <AudioToggleButton src={currentPhotosphere.backgroundAudio} />
+        <AudioToggleButton src={currentPhotosphere.backgroundAudio.path} />
       )}
 
       <ReactPhotoSphereViewer
+        key={mapStatic ? "static" : "dynamic"}
         onReady={handleReady}
         ref={photoSphereRef}
-        src={defaultPhotosphere.src}
+        src={vfe.photospheres[vfe.defaultPhotosphereID].src.path}
         plugins={plugins}
         height={"100vh"}
         width={"100%"}

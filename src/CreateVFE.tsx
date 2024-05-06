@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 
-import { PhotosphereCenterFieldset } from "./AddPhotosphere.tsx";
 import { VFE } from "./DataStructures.ts";
-import PhotosphereViewer from "./PhotosphereViewer.tsx";
+import { PhotosphereCenterFieldset } from "./buttons/AddPhotosphere.tsx";
 
 /* -----------------------------------------------------------------------
     Create a Virtual Field Environment (VFE) that will contain many
@@ -27,6 +26,7 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
   const [vfeName, setVFEName] = useState("");
   const [photosphereName, setPhotosphereName] = useState(""); // State for Photosphere Name
   const [panoImage, setPanoImage] = useState("");
+  const [audio, setAudio] = useState("");
   const [photosphereCenter, setPhotosphereCenter] = useState<{
     x: number;
     y: number;
@@ -45,28 +45,31 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
       photospheres: {
         [photosphereName]: {
           id: photosphereName,
-          src: panoImage,
+          src: { tag: "Network", path: panoImage },
           center: photosphereCenter ?? undefined,
           hotspots: {},
+          backgroundAudio: { tag: "Network", path: audio },
         },
       },
     };
     onCreateVFE(data);
-    return <PhotosphereViewer vfe={data} />;
   }
 
   // Ensure file is truthy
   function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const imageURL = reader.result as string;
-        setPanoImage(imageURL);
-      };
-      reader.readAsDataURL(file);
+      setPanoImage(URL.createObjectURL(file));
     }
   }
+
+  function handleAudioChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (file) {
+      setAudio(URL.createObjectURL(file));
+    }
+  }
+
   // Add styling to input interface
   return (
     <div>
@@ -101,6 +104,10 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
           accept="image/*"
           onChange={handleImageChange}
         />
+      </div>
+      <div>
+        <label htmlFor="audio">Add Audio (Optional):</label>
+        <input type="file" id="audio" onChange={handleAudioChange} />
       </div>
       <PhotosphereCenterFieldset setPhotosphereCenter={setPhotosphereCenter} />
       <button onClick={handleCreateVFE}>Create VFE</button>

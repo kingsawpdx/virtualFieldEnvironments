@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { NavMap } from "./DataStructures";
+import { NavMap } from "../DataStructures";
 
 interface AddNavMapProps {
   onCreateNavMap: (navMap: NavMap) => void;
@@ -32,11 +32,7 @@ function AddNavMap({ onCreateNavMap, onClose }: AddNavMapProps): JSX.Element {
   function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = function () {
-        setNavmapImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+      setNavmapImage(URL.createObjectURL(file));
     }
   }
 
@@ -46,11 +42,11 @@ function AddNavMap({ onCreateNavMap, onClose }: AddNavMapProps): JSX.Element {
       return;
     }
 
-    const navmapSize = 200;
+    const navmapSize = 300;
     const { width, height } = await calculateImageDimensions(navmapImage);
     const maxDimension = Math.max(width, height);
     const newNavMap: NavMap = {
-      src: navmapImage,
+      src: { tag: "Network", path: navmapImage },
       id: navmapName,
       rotation: 0,
       defaultZoom: (navmapSize / maxDimension) * 100,

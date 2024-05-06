@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { Photosphere } from "./DataStructures";
+import { Photosphere } from "../DataStructures";
 
 /* -----------------------------------------------------------------------
     Add a photosphere to a Virtual Field Environment (VFE) using React.
@@ -88,11 +88,7 @@ function AddPhotosphere({
   function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = function () {
-        setPanoImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+      setPanoImage(URL.createObjectURL(file));
     }
   }
 
@@ -100,11 +96,7 @@ function AddPhotosphere({
   function handleAudioChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = function () {
-        setAudioFile(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+      setAudioFile(URL.createObjectURL(file));
     }
   }
 
@@ -118,10 +110,10 @@ function AddPhotosphere({
     // Create new photosphere object
     const newPhotosphere: Photosphere = {
       id: photosphereID,
-      src: panoImage,
+      src: { tag: "Network", path: panoImage },
       center: photosphereCenter ?? undefined,
       hotspots: {},
-      backgroundAudio: audioFile,
+      backgroundAudio: { tag: "Network", path: audioFile },
     };
 
     // Pass newPhotosphere back to parent to update VFE
