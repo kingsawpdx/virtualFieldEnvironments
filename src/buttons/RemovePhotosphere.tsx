@@ -8,11 +8,13 @@ import PhotosphereSelector, {
 interface RemovePhotosphereProps {
   onClose: () => void;
   vfe: VFE;
+  onRemovePhotosphere: (PhotosphereID: string) => void; // Function to remove photosphere from navigation map
 }
 
 function RemovePhotosphere({
   onClose,
   vfe,
+  onRemovePhotosphere,
 }: RemovePhotosphereProps): JSX.Element {
   const [selectedPhotosphere, setSelectedPhotosphere] = useState<string>("");
 
@@ -26,8 +28,17 @@ function RemovePhotosphere({
     setValue: setSelectedPhotosphere,
   };
 
-  function handleRemove() {
+  function HandleRemovePhotosphere() {
+    if (!selectedPhotosphere) {
+      alert("Please select a photosphere to remove.");
+      return;
+    }
+    const removedVFE: VFE = { ...vfe };
+    delete removedVFE.photospheres.selectedPhotosphere;
+
+    onRemovePhotosphere(selectedPhotosphere);
     //Logic for removing the selected Photosphere
+    onClose();
   }
 
   return (
@@ -45,7 +56,7 @@ function RemovePhotosphere({
     >
       <h1>Select a Photosphere to remove</h1>
       <PhotosphereSelector {...selectorProps} />
-      <button onClick={handleRemove}>Remove</button>
+      <button onClick={HandleRemovePhotosphere}>Remove</button>
       <button onClick={onClose}>Close</button>
     </div>
   );

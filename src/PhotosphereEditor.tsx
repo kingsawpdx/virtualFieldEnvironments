@@ -9,6 +9,7 @@ import AddAudio from "./buttons/AddAudio.tsx";
 import AddHotspot from "./buttons/AddHotspot.tsx";
 import AddNavmap from "./buttons/AddNavmap";
 import AddPhotosphere from "./buttons/AddPhotosphere.tsx";
+import RemoveNavMap from "./buttons/RemoveNavmap.tsx";
 import RemovePhotosphere from "./buttons/RemovePhotosphere.tsx";
 
 /* -----------------------------------------------------------------------
@@ -60,13 +61,24 @@ function PhotosphereEditor({
   const [audio, setAudio] = useState<string>("");
 
   const [showRemovePhotosphere, setShowRemovePhotosphere] = useState(false);
-
+  const [showRemoveNavMap, setShowRemoveNavMap] = useState(false);
   console.log(vfe);
 
   // Change URL to reflect current photosphere
   function onChangePS(id: string) {
     navigate(id, { replace: true });
   }
+  /*
+  function handleRemovePhotosphere(PhotoshereID: string)
+  {
+    const updatedVFE: VFE = {
+      ...vfe,
+      photospheres:{
+
+      },
+    }
+  }
+*/
 
   // Update the VFE
   function handleAddPhotosphere(newPhotosphere: Photosphere) {
@@ -83,7 +95,6 @@ function PhotosphereEditor({
     setShowAddPhotosphere(false);
     setUpdateTrigger((prev) => prev + 1);
   }
-
   function handleCreateNavMap(updatedNavMap: NavMap) {
     const updatedVFE: VFE = {
       ...vfe,
@@ -116,6 +127,8 @@ function PhotosphereEditor({
     setShowAddPhotosphere(false);
     setShowAddNavMap(false);
     setShowAddHotspot(false);
+    setShowRemoveNavMap(false);
+    setShowRemovePhotosphere(false);
     setPitch(0);
     setYaw(0);
   }
@@ -141,7 +154,18 @@ function PhotosphereEditor({
       );
     if (showRemovePhotosphere)
       return (
-        <RemovePhotosphere onClose={handleCloseRemovePhotosphere} vfe={vfe} />
+        <RemovePhotosphere
+          onRemovePhotosphere={handleRemovePhotosphereClick}
+          onClose={handleCloseRemovePhotosphere}
+          vfe={vfe}
+        />
+      );
+    if (showRemoveNavMap)
+      return (
+        <RemoveNavMap
+          onClose={handleCloseRemoveNavMap}
+          onRemoveNavmap={handleRemoveNavMap}
+        />
       );
     return null;
   }
@@ -170,12 +194,28 @@ function PhotosphereEditor({
 
   // Function to handle clicking on the "Remove photosphere" button
   function handleRemovePhotosphereClick() {
-    setShowRemovePhotosphere(true); // Set the state to true to show the RemovePhotosphere component
+    setShowRemovePhotosphere(true);
+    // Set the state to true to show the RemovePhotosphere component
   }
 
   // Function to handle closing the RemovePhotosphere component
   function handleCloseRemovePhotosphere() {
     setShowRemovePhotosphere(false); // Set the state to false to hide the RemovePhotosphere component
+  }
+  function handleCloseRemoveNavMap() {
+    setShowRemoveNavMap(false);
+  }
+
+  function handleRemoveNavMap(newNavMap: NavMap) {
+    const updatedVFE: VFE = {
+      ...vfe,
+      map: newNavMap,
+    };
+    setVFE(updatedVFE); // Update the local VFE state
+    onUpdateVFE(updatedVFE); // Propagate the change to the parent component
+    setShowRemoveNavMap(false); // Close the RemoveNavMap component
+    setUpdateTrigger((prev) => prev + 1);
+    //setShowRemoveNavMap(true);
   }
 
   function updateHotspots(
@@ -381,6 +421,7 @@ function PhotosphereEditor({
             <button
               style={{ margin: "10px 0" }}
               onClick={() => {
+                setShowRemoveNavMap(true);
                 //remove nav map
               }}
             >
