@@ -64,7 +64,9 @@ function VFELoader({ render }: PhotosphereLoaderProps) {
     },
     currentPS: photosphereID ?? vfe.defaultPhotosphereID,
     onChangePS: (id) => {
-      navigate(id, { replace: true });
+      if (id !== photosphereID) {
+        navigate(id, { replace: true });
+      }
     },
   });
 }
