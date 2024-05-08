@@ -2,6 +2,7 @@ import localforage from "localforage";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { VFE } from "./DataStructures";
 import vfeData from "./data.json";
 
 function Prototype() {
@@ -9,8 +10,11 @@ function Prototype() {
 
   useEffect(() => {
     async function load() {
-      await localforage.setItem("prototype", vfeData);
-      navigate("/viewer/prototype/", { replace: true });
+      const vfe = vfeData as VFE;
+      await localforage.setItem(vfe.name, vfe);
+      navigate(`/viewer/${vfe.name}/${vfe.defaultPhotosphereID}`, {
+        replace: true,
+      });
     }
 
     void load();
