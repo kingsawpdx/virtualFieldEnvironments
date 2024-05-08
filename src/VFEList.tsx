@@ -1,4 +1,4 @@
-import { CardContent } from "@mui/material";
+import { Skeleton, Typography } from "@mui/material";
 import { Stack } from "@mui/material";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
@@ -10,22 +10,29 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { VFE } from "./DataStructures";
+import { convertLocalToNetwork } from "./VFEConversion";
+
+type NavMapRecord = Partial<Record<string, string>>;
 
 function VFEList() {
   const [names, setNames] = useState<string[]>([]);
-  const [navMap, setNavMap] = useState<Record<string, string | undefined>>({});
+  const [navMaps, setNavMaps] = useState<NavMapRecord>({});
   const navigate = useNavigate();
 
   useEffect(() => {
     async function load() {
-      setNames(await localforage.keys());
-      const newNavMap: Record<string, string | undefined> = {};
-      await localforage.iterate(function (value: VFE, key) {
-        if (value.map) {
-          newNavMap[key] = value.map.src.path;
+      const keys = await localforage.keys();
+      setNames(keys);
+
+      const newNavMaps: NavMapRecord = {};
+      for (const key of keys) {
+        const localVFE = await localforage.getItem<VFE>(key);
+        if (localVFE?.map) {
+          const networkMap = await convertLocalToNetwork(localVFE.map.src);
+          newNavMaps[key] = networkMap.path;
         }
-      });
-      setNavMap(newNavMap);
+      }
+      setNavMaps(newNavMaps);
     }
 
     void load();
@@ -35,9 +42,17 @@ function VFEList() {
     <Stack direction="row" alignItems="center" gap={3}>
       {names.map((name) => (
         <Card key={name} sx={{ maxWidth: 345 }}>
-          <CardHeader title={name}> </CardHeader>
-          <CardMedia sx={{ height: 140 }} image={navMap[name]}></CardMedia>
-          <CardContent></CardContent>
+          <CardHeader
+            title={<Typography variant="h6">{name}</Typography>}
+            disableTypography
+          />
+
+          {navMaps[name] ? (
+            <CardMedia sx={{ height: 140 }} image={navMaps[name]} />
+          ) : (
+            <Skeleton height={140} variant="rectangular" />
+          )}
+
           <CardActions>
             <Button
               size="small"
