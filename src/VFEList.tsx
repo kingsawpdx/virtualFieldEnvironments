@@ -1,11 +1,12 @@
 import {
+  Container,
   Dialog,
   DialogActions,
   DialogTitle,
+  Grid,
   Skeleton,
   Typography,
 } from "@mui/material";
-import { Stack } from "@mui/material";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -61,44 +62,43 @@ function VFEList() {
   }
 
   return (
-    <>
-      <Stack direction="row" alignItems="center" gap={3}>
+    <Container>
+      <Grid container spacing={3} alignItems="center" justifyContent="center">
         {names.map((name) => (
-          <Card
-            key={name}
-            sx={{ maxWidth: 345, display: "flex", flexDirection: "column" }}
-          >
-            <CardHeader
-              title={<Typography variant="h6">{name}</Typography>}
-              disableTypography
-            />
+          <Grid item key={name} xs={12} sm={6} md={4} lg={3}>
+            <Card>
+              <CardHeader
+                title={<Typography variant="h6">{name}</Typography>}
+                disableTypography
+              />
 
-            {navMaps[name] ? (
-              <CardMedia sx={{ height: 140 }} image={navMaps[name]} />
-            ) : (
-              <Skeleton height={140} variant="rectangular" />
-            )}
+              {navMaps[name] ? (
+                <CardMedia sx={{ height: 140 }} image={navMaps[name]} />
+              ) : (
+                <Skeleton height={140} variant="rectangular" />
+              )}
 
-            <CardActions>
-              <Button size="small" component={Link} to={`/viewer/${name}/`}>
-                View
-              </Button>
-              <Button size="small" component={Link} to={`/editor/${name}/`}>
-                Edit
-              </Button>
-              <Button
-                size="small"
-                color="error"
-                onClick={() => {
-                  setToDelete(name);
-                }}
-              >
-                Delete
-              </Button>
-            </CardActions>
-          </Card>
+              <CardActions>
+                <Button size="small" component={Link} to={`/viewer/${name}/`}>
+                  View
+                </Button>
+                <Button size="small" component={Link} to={`/editor/${name}/`}>
+                  Edit
+                </Button>
+                <Button
+                  size="small"
+                  color="error"
+                  onClick={() => {
+                    setToDelete(name);
+                  }}
+                >
+                  Delete
+                </Button>
+              </CardActions>
+            </Card>
+          </Grid>
         ))}
-      </Stack>
+      </Grid>
 
       <Dialog open={toDelete !== null} onClose={dismissDeletion}>
         <DialogTitle>Delete {toDelete}?</DialogTitle>
@@ -114,7 +114,7 @@ function VFEList() {
           </Button>
         </DialogActions>
       </Dialog>
-    </>
+    </Container>
   );
 }
 
