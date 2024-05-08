@@ -126,7 +126,7 @@ function PhotosphereEditor({
     return null;
   }
 
-  async function handleSave() {
+  async function handleExport() {
     const convertedVFE = await convertVFE(vfe, convertNetworkToLocal);
     await save(convertedVFE);
   }
@@ -271,10 +271,10 @@ function PhotosphereEditor({
             <button
               style={{ margin: "10px 0" }}
               onClick={() => {
-                void handleSave();
+                void handleExport();
               }}
             >
-              Save
+              Export
             </button>
           </>
         )}
