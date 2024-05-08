@@ -1,4 +1,5 @@
 import {
+  CardActionArea,
   Container,
   Dialog,
   DialogActions,
@@ -67,22 +68,24 @@ function VFEList() {
         {names.map((name) => (
           <Grid item key={name} xs={12} sm={6} md={4} lg={3}>
             <Card>
-              <CardHeader
-                title={<Typography variant="h6">{name}</Typography>}
-                disableTypography
-              />
+              <CardActionArea component={Link} to={`/viewer/${name}`}>
+                <CardHeader
+                  title={<Typography variant="h6">{name}</Typography>}
+                  disableTypography
+                />
 
-              {navMaps[name] ? (
-                <CardMedia sx={{ height: 140 }} image={navMaps[name]} />
-              ) : (
-                <Skeleton height={140} variant="rectangular" />
-              )}
+                {navMaps[name] ? (
+                  <CardMedia sx={{ height: 140 }} image={navMaps[name]} />
+                ) : (
+                  <Skeleton height={140} variant="rectangular" />
+                )}
+              </CardActionArea>
 
               <CardActions>
-                <Button size="small" component={Link} to={`/viewer/${name}/`}>
+                <Button size="small" component={Link} to={`/viewer/${name}`}>
                   View
                 </Button>
-                <Button size="small" component={Link} to={`/editor/${name}/`}>
+                <Button size="small" component={Link} to={`/editor/${name}`}>
                   Edit
                 </Button>
                 <Button
