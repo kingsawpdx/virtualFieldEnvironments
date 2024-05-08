@@ -68,17 +68,27 @@ function PhotosphereEditor({
   function onChangePS(id: string) {
     navigate(id, { replace: true });
   }
-  /*
-  function handleRemovePhotosphere(PhotoshereID: string)
-  {
+
+  function handleRemovePhotosphere(photosphereId: string) {
+    if (!photosphereId) {
+      alert("Photosphere not found.");
+      return;
+    }
+
+    // Create a new object without the removed photosphere
+    const { [photosphereId]: removedPhotosphere, ...remainingPhotospheres } =
+      vfe.photospheres;
     const updatedVFE: VFE = {
       ...vfe,
-      photospheres:{
+      photospheres: remainingPhotospheres,
+    };
 
-      },
-    }
+    setVFE(updatedVFE); // Update local state
+    onUpdateVFE(updatedVFE); // Propagate changes to parent if necessary
+
+    // After updating the state
+    handleCloseRemovePhotosphere(); // Close the RemovePhotosphere modal or component
   }
-*/
 
   // Update the VFE
   function handleAddPhotosphere(newPhotosphere: Photosphere) {
@@ -155,7 +165,7 @@ function PhotosphereEditor({
     if (showRemovePhotosphere)
       return (
         <RemovePhotosphere
-          onRemovePhotosphere={handleRemovePhotosphereClick}
+          onRemovePhotosphere={handleRemovePhotosphere}
           onClose={handleCloseRemovePhotosphere}
           vfe={vfe}
         />

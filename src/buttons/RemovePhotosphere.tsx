@@ -33,9 +33,6 @@ function RemovePhotosphere({
       alert("Please select a photosphere to remove.");
       return;
     }
-    const removedVFE: VFE = { ...vfe };
-    delete removedVFE.photospheres.selectedPhotosphere;
-
     onRemovePhotosphere(selectedPhotosphere);
     //Logic for removing the selected Photosphere
     onClose();
