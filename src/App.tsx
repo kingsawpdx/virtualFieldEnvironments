@@ -57,14 +57,6 @@ function AppRoot() {
       />
       <Route path="/prototype" element={<Prototype />} />
       <Route
-        path="/viewer/:vfeID"
-        element={
-          <VFELoader render={(props) => <PhotosphereViewer {...props} />} />
-        }
-      >
-        <Route path=":photosphereID" element={null} />
-      </Route>
-      <Route
         path="/create"
         element={
           <CreateVFEForm
@@ -74,6 +66,14 @@ function AppRoot() {
           />
         }
       />
+      <Route
+        path="/viewer/:vfeID"
+        element={
+          <VFELoader render={(props) => <PhotosphereViewer {...props} />} />
+        }
+      >
+        <Route path=":photosphereID" element={null} />
+      </Route>
       <Route
         path="/editor/:vfeID"
         element={
