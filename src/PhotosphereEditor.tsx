@@ -20,7 +20,9 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { Hotspot3D, NavMap, Photosphere, VFE } from "./DataStructures.ts";
+import { save } from "./FileOperations.ts";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
+import { convertNetworkToLocal, convertVFE } from "./VFEConversion.ts";
 import AddAudio from "./buttons/AddAudio.tsx";
 import AddHotspot from "./buttons/AddHotspot.tsx";
 import AddNavmap from "./buttons/AddNavmap";
@@ -155,6 +157,11 @@ function PhotosphereEditor({
     return null;
   }
 
+  async function handleSave() {
+    const convertedVFE = await convertVFE(vfe, convertNetworkToLocal);
+    await save(convertedVFE);
+  }
+
   function handleAudioChange(event: React.ChangeEvent<HTMLInputElement>) {
     AddAudio(event, setAudio, vfe); // Call the AddAudio function to handle audio change
   }
@@ -244,7 +251,7 @@ function PhotosphereEditor({
 
       updatedPhotospheres[photosphereID] = {
         ...currentPhotosphere,
-        src: newBackground,
+        src: { tag: "Network", path: newBackground },
       };
 
       const updatedVFE: VFE = {
@@ -292,6 +299,14 @@ function PhotosphereEditor({
               }}
             >
               Change Features
+            </button>
+            <button
+              style={{ margin: "10px 0" }}
+              onClick={() => {
+                void handleSave();
+              }}
+            >
+              Save
             </button>
           </>
         )}

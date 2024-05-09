@@ -46,7 +46,7 @@ function AddNavMap({ onCreateNavMap, onClose }: AddNavMapProps): JSX.Element {
     const { width, height } = await calculateImageDimensions(navmapImage);
     const maxDimension = Math.max(width, height);
     const newNavMap: NavMap = {
-      src: navmapImage,
+      src: { tag: "Network", path: navmapImage },
       id: navmapName,
       rotation: 0,
       defaultZoom: (navmapSize / maxDimension) * 100,

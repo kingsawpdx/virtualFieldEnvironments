@@ -7,6 +7,18 @@
     to micro-environments and associated elements.
    ----------------------------------------------------------------------- */
 
+export interface LocalAsset {
+  tag: "Local";
+  path: string;
+}
+
+export interface NetworkAsset {
+  tag: "Network";
+  path: string;
+}
+
+export type Asset = LocalAsset | NetworkAsset;
+
 // Virtual Field Environment: the total collection of photosphere environments
 export interface VFE {
   name: string;
@@ -17,7 +29,7 @@ export interface VFE {
 
 // Navigation map: a birdseye view of the various hotspots within a single 360-environment
 export interface NavMap {
-  src: string;
+  src: Asset;
   id: string;
   rotation: number;
   defaultZoom: number;
@@ -28,10 +40,10 @@ export interface NavMap {
 // Photosphere: a single 360-environment
 export interface Photosphere {
   id: string;
-  src: string;
+  src: Asset;
   hotspots: Record<string, Hotspot3D>;
   center?: { x: number; y: number };
-  backgroundAudio?: string;
+  backgroundAudio?: Asset;
 }
 
 // Hotspot2D: a clickable resource that is inside a 2D image (x, y)
@@ -58,18 +70,18 @@ export type HotspotData = Image | Audio | Video | URL | Doc | PhotosphereLink;
 // media objects
 export interface Image {
   tag: "Image";
-  src: string;
+  src: Asset;
   hotspots: Record<string, Hotspot2D>;
 }
 
 export interface Video {
   readonly tag: "Video";
-  src: string;
+  src: Asset;
 }
 
 export interface Audio {
   tag: "Audio";
-  src: string;
+  src: Asset;
 }
 
 export interface URL {

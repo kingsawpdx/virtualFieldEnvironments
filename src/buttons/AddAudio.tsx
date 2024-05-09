@@ -11,8 +11,10 @@ function AddAudio(
   if (file) {
     setAudio(URL.createObjectURL(file));
     const currentPhotosphereId = vfe.defaultPhotosphereID;
-    vfe.photospheres[currentPhotosphereId].backgroundAudio =
-      URL.createObjectURL(file);
+    vfe.photospheres[currentPhotosphereId].backgroundAudio = {
+      tag: "Network",
+      path: URL.createObjectURL(file),
+    };
   } else {
     // Reset the audio if no file is selected
     setAudio("");

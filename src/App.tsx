@@ -1,3 +1,5 @@
+import JSZip from "jszip";
+import localforage from "localforage";
 import { useState } from "react";
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 
@@ -7,6 +9,7 @@ import LandingPage from "./LandingPage.tsx";
 import PhotosphereEditor from "./PhotosphereEditor.tsx";
 import PhotosphereLoader from "./PhotosphereLoader.tsx";
 import Prototype from "./Prototype.tsx";
+import { convertLocalToNetwork, convertVFE } from "./VFEConversion.ts";
 
 // Main component acts as a main entry point for the application
 // Should decide what we are doing, going to LandingPage/Rendering VFE
@@ -34,6 +37,19 @@ function AppRoot() {
     setVFEData(updatedVFE);
   }
 
+  async function handleLoadVFE(file: File) {
+    const zip: JSZip = await JSZip.loadAsync(file);
+    const data = await zip.file("data.json")?.async("string");
+    if (data) {
+      await localforage.setItem("loaded", JSON.parse(data) as VFE);
+      const vfe: VFE | null = await localforage.getItem("loaded");
+      if (vfe) {
+        const convertedVFE = await convertVFE(vfe, convertLocalToNetwork);
+        loadCreatedVFE(convertedVFE);
+      }
+    }
+  }
+
   return (
     <Routes>
       <Route
@@ -42,6 +58,9 @@ function AppRoot() {
           <LandingPage
             onLoadTestVFE={handleLoadTestVFE}
             onCreateVFE={handleCreateVFE}
+            onLoadVFE={(file) => {
+              void handleLoadVFE(file);
+            }}
           />
         }
       />
