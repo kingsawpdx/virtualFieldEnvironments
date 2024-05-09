@@ -397,8 +397,8 @@ function PhotosphereEditor({
           key={updateTrigger}
           vfe={vfe}
         />
-      </CssBaseline>
-    </Box>
+      </div>
+    </div>
   );
 }
 
