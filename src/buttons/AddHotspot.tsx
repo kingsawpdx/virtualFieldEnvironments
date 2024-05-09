@@ -49,6 +49,33 @@ function ContentInput({ contentType, onChangeContent }: ContentInputProps) {
         />
       );
       break;
+    case "Quiz":
+      label = (
+        <div>
+          <label htmlFor="question">Question: </label>
+          <input
+            type="text"
+            id="question"
+            onChange={(e) => {
+              onChangeContent(e.target.value);
+            }}
+          />
+        </div>
+      );
+      input = (
+        <div style={{display:'block'}}>
+          <label htmlFor="answer">Answers: </label>
+          <input
+            type="text"
+            id="answer"
+            onChange={(e) => {
+              onChangeContent(e.target.value);
+            }}
+          />
+        </div>
+      );
+      break;
+
     default:
       label = <label htmlFor="content"></label>;
       input = (
@@ -119,6 +146,13 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
           tag: "PhotosphereLink",
           photosphereID: content,
         };
+        break; 
+      case "Quiz":
+        data = {
+          tag: "Quiz",
+          question: content,
+          answer: content,
+        };
         break;
       // should never actually get here
       default:
@@ -178,6 +212,7 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
           <option value="URL">URL</option>
           <option value="Doc">Document</option>
           <option value="PhotosphereLink">Photosphere Link</option>
+          <option value="Quiz">Quiz</option>
         </select>
       </div>
       <div>

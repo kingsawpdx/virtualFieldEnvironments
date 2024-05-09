@@ -1,4 +1,5 @@
 import { ArrowBack, Close } from "@mui/icons-material";
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -21,6 +22,8 @@ interface HotspotContentProps {
 }
 
 function HotspotContent(props: HotspotContentProps) {
+  const [answer, setAnswer] = useState(""); // State to hold the answer
+  const [feedback, setFeedback] = useState("");
   switch (props.hotspot.tag) {
     case "Image": {
       return (
@@ -68,6 +71,34 @@ function HotspotContent(props: HotspotContentProps) {
       break;
     case "URL":
       break;
+    case "Quiz":
+      const hotspotAnswer = props.hotspot.answer;
+      return (
+        <div>
+          
+          <p>Question: {props.hotspot.question}</p>
+          <input
+            type="text"
+            value={answer}
+            onChange={(e) => setAnswer(e.target.value)}
+          />
+          <button
+            onClick={() => {
+              if (
+                answer.trim().toLowerCase() ===
+                hotspotAnswer.trim().toLowerCase()
+              ) {
+                setFeedback("Correct!");
+              } else {
+                setFeedback("Incorrect! Try again.");
+              }
+            }}
+          >
+            Submit
+          </button>
+          <p>{feedback}</p>
+        </div>
+      );
     default:
       break;
   }

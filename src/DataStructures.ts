@@ -65,7 +65,7 @@ export interface Hotspot3D {
 }
 
 // HotspotData: types of media resources for a hotspot within a photosphere
-export type HotspotData = Image | Audio | Video | URL | Doc | PhotosphereLink;
+export type HotspotData = Image | Audio | Video | URL | Doc | PhotosphereLink | Quiz;
 
 // media objects
 export interface Image {
@@ -97,4 +97,10 @@ export interface Doc {
 export interface PhotosphereLink {
   tag: "PhotosphereLink";
   photosphereID: string;
+}
+
+export interface Quiz {
+  tag: "Quiz";
+  question: string;
+  answer: string;
 }

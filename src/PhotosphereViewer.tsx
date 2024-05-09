@@ -60,6 +60,8 @@ function convertHotspots(hotspots: Record<string, Hotspot3D>): MarkerConfig[] {
         break;
       case "URL":
         break;
+      case "Quiz":
+        break;
       default:
         break;
     }
