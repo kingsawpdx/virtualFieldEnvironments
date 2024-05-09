@@ -1,6 +1,6 @@
-import AttachFileIcon from "@mui/icons-material/AttachFile";
+// import AttachFileIcon from "@mui/icons-material/AttachFile";
 import { Button, Stack, TextField, Typography } from "@mui/material";
-import { MuiFileInput } from "mui-file-input";
+// import { MuiFileInput } from "mui-file-input";
 import { useState } from "react";
 
 import { VFE } from "./DataStructures.ts";
@@ -75,7 +75,7 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
   // Add styling to input interface
   return (
     <Stack sx={{ width: 450, margin: "auto", paddingTop: 20 }} spacing={3}>
-      <Header />
+      {/* <Header /> */}
       <Typography variant="h4">Create a New VFE</Typography>
       <Stack direction="row" spacing={"auto"}>
         <TextField
@@ -92,14 +92,14 @@ function CreateVFEForm({ onCreateVFE }: CreateVFEFormProps) {
             setPhotosphereName(e.target.value);
           }}
         />
-      </div>
+      </Stack>
       <div>
         <label htmlFor="panoImage">Panorama Image:</label>
         <input
           type="file"
           id="panoImage"
           accept="image/*"
-          onChange={handleImageChange}
+          onChange={() => handleImageChange}
         />
       </div>
       <div>
