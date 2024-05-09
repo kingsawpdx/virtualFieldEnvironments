@@ -83,7 +83,7 @@ function PhotosphereEditor({
     navigate(id, { replace: true });
   }
 
-  // Update the VFE
+  // Add photosphere
   function handleAddPhotosphere(newPhotosphere: Photosphere) {
     const updatedVFE: VFE = {
       ...vfe,
@@ -99,6 +99,7 @@ function PhotosphereEditor({
     setUpdateTrigger((prev) => prev + 1);
   }
 
+  // Add NavMap
   function handleCreateNavMap(updatedNavMap: NavMap) {
     const updatedVFE: VFE = {
       ...vfe,
@@ -110,6 +111,7 @@ function PhotosphereEditor({
     setUpdateTrigger((prev) => prev + 1);
   }
 
+  // Add hotspot
   function handleAddHotspot(newHotspot: Hotspot3D) {
     const photosphere: Photosphere = vfe.photospheres[photosphereID];
 
@@ -121,6 +123,7 @@ function PhotosphereEditor({
     setUpdateTrigger((prev) => prev + 1);
   }
 
+  // Get hotspot location
   function handleLocation(vpitch: number, vyaw: number) {
     setPitch(radToDeg(vpitch));
     setYaw(radToDeg(vyaw));
@@ -144,7 +147,6 @@ function PhotosphereEditor({
         <AddNavmap onCreateNavMap={handleCreateNavMap} onClose={resetStates} />
       );
     // Below this you will have your conditional for your own component, ie AddNavmap/AddHotspot
-    // Below this you will have your conditional for your own component, ie AddNavmap/AddHotspot
     if (showAddHotspot)
       return (
         <AddHotspot
@@ -157,21 +159,23 @@ function PhotosphereEditor({
     return null;
   }
 
+  // Save VFE
   async function handleSave() {
     const convertedVFE = await convertVFE(vfe, convertNetworkToLocal);
     await save(convertedVFE);
   }
 
+  // Edit audio
   function handleAudioChange(event: React.ChangeEvent<HTMLInputElement>) {
     AddAudio(event, setAudio, vfe); // Call the AddAudio function to handle audio change
   }
 
-  // Function to handle name change
+  // Edit photosphere
   function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
     setNewName(event.target.value);
   }
 
-  // Function to handle background change
+  // Edit background
   function handleBackgroundChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (file) {
@@ -179,6 +183,7 @@ function PhotosphereEditor({
     }
   }
 
+  // Add a new hotspot to the photosphere
   function updateHotspots(
     photosphere: Photosphere,
     currentPS: string,
@@ -416,63 +421,5 @@ function PhotosphereEditor({
     </div>
   );
 }
-
-// <div style={{ display: "flex", height: "100vh", position: "relative" }}>
-//   <div
-//     style={{
-//       position: "absolute",
-//       zIndex: 1000,
-//       left: "20px",
-//       top: "20px",
-//       display: "flex",
-//       flexDirection: "column",
-//       background: "rgba(255, 255, 255, 0.8)",
-//       borderRadius: "8px",
-//       padding: "10px",
-//     }}
-//   >
-//     <button
-//       style={{ margin: "10px 0" }}
-//       onClick={() => {
-//         resetStates();
-//         setShowAddPhotosphere(true);
-//       }}
-//     >
-//       Add New Photosphere
-//     </button>
-//     <button
-//       style={{ margin: "10px 0" }}
-//       onClick={() => {
-//         resetStates();
-//         setShowAddNavMap(true); // Set state to show AddNavmap
-//         //Call your setShowAddNavmap function to set the state and display the function
-//       }}
-//     >
-//       {vfe.map ? "Change NavMap" : "Add New NavMap"}
-//     </button>
-//     <button
-//       style={{ margin: "10px 0" }}
-//       onClick={() => {
-//         resetStates();
-//         //Call your setShowAddHotspot function to set the state and display the function
-//         setShowAddHotspot(true);
-//       }}
-//     >
-//       Add New Hotspot
-//     </button>
-//   </div>
-//   <div style={{ width: "100%", height: "100%" }}>
-//     <PhotosphereViewer
-//       currentPS={currentPS}
-//       onChangePS={onChangePS}
-//       onViewerClick={handleLocation}
-//       key={updateTrigger}
-//       vfe={vfe}
-//     />
-//     <ActiveComponent />
-//   </div>
-// </div>
-//   );
-// }
 
 export default PhotosphereEditor;
