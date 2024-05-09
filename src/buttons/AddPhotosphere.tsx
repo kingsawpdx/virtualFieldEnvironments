@@ -113,7 +113,9 @@ function AddPhotosphere({
       src: { tag: "Network", path: panoImage },
       center: photosphereCenter ?? undefined,
       hotspots: {},
-      backgroundAudio: { tag: "Network", path: audioFile },
+      backgroundAudio: audioFile
+        ? { tag: "Network", path: audioFile }
+        : undefined,
     };
 
     // Pass newPhotosphere back to parent to update VFE
