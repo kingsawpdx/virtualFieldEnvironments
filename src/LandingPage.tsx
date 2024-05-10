@@ -1,5 +1,4 @@
 import { Stack } from "@mui/material";
-import Dropzone from "react-dropzone";
 
 import FileDropzone from "./FileDropzone";
 import Header from "./Header";

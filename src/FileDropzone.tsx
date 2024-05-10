@@ -33,7 +33,7 @@ function FileDropzone({ onUploadVFE }: FileDropzoneProps) {
             }}
           >
             <input {...getInputProps()} />
-            <p style={{ margin: "auto" }}>Drag 'n' drop a VFE zip or click</p>
+            <p style={{ margin: "auto" }}>Drag and drop a VFE zip or click</p>
           </div>
         </section>
       )}
