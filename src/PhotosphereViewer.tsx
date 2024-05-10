@@ -34,6 +34,7 @@ import {
 import PhotosphereSelector from "./PhotosphereSelector";
 import PopOver from "./PopOver";
 
+// modified from https://mui.com/material-ui/react-switch/#customization 'iOS style'
 const StyledSwitch = styled((props: SwitchProps) => (
   <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
 ))(({ theme }) => ({
