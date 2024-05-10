@@ -2,6 +2,7 @@ import { Stack } from "@mui/material";
 
 import FileDropzone from "./FileDropzone";
 import Header from "./Header";
+import VFEList from "./VFEList";
 
 interface LandingPageProps {
   onLoadTestVFE: () => void;
@@ -19,6 +20,7 @@ function LandingPage({
       <Header onCreateVFE={onCreateVFE} onLoadTestVFE={onLoadTestVFE} />
       <Stack sx={{ width: "80%", margin: "auto", padding: 2 }}>
         <FileDropzone onUploadVFE={onLoadVFE} />
+        <VFEList />
       </Stack>
     </>
   );

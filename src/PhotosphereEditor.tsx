@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
 
 import { Hotspot3D, NavMap, Photosphere, VFE } from "./DataStructures.ts";
 import { save } from "./FileOperations.ts";
@@ -25,23 +24,20 @@ function radToDeg(num: number): number {
 
 // Properties passed down from parent
 interface PhotosphereEditorProps {
-  parentVFE: VFE;
+  vfe: VFE;
   onUpdateVFE: (updatedVFE: VFE) => void;
+  currentPS: string;
+  onChangePS: (id: string) => void;
 }
 
 // If an update is triggered, add newPhotosphere, and update VFE
 function PhotosphereEditor({
-  parentVFE,
+  vfe,
   onUpdateVFE,
+  currentPS,
+  onChangePS,
 }: PhotosphereEditorProps): JSX.Element {
-  const { photosphereID } = useParams() as {
-    vfeID: string;
-    photosphereID: string;
-  };
-  const navigate = useNavigate();
-
   // Base states
-  const [vfe, setVFE] = useState<VFE>(parentVFE);
   const [showAddPhotosphere, setShowAddPhotosphere] = useState(false);
   const [updateTrigger, setUpdateTrigger] = useState(0);
   const [showAddNavMap, setShowAddNavMap] = useState(false); // State to manage whether to show AddNavmap
@@ -59,11 +55,6 @@ function PhotosphereEditor({
 
   console.log(vfe);
 
-  // Change URL to reflect current photosphere
-  function onChangePS(id: string) {
-    navigate(id, { replace: true });
-  }
-
   // Update the VFE
   function handleAddPhotosphere(newPhotosphere: Photosphere) {
     const updatedVFE: VFE = {
@@ -73,7 +64,6 @@ function PhotosphereEditor({
         [newPhotosphere.id]: newPhotosphere,
       },
     };
-    setVFE(updatedVFE); // Update the local VFE state
     onUpdateVFE(updatedVFE); // Propagate the change to the AppRoot
     onChangePS(newPhotosphere.id); // Switch to new photosphere
     setShowAddPhotosphere(false);
@@ -85,18 +75,16 @@ function PhotosphereEditor({
       ...vfe,
       map: updatedNavMap,
     };
-    setVFE(updatedVFE); // Update the local VFE state
     onUpdateVFE(updatedVFE); // Propagate the change to the parent component
     setShowAddNavMap(false); // Close the AddNavMap component
     setUpdateTrigger((prev) => prev + 1);
   }
 
   function handleAddHotspot(newHotspot: Hotspot3D) {
-    const photosphere: Photosphere = vfe.photospheres[photosphereID];
+    const photosphere: Photosphere = vfe.photospheres[currentPS];
 
     photosphere.hotspots[newHotspot.tooltip] = newHotspot;
 
-    setVFE(vfe);
     onUpdateVFE(vfe);
     setShowAddHotspot(false);
     setUpdateTrigger((prev) => prev + 1);
@@ -138,7 +126,7 @@ function PhotosphereEditor({
     return null;
   }
 
-  async function handleSave() {
+  async function handleExport() {
     const convertedVFE = await convertVFE(vfe, convertNetworkToLocal);
     await save(convertedVFE);
   }
@@ -184,18 +172,18 @@ function PhotosphereEditor({
   // Function to handle submit button click for name change
   function handleSubmitName() {
     if (newName.trim() !== "") {
-      const currentPhotosphere = vfe.photospheres[photosphereID];
+      const currentPhotosphere = vfe.photospheres[currentPS];
 
       //making updated photosphere list minus the currentPS
       const updatedPhotospheres: Record<string, Photosphere> =
         Object.fromEntries(
           Object.entries(vfe.photospheres)
-            .filter(([key]) => key !== photosphereID)
+            .filter(([key]) => key !== currentPS)
             .map(([key, photosphere]) => {
               // update hotspots in the current photosphere
               const updatedPhotosphere = updateHotspots(
                 photosphere,
-                photosphereID,
+                currentPS,
                 newName,
               );
               return [key, updatedPhotosphere];
@@ -206,7 +194,7 @@ function PhotosphereEditor({
       updatedPhotospheres[newName] = { ...currentPhotosphere, id: newName };
 
       const updatedDefaultPhotosphereID =
-        vfe.defaultPhotosphereID === photosphereID
+        vfe.defaultPhotosphereID === currentPS
           ? newName
           : vfe.defaultPhotosphereID;
 
@@ -217,7 +205,7 @@ function PhotosphereEditor({
       };
 
       onChangePS(newName); //set currentPS index to new name to access it correctly moving forward
-      setVFE(updatedVFE);
+
       onUpdateVFE(updatedVFE);
       setUpdateTrigger((prev) => prev + 1);
       setNewName("");
@@ -227,10 +215,10 @@ function PhotosphereEditor({
   // Function to handle submit button click for background change
   function handleSubmitBackground() {
     if (newBackground.trim() !== "") {
-      const currentPhotosphere = vfe.photospheres[photosphereID];
+      const currentPhotosphere = vfe.photospheres[currentPS];
       const updatedPhotospheres = { ...vfe.photospheres };
 
-      updatedPhotospheres[photosphereID] = {
+      updatedPhotospheres[currentPS] = {
         ...currentPhotosphere,
         src: { tag: "Network", path: newBackground },
       };
@@ -240,7 +228,6 @@ function PhotosphereEditor({
         photospheres: updatedPhotospheres,
       };
 
-      setVFE(updatedVFE);
       onUpdateVFE(updatedVFE);
       setUpdateTrigger((prev) => prev + 1);
     }
@@ -284,10 +271,10 @@ function PhotosphereEditor({
             <button
               style={{ margin: "10px 0" }}
               onClick={() => {
-                void handleSave();
+                void handleExport();
               }}
             >
-              Save
+              Export
             </button>
           </>
         )}
@@ -387,7 +374,7 @@ function PhotosphereEditor({
       </div>
       <div style={{ width: "100%", height: "100%" }}>
         <PhotosphereViewer
-          currentPS={photosphereID}
+          currentPS={currentPS}
           onChangePS={onChangePS}
           onViewerClick={handleLocation}
           key={updateTrigger}
