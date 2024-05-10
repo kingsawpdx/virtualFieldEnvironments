@@ -97,8 +97,9 @@ function AddNavMap({ onCreateNavMap, onClose }: AddNavMapProps): JSX.Element {
           startAdornment: <AttachFileIcon />,
         }}
       />
-      <Stack direction="row">
+      <Stack direction="row" sx={{ justifyContent: "space-between" }}>
         <Button
+          variant="contained"
           onClick={() => {
             void handleCreateNavMap();
           }}
@@ -106,7 +107,7 @@ function AddNavMap({ onCreateNavMap, onClose }: AddNavMapProps): JSX.Element {
         >
           Create
         </Button>
-        <Button onClick={onClose} sx={{ width: "49%" }}>
+        <Button variant="outlined" onClick={onClose} sx={{ width: "49%" }}>
           Cancel
         </Button>
       </Stack>

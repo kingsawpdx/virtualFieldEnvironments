@@ -243,10 +243,14 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
       </FormControl>
       <ContentInput contentType={contentType} onChangeContent={setContent} />
       <Stack direction="row" sx={{ justifyContent: "space-between" }}>
-        <Button style={{ width: "49%" }} onClick={handleAddHotspot}>
+        <Button
+          variant="contained"
+          style={{ width: "49%" }}
+          onClick={handleAddHotspot}
+        >
           Create
         </Button>
-        <Button style={{ width: "49%" }} onClick={onCancel}>
+        <Button variant="outlined" style={{ width: "49%" }} onClick={onCancel}>
           Cancel
         </Button>
       </Stack>

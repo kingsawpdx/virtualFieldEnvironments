@@ -179,7 +179,9 @@ function AddPhotosphere({
         }}
       />
       <PhotosphereCenterFieldset setPhotosphereCenter={setPhotosphereCenter} />
-      <Button onClick={handlePhotosphereAdd}>Add Photosphere</Button>
+      <Button variant="contained" onClick={handlePhotosphereAdd}>
+        Add Photosphere
+      </Button>
     </Stack>
   );
 }
