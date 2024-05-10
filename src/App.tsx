@@ -63,6 +63,10 @@ function AppRoot() {
             onCreateVFE={(data) => {
               void loadCreatedVFE(data);
             }}
+            header={{
+              onLoadTestVFE: handleLoadTestVFE,
+              onCreateVFE: handleCreateVFE,
+            }}
           />
         }
       />

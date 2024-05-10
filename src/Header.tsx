@@ -1,6 +1,4 @@
 import {
-  DesktopWindowsSharp,
-  EditSharp,
   ExitToAppSharp,
   LibraryAddSharp,
   TerrainSharp,
@@ -14,7 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 
-interface HeaderProps {
+export interface HeaderProps {
   onCreateVFE: () => void;
   onLoadTestVFE: () => void;
 }
@@ -34,19 +32,9 @@ function Header({ onCreateVFE, onLoadTestVFE }: HeaderProps) {
           </Typography>
         </Stack>
         <Stack direction="row">
-          <Tooltip title="View">
-            <IconButton>
-              <DesktopWindowsSharp sx={{ color: "primary.contrastText" }} />
-            </IconButton>
-          </Tooltip>
           <Tooltip title="Create">
             <IconButton onClick={onCreateVFE}>
               <LibraryAddSharp sx={{ color: "primary.contrastText" }} />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Edit">
-            <IconButton>
-              <EditSharp sx={{ color: "primary.contrastText" }} />
             </IconButton>
           </Tooltip>
           <Stack sx={{ justifyContent: "space-around", paddingRight: "10px" }}>
