@@ -250,7 +250,7 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
         >
           Create
         </Button>
-        <Button variant="outlined" style={{ width: "49%" }} onClick={onCancel}>
+        <Button variant="outlined" sx={{ width: "49%" }} onClick={onCancel}>
           Cancel
         </Button>
       </Stack>

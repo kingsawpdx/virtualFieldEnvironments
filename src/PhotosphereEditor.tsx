@@ -108,7 +108,12 @@ function PhotosphereEditor({
   // This function is where we render the actual component based on the useState
   function ActiveComponent() {
     if (showAddPhotosphere)
-      return <AddPhotosphere onAddPhotosphere={handleAddPhotosphere} />;
+      return (
+        <AddPhotosphere
+          onAddPhotosphere={handleAddPhotosphere}
+          onCancel={resetStates}
+        />
+      );
     if (showAddNavMap)
       return (
         <AddNavmap onCreateNavMap={handleCreateNavMap} onClose={resetStates} />

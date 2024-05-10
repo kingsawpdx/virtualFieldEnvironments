@@ -72,11 +72,13 @@ export function PhotosphereCenterFieldset({
 // Properties passed down from parent
 interface AddPhotosphereProps {
   onAddPhotosphere: (newPhotosphere: Photosphere) => void;
+  onCancel: () => void;
 }
 
 // Create new photosphere
 function AddPhotosphere({
   onAddPhotosphere,
+  onCancel,
 }: AddPhotosphereProps): JSX.Element {
   // Base states
   const [photosphereID, setPhotosphereID] = useState("");
@@ -179,9 +181,18 @@ function AddPhotosphere({
         }}
       />
       <PhotosphereCenterFieldset setPhotosphereCenter={setPhotosphereCenter} />
-      <Button variant="contained" onClick={handlePhotosphereAdd}>
-        Add Photosphere
-      </Button>
+      <Stack direction="row" sx={{ justifyContent: "space-between" }}>
+        <Button
+          variant="contained"
+          sx={{ width: "49%" }}
+          onClick={handlePhotosphereAdd}
+        >
+          Create
+        </Button>
+        <Button variant="outlined" sx={{ width: "49%" }} onClick={onCancel}>
+          Cancel
+        </Button>
+      </Stack>
     </Stack>
   );
 }
