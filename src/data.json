@@ -47,6 +47,37 @@
             "hotspots": {}
           }
         },
+        "URLDemo": {
+          "pitch": -10,
+          "yaw": 0,
+          "tooltip": "URLDemo",
+          "data": {
+            "tag": "URL",
+            "src": "https://virtual-field-environments.vercel.app/",
+            "hotspots": {}
+          }
+        },
+        "Audio Demo - FrogChorus.mp3": {
+          "pitch": -10,
+          "yaw": 10,
+          "tooltip": "Audio Demo - FrogChorus.mp3",
+          "data": {
+            "tag": "Audio",
+            "src": {
+              "tag": "Network",
+              "path": "/VFEdata/FrogChorus.LS100206.mp3"
+            }
+          }
+        },
+        "Document Demo - VFE Guidelines": {
+          "pitch": -10,
+          "yaw": 20,
+          "tooltip": "Document Demo - VFE Guidelines",
+          "data": {
+            "tag": "Doc",
+            "content": "/VFEdata/General guide - Virtual Field Environments for Student-based Inquiry.pdf"
+          }
+        },
         "ShorelineSOUTH.mp4": {
           "pitch": -32,
           "yaw": 172,
