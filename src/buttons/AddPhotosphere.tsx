@@ -119,7 +119,7 @@ function AddPhotosphere({
       center: photosphereCenter ?? undefined,
       hotspots: {},
       backgroundAudio: audioFileStr
-        ? { tag: "Network", path: audioFile }
+        ? { tag: "Network", path: audioFileStr }
         : undefined,
     };
 
@@ -170,7 +170,6 @@ function AddPhotosphere({
         }}
       />
       <MuiFileInput
-        required
         placeholder="Upload Background Audio"
         value={audioFile}
         onChange={handleAudioChange}
