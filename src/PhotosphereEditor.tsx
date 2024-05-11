@@ -78,15 +78,31 @@ function PhotosphereEditor({
     // Create a new object without the removed photosphere
     const { [photosphereId]: removedPhotosphere, ...remainingPhotospheres } =
       vfe.photospheres;
+
+    if (Object.keys(remainingPhotospheres).length === 0) {
+      // No more photospheres available
+      alert("No more photospheres available.");
+      navigate("/"); // Redirect to home or a suitable default page
+      return;
+    }
+
+    // Take the next photosphere's ID or the first one from the object keys
+    const nextPhotosphereId = Object.keys(remainingPhotospheres)[0];
+
     const updatedVFE: VFE = {
       ...vfe,
       photospheres: remainingPhotospheres,
+      defaultPhotosphereID:
+        photosphereID === vfe.defaultPhotosphereID
+          ? nextPhotosphereId
+          : vfe.defaultPhotosphereID,
     };
 
     setVFE(updatedVFE); // Update local state
     onUpdateVFE(updatedVFE); // Propagate changes to parent if necessary
-
     // After updating the state
+    setUpdateTrigger((prev) => prev + 1);
+    onChangePS(nextPhotosphereId);
     handleCloseRemovePhotosphere(); // Close the RemovePhotosphere modal or component
   }
 
