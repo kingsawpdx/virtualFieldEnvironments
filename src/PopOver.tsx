@@ -1,4 +1,4 @@
-import { ArrowBack, Close } from "@mui/icons-material";
+import { ArrowBack, Close, Delete } from "@mui/icons-material";
 import {
   Dialog,
   DialogContent,
@@ -80,6 +80,7 @@ export interface PopOverProps {
   pushHotspot: (add: Hotspot2D) => void;
   popHotspot: () => void;
   closeAll: () => void;
+  isEditorMode: boolean;
 }
 
 function PopOver(props: PopOverProps) {
@@ -93,7 +94,18 @@ function PopOver(props: PopOverProps) {
       <DialogTitle id="alert-dialog-title">
         <Stack direction="row" alignItems="center">
           <Box flexGrow={1}>{props.title}</Box>
-
+          {props.isEditorMode && (
+            <Tooltip title="Delete Hotspot" placement="top">
+              <IconButton
+                onClick={() => {
+                  // This is where the delete functionality will go
+                  console.log("Delete clicked"); // For now, it just logs to the console
+                }}
+              >
+                <Delete />
+              </IconButton>
+            </Tooltip>
+          )}
           {props.arrayLength > 1 && (
             <Tooltip title="Back" placement="top">
               <IconButton

@@ -141,6 +141,7 @@ export interface PhotosphereViewerProps {
   currentPS: string;
   onChangePS: (id: string) => void;
   onViewerClick?: (pitch: number, yaw: number) => void;
+  isEditorMode: boolean;
 }
 
 function PhotosphereViewer({
@@ -148,6 +149,7 @@ function PhotosphereViewer({
   currentPS,
   onChangePS,
   onViewerClick,
+  isEditorMode,
 }: PhotosphereViewerProps) {
   const photoSphereRef = React.createRef<ViewerAPI>();
   const [currentPhotosphere, setCurrentPhotosphere] =
@@ -292,6 +294,7 @@ function PhotosphereViewer({
           closeAll={() => {
             setHotspotArray([]);
           }}
+          isEditorMode={isEditorMode}
         />
       )}
 

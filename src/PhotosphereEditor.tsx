@@ -531,6 +531,7 @@ function PhotosphereEditor({
           onViewerClick={handleLocation}
           key={updateTrigger}
           vfe={vfe}
+          isEditorMode={true}
         />
         <ActiveComponent />
       </div>
