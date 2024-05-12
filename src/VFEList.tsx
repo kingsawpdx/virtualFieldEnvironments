@@ -63,7 +63,7 @@ function VFEList() {
   }
 
   return (
-    <Container>
+    <Container sx={{ padding: 3 }}>
       <Grid container spacing={3} alignItems="center" justifyContent="center">
         {names.map((name) => (
           <Grid item key={name} xs={12} sm={6} md={4} lg={3}>

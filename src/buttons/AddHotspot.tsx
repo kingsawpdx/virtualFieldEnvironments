@@ -1,4 +1,16 @@
-import React, { useState } from "react";
+import AttachFileIcon from "@mui/icons-material/AttachFile";
+import {
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { MuiFileInput } from "mui-file-input";
+import { useState } from "react";
 
 import { Hotspot3D, HotspotData } from "../DataStructures.ts";
 
@@ -8,61 +20,90 @@ interface ContentInputProps {
 }
 
 function ContentInput({ contentType, onChangeContent }: ContentInputProps) {
-  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
+  const [contentFile, setContentFile] = useState<File | null>(null); // for MuiFileInput
+
+  function handleFileChange(file: File | null) {
     if (file) {
+      setContentFile(file);
       onChangeContent(URL.createObjectURL(file));
     }
   }
 
-  let label;
-  let input;
   switch (contentType) {
     case "Image":
+      return (
+        <MuiFileInput
+          required
+          placeholder="Upload Image *"
+          value={contentFile}
+          onChange={handleFileChange}
+          inputProps={{ accept: "image/*" }}
+          InputProps={{
+            startAdornment: <AttachFileIcon />,
+          }}
+        />
+      );
     case "Video":
+      return (
+        <MuiFileInput
+          required
+          placeholder="Upload Video *"
+          value={contentFile}
+          onChange={handleFileChange}
+          inputProps={{ accept: "video/*" }}
+          InputProps={{
+            startAdornment: <AttachFileIcon />,
+          }}
+        />
+      );
     case "Audio":
-      label = <label htmlFor="content">Content: </label>;
-      input = <input type="file" id="content" onChange={handleFileChange} />;
-      break;
+      return (
+        <MuiFileInput
+          required
+          placeholder="Upload Audio *"
+          value={contentFile}
+          onChange={handleFileChange}
+          inputProps={{ accept: "audio/*" }}
+          InputProps={{
+            startAdornment: <AttachFileIcon />,
+          }}
+        />
+      );
     case "Doc":
+      return (
+        <TextField
+          required
+          label="Content"
+          onChange={(e) => {
+            onChangeContent(e.target.value);
+          }}
+        />
+      );
     case "URL":
-      label = <label htmlFor="content">Content: </label>;
-      input = (
-        <input
-          type="string"
-          id="content"
+      return (
+        <TextField
+          required
+          label="URL"
           onChange={(e) => {
             onChangeContent(e.target.value);
           }}
         />
       );
-      break;
     case "PhotosphereLink":
-      label = <label htmlFor="content">Photosphere Name: </label>;
-      input = (
-        <input
-          type="string"
-          id="content"
+      return (
+        <TextField
+          required
+          label="Photosphere ID"
           onChange={(e) => {
             onChangeContent(e.target.value);
           }}
         />
       );
-      break;
     default:
-      label = <label htmlFor="content"></label>;
-      input = (
-        <span id="content">First select a content type to add content</span>
-      );
+      return <Typography>Please select a valid content type</Typography>;
   }
-
-  return (
-    <>
-      {label}
-      {input}
-    </>
-  );
 }
+
 interface AddHotspotProps {
   onAddHotspot: (newHotspot: Hotspot3D) => void;
   onCancel: () => void;
@@ -137,8 +178,8 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
   }
 
   return (
-    <div
-      style={{
+    <Stack
+      sx={{
         position: "absolute",
         zIndex: 1000,
         right: "20px",
@@ -148,58 +189,72 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
         background: "rgba(255, 255, 255, 0.8)",
         borderRadius: "8px",
         padding: "10px",
+        justifyContent: "space-between",
+        height: "360px",
+        width: "275px",
       }}
     >
-      <h4 style={{ textAlign: "center" }}>Add A Hotspot</h4>
-      <div>
-        <label htmlFor="tooptip">Tooltip: </label>
-        <input
-          type="string"
-          id="tooltip"
-          value={tooltip}
-          onChange={(e) => {
-            setTooltip(e.target.value);
+      <Typography variant="h5" sx={{ textAlign: "center" }}>
+        Add a Hotspot
+      </Typography>
+      <Typography>Click on viewer for pitch and yaw</Typography>
+      <Stack direction="row" sx={{ justifyContent: "space-between" }}>
+        <TextField
+          label="Pitch"
+          InputProps={{
+            readOnly: true,
           }}
+          defaultValue={String(pitch.toFixed(2))}
+          sx={{ width: "49%" }}
         />
-      </div>
-      <div>
-        <label htmlFor="contentType">Content Type: </label>
-        <select
-          name="contentType"
-          id="contentType"
+        <TextField
+          label="Yaw"
+          InputProps={{
+            readOnly: true,
+          }}
+          defaultValue={String(yaw.toFixed(2))}
+          sx={{ width: "49%" }}
+        />
+      </Stack>
+      <TextField
+        label="tooltip"
+        onChange={(e) => {
+          setTooltip(e.target.value);
+        }}
+      />
+      <FormControl>
+        <InputLabel id="contentType">Content Type</InputLabel>
+        <Select
+          labelId="contentType"
+          value={contentType}
+          label="Content Type"
           onChange={(e) => {
             setContentType(e.target.value);
           }}
         >
-          <option value="invalid">-- Select --</option>
-          <option value="Image">Image</option>
-          <option value="Video">Video</option>
-          <option value="Audio">Audio</option>
-          <option value="URL">URL</option>
-          <option value="Doc">Document</option>
-          <option value="PhotosphereLink">Photosphere Link</option>
-        </select>
-      </div>
-      <div>
-        <ContentInput contentType={contentType} onChangeContent={setContent} />
-      </div>
-      <div>
-        <span>Pitch: </span>
-        <span id="pitch">{String(pitch.toFixed(2))}</span>
-        <span>Yaw: </span>
-        <span id="yaw">{String(yaw.toFixed(2))}</span>
-        <br />
-        <span>Click on viewer for pitch and yaw</span>
-      </div>
-      <div style={{ display: "flex", justifyContent: "space-around" }}>
-        <button style={{ width: "40%" }} onClick={handleAddHotspot}>
+          <MenuItem value="invalid">-- Select --</MenuItem>
+          <MenuItem value="Image">Image</MenuItem>
+          <MenuItem value="Video">Video</MenuItem>
+          <MenuItem value="Audio">Audio</MenuItem>
+          <MenuItem value="URL">URL</MenuItem>
+          <MenuItem value="Doc">Document</MenuItem>
+          <MenuItem value="PhotosphereLink">Photosphere Link</MenuItem>
+        </Select>
+      </FormControl>
+      <ContentInput contentType={contentType} onChangeContent={setContent} />
+      <Stack direction="row" sx={{ justifyContent: "space-between" }}>
+        <Button
+          variant="contained"
+          style={{ width: "49%" }}
+          onClick={handleAddHotspot}
+        >
           Create
-        </button>
-        <button style={{ width: "40%" }} onClick={onCancel}>
+        </Button>
+        <Button variant="outlined" sx={{ width: "49%" }} onClick={onCancel}>
           Cancel
-        </button>
-      </div>
-    </div>
+        </Button>
+      </Stack>
+    </Stack>
   );
 }
 

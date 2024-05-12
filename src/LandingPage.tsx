@@ -1,3 +1,7 @@
+import { Stack } from "@mui/material";
+
+import FileDropzone from "./FileDropzone";
+import Header from "./Header";
 import VFEList from "./VFEList";
 
 interface LandingPageProps {
@@ -11,74 +15,14 @@ function LandingPage({
   onCreateVFE,
   onLoadVFE,
 }: LandingPageProps) {
-  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    if (e.target.files) {
-      onLoadVFE(e.target.files[0]);
-    }
-  }
-
   return (
-    <div
-      style={{
-        height: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        background: "linear-gradient(to right, #4facfe 0%, #00f2fe 100%)",
-      }}
-    >
-      <h1> Welcome to the Virtual Field Enviornment (VFE) </h1>
-      <p> Explore and create virtual field enviornments! </p>
-      <button
-        onClick={onLoadTestVFE}
-        style={{
-          padding: "10px 20px",
-          fontSize: "1rem",
-          cursor: "pointer",
-          margin: "20px",
-          borderRadius: "5px",
-          border: "none",
-          background: "#4facfe",
-          color: "white",
-          boxShadow: "0 4px 14px 0 rgba(0, 0, 0, 0.1)",
-        }}
-      >
-        Load Test VFE
-      </button>
-      <button
-        onClick={onCreateVFE}
-        style={{
-          padding: "10px 20px",
-          fontSize: "1rem",
-          cursor: "pointer",
-          margin: "20px",
-          borderRadius: "5px",
-          border: "none",
-          background: "#4facfe",
-          color: "white",
-          boxShadow: "0 4px 14px 0 rgba(0, 0, 0, 0.1)",
-        }}
-      >
-        Create VFE
-      </button>
-      <input
-        onChange={handleFileChange}
-        style={{
-          padding: "10px 20px",
-          fontSize: "1rem",
-          cursor: "pointer",
-          margin: "20px",
-          borderRadius: "5px",
-          border: "none",
-          background: "#4facfe",
-          color: "white",
-          boxShadow: "0 4px 14px 0 rgba(0, 0, 0, 0.1)",
-        }}
-        type="file"
-      />
-      <VFEList />
-    </div>
+    <>
+      <Header onCreateVFE={onCreateVFE} onLoadTestVFE={onLoadTestVFE} />
+      <Stack sx={{ width: "80%", margin: "auto", padding: 2 }}>
+        <FileDropzone onUploadVFE={onLoadVFE} />
+        <VFEList />
+      </Stack>
+    </>
   );
 }
 
