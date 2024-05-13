@@ -81,6 +81,7 @@ function ContentInput({ contentType, onChangeContent }: ContentInputProps) {
       input = (
         <span id="content">First select a content type to add content</span>
       );
+
   }
 
   return (
@@ -95,12 +96,15 @@ interface AddHotspotProps {
   onCancel: () => void;
   pitch: number;
   yaw: number;
+  level: number;
+  visited: boolean;
 }
 
 function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
   const [tooltip, setTooltip] = useState("");
   const [contentType, setContentType] = useState("invalid");
   const [content, setContent] = useState("");
+  const [level, setLevel] = useState(0); // State for level
 
   function handleAddHotspot() {
     if (tooltip.trim() == "" || contentType == "invalid") {
@@ -165,6 +169,8 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
       yaw: yaw,
       tooltip: tooltip,
       data: data,
+      level: level,
+      visited: false,
     };
 
     onAddHotspot(newHotspot);
@@ -226,6 +232,19 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
         <br />
         <span>Click on viewer for pitch and yaw</span>
       </div>
+
+      <div style={{ display: "flex", justifyContent: "space-around" }}>
+      <label htmlFor="level">Level for level (optional):    </label>
+        <input
+          type="string"
+          id="tooltip"
+          value={level || ""}
+          onChange={(e) => {
+            setLevel(parseInt(e.target.value));
+          }}
+        />
+      </div>
+
       <div style={{ display: "flex", justifyContent: "space-around" }}>
         <button style={{ width: "40%" }} onClick={handleAddHotspot}>
           Create
