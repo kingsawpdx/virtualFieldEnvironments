@@ -24,8 +24,11 @@ interface HotspotContentProps {
 function HotspotContent(props: HotspotContentProps) {
   const [answer, setAnswer] = useState(""); // State to hold the answer
   const [feedback, setFeedback] = useState("");
+
+
   switch (props.hotspot.tag) {
     case "Image": {
+      props.hotspot.visited = true
       return (
         <Box position="relative">
           {Object.values(props.hotspot.hotspots).map((hotspot2D) => (
@@ -61,17 +64,23 @@ function HotspotContent(props: HotspotContentProps) {
       );
     }
     case "Video":
+      props.hotspot.visited = true
       //  "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png"; // changed to make linter happy until icons are ready
       break;
     case "Audio":
+      props.hotspot.visited = true
       break;
     case "Doc":
+      props.hotspot.visited = true
       break;
     case "PhotosphereLink":
+      props.hotspot.visited = true
       break;
     case "URL":
+      props.hotspot.visited = true
       break;
-    case "Quiz":
+    case "Quiz": {
+      props.hotspot.visited = true
       const hotspotAnswer = props.hotspot.answer;
       return (
         <div>
@@ -80,7 +89,7 @@ function HotspotContent(props: HotspotContentProps) {
           <input
             type="text"
             value={answer}
-            onChange={(e) => setAnswer(e.target.value)}
+            onChange={(e) => {setAnswer(e.target.value)}}
           />
           <button
             onClick={() => {
@@ -99,6 +108,7 @@ function HotspotContent(props: HotspotContentProps) {
           <p>{feedback}</p>
         </div>
       );
+          }
     default:
       break;
   }

@@ -96,8 +96,6 @@ interface AddHotspotProps {
   onCancel: () => void;
   pitch: number;
   yaw: number;
-  level: number;
-  visited: boolean;
 }
 
 function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
@@ -119,36 +117,42 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
           tag: "Image",
           src: { tag: "Network", path: content },
           hotspots: {},
+          visited: false,
         };
         break;
       case "Video":
         data = {
           tag: "Video",
           src: { tag: "Network", path: content },
+          visited: false,
         };
         break;
       case "Audio":
         data = {
           tag: "Audio",
           src: { tag: "Network", path: content },
+          visited: false,
         };
         break;
       case "Doc":
         data = {
           tag: "Doc",
           content: content,
+          visited: false,
         };
         break;
       case "URL":
         data = {
           tag: "URL",
           src: content,
+          visited: false,
         };
         break;
       case "PhotosphereLink":
         data = {
           tag: "PhotosphereLink",
           photosphereID: content,
+          visited: false,
         };
         break; 
       case "Quiz":
@@ -156,11 +160,12 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
           tag: "Quiz",
           question: content,
           answer: content,
+          visited: false,
         };
         break;
       // should never actually get here
       default:
-        data = { tag: "URL", src: content };
+        data = { tag: "URL", src: content , visited: false}
         break;
     }
 
@@ -170,7 +175,6 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
       tooltip: tooltip,
       data: data,
       level: level,
-      visited: false,
     };
 
     onAddHotspot(newHotspot);
