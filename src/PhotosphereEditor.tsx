@@ -131,7 +131,7 @@ function PhotosphereEditor({
     if (Object.keys(remainingPhotospheres).length === 0) {
       // No more photospheres available
       alert("No more photospheres available.");
-      navigate("/"); // Redirect to home or a suitable default page
+      navigate("/"); // Redirect to home?
       return;
     }
 
@@ -141,8 +141,8 @@ function PhotosphereEditor({
       defaultPhotosphereID: newDefaultPhotosphereID,
     };
 
-    setVFE(updatedVFE); // Update local state
-    onUpdateVFE(updatedVFE); // Propagate changes to parent if necessary
+    setVFE(updatedVFE);
+    onUpdateVFE(updatedVFE);
     // After updating the state
     setUpdateTrigger((prev) => prev + 1);
     if (photosphereId !== newDefaultPhotosphereID) {
