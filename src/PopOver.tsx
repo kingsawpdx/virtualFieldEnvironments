@@ -81,6 +81,7 @@ export interface PopOverProps {
   popHotspot: () => void;
   closeAll: () => void;
   isEditorMode: boolean;
+  onDeleteHotspot: () => void;
 }
 
 function PopOver(props: PopOverProps) {
@@ -99,7 +100,7 @@ function PopOver(props: PopOverProps) {
               <IconButton
                 onClick={() => {
                   // This is where the delete functionality will go
-                  console.log("Delete clicked"); // For now, it just logs to the console
+                  props.onDeleteHotspot();
                 }}
               >
                 <Delete />

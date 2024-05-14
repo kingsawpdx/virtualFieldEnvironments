@@ -9,6 +9,7 @@ import AddAudio from "./buttons/AddAudio.tsx";
 import AddHotspot from "./buttons/AddHotspot.tsx";
 import AddNavmap from "./buttons/AddNavmap";
 import AddPhotosphere from "./buttons/AddPhotosphere.tsx";
+import RemoveHotspot from "./buttons/RemoveHotspot.tsx";
 import RemoveNavMap from "./buttons/RemoveNavmap.tsx";
 import RemovePhotosphere from "./buttons/RemovePhotosphere.tsx";
 
@@ -62,11 +63,51 @@ function PhotosphereEditor({
 
   const [showRemovePhotosphere, setShowRemovePhotosphere] = useState(false);
   const [showRemoveNavMap, setShowRemoveNavMap] = useState(false);
+  const [showRemoveHotspot, setShowRemoveHotspot] = useState(false);
+  const [hotspotToRemove, setHotspotToRemove] = useState<string | null>(null);
   console.log(vfe);
 
   // Change URL to reflect current photosphere
   function onChangePS(id: string) {
     navigate(id, { replace: true });
+  }
+
+  function handleRemoveHotspotClick(hotspotToRemove: string) {
+    setHotspotToRemove(hotspotToRemove);
+    setShowRemoveHotspot(true);
+  }
+
+  function handleRemoveHotspotConfirm() {
+    if (hotspotToRemove) {
+      const updatedPhotosphere = { ...vfe.photospheres[photosphereID] };
+
+      // Create a new object without the hotspot to remove
+      const remainingHotspots = Object.fromEntries(
+        Object.entries(updatedPhotosphere.hotspots).filter(
+          ([key]) => key !== hotspotToRemove,
+        ),
+      );
+
+      // Update the photosphere with the remaining hotspots
+      const updatedPhotosphereWithHotspots = {
+        ...updatedPhotosphere,
+        hotspots: remainingHotspots,
+      };
+
+      const updatedVFE = {
+        ...vfe,
+        photospheres: {
+          ...vfe.photospheres,
+          [photosphereID]: updatedPhotosphereWithHotspots,
+        },
+      };
+
+      setVFE(updatedVFE); // Update the local VFE state
+      onUpdateVFE(updatedVFE); // Propagate the change to the parent component
+      setShowRemoveHotspot(false); // Close the RemoveHotspot component
+      setHotspotToRemove(null);
+      setUpdateTrigger((prev) => prev + 1);
+    }
   }
 
   function handleRemovePhotosphere(photosphereId: string) {
@@ -76,8 +117,9 @@ function PhotosphereEditor({
     }
 
     // Create a new object without the removed photosphere
-    const { [photosphereId]: removedPhotosphere, ...remainingPhotospheres } =
-      vfe.photospheres;
+    const remainingPhotospheres = Object.fromEntries(
+      Object.entries(vfe.photospheres).filter(([key]) => key !== photosphereId),
+    );
 
     const nextPhotosphereId = Object.keys(remainingPhotospheres)[0];
 
@@ -201,6 +243,13 @@ function PhotosphereEditor({
           onRemoveNavmap={handleRemoveNavMap}
         />
       );
+    if (showRemoveHotspot)
+      return (
+        <RemoveHotspot
+          onClose={handleCloseHotspotRemove}
+          onRemoveHotspot={handleRemoveHotspotConfirm}
+        />
+      );
     return null;
   }
 
@@ -236,6 +285,11 @@ function PhotosphereEditor({
   function handleCloseRemovePhotosphere() {
     setShowRemovePhotosphere(false); // Set the state to false to hide the RemovePhotosphere component
   }
+
+  function handleCloseHotspotRemove() {
+    setShowRemoveHotspot(false);
+  }
+
   function handleCloseRemoveNavMap() {
     setShowRemoveNavMap(false);
   }
@@ -447,14 +501,6 @@ function PhotosphereEditor({
             <button
               style={{ margin: "10px 0" }}
               onClick={() => {
-                //remove hotspots
-              }}
-            >
-              Remove hotpost
-            </button>
-            <button
-              style={{ margin: "10px 0" }}
-              onClick={() => {
                 setShowRemoveNavMap(true);
                 //remove nav map
               }}
@@ -532,6 +578,7 @@ function PhotosphereEditor({
           key={updateTrigger}
           vfe={vfe}
           isEditorMode={true}
+          onRemoveHotspot={handleRemoveHotspotClick}
         />
         <ActiveComponent />
       </div>
