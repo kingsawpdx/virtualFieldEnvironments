@@ -1,3 +1,4 @@
+import { Box, Button, Stack } from "@mui/material";
 import { useState } from "react";
 
 import { Hotspot3D, NavMap, Photosphere, VFE } from "./DataStructures.ts";
@@ -107,7 +108,12 @@ function PhotosphereEditor({
   // This function is where we render the actual component based on the useState
   function ActiveComponent() {
     if (showAddPhotosphere)
-      return <AddPhotosphere onAddPhotosphere={handleAddPhotosphere} />;
+      return (
+        <AddPhotosphere
+          onAddPhotosphere={handleAddPhotosphere}
+          onCancel={resetStates}
+        />
+      );
     if (showAddNavMap)
       return (
         <AddNavmap onCreateNavMap={handleCreateNavMap} onClose={resetStates} />
@@ -234,17 +240,14 @@ function PhotosphereEditor({
     setNewBackground("");
   }
 
-  // Add styling for inputting information
   return (
-    <div style={{ display: "flex", height: "100vh", position: "relative" }}>
-      <div
-        style={{
+    <Box sx={{ height: "100vh" }}>
+      <Stack
+        sx={{
           position: "absolute",
           zIndex: 1000,
           left: "20px",
           top: "20px",
-          display: "flex",
-          flexDirection: "column",
           background: "rgba(255, 255, 255, 0.8)",
           borderRadius: "8px",
           padding: "10px",
@@ -252,64 +255,72 @@ function PhotosphereEditor({
       >
         {!showAddFeatures && !showChangeFeatures && (
           <>
-            <button
-              style={{ margin: "10px 0" }}
+            <Button
+              sx={{ margin: "10px 0" }}
               onClick={() => {
                 setShowAddFeatures(true);
               }}
+              variant="contained"
             >
               Add Features
-            </button>
-            <button
-              style={{ margin: "10px 0" }}
+            </Button>
+            <Button
+              sx={{
+                margin: "10px 0",
+              }}
               onClick={() => {
                 setShowChangeFeatures(true);
               }}
+              variant="contained"
             >
               Change Features
-            </button>
-            <button
-              style={{ margin: "10px 0" }}
+            </Button>
+            <Button
+              sx={{ margin: "10px 0" }}
               onClick={() => {
                 void handleExport();
               }}
+              variant="contained"
             >
               Export
-            </button>
+            </Button>
           </>
         )}
         {showAddFeatures && (
           <>
-            <button
-              style={{ margin: "10px 0" }}
+            <Button
+              sx={{ margin: "10px 0" }}
               onClick={() => {
                 resetStates();
                 setShowAddPhotosphere(true);
               }}
+              variant="contained"
             >
               Add New Photosphere
-            </button>
+            </Button>
 
-            <button
-              style={{ margin: "10px 0" }}
+            <Button
+              sx={{ margin: "10px 0" }}
               onClick={() => {
                 resetStates();
                 setShowAddNavMap(true); // Set state to show AddNavmap
                 //Call your setShowAddNavmap function to set the state and display the function
               }}
+              variant="contained"
             >
               {vfe.map ? "Change NavMap" : "Add New NavMap"}
-            </button>
-            <button
-              style={{ margin: "10px 0" }}
+            </Button>
+            <Button
+              sx={{ margin: "10px 0" }}
               onClick={() => {
                 resetStates();
                 //Call your setShowAddHotspot function to set the state and display the function
                 setShowAddHotspot(true);
               }}
+              variant="contained"
             >
               Add New Hotspot
-            </button>
+            </Button>
 
             <label htmlFor="audio">
               {audio !== "" ||
@@ -318,27 +329,29 @@ function PhotosphereEditor({
                 : "Add Audio:"}
             </label>
             <input type="file" id="audio" onChange={handleAudioChange} />
-            <button
-              style={{ margin: "10" }}
+            <Button
+              sx={{ margin: "10" }}
               onClick={() => {
                 setShowAddFeatures(false);
               }}
+              variant="outlined"
             >
               Back
-            </button>
+            </Button>
           </>
         )}
 
         {showChangeFeatures && (
           <>
-            <button
-              style={{ margin: "10px 470px 0 0" }}
+            <Button
+              sx={{ margin: "10px 470px 0 0" }}
               onClick={() => {
                 setShowChangeFeatures(false);
               }}
+              variant="outlined"
             >
               Back
-            </button>
+            </Button>
             {/* Buttons for changing features */}
             <div style={{ margin: "10px 0" }}>
               <label htmlFor="newName">New Photosphere Name: </label>
@@ -348,12 +361,13 @@ function PhotosphereEditor({
                 value={newName}
                 onChange={handleNameChange}
               />
-              <button
-                style={{ margin: "0px 5px 0 8px" }}
+              <Button
+                sx={{ margin: "0px 5px 0 8px" }}
                 onClick={handleSubmitName}
+                variant="contained"
               >
                 Change Name
-              </button>
+              </Button>
             </div>
             <div style={{ margin: "10px 0" }}>
               <label htmlFor="newBackground">New Background: </label>
@@ -362,17 +376,18 @@ function PhotosphereEditor({
                 id="newBackground"
                 onChange={handleBackgroundChange}
               />
-              <button
-                style={{ margin: "0px 0 0 -55px" }}
+              <Button
+                sx={{ margin: "0px 0 0 -55px" }}
                 onClick={handleSubmitBackground}
+                variant="contained"
               >
                 Change Background
-              </button>
+              </Button>
             </div>
           </>
         )}
-      </div>
-      <div style={{ width: "100%", height: "100%" }}>
+      </Stack>
+      <Box style={{ width: "100%", height: "100%" }}>
         <PhotosphereViewer
           currentPS={currentPS}
           onChangePS={onChangePS}
@@ -381,8 +396,8 @@ function PhotosphereEditor({
           vfe={vfe}
         />
         <ActiveComponent />
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }
 
