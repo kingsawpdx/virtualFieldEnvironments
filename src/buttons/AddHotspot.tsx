@@ -5,15 +5,27 @@ import { Hotspot3D, HotspotData } from "../DataStructures.ts";
 interface ContentInputProps {
   contentType: string;
   onChangeContent: (content: string) => void;
+  onChangeAnswer: (answer: string) => void;
+  onChangeQuestion: (question: string) => void;
 }
 
-function ContentInput({ contentType, onChangeContent }: ContentInputProps) {
+function ContentInput({ contentType, onChangeContent, onChangeAnswer, onChangeQuestion}: ContentInputProps) {
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (file) {
       onChangeContent(URL.createObjectURL(file));
     }
   }
+
+  function handleQuestion(e: React.ChangeEvent<HTMLInputElement>) {
+    onChangeQuestion(e.target.value);
+  }
+
+  function handleAnswer(e: React.ChangeEvent<HTMLInputElement>) {
+    onChangeAnswer(e.target.value);
+  }
+
+
 
   let label;
   let input;
@@ -56,21 +68,17 @@ function ContentInput({ contentType, onChangeContent }: ContentInputProps) {
           <input
             type="text"
             id="question"
-            onChange={(e) => {
-              onChangeContent(e.target.value);
-            }}
+            onChange={handleQuestion}
           />
         </div>
       );
       input = (
         <div style={{display:'block'}}>
-          <label htmlFor="answer">Answers: </label>
+          <label htmlFor="answer">Answer: </label>
           <input
             type="text"
             id="answer"
-            onChange={(e) => {
-              onChangeContent(e.target.value);
-            }}
+            onChange={handleAnswer}
           />
         </div>
       );
@@ -103,6 +111,8 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
   const [contentType, setContentType] = useState("invalid");
   const [content, setContent] = useState("");
   const [level, setLevel] = useState(0); // State for level
+  const [question, setQuestion] = useState("");
+  const [answer, setAnswer] = useState("");
 
   function handleAddHotspot() {
     if (tooltip.trim() == "" || contentType == "invalid") {
@@ -158,8 +168,8 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
       case "Quiz":
         data = {
           tag: "Quiz",
-          question: content,
-          answer: content,
+          question: question,
+          answer: answer,
           visited: false,
         };
         break;
@@ -226,7 +236,7 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
         </select>
       </div>
       <div>
-        <ContentInput contentType={contentType} onChangeContent={setContent} />
+        <ContentInput contentType={contentType} onChangeContent={setContent} onChangeAnswer={setAnswer} onChangeQuestion={setQuestion} />
       </div>
       <div>
         <span>Pitch: </span>
