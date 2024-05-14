@@ -82,7 +82,7 @@ function HotspotContent(props: HotspotContentProps) {
           src={props.hotspot.src.path}
         />
       );
-    case "Doc":
+    case "Doc": {
       const docs = [{ uri: props.hotspot.content }];
       return (
         <DocViewer
@@ -91,6 +91,7 @@ function HotspotContent(props: HotspotContentProps) {
           pluginRenderers={DocViewerRenderers}
         />
       );
+    }
     case "PhotosphereLink":
       break;
     case "URL":
@@ -134,7 +135,7 @@ function PopOver(props: PopOverProps) {
         <Stack direction="row" alignItems="center">
           {props.hotspotData.tag == "URL" ? (
             <Box flexGrow={1}>
-              <a href={props.hotspotData.src} target="_blank">
+              <a href={props.hotspotData.src} target="_blank" rel="noreferrer">
                 {props.title}
               </a>
             </Box>
