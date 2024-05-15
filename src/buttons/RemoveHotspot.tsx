@@ -5,7 +5,6 @@ interface RemoveHotspotProps {
 
 function RemoveHotspot({
   onClose,
-  //vfe,
   onRemoveHotspot,
 }: RemoveHotspotProps): JSX.Element {
   function handleRemoveHotspot() {

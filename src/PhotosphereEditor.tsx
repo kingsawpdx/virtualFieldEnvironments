@@ -294,10 +294,10 @@ function PhotosphereEditor({
     setShowRemoveNavMap(false);
   }
 
-  function handleRemoveNavMap(newNavMap: NavMap) {
+  function handleRemoveNavMap() {
     const updatedVFE: VFE = {
       ...vfe,
-      map: newNavMap,
+      map: undefined,
     };
     setVFE(updatedVFE); // Update the local VFE state
     onUpdateVFE(updatedVFE); // Propagate the change to the parent component

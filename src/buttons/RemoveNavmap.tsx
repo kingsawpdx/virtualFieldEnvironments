@@ -1,9 +1,6 @@
-//import { useState } from "react";
-import { NavMap } from "../DataStructures";
-
 interface RemoveNavMapProps {
   onClose: () => void;
-  onRemoveNavmap: (navMap: NavMap) => void;
+  onRemoveNavmap: () => void;
 }
 
 function RemoveNavMap({
@@ -12,15 +9,8 @@ function RemoveNavMap({
 }: RemoveNavMapProps): JSX.Element {
   function HandleRemoveNavmap() {
     // Remove the current navigation map from the VFE object
-    const newNavMap: NavMap = {
-      src: { tag: "Network", path: "" },
-      id: "",
-      rotation: 0,
-      defaultZoom: 0,
-      defaultCenter: { x: 0, y: 0 },
-      size: 0,
-    };
-    onRemoveNavmap(newNavMap);
+
+    onRemoveNavmap();
 
     // Close the remove navigation map dialog
     onClose();
