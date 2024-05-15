@@ -577,7 +577,6 @@ function PhotosphereEditor({
           onViewerClick={handleLocation}
           key={updateTrigger}
           vfe={vfe}
-          isEditorMode={true}
           onRemoveHotspot={handleRemoveHotspotClick}
         />
         <ActiveComponent />

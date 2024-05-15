@@ -80,8 +80,7 @@ export interface PopOverProps {
   pushHotspot: (add: Hotspot2D) => void;
   popHotspot: () => void;
   closeAll: () => void;
-  isEditorMode: boolean;
-  onDeleteHotspot: () => void;
+  onDeleteHotspot?: () => void;
 }
 
 function PopOver(props: PopOverProps) {
@@ -95,12 +94,12 @@ function PopOver(props: PopOverProps) {
       <DialogTitle id="alert-dialog-title">
         <Stack direction="row" alignItems="center">
           <Box flexGrow={1}>{props.title}</Box>
-          {props.isEditorMode && (
+          {props.onDeleteHotspot !== undefined && (
             <Tooltip title="Delete Hotspot" placement="top">
               <IconButton
                 onClick={() => {
                   // This is where the delete functionality will go
-                  props.onDeleteHotspot();
+                  props.onDeleteHotspot?.();
                 }}
               >
                 <Delete />

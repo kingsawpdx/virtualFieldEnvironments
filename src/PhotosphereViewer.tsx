@@ -141,8 +141,8 @@ export interface PhotosphereViewerProps {
   currentPS: string;
   onChangePS: (id: string) => void;
   onViewerClick?: (pitch: number, yaw: number) => void;
-  isEditorMode: boolean;
-  onRemoveHotspot: (hotspotToRemove: string) => void;
+  //isEditorMode: boolean;
+  onRemoveHotspot?: (hotspotToRemove: string) => void;
 }
 
 function PhotosphereViewer({
@@ -150,7 +150,6 @@ function PhotosphereViewer({
   currentPS,
   onChangePS,
   onViewerClick,
-  isEditorMode,
   onRemoveHotspot,
 }: PhotosphereViewerProps) {
   const photoSphereRef = React.createRef<ViewerAPI>();
@@ -296,9 +295,9 @@ function PhotosphereViewer({
           closeAll={() => {
             setHotspotArray([]);
           }}
-          isEditorMode={isEditorMode}
+          //isEditorMode={true}
           onDeleteHotspot={() => {
-            onRemoveHotspot(hotspotArray[hotspotArray.length - 1].tooltip);
+            onRemoveHotspot?.(hotspotArray[hotspotArray.length - 1].tooltip);
           }}
         />
       )}
