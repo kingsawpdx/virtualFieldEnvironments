@@ -1,3 +1,11 @@
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+} from "@mui/material";
+
 export interface PhotosphereSelectorProps {
   options: string[];
   value: string;
@@ -6,38 +14,38 @@ export interface PhotosphereSelectorProps {
 
 function PhotosphereSelector(props: PhotosphereSelectorProps) {
   return (
-    <div
-      style={{
-        position: "absolute",
-        top: "16px",
-        left: 0,
-        right: 0,
-        width: "200px",
-        padding: "4px",
-        marginLeft: "auto",
-        marginRight: "auto",
-        backgroundColor: "white",
-        borderRadius: "4px",
-        boxShadow: "0 0 4px grey",
-        zIndex: 100,
+    <Stack
+      sx={{
+        width: "150px",
+        padding: "0 5px",
+        justifyContent: "space-around",
       }}
     >
-      <label htmlFor="scene-select">Scene: </label>
-      <select
-        id="scene-select"
-        value={props.value}
-        onChange={(e) => {
-          props.setValue(e.target.value);
-        }}
-        style={{ paddingInline: "8px", paddingBlock: "4px", width: "150px" }}
-      >
-        {props.options.map((option) => (
-          <option key={option} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
-    </div>
+      <FormControl>
+        <InputLabel id="scene-select" sx={{ fontSize: "14px" }}>
+          Scene
+        </InputLabel>
+        <Select
+          labelId="scene-select"
+          label="Scene"
+          value={props.value}
+          onChange={(e) => {
+            props.setValue(e.target.value);
+          }}
+          sx={{
+            fontSize: "14px",
+            width: "150px",
+            height: "35px",
+          }}
+        >
+          {props.options.map((option) => (
+            <MenuItem key={option} value={option} sx={{ fontSize: "13px" }}>
+              {option}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    </Stack>
   );
 }
 

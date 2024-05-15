@@ -1,5 +1,5 @@
+import { Box, Button, Stack } from "@mui/material";
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
 
 import { Hotspot3D, NavMap, Photosphere, VFE } from "./DataStructures.ts";
 import { save } from "./FileOperations.ts";
@@ -28,23 +28,20 @@ function radToDeg(num: number): number {
 
 // Properties passed down from parent
 interface PhotosphereEditorProps {
-  parentVFE: VFE;
+  vfe: VFE;
   onUpdateVFE: (updatedVFE: VFE) => void;
+  currentPS: string;
+  onChangePS: (id: string) => void;
 }
 
 // If an update is triggered, add newPhotosphere, and update VFE
 function PhotosphereEditor({
-  parentVFE,
+  vfe,
   onUpdateVFE,
+  currentPS,
+  onChangePS,
 }: PhotosphereEditorProps): JSX.Element {
-  const { photosphereID } = useParams() as {
-    vfeID: string;
-    photosphereID: string;
-  };
-  const navigate = useNavigate();
-
   // Base states
-  const [vfe, setVFE] = useState<VFE>(parentVFE);
   const [showAddPhotosphere, setShowAddPhotosphere] = useState(false);
   const [updateTrigger, setUpdateTrigger] = useState(0);
   const [showAddNavMap, setShowAddNavMap] = useState(false); // State to manage whether to show AddNavmap
@@ -66,6 +63,7 @@ function PhotosphereEditor({
   const [showRemoveHotspot, setShowRemoveHotspot] = useState(false);
   const [hotspotToRemove, setHotspotToRemove] = useState<string | null>(null);
   console.log(vfe);
+
 
   // Change URL to reflect current photosphere
   function onChangePS(id: string) {
@@ -156,6 +154,7 @@ function PhotosphereEditor({
     handleCloseRemovePhotosphere();
   }
 
+
   // Update the VFE
   function handleAddPhotosphere(newPhotosphere: Photosphere) {
     const updatedVFE: VFE = {
@@ -165,7 +164,6 @@ function PhotosphereEditor({
         [newPhotosphere.id]: newPhotosphere,
       },
     };
-    setVFE(updatedVFE); // Update the local VFE state
     onUpdateVFE(updatedVFE); // Propagate the change to the AppRoot
     onChangePS(newPhotosphere.id); // Switch to new photosphere
     setShowAddPhotosphere(false);
@@ -176,18 +174,16 @@ function PhotosphereEditor({
       ...vfe,
       map: updatedNavMap,
     };
-    setVFE(updatedVFE); // Update the local VFE state
     onUpdateVFE(updatedVFE); // Propagate the change to the parent component
     setShowAddNavMap(false); // Close the AddNavMap component
     setUpdateTrigger((prev) => prev + 1);
   }
 
   function handleAddHotspot(newHotspot: Hotspot3D) {
-    const photosphere: Photosphere = vfe.photospheres[photosphereID];
+    const photosphere: Photosphere = vfe.photospheres[currentPS];
 
     photosphere.hotspots[newHotspot.tooltip] = newHotspot;
 
-    setVFE(vfe);
     onUpdateVFE(vfe);
     setShowAddHotspot(false);
     setUpdateTrigger((prev) => prev + 1);
@@ -212,7 +208,12 @@ function PhotosphereEditor({
   // This function is where we render the actual component based on the useState
   function ActiveComponent() {
     if (showAddPhotosphere)
-      return <AddPhotosphere onAddPhotosphere={handleAddPhotosphere} />;
+      return (
+        <AddPhotosphere
+          onAddPhotosphere={handleAddPhotosphere}
+          onCancel={resetStates}
+        />
+      );
     if (showAddNavMap)
       return (
         <AddNavmap onCreateNavMap={handleCreateNavMap} onClose={resetStates} />
@@ -253,7 +254,7 @@ function PhotosphereEditor({
     return null;
   }
 
-  async function handleSave() {
+  async function handleExport() {
     const convertedVFE = await convertVFE(vfe, convertNetworkToLocal);
     await save(convertedVFE);
   }
@@ -330,18 +331,18 @@ function PhotosphereEditor({
   // Function to handle submit button click for name change
   function handleSubmitName() {
     if (newName.trim() !== "") {
-      const currentPhotosphere = vfe.photospheres[photosphereID];
+      const currentPhotosphere = vfe.photospheres[currentPS];
 
       //making updated photosphere list minus the currentPS
       const updatedPhotospheres: Record<string, Photosphere> =
         Object.fromEntries(
           Object.entries(vfe.photospheres)
-            .filter(([key]) => key !== photosphereID)
+            .filter(([key]) => key !== currentPS)
             .map(([key, photosphere]) => {
               // update hotspots in the current photosphere
               const updatedPhotosphere = updateHotspots(
                 photosphere,
-                photosphereID,
+                currentPS,
                 newName,
               );
               return [key, updatedPhotosphere];
@@ -352,7 +353,7 @@ function PhotosphereEditor({
       updatedPhotospheres[newName] = { ...currentPhotosphere, id: newName };
 
       const updatedDefaultPhotosphereID =
-        vfe.defaultPhotosphereID === photosphereID
+        vfe.defaultPhotosphereID === currentPS
           ? newName
           : vfe.defaultPhotosphereID;
 
@@ -363,7 +364,7 @@ function PhotosphereEditor({
       };
 
       onChangePS(newName); //set currentPS index to new name to access it correctly moving forward
-      setVFE(updatedVFE);
+
       onUpdateVFE(updatedVFE);
       setUpdateTrigger((prev) => prev + 1);
       setNewName("");
@@ -373,10 +374,10 @@ function PhotosphereEditor({
   // Function to handle submit button click for background change
   function handleSubmitBackground() {
     if (newBackground.trim() !== "") {
-      const currentPhotosphere = vfe.photospheres[photosphereID];
+      const currentPhotosphere = vfe.photospheres[currentPS];
       const updatedPhotospheres = { ...vfe.photospheres };
 
-      updatedPhotospheres[photosphereID] = {
+      updatedPhotospheres[currentPS] = {
         ...currentPhotosphere,
         src: { tag: "Network", path: newBackground },
       };
@@ -386,24 +387,20 @@ function PhotosphereEditor({
         photospheres: updatedPhotospheres,
       };
 
-      setVFE(updatedVFE);
       onUpdateVFE(updatedVFE);
       setUpdateTrigger((prev) => prev + 1);
     }
     setNewBackground("");
   }
 
-  // Add styling for inputting information
   return (
-    <div style={{ display: "flex", height: "100vh", position: "relative" }}>
-      <div
-        style={{
+    <Box sx={{ height: "100vh" }}>
+      <Stack
+        sx={{
           position: "absolute",
           zIndex: 1000,
           left: "20px",
           top: "20px",
-          display: "flex",
-          flexDirection: "column",
           background: "rgba(255, 255, 255, 0.8)",
           borderRadius: "8px",
           padding: "10px",
@@ -411,25 +408,30 @@ function PhotosphereEditor({
       >
         {!showAddFeatures && !showChangeFeatures && !showRemoveFeatures && (
           <>
-            <button
-              style={{ margin: "10px 0" }}
+            <Button
+              sx={{ margin: "10px 0" }}
               onClick={() => {
                 setShowAddFeatures(true);
               }}
+              variant="contained"
             >
               Add Features
-            </button>
-            <button
-              style={{ margin: "10px 0" }}
+            </Button>
+            <Button
+              sx={{
+                margin: "10px 0",
+              }}
               onClick={() => {
                 setShowChangeFeatures(true);
               }}
+              variant="contained"
             >
               Change Features
-            </button>
-            <button
-              style={{ margin: "10px 0" }}
+            </Button>
+            <Button
+              sx={{ margin: "10px 0" }}
               onClick={() => {
+
                 setShowRemoveFeatures(true);
               }}
             >
@@ -439,44 +441,51 @@ function PhotosphereEditor({
               style={{ margin: "10px 0" }}
               onClick={() => {
                 void handleSave();
+
+                void handleExport();
+
               }}
+              variant="contained"
             >
-              Save
-            </button>
+              Export
+            </Button>
           </>
         )}
         {showAddFeatures && (
           <>
-            <button
-              style={{ margin: "10px 0" }}
+            <Button
+              sx={{ margin: "10px 0" }}
               onClick={() => {
                 resetStates();
                 setShowAddPhotosphere(true);
               }}
+              variant="contained"
             >
               Add New Photosphere
-            </button>
+            </Button>
 
-            <button
-              style={{ margin: "10px 0" }}
+            <Button
+              sx={{ margin: "10px 0" }}
               onClick={() => {
                 resetStates();
                 setShowAddNavMap(true); // Set state to show AddNavmap
                 //Call your setShowAddNavmap function to set the state and display the function
               }}
+              variant="contained"
             >
               {vfe.map ? "Change NavMap" : "Add New NavMap"}
-            </button>
-            <button
-              style={{ margin: "10px 0" }}
+            </Button>
+            <Button
+              sx={{ margin: "10px 0" }}
               onClick={() => {
                 resetStates();
                 //Call your setShowAddHotspot function to set the state and display the function
                 setShowAddHotspot(true);
               }}
+              variant="contained"
             >
               Add New Hotspot
-            </button>
+            </Button>
 
             <label htmlFor="audio">
               {audio !== "" ||
@@ -485,14 +494,15 @@ function PhotosphereEditor({
                 : "Add Audio:"}
             </label>
             <input type="file" id="audio" onChange={handleAudioChange} />
-            <button
-              style={{ margin: "10" }}
+            <Button
+              sx={{ margin: "10" }}
               onClick={() => {
                 setShowAddFeatures(false);
               }}
+              variant="outlined"
             >
               Back
-            </button>
+            </Button>
           </>
         )}
 
@@ -529,14 +539,15 @@ function PhotosphereEditor({
 
         {showChangeFeatures && (
           <>
-            <button
-              style={{ margin: "10px 470px 0 0" }}
+            <Button
+              sx={{ margin: "10px 470px 0 0" }}
               onClick={() => {
                 setShowChangeFeatures(false);
               }}
+              variant="outlined"
             >
               Back
-            </button>
+            </Button>
             {/* Buttons for changing features */}
             <div style={{ margin: "10px 0" }}>
               <label htmlFor="newName">New Photosphere Name: </label>
@@ -546,12 +557,13 @@ function PhotosphereEditor({
                 value={newName}
                 onChange={handleNameChange}
               />
-              <button
-                style={{ margin: "0px 5px 0 8px" }}
+              <Button
+                sx={{ margin: "0px 5px 0 8px" }}
                 onClick={handleSubmitName}
+                variant="contained"
               >
                 Change Name
-              </button>
+              </Button>
             </div>
             <div style={{ margin: "10px 0" }}>
               <label htmlFor="newBackground">New Background: </label>
@@ -560,19 +572,20 @@ function PhotosphereEditor({
                 id="newBackground"
                 onChange={handleBackgroundChange}
               />
-              <button
-                style={{ margin: "0px 0 0 -55px" }}
+              <Button
+                sx={{ margin: "0px 0 0 -55px" }}
                 onClick={handleSubmitBackground}
+                variant="contained"
               >
                 Change Background
-              </button>
+              </Button>
             </div>
           </>
         )}
-      </div>
-      <div style={{ width: "100%", height: "100%" }}>
+      </Stack>
+      <Box style={{ width: "100%", height: "100%" }}>
         <PhotosphereViewer
-          currentPS={photosphereID}
+          currentPS={currentPS}
           onChangePS={onChangePS}
           onViewerClick={handleLocation}
           key={updateTrigger}
@@ -580,8 +593,8 @@ function PhotosphereEditor({
           onRemoveHotspot={handleRemoveHotspotClick}
         />
         <ActiveComponent />
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }
 

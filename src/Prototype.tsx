@@ -1,11 +1,26 @@
-import { Navigate } from "react-router-dom";
+import localforage from "localforage";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-import dataArray from "./data.json";
+import { VFE } from "./DataStructures";
+import vfeData from "./data.json";
 
 function Prototype() {
-  window.localStorage.setItem("prototype", JSON.stringify(dataArray));
+  const navigate = useNavigate();
 
-  return <Navigate to="/viewer/prototype/" replace={true} />;
+  useEffect(() => {
+    async function load() {
+      const vfe = vfeData as VFE;
+      await localforage.setItem(vfe.name, vfe);
+      navigate(`/viewer/${vfe.name}/${vfe.defaultPhotosphereID}`, {
+        replace: true,
+      });
+    }
+
+    void load();
+  }, [navigate]);
+
+  return <></>;
 }
 
 export default Prototype;

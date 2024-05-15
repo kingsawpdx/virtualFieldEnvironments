@@ -47,13 +47,47 @@
             "hotspots": {}
           }
         },
+        "URLDemo": {
+          "pitch": -10,
+          "yaw": 0,
+          "tooltip": "URLDemo",
+          "data": {
+            "tag": "URL",
+            "src": "https://virtual-field-environments.vercel.app/",
+            "hotspots": {}
+          }
+        },
+        "Audio Demo - FrogChorus.mp3": {
+          "pitch": -10,
+          "yaw": 10,
+          "tooltip": "Audio Demo - FrogChorus.mp3",
+          "data": {
+            "tag": "Audio",
+            "src": {
+              "tag": "Network",
+              "path": "/VFEdata/FrogChorus.LS100206.mp3"
+            }
+          }
+        },
+        "Document Demo - VFE Guidelines": {
+          "pitch": -10,
+          "yaw": 20,
+          "tooltip": "Document Demo - VFE Guidelines",
+          "data": {
+            "tag": "Doc",
+            "content": "/VFEdata/General guide - Virtual Field Environments for Student-based Inquiry.pdf"
+          }
+        },
         "ShorelineSOUTH.mp4": {
           "pitch": -32,
           "yaw": 172,
           "tooltip": "ShorelineSOUTH.mp4",
           "data": {
             "tag": "Video",
-            "src": "/VFEdata/shorelineSOUTH.mp4"
+            "src": {
+              "tag": "Network",
+              "path": "/VFEdata/shorelineSOUTH.mp4"
+            }
           }
         },
         "Paddlers.mp4": {
@@ -62,7 +96,10 @@
           "tooltip": "Paddlers.mp4",
           "data": {
             "tag": "Video",
-            "src": "/VFEdata/paddlers.mp4"
+            "src": {
+              "tag": "Network",
+              "path": "/VFEdata/paddlers.mp4"
+            }
           }
         },
         "SmallPool": {
@@ -110,7 +147,10 @@
           "tooltip": "OutcropTextures",
           "data": {
             "tag": "Video",
-            "src": "/VFEdata/outcrop_textures.mp4"
+            "src": {
+              "tag": "Network",
+              "path": "/VFEdata/outcrop_textures.mp4"
+            }
           }
         },
         "How did these huge logs get here?": {
@@ -228,7 +268,10 @@
           }
         }
       },
-      "backgroundAudio": "/VFEdata/Scene12_UnevenStandTop_LS100146.mp3"
+      "backgroundAudio": {
+        "tag": "Network",
+        "path": "/VFEdata/Scene12_UnevenStandTop_LS100146.mp3"
+      }
     },
     "Entrance": {
       "id": "Entrance",
