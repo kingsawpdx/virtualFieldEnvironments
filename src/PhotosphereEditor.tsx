@@ -124,7 +124,9 @@ function PhotosphereEditor({
 
     if (Object.keys(remainingPhotospheres).length === 0) {
       // No more photospheres available
-      alert("No more photospheres available.");
+      alert(
+        "No more photospheres available. You will return to the home page.",
+      );
       navigate("/"); // Redirect to home?
       return;
     }

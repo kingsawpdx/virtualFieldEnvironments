@@ -30,18 +30,10 @@ function RemovePhotosphere({
 
   function HandleRemovePhotosphere() {
     if (!selectedPhotosphere) {
-      //We need to delete the first photosphere then.
-      if (Object.keys(vfe.photospheres).length > 0) {
-        const photosphereIdRemove = Object.keys(vfe.photospheres)[0];
-        onRemovePhotosphere(photosphereIdRemove);
-      } else {
-        alert("No photospheres to remove.");
-        onClose();
-      }
-    } else {
-      onRemovePhotosphere(selectedPhotosphere);
-      //Logic for removing the selected Photosphere
+      alert("Please select a photosphere to remove.");
+      return;
     }
+    onRemovePhotosphere(selectedPhotosphere);
     onClose();
   }
 
