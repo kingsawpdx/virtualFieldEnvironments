@@ -1,5 +1,6 @@
 import { Box, Button, Stack } from "@mui/material";
 import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { Hotspot3D, NavMap, Photosphere, VFE } from "./DataStructures.ts";
 import { save } from "./FileOperations.ts";
@@ -41,6 +42,11 @@ function PhotosphereEditor({
   currentPS,
   onChangePS,
 }: PhotosphereEditorProps): JSX.Element {
+  const { photosphereID } = useParams() as {
+    vfeID: string;
+    photosphereID: string;
+  };
+  const navigate = useNavigate();
   // Base states
   const [showAddPhotosphere, setShowAddPhotosphere] = useState(false);
   const [updateTrigger, setUpdateTrigger] = useState(0);
@@ -64,11 +70,7 @@ function PhotosphereEditor({
   const [hotspotToRemove, setHotspotToRemove] = useState<string | null>(null);
   console.log(vfe);
 
-
   // Change URL to reflect current photosphere
-  function onChangePS(id: string) {
-    navigate(id, { replace: true });
-  }
 
   function handleRemoveHotspotClick(hotspotToRemove: string) {
     setHotspotToRemove(hotspotToRemove);
@@ -100,7 +102,7 @@ function PhotosphereEditor({
         },
       };
 
-      setVFE(updatedVFE); // Update the local VFE state
+      //setVFE(updatedVFE); // Update the local VFE state
       onUpdateVFE(updatedVFE); // Propagate the change to the parent component
       setShowRemoveHotspot(false); // Close the RemoveHotspot component
       setHotspotToRemove(null);
@@ -139,7 +141,7 @@ function PhotosphereEditor({
       defaultPhotosphereID: newDefaultPhotosphereID,
     };
 
-    setVFE(updatedVFE);
+    //setVFE(updatedVFE);
     onUpdateVFE(updatedVFE);
     // After updating the state
     setUpdateTrigger((prev) => prev + 1);
@@ -153,7 +155,6 @@ function PhotosphereEditor({
     }
     handleCloseRemovePhotosphere();
   }
-
 
   // Update the VFE
   function handleAddPhotosphere(newPhotosphere: Photosphere) {
@@ -300,7 +301,7 @@ function PhotosphereEditor({
       ...vfe,
       map: undefined,
     };
-    setVFE(updatedVFE); // Update the local VFE state
+    //setVFE(updatedVFE); // Update the local VFE state
     onUpdateVFE(updatedVFE); // Propagate the change to the parent component
     setShowRemoveNavMap(false); // Close the RemoveNavMap component
     setUpdateTrigger((prev) => prev + 1);
@@ -431,19 +432,16 @@ function PhotosphereEditor({
             <Button
               sx={{ margin: "10px 0" }}
               onClick={() => {
-
                 setShowRemoveFeatures(true);
               }}
+              variant="contained"
             >
               Remove Features
-            </button>
-            <button
-              style={{ margin: "10px 0" }}
+            </Button>
+            <Button
+              sx={{ margin: "10px 0" }}
               onClick={() => {
-                void handleSave();
-
                 void handleExport();
-
               }}
               variant="contained"
             >
@@ -508,32 +506,34 @@ function PhotosphereEditor({
 
         {showRemoveFeatures && (
           <>
-            <button
-              style={{ margin: "10px 0" }}
+            <Button
+              sx={{ margin: "10px 0" }}
               onClick={() => {
                 setShowRemoveNavMap(true);
                 //remove nav map
               }}
+              variant="contained"
             >
               Remove nav map
-            </button>
-            <button
-              style={{ margin: "10px 0" }}
+            </Button>
+            <Button
+              sx={{ margin: "10px 0" }}
               onClick={() => {
                 //remove photosphere
                 handleRemovePhotosphereClick();
               }}
+              variant="contained"
             >
               Remove photosphere
-            </button>
-            <button
-              style={{ margin: "10px 0" }}
+            </Button>
+            <Button
+              sx={{ margin: "10px 0" }}
               onClick={() => {
                 setShowRemoveFeatures(false);
               }}
             >
               Back
-            </button>
+            </Button>
           </>
         )}
 

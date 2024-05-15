@@ -1,9 +1,5 @@
-
-import { ArrowBack, Close, Delete } from "@mui/icons-material";
-
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
-import { ArrowBack, Close } from "@mui/icons-material";
-
+import { ArrowBack, Close, Delete } from "@mui/icons-material";
 import {
   Dialog,
   DialogContent,
@@ -138,7 +134,6 @@ function PopOver(props: PopOverProps) {
     >
       <DialogTitle id="alert-dialog-title">
         <Stack direction="row" alignItems="center">
-
           <Box flexGrow={1}>{props.title}</Box>
           {props.onDeleteHotspot !== undefined && (
             <Tooltip title="Delete Hotspot" placement="top">
@@ -151,7 +146,7 @@ function PopOver(props: PopOverProps) {
                 <Delete />
               </IconButton>
             </Tooltip>
-
+          )}
           {props.hotspotData.tag == "URL" ? (
             <Box flexGrow={1}>
               <a href={props.hotspotData.src} target="_blank" rel="noreferrer">
@@ -160,7 +155,6 @@ function PopOver(props: PopOverProps) {
             </Box>
           ) : (
             <Box flexGrow={1}>{props.title}</Box>
-
           )}
           {props.arrayLength > 1 && (
             <Tooltip title="Back" placement="top">
