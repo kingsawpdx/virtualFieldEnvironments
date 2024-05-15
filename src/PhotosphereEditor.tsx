@@ -1,6 +1,6 @@
 import { Box, Button, Stack } from "@mui/material";
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { Hotspot3D, NavMap, Photosphere, VFE } from "./DataStructures.ts";
 import { save } from "./FileOperations.ts";
@@ -42,10 +42,6 @@ function PhotosphereEditor({
   currentPS,
   onChangePS,
 }: PhotosphereEditorProps): JSX.Element {
-  const { photosphereID } = useParams() as {
-    vfeID: string;
-    photosphereID: string;
-  };
   const navigate = useNavigate();
   // Base states
   const [showAddPhotosphere, setShowAddPhotosphere] = useState(false);
@@ -79,14 +75,12 @@ function PhotosphereEditor({
 
   function handleRemoveHotspotConfirm() {
     if (hotspotToRemove) {
-      const updatedPhotosphere = { ...vfe.photospheres[photosphereID] };
+      const updatedPhotosphere = { ...vfe.photospheres[currentPS] };
 
       // Create a new object without the hotspot to remove
-      const remainingHotspots = Object.fromEntries(
-        Object.entries(updatedPhotosphere.hotspots).filter(
-          ([key]) => key !== hotspotToRemove,
-        ),
-      );
+
+      const { [hotspotToRemove]: _removed, ...remainingHotspots } =
+        updatedPhotosphere.hotspots;
 
       // Update the photosphere with the remaining hotspots
       const updatedPhotosphereWithHotspots = {
@@ -98,7 +92,7 @@ function PhotosphereEditor({
         ...vfe,
         photospheres: {
           ...vfe.photospheres,
-          [photosphereID]: updatedPhotosphereWithHotspots,
+          [currentPS]: updatedPhotosphereWithHotspots,
         },
       };
 

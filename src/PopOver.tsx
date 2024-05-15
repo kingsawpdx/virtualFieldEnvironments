@@ -134,7 +134,6 @@ function PopOver(props: PopOverProps) {
     >
       <DialogTitle id="alert-dialog-title">
         <Stack direction="row" alignItems="center">
-          <Box flexGrow={1}>{props.title}</Box>
           {props.onDeleteHotspot !== undefined && (
             <Tooltip title="Delete Hotspot" placement="top">
               <IconButton
