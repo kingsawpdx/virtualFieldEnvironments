@@ -141,7 +141,6 @@ export interface PhotosphereViewerProps {
   currentPS: string;
   onChangePS: (id: string) => void;
   onViewerClick?: (pitch: number, yaw: number) => void;
-  //isEditorMode: boolean;
   onRemoveHotspot?: (hotspotToRemove: string) => void;
 }
 
