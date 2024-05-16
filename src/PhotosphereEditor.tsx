@@ -138,7 +138,11 @@ function PhotosphereEditor({
 
     const updatedVFE: VFE = {
       ...vfe,
-      photospheres: remainingPhotospheres,
+      photospheres: updatePhotospheres(
+        remainingPhotospheres,
+        photosphereId,
+        null,
+      ),
       defaultPhotosphereID: newDefaultPhotosphereID,
     };
 
@@ -310,23 +314,49 @@ function PhotosphereEditor({
 
   function updateHotspots(
     photosphere: Photosphere,
-    currentPS: string,
-    newName: string,
+    oldPhotosphereID: string,
+    newPhotosphereID: string | null,
   ): Photosphere {
-    // updating photosphere
-    const updatedPhotosphere: Photosphere = { ...photosphere };
+    const hotspots: Record<string, Hotspot3D> = {};
 
     // iterate through hotspots in the current ps
-    Object.values(updatedPhotosphere.hotspots).forEach((hotspot) => {
+    for (const [id, hotspot] of Object.entries(photosphere.hotspots)) {
       if (
         hotspot.data.tag === "PhotosphereLink" &&
-        hotspot.data.photosphereID === currentPS
+        hotspot.data.photosphereID === oldPhotosphereID
       ) {
-        hotspot.data.photosphereID = newName;
+        if (newPhotosphereID !== null) {
+          hotspots[id] = {
+            ...hotspot,
+            data: { tag: "PhotosphereLink", photosphereID: newPhotosphereID },
+          };
+        }
+      } else {
+        hotspots[id] = hotspot;
       }
-    });
+    }
 
-    return updatedPhotosphere;
+    return { ...photosphere, hotspots };
+  }
+
+  function updatePhotospheres(
+    photospheres: Record<string, Photosphere>,
+    oldPhotosphereID: string,
+    newPhotosphereID: string | null,
+  ): Record<string, Photosphere> {
+    return Object.fromEntries(
+      Object.entries(photospheres)
+        .filter(([key]) => key !== currentPS)
+        .map(([key, photosphere]) => {
+          // update hotspots in the current photosphere
+          const updatedPhotosphere = updateHotspots(
+            photosphere,
+            oldPhotosphereID,
+            newPhotosphereID,
+          );
+          return [key, updatedPhotosphere];
+        }),
+    );
   }
 
   // Function to handle submit button click for name change
@@ -336,19 +366,7 @@ function PhotosphereEditor({
 
       //making updated photosphere list minus the currentPS
       const updatedPhotospheres: Record<string, Photosphere> =
-        Object.fromEntries(
-          Object.entries(vfe.photospheres)
-            .filter(([key]) => key !== currentPS)
-            .map(([key, photosphere]) => {
-              // update hotspots in the current photosphere
-              const updatedPhotosphere = updateHotspots(
-                photosphere,
-                currentPS,
-                newName,
-              );
-              return [key, updatedPhotosphere];
-            }),
-        );
+        updatePhotospheres(vfe.photospheres, currentPS, newName);
 
       //making currentPS entry with newName
       updatedPhotospheres[newName] = { ...currentPhotosphere, id: newName };
