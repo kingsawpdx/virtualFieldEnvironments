@@ -1,14 +1,18 @@
 import { Box, Button, Stack } from "@mui/material";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { Hotspot3D, NavMap, Photosphere, VFE } from "./DataStructures.ts";
-import { save } from "./FileOperations.ts";
+import { deleteStoredVFE, save } from "./FileOperations.ts";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
 import { convertNetworkToLocal, convertVFE } from "./VFEConversion.ts";
 import AddAudio from "./buttons/AddAudio.tsx";
 import AddHotspot from "./buttons/AddHotspot.tsx";
 import AddNavmap from "./buttons/AddNavmap";
 import AddPhotosphere from "./buttons/AddPhotosphere.tsx";
+import RemoveHotspot from "./buttons/RemoveHotspot.tsx";
+import RemoveNavMap from "./buttons/RemoveNavmap.tsx";
+import RemovePhotosphere from "./buttons/RemovePhotosphere.tsx";
 
 /* -----------------------------------------------------------------------
     Update the Virtual Field Environment with an added Photosphere.
@@ -38,6 +42,7 @@ function PhotosphereEditor({
   currentPS,
   onChangePS,
 }: PhotosphereEditorProps): JSX.Element {
+  const navigate = useNavigate();
   // Base states
   const [showAddPhotosphere, setShowAddPhotosphere] = useState(false);
   const [updateTrigger, setUpdateTrigger] = useState(0);
@@ -49,12 +54,109 @@ function PhotosphereEditor({
 
   const [showAddFeatures, setShowAddFeatures] = useState(false);
   const [showChangeFeatures, setShowChangeFeatures] = useState(false);
+  const [showRemoveFeatures, setShowRemoveFeatures] = useState(false);
 
   const [newName, setNewName] = useState(""); // State to hold the new name
   const [newBackground, setNewBackground] = useState("");
   const [audio, setAudio] = useState<string>("");
 
+  const [showRemovePhotosphere, setShowRemovePhotosphere] = useState(false);
+  const [showRemoveNavMap, setShowRemoveNavMap] = useState(false);
+  const [showRemoveHotspot, setShowRemoveHotspot] = useState(false);
+  const [hotspotToRemove, setHotspotToRemove] = useState<string | null>(null);
   console.log(vfe);
+
+  // Change URL to reflect current photosphere
+
+  function handleRemoveHotspotClick(hotspotToRemove: string) {
+    setHotspotToRemove(hotspotToRemove);
+    setShowRemoveHotspot(true);
+  }
+
+  function handleRemoveHotspotConfirm() {
+    if (hotspotToRemove) {
+      const updatedPhotosphere = { ...vfe.photospheres[currentPS] };
+
+      // Create a new object without the hotspot to remove
+
+      const { [hotspotToRemove]: _removed, ...remainingHotspots } =
+        updatedPhotosphere.hotspots;
+
+      // Update the photosphere with the remaining hotspots
+      const updatedPhotosphereWithHotspots = {
+        ...updatedPhotosphere,
+        hotspots: remainingHotspots,
+      };
+
+      const updatedVFE = {
+        ...vfe,
+        photospheres: {
+          ...vfe.photospheres,
+          [currentPS]: updatedPhotosphereWithHotspots,
+        },
+      };
+
+      //setVFE(updatedVFE); // Update the local VFE state
+      onUpdateVFE(updatedVFE); // Propagate the change to the parent component
+      setShowRemoveHotspot(false); // Close the RemoveHotspot component
+      setHotspotToRemove(null);
+      setUpdateTrigger((prev) => prev + 1);
+    }
+  }
+
+  async function handleRemovePhotosphere(photosphereId: string) {
+    if (!photosphereId) {
+      alert("Photosphere not found.");
+      return;
+    }
+
+    // Create a new object without the removed photosphere
+    const remainingPhotospheres = Object.fromEntries(
+      Object.entries(vfe.photospheres).filter(([key]) => key !== photosphereId),
+    );
+
+    if (Object.keys(remainingPhotospheres).length === 0) {
+      // No more photospheres available
+      if (
+        confirm(
+          "This is the last photosphere. The VFE will be deleted and you will return to the home page. Continue?",
+        )
+      ) {
+        await deleteStoredVFE(vfe.name);
+        navigate("/"); // Redirect to home
+      }
+      return;
+    }
+
+    // nextPhotosphereId will never be undefined
+    const nextPhotosphereId = Object.keys(remainingPhotospheres)[0];
+
+    const newDefaultPhotosphereID =
+      photosphereId === vfe.defaultPhotosphereID
+        ? nextPhotosphereId
+        : vfe.defaultPhotosphereID;
+
+    const updatedVFE: VFE = {
+      ...vfe,
+      photospheres: updatePhotospheres(
+        remainingPhotospheres,
+        photosphereId,
+        null,
+      ),
+      defaultPhotosphereID: newDefaultPhotosphereID,
+    };
+
+    //setVFE(updatedVFE);
+    onUpdateVFE(updatedVFE);
+    // After updating the state
+    setUpdateTrigger((prev) => prev + 1);
+    if (photosphereId !== newDefaultPhotosphereID) {
+      onChangePS(newDefaultPhotosphereID); // Navigate to the new or remaining default photosphere
+    } else {
+      onChangePS(nextPhotosphereId);
+    }
+    handleCloseRemovePhotosphere();
+  }
 
   // Update the VFE
   function handleAddPhotosphere(newPhotosphere: Photosphere) {
@@ -70,7 +172,6 @@ function PhotosphereEditor({
     setShowAddPhotosphere(false);
     setUpdateTrigger((prev) => prev + 1);
   }
-
   function handleCreateNavMap(updatedNavMap: NavMap) {
     const updatedVFE: VFE = {
       ...vfe,
@@ -101,6 +202,8 @@ function PhotosphereEditor({
     setShowAddPhotosphere(false);
     setShowAddNavMap(false);
     setShowAddHotspot(false);
+    setShowRemoveNavMap(false);
+    setShowRemovePhotosphere(false);
     setPitch(0);
     setYaw(0);
   }
@@ -129,6 +232,30 @@ function PhotosphereEditor({
           yaw={yaw}
         />
       );
+    if (showRemovePhotosphere)
+      return (
+        <RemovePhotosphere
+          onRemovePhotosphere={(id) => {
+            void handleRemovePhotosphere(id);
+          }}
+          onClose={handleCloseRemovePhotosphere}
+          vfe={vfe}
+        />
+      );
+    if (showRemoveNavMap)
+      return (
+        <RemoveNavMap
+          onClose={handleCloseRemoveNavMap}
+          onRemoveNavmap={handleRemoveNavMap}
+        />
+      );
+    if (showRemoveHotspot)
+      return (
+        <RemoveHotspot
+          onClose={handleCloseHotspotRemove}
+          onRemoveHotspot={handleRemoveHotspotConfirm}
+        />
+      );
     return null;
   }
 
@@ -154,25 +281,82 @@ function PhotosphereEditor({
     }
   }
 
+  // Function to handle clicking on the "Remove photosphere" button
+  function handleRemovePhotosphereClick() {
+    setShowRemovePhotosphere(true);
+    // Set the state to true to show the RemovePhotosphere component
+  }
+
+  // Function to handle closing the RemovePhotosphere component
+  function handleCloseRemovePhotosphere() {
+    setShowRemovePhotosphere(false); // Set the state to false to hide the RemovePhotosphere component
+  }
+
+  function handleCloseHotspotRemove() {
+    setShowRemoveHotspot(false);
+  }
+
+  function handleCloseRemoveNavMap() {
+    setShowRemoveNavMap(false);
+  }
+
+  function handleRemoveNavMap() {
+    const updatedVFE: VFE = {
+      ...vfe,
+      map: undefined,
+    };
+    //setVFE(updatedVFE); // Update the local VFE state
+    onUpdateVFE(updatedVFE); // Propagate the change to the parent component
+    setShowRemoveNavMap(false); // Close the RemoveNavMap component
+    setUpdateTrigger((prev) => prev + 1);
+    //setShowRemoveNavMap(true);
+  }
+
   function updateHotspots(
     photosphere: Photosphere,
-    currentPS: string,
-    newName: string,
+    oldPhotosphereID: string,
+    newPhotosphereID: string | null,
   ): Photosphere {
-    // updating photosphere
-    const updatedPhotosphere: Photosphere = { ...photosphere };
+    const hotspots: Record<string, Hotspot3D> = {};
 
     // iterate through hotspots in the current ps
-    Object.values(updatedPhotosphere.hotspots).forEach((hotspot) => {
+    for (const [id, hotspot] of Object.entries(photosphere.hotspots)) {
       if (
         hotspot.data.tag === "PhotosphereLink" &&
-        hotspot.data.photosphereID === currentPS
+        hotspot.data.photosphereID === oldPhotosphereID
       ) {
-        hotspot.data.photosphereID = newName;
+        if (newPhotosphereID !== null) {
+          hotspots[id] = {
+            ...hotspot,
+            data: { tag: "PhotosphereLink", photosphereID: newPhotosphereID },
+          };
+        }
+      } else {
+        hotspots[id] = hotspot;
       }
-    });
+    }
 
-    return updatedPhotosphere;
+    return { ...photosphere, hotspots };
+  }
+
+  function updatePhotospheres(
+    photospheres: Record<string, Photosphere>,
+    oldPhotosphereID: string,
+    newPhotosphereID: string | null,
+  ): Record<string, Photosphere> {
+    return Object.fromEntries(
+      Object.entries(photospheres)
+        .filter(([key]) => key !== currentPS)
+        .map(([key, photosphere]) => {
+          // update hotspots in the current photosphere
+          const updatedPhotosphere = updateHotspots(
+            photosphere,
+            oldPhotosphereID,
+            newPhotosphereID,
+          );
+          return [key, updatedPhotosphere];
+        }),
+    );
   }
 
   // Function to handle submit button click for name change
@@ -182,19 +366,7 @@ function PhotosphereEditor({
 
       //making updated photosphere list minus the currentPS
       const updatedPhotospheres: Record<string, Photosphere> =
-        Object.fromEntries(
-          Object.entries(vfe.photospheres)
-            .filter(([key]) => key !== currentPS)
-            .map(([key, photosphere]) => {
-              // update hotspots in the current photosphere
-              const updatedPhotosphere = updateHotspots(
-                photosphere,
-                currentPS,
-                newName,
-              );
-              return [key, updatedPhotosphere];
-            }),
-        );
+        updatePhotospheres(vfe.photospheres, currentPS, newName);
 
       //making currentPS entry with newName
       updatedPhotospheres[newName] = { ...currentPhotosphere, id: newName };
@@ -253,7 +425,7 @@ function PhotosphereEditor({
           padding: "10px",
         }}
       >
-        {!showAddFeatures && !showChangeFeatures && (
+        {!showAddFeatures && !showChangeFeatures && !showRemoveFeatures && (
           <>
             <Button
               sx={{ margin: "10px 0" }}
@@ -274,6 +446,15 @@ function PhotosphereEditor({
               variant="contained"
             >
               Change Features
+            </Button>
+            <Button
+              sx={{ margin: "10px 0" }}
+              onClick={() => {
+                setShowRemoveFeatures(true);
+              }}
+              variant="contained"
+            >
+              Remove Features
             </Button>
             <Button
               sx={{ margin: "10px 0" }}
@@ -341,6 +522,39 @@ function PhotosphereEditor({
           </>
         )}
 
+        {showRemoveFeatures && (
+          <>
+            <Button
+              sx={{ margin: "10px 0" }}
+              onClick={() => {
+                setShowRemoveNavMap(true);
+                //remove nav map
+              }}
+              variant="contained"
+            >
+              Remove nav map
+            </Button>
+            <Button
+              sx={{ margin: "10px 0" }}
+              onClick={() => {
+                //remove photosphere
+                handleRemovePhotosphereClick();
+              }}
+              variant="contained"
+            >
+              Remove photosphere
+            </Button>
+            <Button
+              sx={{ margin: "10px 0" }}
+              onClick={() => {
+                setShowRemoveFeatures(false);
+              }}
+            >
+              Back
+            </Button>
+          </>
+        )}
+
         {showChangeFeatures && (
           <>
             <Button
@@ -394,6 +608,7 @@ function PhotosphereEditor({
           onViewerClick={handleLocation}
           key={updateTrigger}
           vfe={vfe}
+          onRemoveHotspot={handleRemoveHotspotClick}
         />
         <ActiveComponent />
       </Box>
