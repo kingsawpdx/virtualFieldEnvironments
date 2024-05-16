@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Hotspot3D, NavMap, Photosphere, VFE } from "./DataStructures.ts";
-import { save } from "./FileOperations.ts";
+import { deleteStoredVFE, save } from "./FileOperations.ts";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
 import { convertNetworkToLocal, convertVFE } from "./VFEConversion.ts";
 import AddAudio from "./buttons/AddAudio.tsx";
@@ -104,7 +104,7 @@ function PhotosphereEditor({
     }
   }
 
-  function handleRemovePhotosphere(photosphereId: string) {
+  async function handleRemovePhotosphere(photosphereId: string) {
     if (!photosphereId) {
       alert("Photosphere not found.");
       return;
@@ -115,21 +115,26 @@ function PhotosphereEditor({
       Object.entries(vfe.photospheres).filter(([key]) => key !== photosphereId),
     );
 
+    if (Object.keys(remainingPhotospheres).length === 0) {
+      // No more photospheres available
+      if (
+        confirm(
+          "This is the last photosphere. The VFE will be deleted and you will return to the home page. Continue?",
+        )
+      ) {
+        await deleteStoredVFE(vfe.name);
+        navigate("/"); // Redirect to home
+      }
+      return;
+    }
+
+    // nextPhotosphereId will never be undefined
     const nextPhotosphereId = Object.keys(remainingPhotospheres)[0];
 
     const newDefaultPhotosphereID =
       photosphereId === vfe.defaultPhotosphereID
         ? nextPhotosphereId
         : vfe.defaultPhotosphereID;
-
-    if (Object.keys(remainingPhotospheres).length === 0) {
-      // No more photospheres available
-      alert(
-        "No more photospheres available. You will return to the home page.",
-      );
-      navigate("/"); // Redirect to home?
-      return;
-    }
 
     const updatedVFE: VFE = {
       ...vfe,
@@ -143,11 +148,8 @@ function PhotosphereEditor({
     setUpdateTrigger((prev) => prev + 1);
     if (photosphereId !== newDefaultPhotosphereID) {
       onChangePS(newDefaultPhotosphereID); // Navigate to the new or remaining default photosphere
-    } else if (nextPhotosphereId) {
-      onChangePS(nextPhotosphereId);
     } else {
-      alert("No valid navigation target after removal.");
-      navigate("/");
+      onChangePS(nextPhotosphereId);
     }
     handleCloseRemovePhotosphere();
   }
@@ -229,7 +231,9 @@ function PhotosphereEditor({
     if (showRemovePhotosphere)
       return (
         <RemovePhotosphere
-          onRemovePhotosphere={handleRemovePhotosphere}
+          onRemovePhotosphere={(id) => {
+            void handleRemovePhotosphere(id);
+          }}
           onClose={handleCloseRemovePhotosphere}
           vfe={vfe}
         />

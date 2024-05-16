@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { VFE } from "./DataStructures";
+import { deleteStoredVFE } from "./FileOperations";
 import { convertLocalToNetwork } from "./VFEConversion";
 
 type NavMapRecord = Partial<Record<string, string>>;
@@ -54,7 +55,7 @@ function VFEList() {
     if (toDelete) {
       // removed deleted nav map from record
       const { [toDelete]: _deleted, ...newNavMaps } = navMaps;
-      await localforage.removeItem(toDelete);
+      await deleteStoredVFE(toDelete);
 
       setNames(names.filter((n) => n !== toDelete));
       setNavMaps(newNavMaps);
