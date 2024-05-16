@@ -1,3 +1,4 @@
+import { Box } from "@mui/material";
 import { useState } from "react";
 
 import { VFE } from "../DataStructures";
@@ -51,7 +52,9 @@ function RemovePhotosphere({
       }}
     >
       <h1>Select a Photosphere to remove</h1>
-      <PhotosphereSelector {...selectorProps} />
+      <Box marginBottom={3}>
+        <PhotosphereSelector {...selectorProps} />
+      </Box>
       <button onClick={HandleRemovePhotosphere}>Remove</button>
       <button onClick={onClose}>Close</button>
     </div>

@@ -21,7 +21,7 @@ function PhotosphereSelector(props: PhotosphereSelectorProps) {
         justifyContent: "space-around",
       }}
     >
-      <FormControl>
+      <FormControl size="small">
         <InputLabel id="scene-select" sx={{ fontSize: "14px" }}>
           Scene
         </InputLabel>
