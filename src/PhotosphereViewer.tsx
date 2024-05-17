@@ -26,6 +26,7 @@ import {
 } from "./DataStructures";
 import PhotosphereSelector from "./PhotosphereSelector";
 import PopOver from "./PopOver";
+const [accessLevel, setAccessLevel] = useState(0);
 
 /** Convert yaw/pitch degrees from numbers to strings ending in "deg" */
 function degToStr(val: number): string {
@@ -42,7 +43,7 @@ function convertHotspots(hotspots: Record<string, Hotspot3D>): MarkerConfig[] {
   const markers: MarkerConfig[] = [];
 
   for (const hotspot of Object.values(hotspots)) {
-    if (hotspot.data.tag === "PhotosphereLink" || !hotspot.isEnabled) continue;
+    if (hotspot.data.tag === "PhotosphereLink" || hotspot.accessLevel && hotspot.accessLevel > accessLevel) continue;
 
     let icon =
       "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"; // default
@@ -88,8 +89,7 @@ function convertLinks(hotspots: Record<string, Hotspot3D>): VirtualTourLink[] {
   const links: VirtualTourLink[] = [];
 
   for (const hotspot of Object.values(hotspots)) {
-    if (hotspot.data.tag !== "PhotosphereLink" || !hotspot.isEnabled) continue; //todo: change to GameLogicService.isHotspotEnabled(hotspot.id)
-
+    if (hotspot.data.tag !== "PhotosphereLink" ) continue; 
     links.push({
       nodeId: hotspot.data.photosphereID,
       position: {
@@ -244,6 +244,11 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
     });
   }
 
+  // Example function to update access level
+  function updateAccessLevel(newLevel: number) {
+    setAccessLevel(newLevel);
+  }
+
   return (
     <>
       <PhotosphereSelector
@@ -275,6 +280,13 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
       {currentPhotosphere.backgroundAudio && (
         <AudioToggleButton src={currentPhotosphere.backgroundAudio} />
       )}
+      {/* Temporary access level selector */}
+      <select onChange={(e) => updateAccessLevel(Number(e.target.value))}> 
+        <option value="0">Level 0</option>
+        <option value="1">Level 1</option>
+        <option value="2">Level 2</option>
+        <option value="3">Level 3</option>
+      </select>
 
       <ReactPhotoSphereViewer
         onReady={handleReady}
@@ -283,7 +295,7 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
         plugins={plugins}
         height={"100vh"}
         width={"100%"}
-        navbar={["autorotate", "zoom", "caption", "download", "fullscreen"]}
+        navbar={accessLevel > 1 ? ["autorotate", "zoom", "caption", "download", "fullscreen"] : ["autorotate", "zoom"]}
       />
     </>
   );

@@ -50,7 +50,7 @@ export interface Hotspot3D {
   yaw: number;
   tooltip: string;
   data: HotspotData;
-  isEnabled: boolean;
+  accessLevel?: number; // Make accessLevel optional with a default value
 }
 
 // HotspotData: types of media resources for a hotspot within a photosphere
