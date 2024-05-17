@@ -26,7 +26,6 @@ import {
 } from "./DataStructures";
 import PhotosphereSelector from "./PhotosphereSelector";
 import PopOver from "./PopOver";
-const [accessLevel, setAccessLevel] = useState(0);
 
 /** Convert yaw/pitch degrees from numbers to strings ending in "deg" */
 function degToStr(val: number): string {
@@ -39,11 +38,11 @@ function sizeToStr(val: number): string {
 }
 
 /** Convert non-link hotspots to markers with type-based content/icons */
-function convertHotspots(hotspots: Record<string, Hotspot3D>): MarkerConfig[] {
+function convertHotspots(hotspots: Record<string, Hotspot3D>, accessLevel: number): MarkerConfig[] {
   const markers: MarkerConfig[] = [];
 
   for (const hotspot of Object.values(hotspots)) {
-    if (hotspot.data.tag === "PhotosphereLink" || hotspot.accessLevel && hotspot.accessLevel > accessLevel) continue;
+    if (hotspot.data.tag === "PhotosphereLink" || (hotspot.accessLevel && hotspot.accessLevel > accessLevel)) continue;
 
     let icon =
       "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"; // default
@@ -142,6 +141,7 @@ export interface PhotosphereViewerProps {
 }
 
 function PhotosphereViewer(props: PhotosphereViewerProps) {
+  const [accessLevel, setAccessLevel] = useState(0);
   const photoSphereRef = React.createRef<ViewerAPI>();
   const defaultPhotosphere =
     props.vfe.photospheres[props.vfe.defaultPhotosphereID];
@@ -219,7 +219,7 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
           id: p.id,
           panorama: p.src,
           name: p.id,
-          markers: convertHotspots(p.hotspots),
+          markers: convertHotspots(p.hotspots, accessLevel),
           links: convertLinks(p.hotspots),
         };
       },
@@ -281,12 +281,16 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
         <AudioToggleButton src={currentPhotosphere.backgroundAudio} />
       )}
       {/* Temporary access level selector */}
-      <select onChange={(e) => updateAccessLevel(Number(e.target.value))}> 
+      <select onChange={(e) => updateAccessLevel(Number(e.target.value))}>
+        <option value="-1">No Access</option>
         <option value="0">Level 0</option>
         <option value="1">Level 1</option>
         <option value="2">Level 2</option>
         <option value="3">Level 3</option>
       </select>
+
+      {/* Display current access level */}
+      <p>Current Access Level: {accessLevel}</p>
 
       <ReactPhotoSphereViewer
         onReady={handleReady}
