@@ -60,6 +60,7 @@ export interface Hotspot2D {
 
 // Hotspot3D: a clickable resource that is inside a 360 photosphere (pitch, yaw)
 export interface Hotspot3D {
+  id: string
   pitch: number;
   yaw: number;
   tooltip: string;
@@ -75,42 +76,36 @@ export interface Image {
   tag: "Image";
   src: Asset;
   hotspots: Record<string, Hotspot2D>;
-  visited: boolean,
 }
 
 export interface Video {
   readonly tag: "Video";
   src: Asset;
-  visited: boolean,
 }
 
 export interface Audio {
   tag: "Audio";
   src: Asset;
-  visited: boolean,
 }
 
 export interface URL {
   tag: "URL";
   src: string;
-  visited: boolean,
 }
 
 export interface Doc {
   tag: "Doc";
   content: string;
-  visited: boolean,
 }
 
 export interface PhotosphereLink {
   tag: "PhotosphereLink";
   photosphereID: string;
-  visited: boolean,
 }
 
 export interface Quiz {
   tag: "Quiz";
   question: string;
   answer: string;
-  visited: boolean,
 }
+

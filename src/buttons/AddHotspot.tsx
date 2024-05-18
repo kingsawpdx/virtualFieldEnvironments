@@ -127,42 +127,36 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
           tag: "Image",
           src: { tag: "Network", path: content },
           hotspots: {},
-          visited: false,
         };
         break;
       case "Video":
         data = {
           tag: "Video",
           src: { tag: "Network", path: content },
-          visited: false,
         };
         break;
       case "Audio":
         data = {
           tag: "Audio",
           src: { tag: "Network", path: content },
-          visited: false,
         };
         break;
       case "Doc":
         data = {
           tag: "Doc",
           content: content,
-          visited: false,
         };
         break;
       case "URL":
         data = {
           tag: "URL",
           src: content,
-          visited: false,
         };
         break;
       case "PhotosphereLink":
         data = {
           tag: "PhotosphereLink",
           photosphereID: content,
-          visited: false,
         };
         break; 
       case "Quiz":
@@ -170,16 +164,16 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
           tag: "Quiz",
           question: question,
           answer: answer,
-          visited: false,
         };
         break;
       // should never actually get here
       default:
-        data = { tag: "URL", src: content , visited: false}
+        data = { tag: "URL", src: content}
         break;
     }
 
     const newHotspot: Hotspot3D = {
+      id: tooltip,
       pitch: pitch,
       yaw: yaw,
       tooltip: tooltip,

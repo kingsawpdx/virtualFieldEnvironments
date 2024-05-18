@@ -26,6 +26,7 @@ import {
 } from "./DataStructures";
 import PhotosphereSelector from "./PhotosphereSelector";
 import PopOver from "./PopOver";
+import { useVisitedState, VisitedState} from './HandleVisit';
 
 /** Convert yaw/pitch degrees from numbers to strings ending in "deg" */
 function degToStr(val: number): string {
@@ -158,6 +159,20 @@ function PhotosphereViewer({
     [],
   );
   const [mapStatic, setMapStatic] = useState(false);
+  
+// Filter out Hotspot2D objects and extract their IDs
+
+// Initialize visited state with the extracted IDs
+//const [visited, handleVisit] = useVisitedState(Object.values(vfe.photospheres[currentPS].hotspots));
+const initialPhotosphereHotspots: VisitedState = Object.keys(vfe.photospheres).reduce<VisitedState>((acc, psId) => {
+  acc[psId] = Object.values(vfe.photospheres[psId].hotspots);
+  return acc;
+}, {});
+
+// Initialize visited state with the extracted IDs
+const [visited, handleVisit] = useVisitedState(initialPhotosphereHotspots);
+
+console.log('in viewer',visited)
 
   useEffect(() => {
     const virtualTour =
@@ -207,8 +222,16 @@ function PhotosphereViewer({
       // setCurrentPhotosphere has to be used to get the current state value because
       // the value of currentPhotosphere does not get updated in an event listener
       setCurrentPhotosphere((currentState) => {
-        const passMarker = currentState.hotspots[marker.config.id];
-        setHotspotArray([passMarker]);
+        //const passMarker = currentState.hotspots[marker.config.id];
+        setHotspotArray((prevArray) => {
+          const passMarker = currentState.hotspots[marker.config.id];
+          return [...prevArray, passMarker];
+        }); 
+      //  addHotspot(marker.config.id);
+
+
+        // Mark as visited
+        handleVisit(currentPS,marker.config.id);
         return currentState;
       });
     });
@@ -248,7 +271,6 @@ function PhotosphereViewer({
       onChangePS(photosphere.id);
     });
   }
-
   return (
     <>
       <div
@@ -294,6 +316,8 @@ function PhotosphereViewer({
           closeAll={() => {
             setHotspotArray([]);
           }}
+
+          //visited={visited}
         />
       )}
 
