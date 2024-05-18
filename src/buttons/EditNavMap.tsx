@@ -36,8 +36,8 @@ function EditNavMap({ onClose, vfe, onUpdateVFE }: EditNavMapProps) {
     const y = event.clientY - rect.top;
 
     // Normalize coordinates to percentages?
-    const normalizedX = (x / rect.width) * 1180;
-    const normalizedY = (y / rect.height) * 1050;
+    const normalizedX = (x / rect.width) * 1160;
+    const normalizedY = (y / rect.height) * 1000;
 
     const updatedPhotospheres = { ...vfe.photospheres };
     const photosphere = updatedPhotospheres[selectedPhotosphere];
@@ -77,9 +77,9 @@ function EditNavMap({ onClose, vfe, onUpdateVFE }: EditNavMapProps) {
             onClick={handleMapClick}
             style={{
               background: `url(${map.src.path}) no-repeat center/contain`,
-              width: "100%",
+              width: "460px",
               height: "400px",
-              border: "1px solid black",
+              border: "0px solid black",
               cursor: "crosshair",
               position: "relative",
             }}
