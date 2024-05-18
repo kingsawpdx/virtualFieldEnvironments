@@ -10,6 +10,7 @@ import AddAudio from "./buttons/AddAudio.tsx";
 import AddHotspot from "./buttons/AddHotspot.tsx";
 import AddNavmap from "./buttons/AddNavmap";
 import AddPhotosphere from "./buttons/AddPhotosphere.tsx";
+import EditNavMap from "./buttons/EditNavMap.tsx";
 import RemoveHotspot from "./buttons/RemoveHotspot.tsx";
 import RemoveNavMap from "./buttons/RemoveNavmap.tsx";
 import RemovePhotosphere from "./buttons/RemovePhotosphere.tsx";
@@ -64,6 +65,7 @@ function PhotosphereEditor({
   const [showRemoveNavMap, setShowRemoveNavMap] = useState(false);
   const [showRemoveHotspot, setShowRemoveHotspot] = useState(false);
   const [hotspotToRemove, setHotspotToRemove] = useState<string | null>(null);
+  const [showEditNavMap, setShowEditNavMap] = useState(false);
   console.log(vfe);
 
   // Change URL to reflect current photosphere
@@ -221,8 +223,14 @@ function PhotosphereEditor({
       return (
         <AddNavmap onCreateNavMap={handleCreateNavMap} onClose={resetStates} />
       );
-    // Below this you will have your conditional for your own component, ie AddNavmap/AddHotspot
-    // Below this you will have your conditional for your own component, ie AddNavmap/AddHotspot
+    if (showEditNavMap)
+      return (
+        <EditNavMap
+          onClose={handleCloseEditNavMap}
+          vfe={vfe}
+          onUpdateVFE={onUpdateVFE}
+        />
+      );
     if (showAddHotspot)
       return (
         <AddHotspot
@@ -298,6 +306,11 @@ function PhotosphereEditor({
 
   function handleCloseRemoveNavMap() {
     setShowRemoveNavMap(false);
+  }
+
+  function handleCloseEditNavMap() {
+    setUpdateTrigger((prev) => prev + 1);
+    setShowEditNavMap(false);
   }
 
   function handleRemoveNavMap() {
@@ -598,6 +611,16 @@ function PhotosphereEditor({
                 Change Background
               </Button>
             </div>
+            <Button
+              sx={{ margin: "10px 0" }}
+              onClick={() => {
+                resetStates();
+                setShowEditNavMap(true); // Set state to show EditNavmap
+              }}
+              variant="contained"
+            >
+              Edit NavMap
+            </Button>
           </>
         )}
       </Stack>
