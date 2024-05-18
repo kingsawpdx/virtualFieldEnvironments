@@ -36,8 +36,8 @@ function EditNavMap({ onClose, vfe, onUpdateVFE }: EditNavMapProps) {
     const y = event.clientY - rect.top;
 
     // Normalize coordinates to percentages?
-    const normalizedX = (x / rect.width) * 100;
-    const normalizedY = (y / rect.height) * 100;
+    const normalizedX = (x / rect.width) * 1180;
+    const normalizedY = (y / rect.height) * 1050;
 
     const updatedPhotospheres = { ...vfe.photospheres };
     const photosphere = updatedPhotospheres[selectedPhotosphere];
