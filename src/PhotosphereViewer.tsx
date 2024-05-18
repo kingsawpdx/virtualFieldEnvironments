@@ -99,8 +99,7 @@ function convertHotspots(hotspots: Record<string, Hotspot3D>): MarkerConfig[] {
   for (const hotspot of Object.values(hotspots)) {
     if (hotspot.data.tag === "PhotosphereLink") continue;
 
-    let icon =
-      "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"; // default
+    let icon = hotspot.icon;
 
     switch (hotspot.data.tag) {
       case "Image":
