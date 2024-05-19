@@ -64,9 +64,9 @@ function EditNavMap({ onClose, vfe, onUpdateVFE }: EditNavMapProps) {
         background: "white",
         borderRadius: "8px",
         padding: "20px",
-        width: "80%",
+        width: "25%",
         maxHeight: "80%",
-        overflowY: "auto",
+        //overflowY: "auto",
       }}
     >
       <h2>Edit NavMap</h2>
@@ -86,13 +86,16 @@ function EditNavMap({ onClose, vfe, onUpdateVFE }: EditNavMapProps) {
           >
             {Object.values(vfe.photospheres).map((photosphere, index) => {
               if (photosphere.center) {
+                // Convert normalized coordinates back to percentages of the actual map dimensions (460x400)
+                const left = (photosphere.center.x / 1160) * 100;
+                const top = (photosphere.center.y / 1000) * 100;
                 return (
                   <div
                     key={index}
                     style={{
                       position: "absolute",
-                      top: `${photosphere.center.y}%`,
-                      left: `${photosphere.center.x}%`,
+                      top: `${top}%`,
+                      left: `${left}%`,
                       backgroundColor: "yellow",
                       width: "10px",
                       height: "10px",

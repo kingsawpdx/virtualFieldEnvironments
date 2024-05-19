@@ -206,6 +206,7 @@ function PhotosphereEditor({
     setShowAddHotspot(false);
     setShowRemoveNavMap(false);
     setShowRemovePhotosphere(false);
+    setShowEditNavMap(false);
     setPitch(0);
     setYaw(0);
   }
