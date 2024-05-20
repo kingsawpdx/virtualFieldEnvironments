@@ -27,6 +27,7 @@ import AudioToggleButton from "./AudioToggleButton";
 import {
   Hotspot2D,
   Hotspot3D,
+  HotspotData,
   NavMap,
   Photosphere,
   VFE,
@@ -196,7 +197,7 @@ export interface PhotosphereViewerProps {
   currentPS: string;
   onChangePS: (id: string) => void;
   onViewerClick?: (pitch: number, yaw: number) => void;
-  onRemoveHotspot?: (hotspotToRemove: string) => void;
+  onUpdateHotspot?: (hotspotID: string, newData: HotspotData | null) => void;
 }
 
 function PhotosphereViewer({
@@ -204,7 +205,7 @@ function PhotosphereViewer({
   currentPS,
   onChangePS,
   onViewerClick,
-  onRemoveHotspot,
+  onUpdateHotspot,
 }: PhotosphereViewerProps) {
   const photoSphereRef = React.createRef<ViewerAPI>();
   const [currentPhotosphere, setCurrentPhotosphere] =
@@ -366,7 +367,7 @@ function PhotosphereViewer({
       {hotspotArray.length > 0 && (
         <PopOver
           hotspotData={hotspotArray[hotspotArray.length - 1].data}
-          title={hotspotArray[hotspotArray.length - 1].tooltip}
+          hotspotID={hotspotArray[hotspotArray.length - 1].tooltip}
           arrayLength={hotspotArray.length}
           pushHotspot={(add: Hotspot2D) => {
             setHotspotArray([...hotspotArray, add]);
@@ -377,10 +378,7 @@ function PhotosphereViewer({
           closeAll={() => {
             setHotspotArray([]);
           }}
-          //isEditorMode={true}
-          onDeleteHotspot={() => {
-            onRemoveHotspot?.(hotspotArray[hotspotArray.length - 1].tooltip);
-          }}
+          onUpdateHotspot={onUpdateHotspot}
         />
       )}
 

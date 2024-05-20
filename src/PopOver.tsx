@@ -114,13 +114,13 @@ function HotspotContent(props: HotspotContentProps) {
 }
 
 export interface PopOverProps {
+  hotspotID: string;
   hotspotData: HotspotData;
-  title: string;
   arrayLength: number;
   pushHotspot: (add: Hotspot2D) => void;
   popHotspot: () => void;
   closeAll: () => void;
-  onDeleteHotspot?: () => void;
+  onUpdateHotspot?: (hotspotID: string, newData: HotspotData | null) => void;
 }
 
 function PopOver(props: PopOverProps) {
@@ -134,12 +134,12 @@ function PopOver(props: PopOverProps) {
     >
       <DialogTitle id="alert-dialog-title">
         <Stack direction="row" alignItems="center">
-          {props.onDeleteHotspot !== undefined && (
+          {props.onUpdateHotspot !== undefined && (
             <Tooltip title="Delete Hotspot" placement="top">
               <IconButton
                 onClick={() => {
                   // This is where the delete functionality will go
-                  props.onDeleteHotspot?.();
+                  props.onUpdateHotspot?.(props.hotspotID, null);
                 }}
               >
                 <Delete />
@@ -149,11 +149,11 @@ function PopOver(props: PopOverProps) {
           {props.hotspotData.tag == "URL" ? (
             <Box flexGrow={1}>
               <a href={props.hotspotData.src} target="_blank" rel="noreferrer">
-                {props.title}
+                {props.hotspotID}
               </a>
             </Box>
           ) : (
-            <Box flexGrow={1}>{props.title}</Box>
+            <Box flexGrow={1}>{props.hotspotID}</Box>
           )}
           {props.arrayLength > 1 && (
             <Tooltip title="Back" placement="top">
