@@ -160,19 +160,13 @@ function PhotosphereViewer({
   );
   const [mapStatic, setMapStatic] = useState(false);
   
-// Filter out Hotspot2D objects and extract their IDs
+  const initialPhotosphereHotspots: VisitedState = Object.keys(vfe.photospheres).reduce<VisitedState>((acc, psId) => {
+    acc[psId] = Object.values(vfe.photospheres[psId].hotspots);
+    return acc;
+  }, {});
+  const [visited, handleVisit] = useVisitedState(initialPhotosphereHotspots);
 
-// Initialize visited state with the extracted IDs
-//const [visited, handleVisit] = useVisitedState(Object.values(vfe.photospheres[currentPS].hotspots));
-const initialPhotosphereHotspots: VisitedState = Object.keys(vfe.photospheres).reduce<VisitedState>((acc, psId) => {
-  acc[psId] = Object.values(vfe.photospheres[psId].hotspots);
-  return acc;
-}, {});
-
-// Initialize visited state with the extracted IDs
-const [visited, handleVisit] = useVisitedState(initialPhotosphereHotspots);
-
-console.log('in viewer',visited)
+  console.log('in viewer',visited)
 
   useEffect(() => {
     const virtualTour =
