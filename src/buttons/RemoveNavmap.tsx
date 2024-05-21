@@ -1,3 +1,5 @@
+import { Button, Stack, Typography } from "@mui/material";
+
 interface RemoveNavMapProps {
   onClose: () => void;
   onRemoveNavmap: () => void;
@@ -7,7 +9,7 @@ function RemoveNavMap({
   onClose,
   onRemoveNavmap,
 }: RemoveNavMapProps): JSX.Element {
-  function HandleRemoveNavmap() {
+  function handleRemoveNavmap() {
     // Remove the current navigation map from the VFE object
 
     onRemoveNavmap();
@@ -17,23 +19,46 @@ function RemoveNavMap({
   }
 
   return (
-    <div
-      style={{
+    <Stack
+      sx={{
         position: "fixed",
-        zIndex: 1050,
+        zIndex: 1500,
         left: "50%",
         top: "50%",
         transform: "translate(-50%, -50%)",
         background: "white",
         borderRadius: "8px",
         padding: "10px",
+        width: "350px",
       }}
+      spacing={1}
     >
-      <h1>Remove Navigation Map</h1>
-      <p>Are you sure you want to remove the current navigation map?</p>
-      <button onClick={HandleRemoveNavmap}>Remove</button>
-      <button onClick={onClose}>Cancel</button>
-    </div>
+      <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+        Remove Navigation Map?
+      </Typography>
+      <Typography>
+        The map will be removed permanently and its data will be lost
+      </Typography>
+      <Stack
+        direction="row"
+        sx={{
+          justifyContent: "space-between",
+          paddingLeft: "50%",
+          paddingTop: "20px",
+        }}
+      >
+        <Button onClick={onClose} sx={{ width: "49%" }} variant="outlined">
+          Keep
+        </Button>
+        <Button
+          onClick={handleRemoveNavmap}
+          sx={{ width: "49%" }}
+          variant="contained"
+        >
+          Remove
+        </Button>
+      </Stack>
+    </Stack>
   );
 }
 
