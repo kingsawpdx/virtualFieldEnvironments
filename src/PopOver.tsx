@@ -1,5 +1,6 @@
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import {
+  Add,
   ArrowBack,
   Article,
   Audiotrack,
@@ -178,6 +179,60 @@ function HotspotEditor({
 }: HotspotEditorProps) {
   const [newTooltip, setNewTooltip] = useState<string>(tooltip);
   const [newData, setNewData] = useState<HotspotData | null>(hotspotData);
+  const [edited, setEdited] = useState(false);
+
+  function removeNestedHotspot(hotspotToRemove: string) {
+    if (newData?.tag === "Image") {
+      const { [hotspotToRemove]: _removed, ...remainingHotspots } =
+        newData.hotspots;
+
+      setNewData({
+        ...newData,
+        hotspots: remainingHotspots,
+      });
+      setEdited(true);
+    }
+  }
+
+  function addNestedHotspot() {
+    if (newData?.tag === "Image") {
+      const newHotspot: Hotspot2D = {
+        x: 0,
+        y: 0,
+        id: crypto.randomUUID(),
+        tooltip: "New Hotspot",
+        color: "red",
+        data: { tag: "Message", content: "New Hotspot Content" },
+      };
+
+      setNewData({
+        ...newData,
+        hotspots: { ...newData.hotspots, [newHotspot.id]: newHotspot },
+      });
+      setEdited(true);
+    }
+  }
+
+  function changeNestedHotspotColor(hotspotToChange: string) {
+    if (newData?.tag === "Image") {
+      const updatedHotspot = newData.hotspots[hotspotToChange];
+      const colors = [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple",
+      ].filter((color) => color !== updatedHotspot.color); // don't choose same color
+
+      updatedHotspot.color = colors[Math.floor(Math.random() * colors.length)];
+      setNewData({
+        ...newData,
+        hotspots: { ...newData.hotspots, [updatedHotspot.id]: updatedHotspot },
+      });
+      setEdited(true);
+    }
+  }
 
   return (
     <Stack gap={2} width="300px">
@@ -197,32 +252,50 @@ function HotspotEditor({
           setNewData(data);
         }}
       />
-      {hotspotData.tag === "Image" && (
+      {newData?.tag === "Image" && (
         <>
-          <Stack alignItems="center">
-            <Typography variant="h6">Nested Hotspots</Typography>
+          <Stack direction="row">
+            <Typography variant="h6" flexGrow={1} textAlign="center">
+              Nested Hotspots
+            </Typography>
+
+            <Tooltip title="Add Hotspot">
+              <IconButton
+                size="small"
+                onClick={() => {
+                  addNestedHotspot();
+                }}
+              >
+                <Add />
+              </IconButton>
+            </Tooltip>
           </Stack>
 
-          <Stack gap={2} overflow="hidden" flexGrow={1} paddingBottom={1}>
-            {Object.values(hotspotData.hotspots).length > 0 &&
-              Object.values(hotspotData.hotspots).map((hotspot2D) => (
+          <Stack gap={2}>
+            {Object.values(newData.hotspots).length > 0 &&
+              Object.values(newData.hotspots).map((hotspot2D) => (
                 <Paper key={hotspot2D.id}>
                   <Box paddingInline={2} paddingBlock={1}>
                     <Stack direction="row" gap={2} alignItems="center">
-                      <HotspotIcon
-                        hotspotData={hotspotData}
-                        color={hotspot2D.color}
-                      />
+                      <IconButton
+                        size="small"
+                        onClick={() => {
+                          changeNestedHotspotColor(hotspot2D.id);
+                        }}
+                      >
+                        <HotspotIcon
+                          hotspotData={hotspot2D.data}
+                          color={hotspot2D.color}
+                        />
+                      </IconButton>
+
                       <Typography>{hotspot2D.tooltip}</Typography>
+
                       <Box flexGrow={1} />
                       <IconButton
                         size="small"
                         onClick={() => {
-                          onUpdateHotspot(
-                            [...hotspotPath, hotspot2D.id],
-                            hotspot2D.tooltip,
-                            null,
-                          );
+                          removeNestedHotspot(hotspot2D.id);
                         }}
                       >
                         <Delete />
@@ -232,11 +305,19 @@ function HotspotEditor({
                 </Paper>
               ))}
           </Stack>
-
-          <Button>Add Nested Hotspot</Button>
         </>
       )}
-
+      <Box flexGrow={1} />
+      {edited && (
+        <Button
+          onClick={() => {
+            setNewData(hotspotData);
+            setEdited(false);
+          }}
+        >
+          Undo Changes
+        </Button>
+      )}
       <Stack direction="row" gap={1.5}>
         <Button
           variant="outlined"
@@ -256,7 +337,7 @@ function HotspotEditor({
             onUpdateHotspot(hotspotPath, newTooltip, newData);
           }}
         >
-          Update Hotspot
+          Save Changes
         </Button>
       </Stack>
     </Stack>

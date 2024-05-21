@@ -184,7 +184,7 @@ export function HotspotDataEditor({
         data = {
           tag: "Image",
           src: { tag: "Network", path: content },
-          hotspots: {},
+          hotspots: hotspotData?.tag === "Image" ? hotspotData.hotspots : {},
         };
         break;
       case "Video":
@@ -224,7 +224,7 @@ export function HotspotDataEditor({
     }
 
     setHotspotData(data);
-  }, [content, contentType, setHotspotData]);
+  }, [content, contentType, hotspotData, setHotspotData]);
 
   return (
     <>
