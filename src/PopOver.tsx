@@ -32,7 +32,7 @@ import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import ReactPlayer from "react-player";
 
-import { Hotspot2D, HotspotData } from "./DataStructures";
+import { Hotspot2D, HotspotData, newID } from "./DataStructures";
 import { HotspotDataEditor } from "./buttons/AddHotspot";
 
 interface HotspotContentProps {
@@ -48,7 +48,7 @@ function HotspotContent(props: HotspotContentProps) {
       return (
         <Box position="relative">
           {Object.values(props.hotspot.hotspots).map((hotspot2D) => (
-            <Tooltip key={hotspot2D.tooltip} title={hotspot2D.tooltip}>
+            <Tooltip key={hotspot2D.id} title={hotspot2D.tooltip}>
               <Box
                 onClick={() => {
                   props.pushHotspot(hotspot2D);
@@ -199,7 +199,7 @@ function HotspotEditor({
       const newHotspot: Hotspot2D = {
         x: 0,
         y: 0,
-        id: crypto.randomUUID(),
+        id: newID(),
         tooltip: "New Hotspot",
         color: "red",
         data: { tag: "Message", content: "New Hotspot Content" },

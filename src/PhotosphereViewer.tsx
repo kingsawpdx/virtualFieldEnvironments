@@ -31,6 +31,7 @@ import {
   NavMap,
   Photosphere,
   VFE,
+  newID,
 } from "./DataStructures";
 import PhotosphereSelector from "./PhotosphereSelector";
 import PopOver from "./PopOver";
@@ -121,7 +122,7 @@ function convertHotspots(hotspots: Record<string, Hotspot3D>): MarkerConfig[] {
     }
 
     markers.push({
-      id: hotspot.tooltip,
+      id: newID(),
       image: icon,
       size: { width: 64, height: 64 },
       position: {

@@ -7,6 +7,10 @@
     to micro-environments and associated elements.
    ----------------------------------------------------------------------- */
 
+export function newID() {
+  return crypto.randomUUID();
+}
+
 export interface LocalAsset {
   tag: "Local";
   path: string;
