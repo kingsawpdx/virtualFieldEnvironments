@@ -281,7 +281,10 @@ function PhotosphereEditor({
 
   function handleAudioChange(file: File | null) {
     setAudioFile(file);
-    AddAudio(file, setAudio, vfe); // Call the AddAudio function to handle audio change
+    const updatedVFE = AddAudio(file, setAudio, vfe, currentPS); // Call the AddAudio function to handle audio change
+
+    onUpdateVFE(updatedVFE);
+    setUpdateTrigger((prev) => prev + 1);
   }
 
   function handleChangePhotosphere(name: string, background: string) {
