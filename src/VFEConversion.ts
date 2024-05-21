@@ -137,3 +137,59 @@ async function convertHotspotData(
       return data;
   }
 }
+
+export function updatePhotosphereHotspot(
+  photosphere: Photosphere,
+  hotspotPath: string[],
+  tooltip: string,
+  data: HotspotData,
+): Photosphere {
+  const newHotspots: [string, Hotspot3D][] = Object.values(
+    photosphere.hotspots,
+  ).map((hotspot3D) => [
+    hotspot3D.id,
+    updateHotspot(hotspot3D, hotspotPath, tooltip, data),
+  ]);
+
+  return {
+    ...photosphere,
+    hotspots: Object.fromEntries(newHotspots),
+  };
+}
+
+function updateHotspot<H extends Hotspot3D | Hotspot2D>(
+  hotspot: H,
+  hotspotPath: string[],
+  tooltip: string,
+  data: HotspotData,
+): H {
+  // Found the hotspot that is being searched for.
+  if (hotspotPath.length === 1 && hotspotPath[0] === hotspot.id) {
+    return { ...hotspot, tooltip, data };
+  }
+
+  if (
+    hotspotPath.length === 0 || // Empty hotspot path will never be found.
+    hotspotPath[0] !== hotspot.id || // First element in hotspot path is already wrong.
+    hotspot.data.tag !== "Image" // Only Image hotspots have nested hotspots.
+  ) {
+    return hotspot;
+  }
+
+  // First path element is correct, so move on to rest of path.
+  const newTargetPath = hotspotPath.slice(1);
+  const newHotspots: [string, Hotspot2D][] = Object.values(
+    hotspot.data.hotspots,
+  ).map((hotspot2D) => [
+    hotspot2D.id,
+    updateHotspot(hotspot2D, newTargetPath, tooltip, data),
+  ]);
+
+  return {
+    ...hotspot,
+    data: {
+      ...hotspot.data,
+      hotspots: Object.fromEntries(newHotspots),
+    },
+  };
+}
