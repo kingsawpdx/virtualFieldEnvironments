@@ -19,6 +19,7 @@ import {
   Link,
   Paper,
   Stack,
+  TextField,
   Tooltip,
   Typography,
   alpha,
@@ -159,16 +160,23 @@ function HotspotIcon(props: { hotspotData: HotspotData; color: string }) {
 
 export interface HotspotEditorProps {
   hotspotPath: string[];
+  tooltip: string;
   hotspotData: HotspotData;
-  onUpdateHotspot: (hotspotPath: string[], newData: HotspotData | null) => void;
+  onUpdateHotspot: (
+    hotspotPath: string[],
+    tooltip: string,
+    newData: HotspotData | null,
+  ) => void;
   pushHotspot: (add: Hotspot2D) => void;
 }
 
 function HotspotEditor({
   hotspotPath,
+  tooltip,
   hotspotData,
   onUpdateHotspot,
 }: HotspotEditorProps) {
+  const [newTooltip, setNewTooltip] = useState<string>(tooltip);
   const [newData, setNewData] = useState<HotspotData | null>(hotspotData);
 
   return (
@@ -176,6 +184,13 @@ function HotspotEditor({
       <Stack alignItems="center">
         <Typography variant="h5">Edit Hotspot</Typography>
       </Stack>
+      <TextField
+        label="Tooltip"
+        value={newTooltip}
+        onChange={(e) => {
+          setNewTooltip(e.target.value);
+        }}
+      />
       <HotspotDataEditor
         hotspotData={newData}
         setHotspotData={(data) => {
@@ -188,9 +203,9 @@ function HotspotEditor({
             <Typography variant="h6">Nested Hotspots</Typography>
           </Stack>
 
-          {Object.values(hotspotData.hotspots).length > 0 && (
-            <Stack gap={0}>
-              {Object.values(hotspotData.hotspots).map((hotspot2D) => (
+          <Stack gap={2} overflow="hidden" flexGrow={1} paddingBottom={1}>
+            {Object.values(hotspotData.hotspots).length > 0 &&
+              Object.values(hotspotData.hotspots).map((hotspot2D) => (
                 <Paper key={hotspot2D.id}>
                   <Box paddingInline={2} paddingBlock={1}>
                     <Stack direction="row" gap={2} alignItems="center">
@@ -203,7 +218,11 @@ function HotspotEditor({
                       <IconButton
                         size="small"
                         onClick={() => {
-                          onUpdateHotspot([...hotspotPath, hotspot2D.id], null);
+                          onUpdateHotspot(
+                            [...hotspotPath, hotspot2D.id],
+                            hotspot2D.tooltip,
+                            null,
+                          );
                         }}
                       >
                         <Delete />
@@ -212,20 +231,19 @@ function HotspotEditor({
                   </Box>
                 </Paper>
               ))}
-            </Stack>
-          )}
+          </Stack>
 
           <Button>Add Nested Hotspot</Button>
         </>
       )}
-      <Box flexGrow={1} />
+
       <Stack direction="row" gap={1.5}>
         <Button
           variant="outlined"
           color="error"
           sx={{ width: "50%" }}
           onClick={() => {
-            onUpdateHotspot(hotspotPath, null);
+            onUpdateHotspot(hotspotPath, newTooltip, null);
           }}
         >
           Delete Hotspot
@@ -235,7 +253,7 @@ function HotspotEditor({
           variant="contained"
           sx={{ width: "50%" }}
           onClick={() => {
-            onUpdateHotspot(hotspotPath, newData);
+            onUpdateHotspot(hotspotPath, newTooltip, newData);
           }}
         >
           Update Hotspot
@@ -247,19 +265,19 @@ function HotspotEditor({
 
 export interface PopOverProps {
   hotspotPath: string[];
+  tooltip: string;
   hotspotData: HotspotData;
   pushHotspot: (add: Hotspot2D) => void;
   popHotspot: () => void;
   closeAll: () => void;
   onUpdateHotspot?: (
     hotspotPath: string[],
+    tooltip: string,
     newData: HotspotData | null,
   ) => void;
 }
 
 function PopOver(props: PopOverProps) {
-  const hotspotID = props.hotspotPath[props.hotspotPath.length - 1];
-
   return (
     <Dialog
       open={true}
@@ -267,17 +285,18 @@ function PopOver(props: PopOverProps) {
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
       maxWidth={false}
+      scroll="body"
     >
       <DialogTitle id="alert-dialog-title">
         <Stack direction="row" alignItems="center">
           {props.hotspotData.tag == "URL" ? (
             <Box flexGrow={1}>
               <a href={props.hotspotData.src} target="_blank" rel="noreferrer">
-                {hotspotID}
+                {props.tooltip}
               </a>
             </Box>
           ) : (
-            <Box flexGrow={1}>{hotspotID}</Box>
+            <Box flexGrow={1}>{props.tooltip}</Box>
           )}
           {props.hotspotPath.length > 1 && (
             <Tooltip title="Back" placement="top">
@@ -315,6 +334,7 @@ function PopOver(props: PopOverProps) {
               />
               <HotspotEditor
                 hotspotPath={props.hotspotPath}
+                tooltip={props.tooltip}
                 hotspotData={props.hotspotData}
                 onUpdateHotspot={props.onUpdateHotspot}
                 pushHotspot={props.pushHotspot}

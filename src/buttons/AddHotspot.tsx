@@ -326,7 +326,7 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
         />
       </Stack>
       <TextField
-        label="tooltip"
+        label="Tooltip"
         onChange={(e) => {
           setTooltip(e.target.value);
         }}

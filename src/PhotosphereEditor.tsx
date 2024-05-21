@@ -76,6 +76,7 @@ function PhotosphereEditor({
 
   function handleUpdateHotspot(
     hotspotPath: string[],
+    tooltip: string,
     data: HotspotData | null,
   ) {
     // TODO: handle updating and deleting nested hotspots
