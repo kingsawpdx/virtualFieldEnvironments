@@ -61,13 +61,13 @@ function PhotosphereEditor({
 
   const [showChangePhotosphere, setShowChangePhotosphere] = useState(false);
 
-  const [audio, setAudio] = useState<string>("");
-  const [audioFile, setAudioFile] = useState<File | null>(null);
+  const [audioFile, setAudioFile] = useState<File | null>(null); // for MuiInputFile
 
   const [showRemovePhotosphere, setShowRemovePhotosphere] = useState(false);
   const [showRemoveNavMap, setShowRemoveNavMap] = useState(false);
   const [showRemoveHotspot, setShowRemoveHotspot] = useState(false);
   const [hotspotToRemove, setHotspotToRemove] = useState<string | null>(null);
+
   console.log(vfe);
 
   // Change URL to reflect current photosphere
@@ -281,7 +281,7 @@ function PhotosphereEditor({
 
   function handleAudioChange(file: File | null) {
     setAudioFile(file);
-    const updatedVFE = AddAudio(file, setAudio, vfe, currentPS); // Call the AddAudio function to handle audio change
+    const updatedVFE = AddAudio(file, vfe, currentPS); // Call the AddAudio function to handle audio change
 
     onUpdateVFE(updatedVFE);
     setUpdateTrigger((prev) => prev + 1);
