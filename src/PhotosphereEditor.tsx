@@ -11,7 +11,11 @@ import {
 } from "./DataStructures.ts";
 import { deleteStoredVFE, save } from "./FileOperations.ts";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
-import { convertNetworkToLocal, convertVFE } from "./VFEConversion.ts";
+import {
+  convertNetworkToLocal,
+  convertVFE,
+  updatePhotosphereHotspot,
+} from "./VFEConversion.ts";
 import AddAudio from "./buttons/AddAudio.tsx";
 import AddHotspot from "./buttons/AddHotspot.tsx";
 import AddNavmap from "./buttons/AddNavmap";
@@ -69,7 +73,9 @@ function PhotosphereEditor({
   const [showRemovePhotosphere, setShowRemovePhotosphere] = useState(false);
   const [showRemoveNavMap, setShowRemoveNavMap] = useState(false);
   const [showRemoveHotspot, setShowRemoveHotspot] = useState(false);
-  const [hotspotToRemove, setHotspotToRemove] = useState<string | null>(null);
+  const [hotspotPathToRemove, setHotspotToRemove] = useState<string[] | null>(
+    null,
+  );
   console.log(vfe);
 
   // Change URL to reflect current photosphere
@@ -79,32 +85,40 @@ function PhotosphereEditor({
     tooltip: string,
     data: HotspotData | null,
   ) {
-    // TODO: handle updating and deleting nested hotspots
-    const hotspotID = hotspotPath[hotspotPath.length - 1];
-
     if (data === null) {
-      setHotspotToRemove(hotspotID);
+      setHotspotToRemove(hotspotPath);
       setShowRemoveHotspot(true);
       return;
     }
 
-    console.log(data);
+    const updatedPhotosphere = updatePhotosphereHotspot(
+      vfe.photospheres[currentPS],
+      hotspotPath,
+      tooltip,
+      data,
+    );
+
+    const updatedVFE = {
+      ...vfe,
+      photospheres: {
+        ...vfe.photospheres,
+        [currentPS]: updatedPhotosphere,
+      },
+    };
+
+    onUpdateVFE(updatedVFE);
+    setUpdateTrigger((prev) => prev + 1);
   }
 
   function handleRemoveHotspotConfirm() {
-    if (hotspotToRemove) {
-      const updatedPhotosphere = { ...vfe.photospheres[currentPS] };
-
-      // Create a new object without the hotspot to remove
-
-      const { [hotspotToRemove]: _removed, ...remainingHotspots } =
-        updatedPhotosphere.hotspots;
-
+    if (hotspotPathToRemove) {
       // Update the photosphere with the remaining hotspots
-      const updatedPhotosphereWithHotspots = {
-        ...updatedPhotosphere,
-        hotspots: remainingHotspots,
-      };
+      const updatedPhotosphereWithHotspots = updatePhotosphereHotspot(
+        vfe.photospheres[currentPS],
+        hotspotPathToRemove,
+        "",
+        null,
+      );
 
       const updatedVFE = {
         ...vfe,
@@ -114,7 +128,6 @@ function PhotosphereEditor({
         },
       };
 
-      //setVFE(updatedVFE); // Update the local VFE state
       onUpdateVFE(updatedVFE); // Propagate the change to the parent component
       setShowRemoveHotspot(false); // Close the RemoveHotspot component
       setHotspotToRemove(null);

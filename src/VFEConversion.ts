@@ -142,18 +142,20 @@ export function updatePhotosphereHotspot(
   photosphere: Photosphere,
   hotspotPath: string[],
   tooltip: string,
-  data: HotspotData,
+  data: HotspotData | null,
 ): Photosphere {
-  const newHotspots: [string, Hotspot3D][] = Object.values(
-    photosphere.hotspots,
-  ).map((hotspot3D) => [
-    hotspot3D.id,
-    updateHotspot(hotspot3D, hotspotPath, tooltip, data),
-  ]);
+  const hotspots: Record<string, Hotspot3D> = {};
+  for (const hotspot3D of Object.values(photosphere.hotspots)) {
+    const updated = updateHotspot(hotspot3D, hotspotPath, tooltip, data);
+    if (updated !== null) {
+      // null hotspots are deleted
+      hotspots[updated.id] = updated;
+    }
+  }
 
   return {
     ...photosphere,
-    hotspots: Object.fromEntries(newHotspots),
+    hotspots,
   };
 }
 
@@ -161,8 +163,8 @@ function updateHotspot<H extends Hotspot3D | Hotspot2D>(
   hotspot: H,
   hotspotPath: string[],
   tooltip: string,
-  data: HotspotData,
-): H {
+  data: HotspotData | null,
+): H | null {
   // Found the hotspot that is being searched for.
   if (hotspotPath.length === 1 && hotspotPath[0] === hotspot.id) {
     return { ...hotspot, tooltip, data };
@@ -178,18 +180,20 @@ function updateHotspot<H extends Hotspot3D | Hotspot2D>(
 
   // First path element is correct, so move on to rest of path.
   const newTargetPath = hotspotPath.slice(1);
-  const newHotspots: [string, Hotspot2D][] = Object.values(
-    hotspot.data.hotspots,
-  ).map((hotspot2D) => [
-    hotspot2D.id,
-    updateHotspot(hotspot2D, newTargetPath, tooltip, data),
-  ]);
+  const hotspots: Record<string, Hotspot2D> = {};
+  for (const hotspot2D of Object.values(hotspot.data.hotspots)) {
+    const updated = updateHotspot(hotspot2D, newTargetPath, tooltip, data);
+    if (updated !== null) {
+      // null hotspots are deleted
+      hotspots[updated.id] = updated;
+    }
+  }
 
   return {
     ...hotspot,
     data: {
       ...hotspot.data,
-      hotspots: Object.fromEntries(newHotspots),
+      hotspots,
     },
   };
 }
