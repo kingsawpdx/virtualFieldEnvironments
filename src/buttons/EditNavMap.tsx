@@ -36,8 +36,8 @@ function EditNavMap({ onClose, vfe, onUpdateVFE }: EditNavMapProps) {
     const y = event.clientY - rect.top;
 
     // Normalize coordinates to percentages?
-    const normalizedX = (x / rect.width) * 1160;
-    const normalizedY = (y / rect.height) * 1000;
+    const normalizedX = (x / rect.width) * 100;
+    const normalizedY = (y / rect.height) * 100;
 
     const updatedPhotospheres = { ...vfe.photospheres };
     const photosphere = updatedPhotospheres[selectedPhotosphere];
@@ -64,9 +64,9 @@ function EditNavMap({ onClose, vfe, onUpdateVFE }: EditNavMapProps) {
         background: "white",
         borderRadius: "8px",
         padding: "20px",
-        width: "25%",
+        maxWidth: "80%",
         maxHeight: "80%",
-        //overflowY: "auto",
+        overflowY: "auto",
       }}
     >
       <h2>Edit NavMap</h2>
@@ -77,25 +77,22 @@ function EditNavMap({ onClose, vfe, onUpdateVFE }: EditNavMapProps) {
             onClick={handleMapClick}
             style={{
               background: `url(${map.src.path}) no-repeat center/contain`,
-              width: "460px",
-              height: "400px",
-              border: "0px solid black",
+              width: map.defaultCenter.x,
+              height: map.defaultCenter.y,
+              border: "1px solid black",
               cursor: "crosshair",
               position: "relative",
             }}
           >
             {Object.values(vfe.photospheres).map((photosphere, index) => {
               if (photosphere.center) {
-                // Convert normalized coordinates back to percentages of the actual map dimensions (460x400)
-                const left = (photosphere.center.x / 1160) * 100;
-                const top = (photosphere.center.y / 1000) * 100;
                 return (
                   <div
                     key={index}
                     style={{
                       position: "absolute",
-                      top: `${top}%`,
-                      left: `${left}%`,
+                      top: `${photosphere.center.y}%`,
+                      left: `${photosphere.center.x}%`,
                       backgroundColor: "yellow",
                       width: "10px",
                       height: "10px",
