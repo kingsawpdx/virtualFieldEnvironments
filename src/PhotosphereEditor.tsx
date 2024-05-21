@@ -1,4 +1,6 @@
+import AttachFileIcon from "@mui/icons-material/AttachFile";
 import { Box, Button, Stack } from "@mui/material";
+import { MuiFileInput } from "mui-file-input";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -10,6 +12,7 @@ import AddAudio from "./buttons/AddAudio.tsx";
 import AddHotspot from "./buttons/AddHotspot.tsx";
 import AddNavmap from "./buttons/AddNavmap";
 import AddPhotosphere from "./buttons/AddPhotosphere.tsx";
+import ChangePhotosphere from "./buttons/ChangePhotosphere.tsx";
 import RemoveHotspot from "./buttons/RemoveHotspot.tsx";
 import RemoveNavMap from "./buttons/RemoveNavmap.tsx";
 import RemovePhotosphere from "./buttons/RemovePhotosphere.tsx";
@@ -56,9 +59,10 @@ function PhotosphereEditor({
   const [showChangeFeatures, setShowChangeFeatures] = useState(false);
   const [showRemoveFeatures, setShowRemoveFeatures] = useState(false);
 
-  const [newName, setNewName] = useState(""); // State to hold the new name
-  const [newBackground, setNewBackground] = useState("");
+  const [showChangePhotosphere, setShowChangePhotosphere] = useState(false);
+
   const [audio, setAudio] = useState<string>("");
+  const [audioFile, setAudioFile] = useState<File | null>(null);
 
   const [showRemovePhotosphere, setShowRemovePhotosphere] = useState(false);
   const [showRemoveNavMap, setShowRemoveNavMap] = useState(false);
@@ -172,6 +176,7 @@ function PhotosphereEditor({
     setShowAddPhotosphere(false);
     setUpdateTrigger((prev) => prev + 1);
   }
+
   function handleCreateNavMap(updatedNavMap: NavMap) {
     const updatedVFE: VFE = {
       ...vfe,
@@ -202,6 +207,7 @@ function PhotosphereEditor({
     setShowAddPhotosphere(false);
     setShowAddNavMap(false);
     setShowAddHotspot(false);
+    setShowChangePhotosphere(false);
     setShowRemoveNavMap(false);
     setShowRemovePhotosphere(false);
     setPitch(0);
@@ -232,6 +238,15 @@ function PhotosphereEditor({
           yaw={yaw}
         />
       );
+    if (showChangePhotosphere) {
+      return (
+        <ChangePhotosphere
+          ps={vfe.photospheres[currentPS]}
+          onCancel={resetStates}
+          onChangePhotosphere={handleChangePhotosphere}
+        />
+      );
+    }
     if (showRemovePhotosphere)
       return (
         <RemovePhotosphere
@@ -264,21 +279,44 @@ function PhotosphereEditor({
     await save(convertedVFE);
   }
 
-  function handleAudioChange(event: React.ChangeEvent<HTMLInputElement>) {
-    AddAudio(event, setAudio, vfe); // Call the AddAudio function to handle audio change
+  function handleAudioChange(file: File | null) {
+    setAudioFile(file);
+    AddAudio(file, setAudio, vfe); // Call the AddAudio function to handle audio change
   }
 
-  // Function to handle name change
-  function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setNewName(event.target.value);
-  }
+  function handleChangePhotosphere(name: string, background: string) {
+    const currentPhotosphere = vfe.photospheres[currentPS];
 
-  // Function to handle background change
-  function handleBackgroundChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    if (file) {
-      setNewBackground(URL.createObjectURL(file));
-    }
+    //making updated photosphere list minus the currentPS
+    const updatedPhotospheres: Record<string, Photosphere> = updatePhotospheres(
+      vfe.photospheres,
+      currentPS,
+      name,
+    );
+
+    //making currentPS entry with newName
+    updatedPhotospheres[name] = { ...currentPhotosphere, id: name };
+
+    const updatedDefaultPhotosphereID =
+      vfe.defaultPhotosphereID === currentPS ? name : vfe.defaultPhotosphereID;
+
+    updatedPhotospheres[currentPS] = {
+      ...currentPhotosphere,
+      src: { tag: "Network", path: background },
+    };
+
+    const updatedVFE: VFE = {
+      ...vfe,
+      defaultPhotosphereID: updatedDefaultPhotosphereID,
+      photospheres: updatedPhotospheres,
+    };
+
+    onChangePS(name); //set currentPS index to new name to access it correctly moving forward
+    onUpdateVFE(updatedVFE);
+    setShowChangePhotosphere(false);
+    setUpdateTrigger((prev) => prev + 1);
+
+    return;
   }
 
   // Function to handle clicking on the "Remove photosphere" button
@@ -357,59 +395,6 @@ function PhotosphereEditor({
           return [key, updatedPhotosphere];
         }),
     );
-  }
-
-  // Function to handle submit button click for name change
-  function handleSubmitName() {
-    if (newName.trim() !== "") {
-      const currentPhotosphere = vfe.photospheres[currentPS];
-
-      //making updated photosphere list minus the currentPS
-      const updatedPhotospheres: Record<string, Photosphere> =
-        updatePhotospheres(vfe.photospheres, currentPS, newName);
-
-      //making currentPS entry with newName
-      updatedPhotospheres[newName] = { ...currentPhotosphere, id: newName };
-
-      const updatedDefaultPhotosphereID =
-        vfe.defaultPhotosphereID === currentPS
-          ? newName
-          : vfe.defaultPhotosphereID;
-
-      const updatedVFE: VFE = {
-        ...vfe,
-        defaultPhotosphereID: updatedDefaultPhotosphereID,
-        photospheres: updatedPhotospheres,
-      };
-
-      onChangePS(newName); //set currentPS index to new name to access it correctly moving forward
-
-      onUpdateVFE(updatedVFE);
-      setUpdateTrigger((prev) => prev + 1);
-      setNewName("");
-    }
-  }
-
-  // Function to handle submit button click for background change
-  function handleSubmitBackground() {
-    if (newBackground.trim() !== "") {
-      const currentPhotosphere = vfe.photospheres[currentPS];
-      const updatedPhotospheres = { ...vfe.photospheres };
-
-      updatedPhotospheres[currentPS] = {
-        ...currentPhotosphere,
-        src: { tag: "Network", path: newBackground },
-      };
-
-      const updatedVFE: VFE = {
-        ...vfe,
-        photospheres: updatedPhotospheres,
-      };
-
-      onUpdateVFE(updatedVFE);
-      setUpdateTrigger((prev) => prev + 1);
-    }
-    setNewBackground("");
   }
 
   return (
@@ -502,16 +487,18 @@ function PhotosphereEditor({
             >
               Add New Hotspot
             </Button>
-
-            <label htmlFor="audio">
-              {audio !== "" ||
-              vfe.photospheres[vfe.defaultPhotosphereID].backgroundAudio
-                ? "Change Audio: "
-                : "Add Audio:"}
-            </label>
-            <input type="file" id="audio" onChange={handleAudioChange} />
+            <MuiFileInput
+              placeholder="Upload Background Audio"
+              value={audioFile}
+              onChange={handleAudioChange}
+              inputProps={{ accept: "audio/*" }}
+              InputProps={{
+                startAdornment: <AttachFileIcon />,
+              }}
+              sx={{ width: "275px", margin: "5px 0" }}
+            />
             <Button
-              sx={{ margin: "10" }}
+              sx={{ margin: "10px 0" }}
               onClick={() => {
                 setShowAddFeatures(false);
               }}
@@ -549,6 +536,7 @@ function PhotosphereEditor({
               onClick={() => {
                 setShowRemoveFeatures(false);
               }}
+              variant="outlined"
             >
               Back
             </Button>
@@ -558,7 +546,17 @@ function PhotosphereEditor({
         {showChangeFeatures && (
           <>
             <Button
-              sx={{ margin: "10px 470px 0 0" }}
+              sx={{ margin: "10px 0" }}
+              onClick={() => {
+                resetStates();
+                setShowChangePhotosphere(true);
+              }}
+              variant="contained"
+            >
+              Change Photosphere
+            </Button>
+            <Button
+              sx={{ margin: "10px 0" }}
               onClick={() => {
                 setShowChangeFeatures(false);
               }}
@@ -566,38 +564,6 @@ function PhotosphereEditor({
             >
               Back
             </Button>
-            {/* Buttons for changing features */}
-            <div style={{ margin: "10px 0" }}>
-              <label htmlFor="newName">New Photosphere Name: </label>
-              <input
-                type="text"
-                id="newName"
-                value={newName}
-                onChange={handleNameChange}
-              />
-              <Button
-                sx={{ margin: "0px 5px 0 8px" }}
-                onClick={handleSubmitName}
-                variant="contained"
-              >
-                Change Name
-              </Button>
-            </div>
-            <div style={{ margin: "10px 0" }}>
-              <label htmlFor="newBackground">New Background: </label>
-              <input
-                type="file"
-                id="newBackground"
-                onChange={handleBackgroundChange}
-              />
-              <Button
-                sx={{ margin: "0px 0 0 -55px" }}
-                onClick={handleSubmitBackground}
-                variant="contained"
-              >
-                Change Background
-              </Button>
-            </div>
           </>
         )}
       </Stack>

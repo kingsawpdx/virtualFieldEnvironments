@@ -1,13 +1,10 @@
-import { ChangeEvent } from "react";
-
 import { VFE } from "../DataStructures";
 
 function AddAudio(
-  event: ChangeEvent<HTMLInputElement>,
+  file: File | null,
   setAudio: React.Dispatch<React.SetStateAction<string>>,
   vfe: VFE,
 ) {
-  const file = event.target.files?.[0];
   if (file) {
     setAudio(URL.createObjectURL(file));
     const currentPhotosphereId = vfe.defaultPhotosphereID;
