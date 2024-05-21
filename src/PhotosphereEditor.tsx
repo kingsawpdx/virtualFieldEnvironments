@@ -74,7 +74,13 @@ function PhotosphereEditor({
 
   // Change URL to reflect current photosphere
 
-  function handleUpdateHotspot(hotspotID: string, data: HotspotData | null) {
+  function handleUpdateHotspot(
+    hotspotPath: string[],
+    data: HotspotData | null,
+  ) {
+    // TODO: handle updating and deleting nested hotspots
+    const hotspotID = hotspotPath[hotspotPath.length - 1];
+
     if (data === null) {
       setHotspotToRemove(hotspotID);
       setShowRemoveHotspot(true);

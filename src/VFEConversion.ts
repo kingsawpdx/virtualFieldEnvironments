@@ -129,9 +129,10 @@ async function convertHotspotData(
       return convertImage(data, convert);
     case "Audio":
     case "Video":
+    case "Doc":
       return { ...data, src: await convert(data.src) };
     case "URL":
-    case "Doc":
+    case "Message":
     case "PhotosphereLink":
       return data;
   }

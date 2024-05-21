@@ -197,7 +197,10 @@ export interface PhotosphereViewerProps {
   currentPS: string;
   onChangePS: (id: string) => void;
   onViewerClick?: (pitch: number, yaw: number) => void;
-  onUpdateHotspot?: (hotspotID: string, newData: HotspotData | null) => void;
+  onUpdateHotspot?: (
+    hotspotPath: string[],
+    newData: HotspotData | null,
+  ) => void;
 }
 
 function PhotosphereViewer({
@@ -367,8 +370,7 @@ function PhotosphereViewer({
       {hotspotArray.length > 0 && (
         <PopOver
           hotspotData={hotspotArray[hotspotArray.length - 1].data}
-          hotspotID={hotspotArray[hotspotArray.length - 1].tooltip}
-          arrayLength={hotspotArray.length}
+          hotspotPath={hotspotArray.map((h) => h.id)}
           pushHotspot={(add: Hotspot2D) => {
             setHotspotArray([...hotspotArray, add]);
           }}

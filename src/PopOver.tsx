@@ -1,21 +1,37 @@
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
-import { ArrowBack, Close, Delete } from "@mui/icons-material";
 import {
+  ArrowBack,
+  Article,
+  Audiotrack,
+  Close,
+  Delete,
+  Image,
+  Title,
+  Videocam,
+} from "@mui/icons-material";
+import {
+  Button,
   Dialog,
   DialogContent,
   DialogTitle,
+  Divider,
   IconButton,
+  Link,
+  Paper,
   Stack,
   Tooltip,
+  Typography,
   alpha,
   lighten,
 } from "@mui/material";
 import Box from "@mui/material/Box";
+import { useState } from "react";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import ReactPlayer from "react-player";
 
 import { Hotspot2D, HotspotData } from "./DataStructures";
+import { HotspotDataEditor } from "./buttons/AddHotspot";
 
 interface HotspotContentProps {
   hotspot: HotspotData;
@@ -30,25 +46,26 @@ function HotspotContent(props: HotspotContentProps) {
       return (
         <Box position="relative">
           {Object.values(props.hotspot.hotspots).map((hotspot2D) => (
-            <Box
-              key={hotspot2D.tooltip}
-              onClick={() => {
-                props.pushHotspot(hotspot2D);
-              }}
-              position="absolute"
-              left={`${hotspot2D.x}%`}
-              top={`${hotspot2D.y}%`}
-              width={50}
-              height={50}
-              border={"5px solid"}
-              borderColor={alpha(hotspot2D.color, 0.5)}
-              sx={{
-                "&:hover": {
-                  borderColor: lighten(hotspot2D.color, 0.5),
-                  backgroundColor: alpha(hotspot2D.color, 0.25),
-                },
-              }}
-            />
+            <Tooltip key={hotspot2D.tooltip} title={hotspot2D.tooltip}>
+              <Box
+                onClick={() => {
+                  props.pushHotspot(hotspot2D);
+                }}
+                position="absolute"
+                left={`${hotspot2D.x}%`}
+                top={`${hotspot2D.y}%`}
+                width={50}
+                height={50}
+                border={"5px solid"}
+                borderColor={alpha(hotspot2D.color, 0.5)}
+                sx={{
+                  "&:hover": {
+                    borderColor: lighten(hotspot2D.color, 0.5),
+                    backgroundColor: alpha(hotspot2D.color, 0.25),
+                  },
+                }}
+              />
+            </Tooltip>
           ))}
           <img
             style={{
@@ -83,7 +100,7 @@ function HotspotContent(props: HotspotContentProps) {
         />
       );
     case "Doc": {
-      const docs = [{ uri: props.hotspot.content }];
+      const docs = [{ uri: props.hotspot.src.path }];
       return (
         <DocViewer
           style={{ width: "80vw", height: "70vh" }}
@@ -92,8 +109,6 @@ function HotspotContent(props: HotspotContentProps) {
         />
       );
     }
-    case "PhotosphereLink":
-      break;
     case "URL":
       return (
         <Box width={"80vw"} height={"70vh"} fontFamily={"Helvetica"}>
@@ -108,22 +123,143 @@ function HotspotContent(props: HotspotContentProps) {
           />
         </Box>
       );
+    case "Message":
+      return (
+        <Box width={"20vw"} maxHeight={"70vh"}>
+          <Typography>{props.hotspot.content}</Typography>
+        </Box>
+      );
+    case "PhotosphereLink":
+      break;
     default:
       break;
   }
 }
 
-export interface PopOverProps {
-  hotspotID: string;
+function HotspotIcon(props: { hotspotData: HotspotData; color: string }) {
+  const iconProps = { color: props.color };
+
+  switch (props.hotspotData.tag) {
+    case "Image":
+      return <Image sx={iconProps} />;
+    case "Audio":
+      return <Audiotrack sx={iconProps} />;
+    case "Video":
+      return <Videocam sx={iconProps} />;
+    case "Doc":
+      return <Article sx={iconProps} />;
+    case "URL":
+      return <Link sx={iconProps} />;
+    case "Message":
+      return <Title sx={iconProps} />;
+    case "PhotosphereLink":
+      return <></>;
+  }
+}
+
+export interface HotspotEditorProps {
+  hotspotPath: string[];
   hotspotData: HotspotData;
-  arrayLength: number;
+  onUpdateHotspot: (hotspotPath: string[], newData: HotspotData | null) => void;
+  pushHotspot: (add: Hotspot2D) => void;
+}
+
+function HotspotEditor({
+  hotspotPath,
+  hotspotData,
+  onUpdateHotspot,
+}: HotspotEditorProps) {
+  const [newData, setNewData] = useState<HotspotData | null>(hotspotData);
+
+  return (
+    <Stack gap={2} width="300px">
+      <Stack alignItems="center">
+        <Typography variant="h5">Edit Hotspot</Typography>
+      </Stack>
+      <HotspotDataEditor
+        hotspotData={newData}
+        setHotspotData={(data) => {
+          setNewData(data);
+        }}
+      />
+      {hotspotData.tag === "Image" && (
+        <>
+          <Stack alignItems="center">
+            <Typography variant="h6">Nested Hotspots</Typography>
+          </Stack>
+
+          {Object.values(hotspotData.hotspots).length > 0 && (
+            <Stack gap={0}>
+              {Object.values(hotspotData.hotspots).map((hotspot2D) => (
+                <Paper key={hotspot2D.id}>
+                  <Box paddingInline={2} paddingBlock={1}>
+                    <Stack direction="row" gap={2} alignItems="center">
+                      <HotspotIcon
+                        hotspotData={hotspotData}
+                        color={hotspot2D.color}
+                      />
+                      <Typography>{hotspot2D.tooltip}</Typography>
+                      <Box flexGrow={1} />
+                      <IconButton
+                        size="small"
+                        onClick={() => {
+                          onUpdateHotspot([...hotspotPath, hotspot2D.id], null);
+                        }}
+                      >
+                        <Delete />
+                      </IconButton>
+                    </Stack>
+                  </Box>
+                </Paper>
+              ))}
+            </Stack>
+          )}
+
+          <Button>Add Nested Hotspot</Button>
+        </>
+      )}
+      <Box flexGrow={1} />
+      <Stack direction="row" gap={1.5}>
+        <Button
+          variant="outlined"
+          color="error"
+          sx={{ width: "50%" }}
+          onClick={() => {
+            onUpdateHotspot(hotspotPath, null);
+          }}
+        >
+          Delete Hotspot
+        </Button>
+
+        <Button
+          variant="contained"
+          sx={{ width: "50%" }}
+          onClick={() => {
+            onUpdateHotspot(hotspotPath, newData);
+          }}
+        >
+          Update Hotspot
+        </Button>
+      </Stack>
+    </Stack>
+  );
+}
+
+export interface PopOverProps {
+  hotspotPath: string[];
+  hotspotData: HotspotData;
   pushHotspot: (add: Hotspot2D) => void;
   popHotspot: () => void;
   closeAll: () => void;
-  onUpdateHotspot?: (hotspotID: string, newData: HotspotData | null) => void;
+  onUpdateHotspot?: (
+    hotspotPath: string[],
+    newData: HotspotData | null,
+  ) => void;
 }
 
 function PopOver(props: PopOverProps) {
+  const hotspotID = props.hotspotPath[props.hotspotPath.length - 1];
+
   return (
     <Dialog
       open={true}
@@ -134,28 +270,16 @@ function PopOver(props: PopOverProps) {
     >
       <DialogTitle id="alert-dialog-title">
         <Stack direction="row" alignItems="center">
-          {props.onUpdateHotspot !== undefined && (
-            <Tooltip title="Delete Hotspot" placement="top">
-              <IconButton
-                onClick={() => {
-                  // This is where the delete functionality will go
-                  props.onUpdateHotspot?.(props.hotspotID, null);
-                }}
-              >
-                <Delete />
-              </IconButton>
-            </Tooltip>
-          )}
           {props.hotspotData.tag == "URL" ? (
             <Box flexGrow={1}>
               <a href={props.hotspotData.src} target="_blank" rel="noreferrer">
-                {props.hotspotID}
+                {hotspotID}
               </a>
             </Box>
           ) : (
-            <Box flexGrow={1}>{props.hotspotID}</Box>
+            <Box flexGrow={1}>{hotspotID}</Box>
           )}
-          {props.arrayLength > 1 && (
+          {props.hotspotPath.length > 1 && (
             <Tooltip title="Back" placement="top">
               <IconButton
                 onClick={() => {
@@ -175,12 +299,29 @@ function PopOver(props: PopOverProps) {
       </DialogTitle>
 
       <DialogContent>
-        <HotspotContent
-          hotspot={props.hotspotData}
-          pushHotspot={props.pushHotspot}
-          popHotspot={props.popHotspot}
-          arrayLength={props.arrayLength}
-        />
+        <Stack direction="row">
+          <HotspotContent
+            hotspot={props.hotspotData}
+            pushHotspot={props.pushHotspot}
+            popHotspot={props.popHotspot}
+            arrayLength={props.hotspotPath.length}
+          />
+          {props.onUpdateHotspot !== undefined && (
+            <>
+              <Divider
+                orientation="vertical"
+                flexItem
+                sx={{ marginInline: 1.5 }}
+              />
+              <HotspotEditor
+                hotspotPath={props.hotspotPath}
+                hotspotData={props.hotspotData}
+                onUpdateHotspot={props.onUpdateHotspot}
+                pushHotspot={props.pushHotspot}
+              />
+            </>
+          )}
+        </Stack>
       </DialogContent>
     </Dialog>
   );

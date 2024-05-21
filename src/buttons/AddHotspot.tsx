@@ -10,16 +10,35 @@ import {
   Typography,
 } from "@mui/material";
 import { MuiFileInput } from "mui-file-input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Hotspot3D, HotspotData } from "../DataStructures.ts";
 
 interface ContentInputProps {
   contentType: string;
+  content: string;
   onChangeContent: (content: string) => void;
 }
 
-function ContentInput({ contentType, onChangeContent }: ContentInputProps) {
+// from https://github.com/Alcumus/react-doc-viewer?tab=readme-ov-file#current-renderable-file-types
+const documentAcceptTypes = [
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "text/htm",
+  "text/html",
+  "application/pdf",
+  "application/vnd.ms-powerpoint",
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+  "text/plain",
+  "application/vnd.ms-excel",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+];
+
+function ContentInput({
+  contentType,
+  content,
+  onChangeContent,
+}: ContentInputProps) {
   const [contentFile, setContentFile] = useState<File | null>(null); // for MuiFileInput
 
   function handleFileChange(file: File | null) {
@@ -70,12 +89,18 @@ function ContentInput({ contentType, onChangeContent }: ContentInputProps) {
         />
       );
     case "Doc":
+      console.log(documentAcceptTypes.join(", "));
       return (
-        <TextField
+        <MuiFileInput
           required
-          label="Content"
-          onChange={(e) => {
-            onChangeContent(e.target.value);
+          placeholder="Upload Document *"
+          value={contentFile}
+          onChange={handleFileChange}
+          inputProps={{
+            accept: documentAcceptTypes.join(", "),
+          }}
+          InputProps={{
+            startAdornment: <AttachFileIcon />,
           }}
         />
       );
@@ -84,9 +109,22 @@ function ContentInput({ contentType, onChangeContent }: ContentInputProps) {
         <TextField
           required
           label="URL"
+          value={content}
           onChange={(e) => {
             onChangeContent(e.target.value);
           }}
+        />
+      );
+    case "Message":
+      return (
+        <TextField
+          required
+          label="Message"
+          value={content}
+          onChange={(e) => {
+            onChangeContent(e.target.value);
+          }}
+          multiline
         />
       );
     case "PhotosphereLink":
@@ -94,6 +132,7 @@ function ContentInput({ contentType, onChangeContent }: ContentInputProps) {
         <TextField
           required
           label="Photosphere ID"
+          value={content}
           onChange={(e) => {
             onChangeContent(e.target.value);
           }}
@@ -104,25 +143,42 @@ function ContentInput({ contentType, onChangeContent }: ContentInputProps) {
   }
 }
 
-interface AddHotspotProps {
-  onAddHotspot: (newHotspot: Hotspot3D) => void;
-  onCancel: () => void;
-  pitch: number;
-  yaw: number;
+function getHotstpotDataContent(data: HotspotData | null): string {
+  if (data === null) return "";
+
+  switch (data.tag) {
+    case "Image":
+    case "Audio":
+    case "Video":
+    case "Doc":
+      return data.src.path;
+    case "URL":
+      return data.src;
+    case "Message":
+      return data.content;
+    case "PhotosphereLink":
+      return data.photosphereID;
+  }
 }
 
-function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
-  const [tooltip, setTooltip] = useState("");
-  const [contentType, setContentType] = useState("invalid");
-  const [content, setContent] = useState("");
+export interface HotspotDataEditorProps {
+  hotspotData: HotspotData | null;
+  setHotspotData: (data: HotspotData | null) => void;
+}
 
-  function handleAddHotspot() {
-    if (tooltip.trim() == "" || contentType == "invalid") {
-      alert("Please provide a tooltip and a valid content type");
-      return;
-    }
+export function HotspotDataEditor({
+  hotspotData,
+  setHotspotData,
+}: HotspotDataEditorProps) {
+  const [contentType, setContentType] = useState<string>(
+    hotspotData?.tag ?? "invalid",
+  );
+  const [content, setContent] = useState<string>(
+    getHotstpotDataContent(hotspotData),
+  );
 
-    let data: HotspotData;
+  useEffect(() => {
+    let data: HotspotData | null;
     switch (contentType) {
       case "Image":
         data = {
@@ -146,7 +202,7 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
       case "Doc":
         data = {
           tag: "Doc",
-          content: content,
+          src: { tag: "Network", path: content },
         };
         break;
       case "URL":
@@ -155,23 +211,76 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
           src: content,
         };
         break;
-      case "PhotosphereLink":
+      case "Message":
         data = {
-          tag: "PhotosphereLink",
-          photosphereID: content,
+          tag: "Message",
+          content: content,
         };
         break;
       // should never actually get here
       default:
-        data = { tag: "URL", src: content };
+        data = null;
         break;
+    }
+
+    setHotspotData(data);
+  }, [content, contentType, setHotspotData]);
+
+  return (
+    <>
+      <FormControl>
+        <InputLabel id="contentType">Content Type</InputLabel>
+        <Select
+          labelId="contentType"
+          value={contentType}
+          label="Content Type"
+          onChange={(e) => {
+            setContentType(e.target.value);
+            setContent("");
+          }}
+        >
+          <MenuItem value="invalid">-- Select --</MenuItem>
+          <MenuItem value="Image">Image</MenuItem>
+          <MenuItem value="Video">Video</MenuItem>
+          <MenuItem value="Audio">Audio</MenuItem>
+          <MenuItem value="Doc">Document</MenuItem>
+          <MenuItem value="URL">URL</MenuItem>
+          <MenuItem value="Message">Message</MenuItem>
+          <MenuItem value="PhotosphereLink">Photosphere Link</MenuItem>
+        </Select>
+      </FormControl>
+      <ContentInput
+        contentType={contentType}
+        content={content}
+        onChangeContent={setContent}
+      />
+    </>
+  );
+}
+
+interface AddHotspotProps {
+  onAddHotspot: (newHotspot: Hotspot3D) => void;
+  onCancel: () => void;
+  pitch: number;
+  yaw: number;
+}
+
+function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
+  const [tooltip, setTooltip] = useState("");
+  const [hotspotData, setHotspotData] = useState<HotspotData | null>(null);
+
+  function handleAddHotspot() {
+    if (tooltip.trim() == "" || hotspotData === null) {
+      alert("Please provide a tooltip and a valid content type");
+      return;
     }
 
     const newHotspot: Hotspot3D = {
       pitch: pitch,
       yaw: yaw,
+      id: tooltip,
       tooltip: tooltip,
-      data: data,
+      data: hotspotData,
     };
 
     onAddHotspot(newHotspot);
@@ -222,26 +331,10 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
           setTooltip(e.target.value);
         }}
       />
-      <FormControl>
-        <InputLabel id="contentType">Content Type</InputLabel>
-        <Select
-          labelId="contentType"
-          value={contentType}
-          label="Content Type"
-          onChange={(e) => {
-            setContentType(e.target.value);
-          }}
-        >
-          <MenuItem value="invalid">-- Select --</MenuItem>
-          <MenuItem value="Image">Image</MenuItem>
-          <MenuItem value="Video">Video</MenuItem>
-          <MenuItem value="Audio">Audio</MenuItem>
-          <MenuItem value="URL">URL</MenuItem>
-          <MenuItem value="Doc">Document</MenuItem>
-          <MenuItem value="PhotosphereLink">Photosphere Link</MenuItem>
-        </Select>
-      </FormControl>
-      <ContentInput contentType={contentType} onChangeContent={setContent} />
+      <HotspotDataEditor
+        hotspotData={hotspotData}
+        setHotspotData={setHotspotData}
+      />
       <Stack direction="row" sx={{ justifyContent: "space-between" }}>
         <Button
           variant="contained"

@@ -24,6 +24,7 @@
         "OutcropWideView": {
           "pitch": 5,
           "yaw": -5,
+          "id": "OutcropWideView",
           "tooltip": "OutcropWideView",
           "data": {
             "tag": "Image",
@@ -37,6 +38,7 @@
         "Flowers": {
           "pitch": -3,
           "yaw": 18,
+          "id": "Flowers",
           "tooltip": "Flowers",
           "data": {
             "tag": "Image",
@@ -50,16 +52,21 @@
         "URLDemo": {
           "pitch": -10,
           "yaw": 0,
+          "id": "URLDemo",
           "tooltip": "URLDemo",
           "data": {
             "tag": "URL",
-            "src": "https://virtual-field-environments.vercel.app/",
+            "src": {
+              "tag": "Network",
+              "path": "https://virtual-field-environments.vercel.app/"
+            },
             "hotspots": {}
           }
         },
         "Audio Demo - FrogChorus.mp3": {
           "pitch": -10,
           "yaw": 10,
+          "id": "Audio Demo - FrogChorus.mp3",
           "tooltip": "Audio Demo - FrogChorus.mp3",
           "data": {
             "tag": "Audio",
@@ -72,15 +79,20 @@
         "Document Demo - VFE Guidelines": {
           "pitch": -10,
           "yaw": 20,
+          "id": "Document Demo - VFE Guidelines",
           "tooltip": "Document Demo - VFE Guidelines",
           "data": {
             "tag": "Doc",
-            "content": "/VFEdata/General guide - Virtual Field Environments for Student-based Inquiry.pdf"
+            "src": {
+              "tag": "Network",
+              "path": "/VFEdata/General guide - Virtual Field Environments for Student-based Inquiry.pdf"
+            }
           }
         },
         "ShorelineSOUTH.mp4": {
           "pitch": -32,
           "yaw": 172,
+          "id": "ShorelineSOUTH.mp4",
           "tooltip": "ShorelineSOUTH.mp4",
           "data": {
             "tag": "Video",
@@ -93,6 +105,7 @@
         "Paddlers.mp4": {
           "pitch": -10,
           "yaw": -175,
+          "id": "Paddlers.mp4",
           "tooltip": "Paddlers.mp4",
           "data": {
             "tag": "Video",
@@ -105,6 +118,7 @@
         "SmallPool": {
           "pitch": -13,
           "yaw": 100,
+          "id": "SmallPool",
           "tooltip": "SmallPool",
           "data": {
             "tag": "Image",
@@ -118,6 +132,7 @@
         "LogNearShoreline": {
           "pitch": -25,
           "yaw": -40,
+          "id": "LogNearShoreline",
           "tooltip": "LogNearShoreline",
           "data": {
             "tag": "Image",
@@ -131,6 +146,7 @@
         "CoolLog": {
           "pitch": -17,
           "yaw": -33,
+          "id": "CoolLog",
           "tooltip": "CoolLog",
           "data": {
             "tag": "Image",
@@ -144,6 +160,7 @@
         "OutcropTextures": {
           "pitch": 6,
           "yaw": 5,
+          "id": "OutcropTextures",
           "tooltip": "OutcropTextures",
           "data": {
             "tag": "Video",
@@ -156,15 +173,17 @@
         "How did these huge logs get here?": {
           "pitch": -12,
           "yaw": -37,
+          "id": "How did these huge logs get here?",
           "tooltip": "How did these huge logs get here?",
           "data": {
-            "tag": "Doc",
+            "tag": "Message",
             "content": "How did these huge logs get here?"
           }
         },
         "Mushroom": {
           "pitch": 2,
           "yaw": -19,
+          "id": "Mushroom",
           "tooltip": "Mushroom",
           "data": {
             "tag": "Image",
@@ -178,6 +197,7 @@
         "Contact": {
           "pitch": 2,
           "yaw": -46,
+          "id": "Contact",
           "tooltip": "Contact",
           "data": {
             "tag": "Image",
@@ -239,6 +259,7 @@
         "SouthWaterfront": {
           "pitch": -1,
           "yaw": -25,
+          "id": "SouthWaterfront",
           "tooltip": "SouthWaterfront",
           "data": {
             "tag": "Image",
@@ -252,6 +273,7 @@
         "Go West": {
           "pitch": 0,
           "yaw": -35,
+          "id": "Go West",
           "tooltip": "Go West",
           "data": {
             "tag": "PhotosphereLink",
@@ -261,6 +283,7 @@
         "Go to Entrance": {
           "pitch": -7,
           "yaw": 125,
+          "id": "Go to Entrance",
           "tooltip": "Go to Entrance",
           "data": {
             "tag": "PhotosphereLink",
@@ -284,6 +307,7 @@
         "Go East": {
           "pitch": -2,
           "yaw": -4,
+          "id": "Go East",
           "tooltip": "Go East",
           "data": {
             "tag": "PhotosphereLink",
@@ -293,6 +317,7 @@
         "Go South": {
           "pitch": -4,
           "yaw": -78,
+          "id": "Go South",
           "tooltip": "Go South",
           "data": {
             "tag": "PhotosphereLink",
@@ -312,6 +337,7 @@
         "Go North": {
           "pitch": 0,
           "yaw": 10,
+          "id": "Go North",
           "tooltip": "Go North",
           "data": {
             "tag": "PhotosphereLink",
@@ -321,6 +347,7 @@
         "Go South": {
           "pitch": -3,
           "yaw": 115,
+          "id": "Go South",
           "tooltip": "Go South",
           "data": {
             "tag": "PhotosphereLink",
@@ -340,6 +367,7 @@
         "Go West": {
           "pitch": 0,
           "yaw": -130,
+          "id": "Go West",
           "tooltip": "Go West",
           "data": {
             "tag": "PhotosphereLink",
@@ -349,6 +377,7 @@
         "Go East": {
           "pitch": 0,
           "yaw": 92,
+          "id": "Go East",
           "tooltip": "Go East",
           "data": {
             "tag": "PhotosphereLink",
@@ -368,6 +397,7 @@
         "Go North": {
           "pitch": 3,
           "yaw": 2,
+          "id": "Go North",
           "tooltip": "Go North",
           "data": {
             "tag": "PhotosphereLink",
@@ -377,6 +407,7 @@
         "Go to Entrance": {
           "pitch": -2,
           "yaw": -167,
+          "id": "Go to Entrance",
           "tooltip": "Go to Entrance",
           "data": {
             "tag": "PhotosphereLink",
