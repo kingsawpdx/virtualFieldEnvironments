@@ -11,7 +11,6 @@ function RemoveNavMap({
 }: RemoveNavMapProps): JSX.Element {
   function handleRemoveNavmap() {
     // Remove the current navigation map from the VFE object
-
     onRemoveNavmap();
 
     // Close the remove navigation map dialog

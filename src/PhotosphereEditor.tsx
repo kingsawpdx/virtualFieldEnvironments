@@ -17,15 +17,7 @@ import RemoveHotspot from "./buttons/RemoveHotspot.tsx";
 import RemoveNavMap from "./buttons/RemoveNavmap.tsx";
 import RemovePhotosphere from "./buttons/RemovePhotosphere.tsx";
 
-/* -----------------------------------------------------------------------
-    Update the Virtual Field Environment with an added Photosphere.
-
-    * Take the initial VFE from parent
-    * If a change has been made to the parentVFE -> updateTrigger === true
-    * Send the newPhotosphere back to parent
-    * Parent updates the VFE with the newPhotosphere object
-   ----------------------------------------------------------------------- */
-
+/** Convert from radians to degrees */
 function radToDeg(num: number): number {
   return num * (180 / Math.PI);
 }
@@ -38,7 +30,6 @@ interface PhotosphereEditorProps {
   onChangePS: (id: string) => void;
 }
 
-// If an update is triggered, add newPhotosphere, and update VFE
 function PhotosphereEditor({
   vfe,
   onUpdateVFE,
@@ -46,9 +37,10 @@ function PhotosphereEditor({
   onChangePS,
 }: PhotosphereEditorProps): JSX.Element {
   const navigate = useNavigate();
-  // Base states
+
+  const [updateTrigger, setUpdateTrigger] = useState(0); // used to force refresh after changes
+
   const [showAddPhotosphere, setShowAddPhotosphere] = useState(false);
-  const [updateTrigger, setUpdateTrigger] = useState(0);
   const [showAddNavMap, setShowAddNavMap] = useState(false); // State to manage whether to show AddNavmap
 
   const [showAddHotspot, setShowAddHotspot] = useState(false);
@@ -70,8 +62,6 @@ function PhotosphereEditor({
 
   console.log(vfe);
 
-  // Change URL to reflect current photosphere
-
   function handleRemoveHotspotClick(hotspotToRemove: string) {
     setHotspotToRemove(hotspotToRemove);
     setShowRemoveHotspot(true);
@@ -82,7 +72,6 @@ function PhotosphereEditor({
       const updatedPhotosphere = { ...vfe.photospheres[currentPS] };
 
       // Create a new object without the hotspot to remove
-
       const { [hotspotToRemove]: _removed, ...remainingHotspots } =
         updatedPhotosphere.hotspots;
 
@@ -100,7 +89,6 @@ function PhotosphereEditor({
         },
       };
 
-      //setVFE(updatedVFE); // Update the local VFE state
       onUpdateVFE(updatedVFE); // Propagate the change to the parent component
       setShowRemoveHotspot(false); // Close the RemoveHotspot component
       setHotspotToRemove(null);
@@ -150,7 +138,6 @@ function PhotosphereEditor({
       defaultPhotosphereID: newDefaultPhotosphereID,
     };
 
-    //setVFE(updatedVFE);
     onUpdateVFE(updatedVFE);
     // After updating the state
     setUpdateTrigger((prev) => prev + 1);
@@ -162,7 +149,6 @@ function PhotosphereEditor({
     handleCloseRemovePhotosphere();
   }
 
-  // Update the VFE
   function handleAddPhotosphere(newPhotosphere: Photosphere) {
     const updatedVFE: VFE = {
       ...vfe,
@@ -171,6 +157,7 @@ function PhotosphereEditor({
         [newPhotosphere.id]: newPhotosphere,
       },
     };
+
     onUpdateVFE(updatedVFE); // Propagate the change to the AppRoot
     onChangePS(newPhotosphere.id); // Switch to new photosphere
     setShowAddPhotosphere(false);
@@ -197,6 +184,7 @@ function PhotosphereEditor({
     setUpdateTrigger((prev) => prev + 1);
   }
 
+  /** Get and use pitch/yaw from viewer click */
   function handleLocation(vpitch: number, vyaw: number) {
     setPitch(radToDeg(vpitch));
     setYaw(radToDeg(vyaw));
@@ -214,7 +202,7 @@ function PhotosphereEditor({
     setYaw(0);
   }
 
-  // This function is where we render the actual component based on the useState
+  /** Render the actual component based on states */
   function ActiveComponent() {
     if (showAddPhotosphere)
       return (
@@ -227,8 +215,6 @@ function PhotosphereEditor({
       return (
         <AddNavmap onCreateNavMap={handleCreateNavMap} onClose={resetStates} />
       );
-    // Below this you will have your conditional for your own component, ie AddNavmap/AddHotspot
-    // Below this you will have your conditional for your own component, ie AddNavmap/AddHotspot
     if (showAddHotspot)
       return (
         <AddHotspot
@@ -287,6 +273,11 @@ function PhotosphereEditor({
     setUpdateTrigger((prev) => prev + 1);
   }
 
+  /**
+   * Edit parts of a previously created photosphere.
+   * @param name Photosphere's new/old ID
+   * @param background objectURL for new/old panorama
+   */
   function handleChangePhotosphere(name: string, background: string) {
     const currentPhotosphere = vfe.photospheres[currentPS];
 
@@ -297,7 +288,7 @@ function PhotosphereEditor({
       name,
     );
 
-    //making currentPS entry with newName
+    //making currentPS entry with name
     updatedPhotospheres[name] = { ...currentPhotosphere, id: name };
 
     const updatedDefaultPhotosphereID =
@@ -322,15 +313,12 @@ function PhotosphereEditor({
     return;
   }
 
-  // Function to handle clicking on the "Remove photosphere" button
   function handleRemovePhotosphereClick() {
     setShowRemovePhotosphere(true);
-    // Set the state to true to show the RemovePhotosphere component
   }
 
-  // Function to handle closing the RemovePhotosphere component
   function handleCloseRemovePhotosphere() {
-    setShowRemovePhotosphere(false); // Set the state to false to hide the RemovePhotosphere component
+    setShowRemovePhotosphere(false);
   }
 
   function handleCloseHotspotRemove() {
@@ -346,13 +334,13 @@ function PhotosphereEditor({
       ...vfe,
       map: undefined,
     };
-    //setVFE(updatedVFE); // Update the local VFE state
+
     onUpdateVFE(updatedVFE); // Propagate the change to the parent component
     setShowRemoveNavMap(false); // Close the RemoveNavMap component
     setUpdateTrigger((prev) => prev + 1);
-    //setShowRemoveNavMap(true);
   }
 
+  /** Update PhotosphereLink hotspots with new photosphere ID */
   function updateHotspots(
     photosphere: Photosphere,
     oldPhotosphereID: string,
@@ -380,6 +368,7 @@ function PhotosphereEditor({
     return { ...photosphere, hotspots };
   }
 
+  /** Helper for handleChangePhotosphere. Update photosphere name in each photosphere's PhotosphereLink hotspots */
   function updatePhotospheres(
     photospheres: Record<string, Photosphere>,
     oldPhotosphereID: string,

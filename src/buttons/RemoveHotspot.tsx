@@ -13,6 +13,7 @@ function RemoveHotspot({
     onRemoveHotspot();
     onClose();
   }
+
   return (
     <Stack
       sx={{

@@ -20,7 +20,6 @@ function ChangePhotosphere({
   const [background, setBackground] = useState(ps.src.path);
   const [backgroundFile, setBackgroundFile] = useState<File | null>(null);
 
-  // Function to handle background change
   function handleBackgroundChange(file: File | null) {
     if (file) {
       setBackgroundFile(file);
