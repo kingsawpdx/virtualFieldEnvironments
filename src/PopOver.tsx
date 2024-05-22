@@ -18,7 +18,6 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  Divider,
   IconButton,
   Link,
   Paper,
@@ -28,6 +27,7 @@ import {
   Tooltip,
   Typography,
   alpha,
+  colors,
   lighten,
 } from "@mui/material";
 import Box from "@mui/material/Box";
@@ -257,7 +257,7 @@ function HotspotEditor({
   }
 
   return (
-    <Stack gap={2} width="300px">
+    <Stack gap={2} width="300px" height="100%">
       <Stack alignItems="center">
         <Typography variant="h5">Hotspot Editor</Typography>
       </Stack>
@@ -320,8 +320,8 @@ function HotspotEditor({
             nestedHotspotLength > 0 &&
             Object.values(newData.hotspots).map((hotspot2D) => (
               <Paper key={hotspot2D.id}>
-                <Box paddingInline={2} paddingBlock={1}>
-                  <Stack direction="row" gap={2} alignItems="center">
+                <Box padding={1}>
+                  <Stack direction="row" gap={1} alignItems="center">
                     <Tooltip title="Change Color">
                       <IconButton
                         size="small"
@@ -337,7 +337,13 @@ function HotspotEditor({
                       </IconButton>
                     </Tooltip>
 
-                    <Typography>{hotspot2D.tooltip}</Typography>
+                    <Typography
+                      overflow="hidden"
+                      textOverflow="ellipsis"
+                      whiteSpace="nowrap"
+                    >
+                      {hotspot2D.tooltip}
+                    </Typography>
 
                     <Box flexGrow={1} />
                     <Stack direction="row">
@@ -489,33 +495,37 @@ function PopOver(props: PopOverProps) {
         </Stack>
       </DialogTitle>
 
-      <DialogContent>
-        <Stack direction="row">
+      <Stack direction="row">
+        <DialogContent>
           <HotspotContent
             hotspot={props.hotspotData}
             pushHotspot={props.pushHotspot}
             popHotspot={props.popHotspot}
             arrayLength={props.hotspotPath.length}
           />
-          {props.onUpdateHotspot !== undefined && (
-            <>
-              <Divider
-                orientation="vertical"
-                flexItem
-                sx={{ marginInline: 1.5 }}
-              />
-              <HotspotEditor
-                key={props.hotspotPath.join()}
-                hotspotPath={props.hotspotPath}
-                tooltip={props.tooltip}
-                hotspotData={props.hotspotData}
-                onUpdateHotspot={props.onUpdateHotspot}
-                pushHotspot={props.pushHotspot}
-              />
-            </>
-          )}
-        </Stack>
-      </DialogContent>
+        </DialogContent>
+        {props.onUpdateHotspot !== undefined && (
+          <Box
+            padding="20px 24px"
+            bgcolor="#FDFDFD"
+            borderColor={colors.grey[300]}
+            sx={{
+              borderStyle: "solid",
+              borderWidth: "1px 0 0 1px",
+              borderTopLeftRadius: "4px",
+            }}
+          >
+            <HotspotEditor
+              key={props.hotspotPath.join()}
+              hotspotPath={props.hotspotPath}
+              tooltip={props.tooltip}
+              hotspotData={props.hotspotData}
+              onUpdateHotspot={props.onUpdateHotspot}
+              pushHotspot={props.pushHotspot}
+            />
+          </Box>
+        )}
+      </Stack>
     </Dialog>
   );
 }
