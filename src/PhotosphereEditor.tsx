@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState} from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { Hotspot3D, NavMap, Photosphere, VFE } from "./DataStructures.ts";
@@ -9,6 +9,7 @@ import AddAudio from "./buttons/AddAudio.tsx";
 import AddHotspot from "./buttons/AddHotspot.tsx";
 import AddNavmap from "./buttons/AddNavmap";
 import AddPhotosphere from "./buttons/AddPhotosphere.tsx";
+import {VisitedState} from "./HandleVisit.tsx";
 
 /* -----------------------------------------------------------------------
     Update the Virtual Field Environment with an added Photosphere.
@@ -56,6 +57,7 @@ function PhotosphereEditor({
   const [newName, setNewName] = useState(""); // State to hold the new name
   const [newBackground, setNewBackground] = useState("");
   const [audio, setAudio] = useState<string>("");
+  const visitedState = JSON.parse(localStorage.getItem('visitedState') ?? '{}') as VisitedState;
 
   console.log(vfe);
 
@@ -185,6 +187,9 @@ function PhotosphereEditor({
   function handleSubmitName() {
     if (newName.trim() !== "") {
       const currentPhotosphere = vfe.photospheres[photosphereID];
+      
+      const updatedVisitedState: VisitedState = {...visitedState};
+      updatedVisitedState[newName] = visitedState[photosphereID];
 
       //making updated photosphere list minus the currentPS
       const updatedPhotospheres: Record<string, Photosphere> =
@@ -205,6 +210,7 @@ function PhotosphereEditor({
       //making currentPS entry with newName
       updatedPhotospheres[newName] = { ...currentPhotosphere, id: newName };
 
+
       const updatedDefaultPhotosphereID =
         vfe.defaultPhotosphereID === photosphereID
           ? newName
@@ -215,6 +221,8 @@ function PhotosphereEditor({
         defaultPhotosphereID: updatedDefaultPhotosphereID,
         photospheres: updatedPhotospheres,
       };
+
+      localStorage.setItem('visitedState', JSON.stringify(updatedVisitedState));
 
       onChangePS(newName); //set currentPS index to new name to access it correctly moving forward
       setVFE(updatedVFE);

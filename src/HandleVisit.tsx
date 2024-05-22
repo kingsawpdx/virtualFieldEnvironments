@@ -1,31 +1,37 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Hotspot3D } from './DataStructures';
 
-export type VisitedState = Record<string, Hotspot3D[]>;
+export type VisitedState = Record<string, Record<string, boolean>>;
 
-export function useVisitedState(initialHotspots: VisitedState) {
-   
-  //initilizes state, but resets once new hotspot added  
-  function initializeVisitedState() {
-    const initialVisitedState: Record<string, Record<string, boolean>> = {};
+export function useVisitedState(initialHotspots: Record<string, Hotspot3D[]>) {
 
-    console.log('initial', initialVisitedState);
-
+  // Function to initialize state from local storage or initial hotspots
+  function initializeVisitedState(): VisitedState {
+    const storedState: string | null = localStorage.getItem('visitedState');
+    const parsedStoredState: VisitedState = storedState ? JSON.parse(storedState) as VisitedState : {};
+    
+    const initialVisitedState: VisitedState = {};
+    
     for (const [psId, hotspots] of Object.entries(initialHotspots)) {
       initialVisitedState[psId] = Object.fromEntries(
-        hotspots.map((hotspot) => [hotspot.id, false])
+        hotspots.map((hotspot) => [
+          hotspot.id,
+          parsedStoredState[psId][hotspot.id] || false,
+        ])
       );
     }
     return initialVisitedState;
   }
 
-  const [visited, setVisited] = useState<Record<string, Record<string, boolean>>>(
-    initializeVisitedState()
-  );
+  // State to manage visited hotspots
+  const [visited, setVisited] = useState<VisitedState>(initializeVisitedState());
 
-  console.log('visited', visited);
+  // Store state in local storage 
+  useEffect(() => {
+    localStorage.setItem('visitedState', JSON.stringify(visited));
+  }, [visited]);
 
-  //mark state as visited
+  // Function to mark hotspot as visited
   const handleVisit = useCallback((photosphereId: string, hotspotId: string) => {
     setVisited((prevState) => ({
       ...prevState,

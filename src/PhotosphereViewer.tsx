@@ -26,7 +26,7 @@ import {
 } from "./DataStructures";
 import PhotosphereSelector from "./PhotosphereSelector";
 import PopOver from "./PopOver";
-import { useVisitedState, VisitedState} from './HandleVisit';
+import { useVisitedState} from './HandleVisit';
 
 /** Convert yaw/pitch degrees from numbers to strings ending in "deg" */
 function degToStr(val: number): string {
@@ -159,12 +159,13 @@ function PhotosphereViewer({
     [],
   );
   const [mapStatic, setMapStatic] = useState(false);
-  
-  const initialPhotosphereHotspots: VisitedState = Object.keys(vfe.photospheres).reduce<VisitedState>((acc, psId) => {
+
+  const initialPhotosphereHotspots: Record<string, Hotspot3D[]> = Object.keys(vfe.photospheres).reduce<Record<string, Hotspot3D[]>>((acc, psId) => {
     acc[psId] = Object.values(vfe.photospheres[psId].hotspots);
     return acc;
   }, {});
-  const [visited, handleVisit] = useVisitedState(initialPhotosphereHotspots);
+  
+  const [visited, handleVisit] = useVisitedState(initialPhotosphereHotspots); 
 
   console.log('in viewer',visited)
 
@@ -215,13 +216,10 @@ function PhotosphereViewer({
 
       // setCurrentPhotosphere has to be used to get the current state value because
       // the value of currentPhotosphere does not get updated in an event listener
+
       setCurrentPhotosphere((currentState) => {
-        //const passMarker = currentState.hotspots[marker.config.id];
-        setHotspotArray((prevArray) => {
-          const passMarker = currentState.hotspots[marker.config.id];
-          return [...prevArray, passMarker];
-        }); 
-      //  addHotspot(marker.config.id);
+        const passMarker = currentState.hotspots[marker.config.id];
+        setHotspotArray([passMarker]);
 
 
         // Mark as visited
