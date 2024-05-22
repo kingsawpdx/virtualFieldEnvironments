@@ -3,14 +3,7 @@ import {
   LibraryAddSharp,
   TerrainSharp,
 } from "@mui/icons-material";
-import {
-  AppBar,
-  Button,
-  IconButton,
-  Stack,
-  Tooltip,
-  Typography,
-} from "@mui/material";
+import { AppBar, Button, IconButton, Stack, Typography } from "@mui/material";
 
 export interface HeaderProps {
   onCreateVFE: () => void;
@@ -31,12 +24,19 @@ function Header({ onCreateVFE, onLoadTestVFE }: HeaderProps) {
             Virtual Field Guides
           </Typography>
         </Stack>
-        <Stack direction="row">
-          <Tooltip title="Create">
-            <IconButton onClick={onCreateVFE}>
-              <LibraryAddSharp sx={{ color: "primary.contrastText" }} />
-            </IconButton>
-          </Tooltip>
+        <Stack direction="row" spacing={1}>
+          <Stack sx={{ justifyContent: "space-around" }}>
+            <Button
+              onClick={onCreateVFE}
+              endIcon={
+                <LibraryAddSharp sx={{ color: "primary.contrastText" }} />
+              }
+            >
+              <Typography sx={{ color: "primary.contrastText" }}>
+                Create
+              </Typography>
+            </Button>
+          </Stack>
           <Stack sx={{ justifyContent: "space-around", paddingRight: "10px" }}>
             <Button
               sx={{ backgroundColor: "primary.dark" }}
