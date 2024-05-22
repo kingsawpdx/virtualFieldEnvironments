@@ -70,6 +70,17 @@ function PhotosphereEditor({
 
   // Change URL to reflect current photosphere
 
+  function handleEditNavMap(updatedPhotospheres: Record<string, Photosphere>) {
+    const updatedVFE: VFE = {
+      ...vfe,
+      photospheres: updatedPhotospheres,
+    };
+
+    onUpdateVFE(updatedVFE);
+    setShowEditNavMap(false);
+    setUpdateTrigger((prev) => prev + 1);
+  }
+
   function handleRemoveHotspotClick(hotspotToRemove: string) {
     setHotspotToRemove(hotspotToRemove);
     setShowRemoveHotspot(true);
@@ -227,9 +238,9 @@ function PhotosphereEditor({
     if (showEditNavMap)
       return (
         <EditNavMap
-          onClose={handleCloseEditNavMap}
+          onClose={resetStates}
           vfe={vfe}
-          onUpdateVFE={onUpdateVFE}
+          onUpdateVFE={handleEditNavMap}
         />
       );
     if (showAddHotspot)
@@ -308,12 +319,12 @@ function PhotosphereEditor({
   function handleCloseRemoveNavMap() {
     setShowRemoveNavMap(false);
   }
-
+  /*
   function handleCloseEditNavMap() {
     setUpdateTrigger((prev) => prev + 1);
     setShowEditNavMap(false);
   }
-
+*/
   function handleRemoveNavMap() {
     const updatedVFE: VFE = {
       ...vfe,

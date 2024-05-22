@@ -1,7 +1,7 @@
 import { Box, Button, Stack } from "@mui/material";
 import { useState } from "react";
 
-import { VFE } from "../DataStructures";
+import { Photosphere, VFE } from "../DataStructures";
 import PhotosphereSelector, {
   PhotosphereSelectorProps,
 } from "../PhotosphereSelector";
@@ -9,7 +9,7 @@ import PhotosphereSelector, {
 interface EditNavMapProps {
   onClose: () => void;
   vfe: VFE;
-  onUpdateVFE: (updatedVFE: VFE) => void;
+  onUpdateVFE: (updatedPhotospheres: Record<string, Photosphere>) => void;
 }
 
 function EditNavMap({ onClose, vfe, onUpdateVFE }: EditNavMapProps) {
@@ -39,12 +39,7 @@ function EditNavMap({ onClose, vfe, onUpdateVFE }: EditNavMapProps) {
     const photosphere = updatedPhotospheres[selectedPhotosphere];
     photosphere.center = { x: x * 2, y: y * 2 };
 
-    const updatedVFE: VFE = {
-      ...vfe,
-      photospheres: updatedPhotospheres,
-    };
-
-    onUpdateVFE(updatedVFE);
+    onUpdateVFE(updatedPhotospheres);
     // Clear the selection after placing the hotspot
     setSelectedPhotosphere("");
   }
