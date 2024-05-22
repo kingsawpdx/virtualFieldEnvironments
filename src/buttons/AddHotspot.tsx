@@ -178,7 +178,7 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
       iconData = customIconData;
     }
 
-    let iconAsset: Asset = {
+    const iconAsset: Asset = {
       tag: "Network",
       path: iconData,
     };
