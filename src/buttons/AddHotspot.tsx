@@ -12,7 +12,7 @@ import {
 import { MuiFileInput } from "mui-file-input";
 import { useState } from "react";
 
-import { Hotspot3D, HotspotData } from "../DataStructures.ts";
+import { Asset, Hotspot3D, HotspotData } from "../DataStructures.ts";
 
 interface ContentInputProps {
   contentType: string;
@@ -115,6 +115,9 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
   const [tooltip, setTooltip] = useState("");
   const [contentType, setContentType] = useState("invalid");
   const [content, setContent] = useState("");
+  const [icon, setIcon] = useState("");
+  const [customIcon, setCustomIcon] = useState(false);
+  const [customIconData, setCustomIconData] = useState("");
 
   function handleAddHotspot() {
     if (tooltip.trim() == "" || contentType == "invalid") {
@@ -167,11 +170,25 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
         break;
     }
 
+    let iconData = "";
+
+    if (customIconData == "") {
+      iconData = icon;
+    } else {
+      iconData = customIconData;
+    }
+
+    const iconAsset: Asset = {
+      tag: "Network",
+      path: iconData,
+    };
+
     const newHotspot: Hotspot3D = {
       pitch: pitch,
       yaw: yaw,
       tooltip: tooltip,
       data: data,
+      icon: iconAsset,
     };
 
     onAddHotspot(newHotspot);
@@ -186,11 +203,11 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
         top: "20px",
         display: "flex",
         flexDirection: "column",
+        flexGrow: "1",
         background: "rgba(255, 255, 255, 0.8)",
         borderRadius: "8px",
         padding: "10px",
         justifyContent: "space-between",
-        height: "360px",
         width: "275px",
       }}
     >
@@ -241,6 +258,49 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
           <MenuItem value="PhotosphereLink">Photosphere Link</MenuItem>
         </Select>
       </FormControl>
+      {contentType == "PhotosphereLink" ? (
+        <></>
+      ) : (
+        <FormControl>
+          <InputLabel id="icon">Icon</InputLabel>
+          <Select
+            labelId="icon"
+            value={icon}
+            label="Custom Icon"
+            onChange={(e) => {
+              if (e.target.value == "custom") {
+                setCustomIcon(true);
+                setIcon(e.target.value);
+              } else {
+                setIcon(e.target.value);
+                setCustomIcon(false);
+                setCustomIconData("");
+              }
+            }}
+          >
+            <MenuItem value="custom">Custom Link</MenuItem>
+            <MenuItem value="https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png">
+              Blue Icon
+            </MenuItem>
+            <MenuItem value="https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png">
+              Red Icon
+            </MenuItem>
+          </Select>
+        </FormControl>
+      )}
+
+      {customIcon ? (
+        <TextField
+          required
+          label="Link to icon"
+          onChange={(e) => {
+            setCustomIconData(e.target.value);
+          }}
+        />
+      ) : (
+        <></>
+      )}
+
       <ContentInput contentType={contentType} onChangeContent={setContent} />
       <Stack direction="row" sx={{ justifyContent: "space-between" }}>
         <Button

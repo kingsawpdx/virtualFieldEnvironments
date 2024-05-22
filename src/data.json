@@ -24,6 +24,10 @@
         "OutcropWideView": {
           "pitch": 5,
           "yaw": -5,
+          "icon": {
+            "tag": "Network",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+          },
           "tooltip": "OutcropWideView",
           "data": {
             "tag": "Image",
@@ -37,6 +41,10 @@
         "Flowers": {
           "pitch": -3,
           "yaw": 18,
+          "icon": {
+            "tag": "Network",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+          },
           "tooltip": "Flowers",
           "data": {
             "tag": "Image",
@@ -50,6 +58,10 @@
         "URLDemo": {
           "pitch": -10,
           "yaw": 0,
+          "icon": {
+            "tag": "Network",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+          },
           "tooltip": "URLDemo",
           "data": {
             "tag": "URL",
@@ -60,6 +72,10 @@
         "Audio Demo - FrogChorus.mp3": {
           "pitch": -10,
           "yaw": 10,
+          "icon": {
+            "tag": "Network",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+          },
           "tooltip": "Audio Demo - FrogChorus.mp3",
           "data": {
             "tag": "Audio",
@@ -72,6 +88,10 @@
         "Document Demo - VFE Guidelines": {
           "pitch": -10,
           "yaw": 20,
+          "icon": {
+            "tag": "Network",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+          },
           "tooltip": "Document Demo - VFE Guidelines",
           "data": {
             "tag": "Doc",
@@ -81,6 +101,10 @@
         "ShorelineSOUTH.mp4": {
           "pitch": -32,
           "yaw": 172,
+          "icon": {
+            "tag": "Network",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png"
+          },
           "tooltip": "ShorelineSOUTH.mp4",
           "data": {
             "tag": "Video",
@@ -93,6 +117,10 @@
         "Paddlers.mp4": {
           "pitch": -10,
           "yaw": -175,
+          "icon": {
+            "tag": "Network",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png"
+          },
           "tooltip": "Paddlers.mp4",
           "data": {
             "tag": "Video",
@@ -105,6 +133,10 @@
         "SmallPool": {
           "pitch": -13,
           "yaw": 100,
+          "icon": {
+            "tag": "Network",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+          },
           "tooltip": "SmallPool",
           "data": {
             "tag": "Image",
@@ -118,6 +150,10 @@
         "LogNearShoreline": {
           "pitch": -25,
           "yaw": -40,
+          "icon": {
+            "tag": "Network",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+          },
           "tooltip": "LogNearShoreline",
           "data": {
             "tag": "Image",
@@ -131,6 +167,10 @@
         "CoolLog": {
           "pitch": -17,
           "yaw": -33,
+          "icon": {
+            "tag": "Network",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+          },
           "tooltip": "CoolLog",
           "data": {
             "tag": "Image",
@@ -144,6 +184,10 @@
         "OutcropTextures": {
           "pitch": 6,
           "yaw": 5,
+          "icon": {
+            "tag": "Network",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png"
+          },
           "tooltip": "OutcropTextures",
           "data": {
             "tag": "Video",
@@ -156,6 +200,10 @@
         "How did these huge logs get here?": {
           "pitch": -12,
           "yaw": -37,
+          "icon": {
+            "tag": "Network",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+          },
           "tooltip": "How did these huge logs get here?",
           "data": {
             "tag": "Doc",
@@ -165,6 +213,10 @@
         "Mushroom": {
           "pitch": 2,
           "yaw": -19,
+          "icon": {
+            "tag": "Network",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+          },
           "tooltip": "Mushroom",
           "data": {
             "tag": "Image",
@@ -178,6 +230,10 @@
         "Contact": {
           "pitch": 2,
           "yaw": -46,
+          "icon": {
+            "tag": "Network",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+          },
           "tooltip": "Contact",
           "data": {
             "tag": "Image",
@@ -239,6 +295,10 @@
         "SouthWaterfront": {
           "pitch": -1,
           "yaw": -25,
+          "icon": {
+            "tag": "Network",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+          },
           "tooltip": "SouthWaterfront",
           "data": {
             "tag": "Image",
@@ -252,6 +312,10 @@
         "Go West": {
           "pitch": 0,
           "yaw": -35,
+          "icon": {
+            "tag": "Network",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+          },
           "tooltip": "Go West",
           "data": {
             "tag": "PhotosphereLink",
@@ -261,6 +325,10 @@
         "Go to Entrance": {
           "pitch": -7,
           "yaw": 125,
+          "icon": {
+            "tag": "Network",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+          },
           "tooltip": "Go to Entrance",
           "data": {
             "tag": "PhotosphereLink",
@@ -284,6 +352,10 @@
         "Go East": {
           "pitch": -2,
           "yaw": -4,
+          "icon": {
+            "tag": "Network",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+          },
           "tooltip": "Go East",
           "data": {
             "tag": "PhotosphereLink",
@@ -293,6 +365,10 @@
         "Go South": {
           "pitch": -4,
           "yaw": -78,
+          "icon": {
+            "tag": "Network",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+          },
           "tooltip": "Go South",
           "data": {
             "tag": "PhotosphereLink",
@@ -312,6 +388,10 @@
         "Go North": {
           "pitch": 0,
           "yaw": 10,
+          "icon": {
+            "tag": "Network",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+          },
           "tooltip": "Go North",
           "data": {
             "tag": "PhotosphereLink",
@@ -321,6 +401,10 @@
         "Go South": {
           "pitch": -3,
           "yaw": 115,
+          "icon": {
+            "tag": "Network",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+          },
           "tooltip": "Go South",
           "data": {
             "tag": "PhotosphereLink",
@@ -340,6 +424,10 @@
         "Go West": {
           "pitch": 0,
           "yaw": -130,
+          "icon": {
+            "tag": "Network",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+          },
           "tooltip": "Go West",
           "data": {
             "tag": "PhotosphereLink",
@@ -349,6 +437,10 @@
         "Go East": {
           "pitch": 0,
           "yaw": 92,
+          "icon": {
+            "tag": "Network",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+          },
           "tooltip": "Go East",
           "data": {
             "tag": "PhotosphereLink",
@@ -368,6 +460,10 @@
         "Go North": {
           "pitch": 3,
           "yaw": 2,
+          "icon": {
+            "tag": "Network",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+          },
           "tooltip": "Go North",
           "data": {
             "tag": "PhotosphereLink",
@@ -377,6 +473,10 @@
         "Go to Entrance": {
           "pitch": -2,
           "yaw": -167,
+          "icon": {
+            "tag": "Network",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+          },
           "tooltip": "Go to Entrance",
           "data": {
             "tag": "PhotosphereLink",
