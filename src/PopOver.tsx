@@ -6,6 +6,7 @@ import {
   Audiotrack,
   Close,
   Delete,
+  Edit,
   ExpandLess,
   ExpandMore,
   Image,
@@ -14,7 +15,6 @@ import {
 } from "@mui/icons-material";
 import {
   Button,
-  Collapse,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -186,6 +186,7 @@ function HotspotEditor({
   tooltip,
   hotspotData,
   onUpdateHotspot,
+  pushHotspot,
 }: HotspotEditorProps) {
   const [newTooltip, setNewTooltip] = useState<string>(tooltip);
   const [newData, setNewData] = useState<HotspotData | null>(hotspotData);
@@ -340,16 +341,30 @@ function HotspotEditor({
                         <Typography>{hotspot2D.tooltip}</Typography>
 
                         <Box flexGrow={1} />
-                        <Tooltip title="Delete Hotspot">
-                          <IconButton
-                            size="small"
-                            onClick={() => {
-                              removeNestedHotspot(hotspot2D.id);
-                            }}
-                          >
-                            <Delete />
-                          </IconButton>
-                        </Tooltip>
+                        <Stack direction="row">
+                          {!edited && (
+                            <Tooltip title="Edit">
+                              <IconButton
+                                size="small"
+                                onClick={() => {
+                                  pushHotspot(hotspot2D);
+                                }}
+                              >
+                                <Edit />
+                              </IconButton>
+                            </Tooltip>
+                          )}
+                          <Tooltip title="Delete">
+                            <IconButton
+                              size="small"
+                              onClick={() => {
+                                removeNestedHotspot(hotspot2D.id);
+                              }}
+                            >
+                              <Delete />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
                       </Stack>
                     </Box>
                   </Paper>
