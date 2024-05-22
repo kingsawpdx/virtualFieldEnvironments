@@ -14,6 +14,9 @@ interface EditNavMapProps {
 
 function EditNavMap({ onClose, vfe, onUpdateVFE }: EditNavMapProps) {
   const [selectedPhotosphere, setSelectedPhotosphere] = useState("");
+  const [localPhotospheres, setLocalPhotospheres] = useState<
+    Record<string, Photosphere>
+  >(vfe.photospheres);
 
   const options: string[] = Object.keys(vfe.photospheres);
 
@@ -35,13 +38,18 @@ function EditNavMap({ onClose, vfe, onUpdateVFE }: EditNavMapProps) {
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
 
-    const updatedPhotospheres = { ...vfe.photospheres };
+    const updatedPhotospheres = { ...localPhotospheres };
     const photosphere = updatedPhotospheres[selectedPhotosphere];
     photosphere.center = { x: x * 2, y: y * 2 };
 
-    onUpdateVFE(updatedPhotospheres);
-    // Clear the selection after placing the hotspot
-    setSelectedPhotosphere("");
+    setLocalPhotospheres(updatedPhotospheres); // Update local state
+    // Do not call onUpdateVFE here
+    setSelectedPhotosphere(""); // Optionally clear the selection after placing the hotspot
+  }
+
+  function handleSave() {
+    onUpdateVFE(localPhotospheres); // Update global state with local changes
+    onClose(); // Optionally close the modal on save
   }
 
   return (
@@ -75,7 +83,7 @@ function EditNavMap({ onClose, vfe, onUpdateVFE }: EditNavMapProps) {
               position: "relative",
             }}
           >
-            {Object.values(vfe.photospheres).map((photosphere, index) => {
+            {Object.values(localPhotospheres).map((photosphere, index) => {
               if (photosphere.center) {
                 return (
                   <div
@@ -100,6 +108,9 @@ function EditNavMap({ onClose, vfe, onUpdateVFE }: EditNavMapProps) {
         ) : (
           <div style={{ color: "red" }}>No map available</div>
         )}
+        <Button variant="contained" onClick={handleSave}>
+          Save
+        </Button>
         <Button variant="outlined" onClick={onClose}>
           Close
         </Button>
