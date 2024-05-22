@@ -12,7 +12,7 @@ import {
 import { MuiFileInput } from "mui-file-input";
 import { useState } from "react";
 
-import { Hotspot3D, HotspotData } from "../DataStructures.ts";
+import { Asset, Hotspot3D, HotspotData } from "../DataStructures.ts";
 
 interface ContentInputProps {
   contentType: string;
@@ -178,12 +178,17 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
       iconData = customIconData;
     }
 
+    let iconAsset: Asset = {
+      tag: "Network",
+      path: iconData,
+    };
+
     const newHotspot: Hotspot3D = {
       pitch: pitch,
       yaw: yaw,
       tooltip: tooltip,
       data: data,
-      icon: iconData,
+      icon: iconAsset,
     };
 
     onAddHotspot(newHotspot);

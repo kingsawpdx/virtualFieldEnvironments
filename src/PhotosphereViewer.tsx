@@ -99,7 +99,7 @@ function convertHotspots(hotspots: Record<string, Hotspot3D>): MarkerConfig[] {
   for (const hotspot of Object.values(hotspots)) {
     if (hotspot.data.tag === "PhotosphereLink") continue;
 
-    let icon = hotspot.icon;
+    let icon = hotspot.icon.path;
 
     switch (hotspot.data.tag) {
       case "Image":
