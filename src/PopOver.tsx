@@ -268,12 +268,7 @@ function HotspotEditor({
           setNewTooltip(e.target.value);
         }}
       />
-      <HotspotDataEditor
-        hotspotData={newData}
-        setHotspotData={(data) => {
-          setNewData(data);
-        }}
-      />
+      <HotspotDataEditor hotspotData={newData} setHotspotData={setNewData} />
       {newData?.tag === "Image" && (
         <Stack gap={1}>
           <Stack direction="row">

@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { MuiFileInput } from "mui-file-input";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { Hotspot3D, HotspotData, newID } from "../DataStructures.ts";
 
@@ -143,7 +143,7 @@ function ContentInput({
   }
 }
 
-function getHotstpotDataContent(data: HotspotData | null): string {
+function getHotspotDataContent(data: HotspotData | null): string {
   if (data === null) return "";
 
   switch (data.tag) {
@@ -174,7 +174,12 @@ export function HotspotDataEditor({
     hotspotData?.tag ?? "invalid",
   );
   const [content, setContent] = useState<string>(
-    getHotstpotDataContent(hotspotData),
+    getHotspotDataContent(hotspotData),
+  );
+
+  const hotspots = useMemo(
+    () => (hotspotData?.tag === "Image" ? hotspotData.hotspots : {}),
+    [hotspotData],
   );
 
   useEffect(() => {
@@ -184,7 +189,7 @@ export function HotspotDataEditor({
         data = {
           tag: "Image",
           src: { tag: "Network", path: content },
-          hotspots: hotspotData?.tag === "Image" ? hotspotData.hotspots : {},
+          hotspots: hotspots,
         };
         break;
       case "Video":
@@ -224,7 +229,7 @@ export function HotspotDataEditor({
     }
 
     setHotspotData(data);
-  }, [content, contentType, hotspotData, setHotspotData]);
+  }, [content, contentType, setHotspotData, hotspots]);
 
   return (
     <>
