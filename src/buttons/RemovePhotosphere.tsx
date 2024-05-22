@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 
 import { VFE } from "../DataStructures";
@@ -29,7 +29,7 @@ function RemovePhotosphere({
     setValue: setSelectedPhotosphere,
   };
 
-  function HandleRemovePhotosphere() {
+  function handleRemovePhotosphere() {
     if (!selectedPhotosphere) {
       alert("Please select a photosphere to remove.");
       return;
@@ -39,8 +39,8 @@ function RemovePhotosphere({
   }
 
   return (
-    <div
-      style={{
+    <Stack
+      sx={{
         position: "fixed",
         zIndex: 1050,
         left: "50%",
@@ -51,13 +51,31 @@ function RemovePhotosphere({
         padding: "10px",
       }}
     >
-      <h1>Select a Photosphere to remove</h1>
-      <Box marginBottom={3}>
+      <Typography variant="h5">Remove Photosphere</Typography>
+      <Typography>
+        Select a photosphere to remove from the list below
+      </Typography>
+      <Box sx={{ margin: "auto", padding: "15px 0 35px" }}>
         <PhotosphereSelector {...selectorProps} />
       </Box>
-      <button onClick={HandleRemovePhotosphere}>Remove</button>
-      <button onClick={onClose}>Close</button>
-    </div>
+      <Stack
+        direction="row"
+        sx={{
+          justifyContent: "space-between",
+        }}
+      >
+        <Button onClick={onClose} sx={{ width: "49%" }} variant="outlined">
+          Keep
+        </Button>
+        <Button
+          onClick={handleRemovePhotosphere}
+          sx={{ width: "49%" }}
+          variant="contained"
+        >
+          Remove
+        </Button>
+      </Stack>
+    </Stack>
   );
 }
 

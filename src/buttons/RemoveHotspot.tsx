@@ -1,3 +1,5 @@
+import { Button, Stack, Typography } from "@mui/material";
+
 interface RemoveHotspotProps {
   onClose: () => void;
   onRemoveHotspot: () => void;
@@ -11,9 +13,10 @@ function RemoveHotspot({
     onRemoveHotspot();
     onClose();
   }
+
   return (
-    <div
-      style={{
+    <Stack
+      sx={{
         position: "fixed",
         zIndex: 1500,
         left: "50%",
@@ -22,13 +25,36 @@ function RemoveHotspot({
         background: "white",
         borderRadius: "8px",
         padding: "10px",
+        width: "350px",
       }}
+      spacing={1}
     >
-      <h1>Remove Hotspot</h1>
-      <p>Are you sure you want to remove this hotspot?</p>
-      <button onClick={handleRemoveHotspot}>Yes</button>
-      <button onClick={onClose}>Cancel</button>
-    </div>
+      <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+        Remove Hotspot?
+      </Typography>
+      <Typography>
+        The hotspot will be removed permanently and its data will be lost
+      </Typography>
+      <Stack
+        direction="row"
+        sx={{
+          justifyContent: "space-between",
+          paddingLeft: "50%",
+          paddingTop: "20px",
+        }}
+      >
+        <Button onClick={onClose} sx={{ width: "49%" }} variant="outlined">
+          Keep
+        </Button>
+        <Button
+          onClick={handleRemoveHotspot}
+          sx={{ width: "49%" }}
+          variant="contained"
+        >
+          Remove
+        </Button>
+      </Stack>
+    </Stack>
   );
 }
 
