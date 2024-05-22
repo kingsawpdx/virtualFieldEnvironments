@@ -252,10 +252,6 @@ function HotspotEditor({
     }
   }
 
-  function nestedHotspotLengthText(length: number) {
-    return `${length} Nested ${length === 1 ? "Hotspot" : "Hotspots"}`;
-  }
-
   return (
     <Stack gap={2} width="300px" height="100%">
       <Stack alignItems="center">
@@ -294,7 +290,7 @@ function HotspotEditor({
               }}
               sx={{ cursor: nestedHotspotLength > 0 ? "pointer" : "unset" }}
             >
-              {nestedHotspotLengthText(nestedHotspotLength)}
+              {`Nested Hotspots (${nestedHotspotLength})`}
             </Typography>
 
             <Tooltip title="Add Hotspot">
