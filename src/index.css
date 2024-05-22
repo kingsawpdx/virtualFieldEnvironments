@@ -9,3 +9,11 @@ body {
 .psv-map__overlay {
   display: none;
 }
+
+/* Make color picker border-radius same as MUI elements. */
+.react-colorful__saturation {
+  border-radius: 4px 4px 0 0 !important;
+}
+.react-colorful__hue {
+  border-radius: 0 0 4px 4px !important;
+}

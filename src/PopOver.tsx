@@ -19,6 +19,7 @@ import {
   IconButton,
   Link,
   Paper,
+  Popover,
   Stack,
   TextField,
   Tooltip,
@@ -28,6 +29,7 @@ import {
 } from "@mui/material";
 import Box from "@mui/material/Box";
 import { useState } from "react";
+import { HexColorPicker } from "react-colorful";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import ReactPlayer from "react-player";
@@ -186,6 +188,9 @@ function HotspotEditor({
   const [newData, setNewData] = useState<HotspotData | null>(hotspotData);
   const [edited, setEdited] = useState(false);
 
+  const [popperAnchor, setPopperAnchor] = useState<HTMLElement | null>(null);
+  const [popperHotspot, setPopperHotspot] = useState<Hotspot2D | null>(null);
+
   function removeNestedHotspot(hotspotToRemove: string) {
     if (newData?.tag === "Image") {
       const { [hotspotToRemove]: _removed, ...remainingHotspots } =
@@ -213,6 +218,18 @@ function HotspotEditor({
       setNewData({
         ...newData,
         hotspots: { ...newData.hotspots, [newHotspot.id]: newHotspot },
+      });
+      setEdited(true);
+    }
+  }
+
+  function changeNestedHotspotColor(hotspotToChange: string, color: string) {
+    if (newData?.tag === "Image") {
+      const updatedHotspot = { ...newData.hotspots[hotspotToChange], color };
+
+      setNewData({
+        ...newData,
+        hotspots: { ...newData.hotspots, [updatedHotspot.id]: updatedHotspot },
       });
       setEdited(true);
     }
@@ -261,29 +278,34 @@ function HotspotEditor({
                 <Paper key={hotspot2D.id}>
                   <Box paddingInline={2} paddingBlock={1}>
                     <Stack direction="row" gap={2} alignItems="center">
-                      <IconButton
-                        size="small"
-                        onClick={() => {
-                          return;
-                        }}
-                      >
-                        <HotspotIcon
-                          hotspotData={hotspot2D.data}
-                          color={hotspot2D.color}
-                        />
-                      </IconButton>
+                      <Tooltip title="Change Color">
+                        <IconButton
+                          size="small"
+                          onClick={(e: React.MouseEvent<HTMLElement>) => {
+                            setPopperAnchor(e.currentTarget);
+                            setPopperHotspot(hotspot2D);
+                          }}
+                        >
+                          <HotspotIcon
+                            hotspotData={hotspot2D.data}
+                            color={hotspot2D.color}
+                          />
+                        </IconButton>
+                      </Tooltip>
 
                       <Typography>{hotspot2D.tooltip}</Typography>
 
                       <Box flexGrow={1} />
-                      <IconButton
-                        size="small"
-                        onClick={() => {
-                          removeNestedHotspot(hotspot2D.id);
-                        }}
-                      >
-                        <Delete />
-                      </IconButton>
+                      <Tooltip title="Delete Hotspot">
+                        <IconButton
+                          size="small"
+                          onClick={() => {
+                            removeNestedHotspot(hotspot2D.id);
+                          }}
+                        >
+                          <Delete />
+                        </IconButton>
+                      </Tooltip>
                     </Stack>
                   </Box>
                 </Paper>
@@ -291,6 +313,34 @@ function HotspotEditor({
           </Stack>
         </>
       )}
+
+      <Popover
+        anchorEl={popperAnchor}
+        open={popperAnchor !== null && popperHotspot !== null}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+        transformOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        onClose={() => {
+          setPopperAnchor(null);
+        }}
+      >
+        <Box padding="3px">
+          <HexColorPicker
+            color={popperHotspot?.color}
+            onChange={(color) => {
+              if (popperHotspot) {
+                changeNestedHotspotColor(popperHotspot.id, color);
+              }
+            }}
+          />
+        </Box>
+      </Popover>
+
       <Box flexGrow={1} />
       {edited && (
         <Button
