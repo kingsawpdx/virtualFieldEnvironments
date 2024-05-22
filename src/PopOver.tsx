@@ -275,7 +275,7 @@ function HotspotEditor({
         }}
       />
       {newData?.tag === "Image" && (
-        <>
+        <Stack gap={1}>
           <Stack direction="row">
             {nestedHotspotLength == 0 ? (
               <Box width={32} height={32} padding="1px" />
@@ -316,62 +316,59 @@ function HotspotEditor({
             </Tooltip>
           </Stack>
 
-          {!hotspotsCollapsed && (
-            <Stack gap={1}>
-              {nestedHotspotLength > 0 &&
-                Object.values(newData.hotspots).map((hotspot2D) => (
-                  <Paper key={hotspot2D.id}>
-                    <Box paddingInline={2} paddingBlock={1}>
-                      <Stack direction="row" gap={2} alignItems="center">
-                        <Tooltip title="Change Color">
+          {!hotspotsCollapsed &&
+            nestedHotspotLength > 0 &&
+            Object.values(newData.hotspots).map((hotspot2D) => (
+              <Paper key={hotspot2D.id}>
+                <Box paddingInline={2} paddingBlock={1}>
+                  <Stack direction="row" gap={2} alignItems="center">
+                    <Tooltip title="Change Color">
+                      <IconButton
+                        size="small"
+                        onClick={(e: React.MouseEvent<HTMLElement>) => {
+                          setPopperAnchor(e.currentTarget);
+                          setPopperHotspot(hotspot2D);
+                        }}
+                      >
+                        <HotspotIcon
+                          hotspotData={hotspot2D.data}
+                          color={hotspot2D.color}
+                        />
+                      </IconButton>
+                    </Tooltip>
+
+                    <Typography>{hotspot2D.tooltip}</Typography>
+
+                    <Box flexGrow={1} />
+                    <Stack direction="row">
+                      {!edited && (
+                        <Tooltip title="Edit">
                           <IconButton
                             size="small"
-                            onClick={(e: React.MouseEvent<HTMLElement>) => {
-                              setPopperAnchor(e.currentTarget);
-                              setPopperHotspot(hotspot2D);
+                            onClick={() => {
+                              pushHotspot(hotspot2D);
                             }}
                           >
-                            <HotspotIcon
-                              hotspotData={hotspot2D.data}
-                              color={hotspot2D.color}
-                            />
+                            <Edit />
                           </IconButton>
                         </Tooltip>
-
-                        <Typography>{hotspot2D.tooltip}</Typography>
-
-                        <Box flexGrow={1} />
-                        <Stack direction="row">
-                          {!edited && (
-                            <Tooltip title="Edit">
-                              <IconButton
-                                size="small"
-                                onClick={() => {
-                                  pushHotspot(hotspot2D);
-                                }}
-                              >
-                                <Edit />
-                              </IconButton>
-                            </Tooltip>
-                          )}
-                          <Tooltip title="Delete">
-                            <IconButton
-                              size="small"
-                              onClick={() => {
-                                removeNestedHotspot(hotspot2D.id);
-                              }}
-                            >
-                              <Delete />
-                            </IconButton>
-                          </Tooltip>
-                        </Stack>
-                      </Stack>
-                    </Box>
-                  </Paper>
-                ))}
-            </Stack>
-          )}
-        </>
+                      )}
+                      <Tooltip title="Delete">
+                        <IconButton
+                          size="small"
+                          onClick={() => {
+                            removeNestedHotspot(hotspot2D.id);
+                          }}
+                        >
+                          <Delete />
+                        </IconButton>
+                      </Tooltip>
+                    </Stack>
+                  </Stack>
+                </Box>
+              </Paper>
+            ))}
+        </Stack>
       )}
 
       <Popover
