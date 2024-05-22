@@ -94,7 +94,12 @@ function HotspotContent(props: HotspotContentProps) {
     case "Audio":
       return (
         <AudioPlayer
-          style={{ width: "50vh", maxHeight: "70vh" }}
+          style={{
+            width: "50vh",
+            height: "150px",
+            marginTop: 3,
+            borderRadius: 5,
+          }}
           showSkipControls={false}
           showJumpControls={false}
           showDownloadProgress={false}
@@ -201,34 +206,13 @@ function HotspotEditor({
         y: 0,
         id: newID(),
         tooltip: "New Hotspot",
-        color: "red",
+        color: "#FF0000",
         data: { tag: "Message", content: "New Hotspot Content" },
       };
 
       setNewData({
         ...newData,
         hotspots: { ...newData.hotspots, [newHotspot.id]: newHotspot },
-      });
-      setEdited(true);
-    }
-  }
-
-  function changeNestedHotspotColor(hotspotToChange: string) {
-    if (newData?.tag === "Image") {
-      const updatedHotspot = newData.hotspots[hotspotToChange];
-      const colors = [
-        "red",
-        "orange",
-        "yellow",
-        "green",
-        "blue",
-        "purple",
-      ].filter((color) => color !== updatedHotspot.color); // don't choose same color
-
-      updatedHotspot.color = colors[Math.floor(Math.random() * colors.length)];
-      setNewData({
-        ...newData,
-        hotspots: { ...newData.hotspots, [updatedHotspot.id]: updatedHotspot },
       });
       setEdited(true);
     }
@@ -280,7 +264,7 @@ function HotspotEditor({
                       <IconButton
                         size="small"
                         onClick={() => {
-                          changeNestedHotspotColor(hotspot2D.id);
+                          return;
                         }}
                       >
                         <HotspotIcon
@@ -414,6 +398,7 @@ function PopOver(props: PopOverProps) {
                 sx={{ marginInline: 1.5 }}
               />
               <HotspotEditor
+                key={props.hotspotPath.join()}
                 hotspotPath={props.hotspotPath}
                 tooltip={props.tooltip}
                 hotspotData={props.hotspotData}

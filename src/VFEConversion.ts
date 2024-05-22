@@ -167,7 +167,11 @@ function updateHotspot<H extends Hotspot3D | Hotspot2D>(
 ): H | null {
   // Found the hotspot that is being searched for.
   if (hotspotPath.length === 1 && hotspotPath[0] === hotspot.id) {
-    return { ...hotspot, tooltip, data };
+    if (data === null) {
+      return null; // marked for deletion in calling function
+    }
+
+    return { ...hotspot, tooltip, data, asdasd: 23 } as H;
   }
 
   if (
