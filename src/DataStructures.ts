@@ -65,6 +65,7 @@ export interface Hotspot3D {
   tooltip: string;
   data: HotspotData;
   level: number;
+  icon: Asset;
 }
 
 // HotspotData: types of media resources for a hotspot within a photosphere

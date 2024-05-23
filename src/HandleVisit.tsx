@@ -20,6 +20,19 @@ export function useVisitedState(initialHotspots: Record<string, Hotspot3D[]>) {
         ])
       );
     }
+    for (const psId in parsedStoredState) {
+      if (!initialHotspots[psId]) {
+        // Remove the photosphere if it doesn't exist in initialHotspots
+        delete parsedStoredState[psId];
+      } else {
+        for (const hotspotId in parsedStoredState[psId]) {
+          if (!initialHotspots[psId].some(hotspot => hotspot.id === hotspotId)) {
+            // Remove the hotspot if it doesn't exist in the current photosphere's hotspots
+            delete parsedStoredState[psId][hotspotId];
+          }
+        }
+      }
+    }
     return initialVisitedState;
   }
 

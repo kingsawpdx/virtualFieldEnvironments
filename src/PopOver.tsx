@@ -1,5 +1,5 @@
-import { ArrowBack, Close } from "@mui/icons-material";
-import { useState } from "react";
+import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
+import { ArrowBack, Close, Delete } from "@mui/icons-material";
 import {
   Dialog,
   DialogContent,
@@ -11,8 +11,11 @@ import {
   lighten,
 } from "@mui/material";
 import Box from "@mui/material/Box";
+import AudioPlayer from "react-h5-audio-player";
+import "react-h5-audio-player/lib/styles.css";
+import ReactPlayer from "react-player";
+import { useState } from "react";
 import { Hotspot2D, HotspotData } from "./DataStructures";
-//import { VisitedState } from './HandleVisit';
 
 interface HotspotContentProps {
   hotspot: HotspotData;
@@ -62,45 +65,81 @@ function HotspotContent(props: HotspotContentProps) {
       );
     }
     case "Video":
-      //  "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png"; // changed to make linter happy until icons are ready
-      break;
+      return (
+        <ReactPlayer
+          url={props.hotspot.src.path}
+          controls={true}
+          style={{
+            maxWidth: "100%",
+            maxHeight: "70vh",
+          }}
+        />
+      );
     case "Audio":
-      break;
-    case "Doc":
-      break;
+      return (
+        <AudioPlayer
+          style={{ width: "50vh", maxHeight: "70vh" }}
+          showSkipControls={false}
+          showJumpControls={false}
+          showDownloadProgress={false}
+          src={props.hotspot.src.path}
+        />
+      );
+    case "Doc": {
+      const docs = [{ uri: props.hotspot.content }];
+      return (
+        <DocViewer
+          style={{ width: "80vw", height: "70vh" }}
+          documents={docs}
+          pluginRenderers={DocViewerRenderers}
+        />
+      );
+    }
     case "PhotosphereLink":
       break;
     case "URL":
-      break;
-    case "Quiz": {
-      const hotspotAnswer = props.hotspot.answer;
       return (
-        <div>
-          
-          <p>Question: {props.hotspot.question}</p>
-          <input
-            type="text"
-            value={answer}
-            onChange={(e) => {setAnswer(e.target.value)}}
-          />
-          <button
-            onClick={() => {
-              if (
-                answer.trim().toLowerCase() ===
-                hotspotAnswer.trim().toLowerCase()
-              ) {
-                setFeedback("Correct!");
-              } else {
-                setFeedback("Incorrect! Try again.");
-              }
+        <Box width={"80vw"} height={"70vh"} fontFamily={"Helvetica"}>
+          To view the link in a new tab, click the title.
+          <iframe
+            style={{
+              marginTop: "10px",
+              width: "80vw",
+              height: "70vh",
             }}
-          >
-            Submit
-          </button>
-          <p>{feedback}</p>
-        </div>
+            src={props.hotspot.src}
+          />
+        </Box>
       );
-          }
+      case "Quiz": {
+        const hotspotAnswer = props.hotspot.answer;
+        return (
+          <div>
+            
+            <p>Question: {props.hotspot.question}</p>
+            <input
+              type="text"
+              value={answer}
+              onChange={(e) => {setAnswer(e.target.value)}}
+            />
+            <button
+              onClick={() => {
+                if (
+                  answer.trim().toLowerCase() ===
+                  hotspotAnswer.trim().toLowerCase()
+                ) {
+                  setFeedback("Correct!");
+                } else {
+                  setFeedback("Incorrect! Try again.");
+                }
+              }}
+            >
+              Submit
+            </button>
+            <p>{feedback}</p>
+          </div>
+        );  
+      }
     default:
       break;
   }
@@ -113,8 +152,7 @@ export interface PopOverProps {
   pushHotspot: (add: Hotspot2D) => void;
   popHotspot: () => void;
   closeAll: () => void;
- // visited: VisitedState;
- // handleVisit: (hotspotId: string) => void; 
+  onDeleteHotspot?: () => void;
 }
 
 function PopOver(props: PopOverProps) {
@@ -124,11 +162,31 @@ function PopOver(props: PopOverProps) {
       onClose={props.closeAll}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
+      maxWidth={false}
     >
       <DialogTitle id="alert-dialog-title">
         <Stack direction="row" alignItems="center">
-          <Box flexGrow={1}>{props.title}</Box>
-
+          {props.onDeleteHotspot !== undefined && (
+            <Tooltip title="Delete Hotspot" placement="top">
+              <IconButton
+                onClick={() => {
+                  // This is where the delete functionality will go
+                  props.onDeleteHotspot?.();
+                }}
+              >
+                <Delete />
+              </IconButton>
+            </Tooltip>
+          )}
+          {props.hotspotData.tag == "URL" ? (
+            <Box flexGrow={1}>
+              <a href={props.hotspotData.src} target="_blank" rel="noreferrer">
+                {props.title}
+              </a>
+            </Box>
+          ) : (
+            <Box flexGrow={1}>{props.title}</Box>
+          )}
           {props.arrayLength > 1 && (
             <Tooltip title="Back" placement="top">
               <IconButton

@@ -1,6 +1,18 @@
-import React, { useState } from "react";
+import AttachFileIcon from "@mui/icons-material/AttachFile";
+import {
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { MuiFileInput } from "mui-file-input";
+import { useState } from "react";
 
-import { Hotspot3D, HotspotData } from "../DataStructures.ts";
+import { Asset, Hotspot3D, HotspotData } from "../DataStructures.ts";
 
 interface ContentInputProps {
   contentType: string;
@@ -9,52 +21,81 @@ interface ContentInputProps {
   onChangeQuestion: (question: string) => void;
 }
 
-function ContentInput({ contentType, onChangeContent, onChangeAnswer, onChangeQuestion}: ContentInputProps) {
-  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
+function ContentInput({ contentType, onChangeContent, onChangeQuestion, onChangeAnswer }: ContentInputProps) {
+  const [contentFile, setContentFile] = useState<File | null>(null); // for MuiFileInput
+
+  function handleFileChange(file: File | null) {
     if (file) {
+      setContentFile(file);
       onChangeContent(URL.createObjectURL(file));
     }
   }
 
-  function handleQuestion(e: React.ChangeEvent<HTMLInputElement>) {
-    onChangeQuestion(e.target.value);
-  }
-
-  function handleAnswer(e: React.ChangeEvent<HTMLInputElement>) {
-    onChangeAnswer(e.target.value);
-  }
-
-
-
-  let label;
-  let input;
   switch (contentType) {
     case "Image":
+      return (
+        <MuiFileInput
+          required
+          placeholder="Upload Image *"
+          value={contentFile}
+          onChange={handleFileChange}
+          inputProps={{ accept: "image/*" }}
+          InputProps={{
+            startAdornment: <AttachFileIcon />,
+          }}
+        />
+      );
     case "Video":
+      return (
+        <MuiFileInput
+          required
+          placeholder="Upload Video *"
+          value={contentFile}
+          onChange={handleFileChange}
+          inputProps={{ accept: "video/*" }}
+          InputProps={{
+            startAdornment: <AttachFileIcon />,
+          }}
+        />
+      );
     case "Audio":
-      label = <label htmlFor="content">Content: </label>;
-      input = <input type="file" id="content" onChange={handleFileChange} />;
-      break;
+      return (
+        <MuiFileInput
+          required
+          placeholder="Upload Audio *"
+          value={contentFile}
+          onChange={handleFileChange}
+          inputProps={{ accept: "audio/*" }}
+          InputProps={{
+            startAdornment: <AttachFileIcon />,
+          }}
+        />
+      );
     case "Doc":
-    case "URL":
-      label = <label htmlFor="content">Content: </label>;
-      input = (
-        <input
-          type="string"
-          id="content"
+      return (
+        <TextField
+          required
+          label="Content"
           onChange={(e) => {
             onChangeContent(e.target.value);
           }}
         />
       );
-      break;
+    case "URL":
+      return (
+        <TextField
+          required
+          label="URL"
+          onChange={(e) => {
+            onChangeContent(e.target.value);
+          }}
+        />
+      );
     case "PhotosphereLink":
-      label = <label htmlFor="content">Photosphere Name: </label>;
-      input = (
-        <input
-          type="string"
-          id="content"
+      return (
+        <TextField
+          required
+          label="Photosphere ID"
           onChange={(e) => {
             onChangeContent(e.target.value);
           }}
@@ -62,43 +103,35 @@ function ContentInput({ contentType, onChangeContent, onChangeAnswer, onChangeQu
       );
       break;
     case "Quiz":
-      label = (
+      return (
         <div>
-          <label htmlFor="question">Question: </label>
-          <input
-            type="text"
-            id="question"
-            onChange={handleQuestion}
+          <TextField
+            required
+            label="Question"
+            onChange={(e) => {
+              onChangeQuestion(e.target.value);
+            }}
+            fullWidth
+            margin="normal"
           />
-        </div>
-      );
-      input = (
-        <div style={{display:'block'}}>
-          <label htmlFor="answer">Answer: </label>
-          <input
-            type="text"
-            id="answer"
-            onChange={handleAnswer}
+          <TextField
+            required
+            label="Answer"
+            onChange={(e) => {
+              onChangeAnswer(e.target.value);
+            }}
+            fullWidth
+            margin="normal"
           />
         </div>
       );
       break;
 
     default:
-      label = <label htmlFor="content"></label>;
-      input = (
-        <span id="content">First select a content type to add content</span>
-      );
-
+      return <Typography>Please select a valid content type</Typography>;
   }
-
-  return (
-    <>
-      {label}
-      {input}
-    </>
-  );
 }
+
 interface AddHotspotProps {
   onAddHotspot: (newHotspot: Hotspot3D) => void;
   onCancel: () => void;
@@ -113,6 +146,9 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
   const [level, setLevel] = useState(0); // State for level
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
+  const [icon, setIcon] = useState("");
+  const [customIcon, setCustomIcon] = useState(false);
+  const [customIconData, setCustomIconData] = useState("");
 
   function handleAddHotspot() {
     if (tooltip.trim() == "" || contentType == "invalid") {
@@ -172,6 +208,19 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
         break;
     }
 
+    let iconData = "";
+
+    if (customIconData == "") {
+      iconData = icon;
+    } else {
+      iconData = customIconData;
+    }
+
+    const iconAsset: Asset = {
+      tag: "Network",
+      path: iconData,
+    };
+
     const newHotspot: Hotspot3D = {
       id: tooltip,
       pitch: pitch,
@@ -179,89 +228,148 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
       tooltip: tooltip,
       data: data,
       level: level,
+      icon: iconAsset,
     };
 
     onAddHotspot(newHotspot);
   }
 
   return (
-    <div
-      style={{
+    <Stack
+      sx={{
         position: "absolute",
         zIndex: 1000,
         right: "20px",
         top: "20px",
         display: "flex",
         flexDirection: "column",
+        flexGrow: "1",
         background: "rgba(255, 255, 255, 0.8)",
         borderRadius: "8px",
         padding: "10px",
+        justifyContent: "space-between",
+        width: "275px",
       }}
     >
-      <h4 style={{ textAlign: "center" }}>Add A Hotspot</h4>
-      <div>
-        <label htmlFor="tooptip">Tooltip: </label>
-        <input
-          type="string"
-          id="tooltip"
-          value={tooltip}
-          onChange={(e) => {
-            setTooltip(e.target.value);
+      <Typography variant="h5" sx={{ textAlign: "center" }}>
+        Add a Hotspot
+      </Typography>
+      <Typography>Click on viewer for pitch and yaw</Typography>
+      <Stack direction="row" sx={{ justifyContent: "space-between" }}>
+        <TextField
+          label="Pitch"
+          InputProps={{
+            readOnly: true,
           }}
+          defaultValue={String(pitch.toFixed(2))}
+          sx={{ width: "49%" }}
         />
-      </div>
-      <div>
-        <label htmlFor="contentType">Content Type: </label>
-        <select
-          name="contentType"
-          id="contentType"
+        <TextField
+          label="Yaw"
+          InputProps={{
+            readOnly: true,
+          }}
+          defaultValue={String(yaw.toFixed(2))}
+          sx={{ width: "49%" }}
+        />
+      </Stack>
+      <TextField
+        label="tooltip"
+        onChange={(e) => {
+          setTooltip(e.target.value);
+        }}
+      />
+      <FormControl>
+        <InputLabel id="contentType">Content Type</InputLabel>
+        <Select
+          labelId="contentType"
+          value={contentType}
+          label="Content Type"
           onChange={(e) => {
             setContentType(e.target.value);
           }}
         >
-          <option value="invalid">-- Select --</option>
-          <option value="Image">Image</option>
-          <option value="Video">Video</option>
-          <option value="Audio">Audio</option>
-          <option value="URL">URL</option>
-          <option value="Doc">Document</option>
-          <option value="PhotosphereLink">Photosphere Link</option>
-          <option value="Quiz">Quiz</option>
-        </select>
-      </div>
-      <div>
-        <ContentInput contentType={contentType} onChangeContent={setContent} onChangeAnswer={setAnswer} onChangeQuestion={setQuestion} />
-      </div>
-      <div>
-        <span>Pitch: </span>
-        <span id="pitch">{String(pitch.toFixed(2))}</span>
-        <span>Yaw: </span>
-        <span id="yaw">{String(yaw.toFixed(2))}</span>
-        <br />
-        <span>Click on viewer for pitch and yaw</span>
-      </div>
+          <MenuItem value="invalid">-- Select --</MenuItem>
+          <MenuItem value="Image">Image</MenuItem>
+          <MenuItem value="Video">Video</MenuItem>
+          <MenuItem value="Audio">Audio</MenuItem>
+          <MenuItem value="URL">URL</MenuItem>
+          <MenuItem value="Doc">Document</MenuItem>
+          <MenuItem value="PhotosphereLink">Photosphere Link</MenuItem>
+          <MenuItem value="Quiz">Quiz</MenuItem>
+        </Select>
+      </FormControl>
+      {contentType == "PhotosphereLink" ? (
+        <></>
+      ) : (
+        <FormControl>
+          <InputLabel id="icon">Icon</InputLabel>
+          <Select
+            labelId="icon"
+            value={icon}
+            label="Custom Icon"
+            onChange={(e) => {
+              if (e.target.value == "custom") {
+                setCustomIcon(true);
+                setIcon(e.target.value);
+              } else {
+                setIcon(e.target.value);
+                setCustomIcon(false);
+                setCustomIconData("");
+              }
+            }}
+          >
+            <MenuItem value="custom">Custom Link</MenuItem>
+            <MenuItem value="https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png">
+              Blue Icon
+            </MenuItem>
+            <MenuItem value="https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png">
+              Red Icon
+            </MenuItem>
+          </Select>
+        </FormControl>
+      )}
 
-      <div style={{ display: "flex", justifyContent: "space-around" }}>
-      <label htmlFor="level">Level for level (optional):    </label>
-        <input
-          type="string"
-          id="tooltip"
-          value={level || ""}
+      {customIcon ? (
+        <TextField
+          required
+          label="Link to icon"
           onChange={(e) => {
-            setLevel(parseInt(e.target.value));
+            setCustomIconData(e.target.value);
           }}
         />
-      </div>
+      ) : (
+        <></>
+      )}
 
-      <div style={{ display: "flex", justifyContent: "space-around" }}>
-        <button style={{ width: "40%" }} onClick={handleAddHotspot}>
+      <ContentInput contentType={contentType} onChangeContent={setContent} onChangeAnswer={setAnswer} onChangeQuestion={setQuestion} />
+      <TextField
+        label="Level (optional)"
+        value={level || ""}
+        onChange={(e) => {
+          const newValue = parseInt(e.target.value);
+          if (!isNaN(newValue)) {
+            setLevel(newValue);
+          } else {
+            setLevel(0);
+          }
+        }}
+        fullWidth
+        margin="normal"
+      />
+      <Stack direction="row" sx={{ justifyContent: "space-between" }}>
+        <Button
+          variant="contained"
+          style={{ width: "49%" }}
+          onClick={handleAddHotspot}
+        >
           Create
-        </button>
-        <button style={{ width: "40%" }} onClick={onCancel}>
+        </Button>
+        <Button variant="outlined" sx={{ width: "49%" }} onClick={onCancel}>
           Cancel
-        </button>
-      </div>
-    </div>
+        </Button>
+      </Stack>
+    </Stack>
   );
 }
 
