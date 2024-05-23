@@ -40,7 +40,7 @@ function EditNavMap({ onClose, vfe, onUpdateVFE }: EditNavMapProps) {
 
     const updatedPhotospheres = { ...localPhotospheres };
     const photosphere = updatedPhotospheres[selectedPhotosphere];
-    photosphere.center = { x: x * 2, y: y * 2 }; // multiply both by 2 because the defaultCenter(x,y) is divinded by 2
+    photosphere.center = { x: x, y: y }; // multiply both by 2 because the defaultCenter(x,y) is divinded by 2
 
     setLocalPhotospheres(updatedPhotospheres); // Update local state
     // Do not call onUpdateVFE here
@@ -76,8 +76,8 @@ function EditNavMap({ onClose, vfe, onUpdateVFE }: EditNavMapProps) {
             onClick={handleMapClick}
             style={{
               background: `url(${map.src.path}) no-repeat center/contain`,
-              width: map.defaultCenter.x,
-              height: map.defaultCenter.y,
+              width: map.width,
+              height: map.height,
               border: "1px solid black",
               cursor: "crosshair",
               position: "relative",
@@ -90,8 +90,8 @@ function EditNavMap({ onClose, vfe, onUpdateVFE }: EditNavMapProps) {
                     key={index}
                     style={{
                       position: "absolute",
-                      top: `${photosphere.center.y / 2}px`,
-                      left: `${photosphere.center.x / 2}px`,
+                      top: `${photosphere.center.y}px`,
+                      left: `${photosphere.center.x}px`,
                       backgroundColor: "yellow",
                       width: "10px",
                       height: "10px",

@@ -35,6 +35,8 @@ export interface NavMap {
   defaultZoom: number;
   defaultCenter: { x: number; y: number };
   size: number;
+  width: number;
+  height: number;
 }
 
 // Photosphere: a single 360-environment
