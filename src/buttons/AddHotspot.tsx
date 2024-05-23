@@ -242,8 +242,8 @@ export function HotspotDataEditor({
           value={contentType}
           label="Content Type"
           onChange={(e) => {
-            setContentType(e.target.value);
             setContent("");
+            setContentType(e.target.value);
           }}
         >
           <MenuItem value="invalid">-- Select --</MenuItem>
