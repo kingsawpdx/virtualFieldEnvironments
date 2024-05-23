@@ -40,7 +40,7 @@ function EditNavMap({ onClose, vfe, onUpdateVFE }: EditNavMapProps) {
 
     const updatedPhotospheres = { ...localPhotospheres };
     const photosphere = updatedPhotospheres[selectedPhotosphere];
-    photosphere.center = { x: x * 2, y: y * 2 };
+    photosphere.center = { x: x * 2, y: y * 2 }; // multiply both by 2 because the defaultCenter(x,y) is divinded by 2
 
     setLocalPhotospheres(updatedPhotospheres); // Update local state
     // Do not call onUpdateVFE here

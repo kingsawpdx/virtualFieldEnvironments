@@ -350,12 +350,7 @@ function PhotosphereEditor({
   function handleCloseRemoveNavMap() {
     setShowRemoveNavMap(false);
   }
-  /*
-  function handleCloseEditNavMap() {
-    setUpdateTrigger((prev) => prev + 1);
-    setShowEditNavMap(false);
-  }
-*/
+
   function handleRemoveNavMap() {
     const updatedVFE: VFE = {
       ...vfe,
@@ -577,21 +572,21 @@ function PhotosphereEditor({
             <Button
               sx={{ margin: "10px 0" }}
               onClick={() => {
-                setShowChangeFeatures(false);
-              }}
-              variant="outlined"
-            >
-              Back
-            </Button>
-            <Button
-              sx={{ margin: "10px 0" }}
-              onClick={() => {
                 resetStates();
                 setShowEditNavMap(true); // Set state to show EditNavmap
               }}
               variant="contained"
             >
               Edit NavMap
+            </Button>
+            <Button
+              sx={{ margin: "10px 0" }}
+              onClick={() => {
+                setShowChangeFeatures(false);
+              }}
+              variant="outlined"
+            >
+              Back
             </Button>
           </>
         )}
