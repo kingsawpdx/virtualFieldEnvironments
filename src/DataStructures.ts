@@ -54,7 +54,6 @@ export interface Hotspot2D {
   tooltip: string;
   color: string;
   data: HotspotData;
-  level: number;
 }
 
 // Hotspot3D: a clickable resource that is inside a 360 photosphere (pitch, yaw)
