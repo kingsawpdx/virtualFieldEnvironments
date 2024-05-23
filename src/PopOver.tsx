@@ -218,7 +218,7 @@ function HotspotEditor({
     if (newData !== null) {
       setPreviewData(newData);
     }
-  }, [newData]);
+  }, [setPreviewData, newData]);
 
   function removeNestedHotspot(hotspotToRemove: string) {
     if (newData?.tag === "Image") {

@@ -176,9 +176,12 @@ export function HotspotDataEditor({
     getHotspotDataContent(hotspotData),
   );
 
+  const noHotspots = useMemo(() => {
+    return {};
+  }, []);
   const hotspots = useMemo(
-    () => (hotspotData?.tag === "Image" ? hotspotData.hotspots : {}),
-    [hotspotData],
+    () => (hotspotData?.tag === "Image" ? hotspotData.hotspots : noHotspots),
+    [hotspotData, noHotspots],
   );
 
   useEffect(() => {
@@ -188,7 +191,7 @@ export function HotspotDataEditor({
         data = {
           tag: "Image",
           src: { tag: "Network", path: content },
-          hotspots: hotspots,
+          hotspots,
         };
         break;
       case "Video":
