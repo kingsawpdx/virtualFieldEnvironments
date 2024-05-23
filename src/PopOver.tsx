@@ -179,6 +179,8 @@ export interface HotspotEditorProps {
     newData: HotspotData | null,
   ) => void;
   pushHotspot: (add: Hotspot2D) => void;
+  setPreviewTooltip: (tooltip: string) => void;
+  setPreviewData: (data: HotspotData) => void;
 }
 
 function HotspotEditor({
@@ -187,6 +189,8 @@ function HotspotEditor({
   hotspotData,
   onUpdateHotspot,
   pushHotspot,
+  setPreviewTooltip,
+  setPreviewData,
 }: HotspotEditorProps) {
   const [newTooltip, setNewTooltip] = useState<string>(tooltip);
   const [newData, setNewData] = useState<HotspotData | null>(hotspotData);
@@ -203,8 +207,16 @@ function HotspotEditor({
   );
 
   useEffect(() => {
+    setPreviewTooltip(newTooltip);
+  }, [setPreviewTooltip, newTooltip]);
+
+  useEffect(() => {
     if (newData?.tag === "Image") {
       setNestedHotspotLength(Object.values(newData.hotspots).length);
+    }
+
+    if (newData !== null) {
+      setPreviewData(newData);
     }
   }, [newData]);
 
@@ -447,6 +459,9 @@ export interface PopOverProps {
 }
 
 function PopOver(props: PopOverProps) {
+  const [previewTooltip, setPreviewTooltip] = useState(props.tooltip);
+  const [previewData, setPreviewData] = useState(props.hotspotData);
+
   return (
     <Dialog
       open={true}
@@ -458,14 +473,14 @@ function PopOver(props: PopOverProps) {
     >
       <DialogTitle id="alert-dialog-title">
         <Stack direction="row" alignItems="center">
-          {props.hotspotData.tag == "URL" ? (
+          {previewData.tag == "URL" ? (
             <Box flexGrow={1}>
-              <a href={props.hotspotData.src} target="_blank" rel="noreferrer">
-                {props.tooltip}
+              <a href={previewData.src} target="_blank" rel="noreferrer">
+                {previewTooltip}
               </a>
             </Box>
           ) : (
-            <Box flexGrow={1}>{props.tooltip}</Box>
+            <Box flexGrow={1}>{previewTooltip}</Box>
           )}
           {props.hotspotPath.length > 1 && (
             <Tooltip title="Back" placement="top">
@@ -489,7 +504,7 @@ function PopOver(props: PopOverProps) {
       <Stack direction="row">
         <DialogContent>
           <HotspotContent
-            hotspot={props.hotspotData}
+            hotspot={previewData}
             pushHotspot={props.pushHotspot}
             popHotspot={props.popHotspot}
             arrayLength={props.hotspotPath.length}
@@ -513,6 +528,8 @@ function PopOver(props: PopOverProps) {
               hotspotData={props.hotspotData}
               onUpdateHotspot={props.onUpdateHotspot}
               pushHotspot={props.pushHotspot}
+              setPreviewTooltip={setPreviewTooltip}
+              setPreviewData={setPreviewData}
             />
           </Box>
         )}

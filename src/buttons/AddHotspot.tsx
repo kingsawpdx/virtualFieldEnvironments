@@ -89,7 +89,6 @@ function ContentInput({
         />
       );
     case "Doc":
-      console.log(documentAcceptTypes.join(", "));
       return (
         <MuiFileInput
           required
