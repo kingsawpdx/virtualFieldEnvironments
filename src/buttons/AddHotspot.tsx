@@ -21,7 +21,12 @@ interface ContentInputProps {
   onChangeQuestion: (question: string) => void;
 }
 
-function ContentInput({ contentType, onChangeContent, onChangeQuestion, onChangeAnswer }: ContentInputProps) {
+function ContentInput({
+  contentType,
+  onChangeContent,
+  onChangeQuestion,
+  onChangeAnswer,
+}: ContentInputProps) {
   const [contentFile, setContentFile] = useState<File | null>(null); // for MuiFileInput
 
   function handleFileChange(file: File | null) {
@@ -194,7 +199,7 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
           tag: "PhotosphereLink",
           photosphereID: content,
         };
-        break; 
+        break;
       case "Quiz":
         data = {
           tag: "Quiz",
@@ -204,7 +209,7 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
         break;
       // should never actually get here
       default:
-        data = { tag: "URL", src: content}
+        data = { tag: "URL", src: content };
         break;
     }
 
@@ -342,7 +347,12 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
         <></>
       )}
 
-      <ContentInput contentType={contentType} onChangeContent={setContent} onChangeAnswer={setAnswer} onChangeQuestion={setQuestion} />
+      <ContentInput
+        contentType={contentType}
+        onChangeContent={setContent}
+        onChangeAnswer={setAnswer}
+        onChangeQuestion={setQuestion}
+      />
       <TextField
         label="Level (optional)"
         value={level || ""}
@@ -357,7 +367,7 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
         fullWidth
         margin="normal"
       />
-      <Stack direction="row" sx={{ justifyContent: "space-between" }}>
+      <Stack direction="row" sx={{ justifyCointent: "space-between" }}>
         <Button
           variant="contained"
           style={{ width: "49%" }}

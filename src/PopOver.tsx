@@ -11,10 +11,11 @@ import {
   lighten,
 } from "@mui/material";
 import Box from "@mui/material/Box";
+import { useState } from "react";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import ReactPlayer from "react-player";
-import { useState } from "react";
+
 import { Hotspot2D, HotspotData } from "./DataStructures";
 
 interface HotspotContentProps {
@@ -111,35 +112,36 @@ function HotspotContent(props: HotspotContentProps) {
           />
         </Box>
       );
-      case "Quiz": {
-        const hotspotAnswer = props.hotspot.answer;
-        return (
-          <div>
-            
-            <p>Question: {props.hotspot.question}</p>
-            <input
-              type="text"
-              value={answer}
-              onChange={(e) => {setAnswer(e.target.value)}}
-            />
-            <button
-              onClick={() => {
-                if (
-                  answer.trim().toLowerCase() ===
-                  hotspotAnswer.trim().toLowerCase()
-                ) {
-                  setFeedback("Correct!");
-                } else {
-                  setFeedback("Incorrect! Try again.");
-                }
-              }}
-            >
-              Submit
-            </button>
-            <p>{feedback}</p>
-          </div>
-        );  
-      }
+    case "Quiz": {
+      const hotspotAnswer = props.hotspot.answer;
+      return (
+        <div>
+          <p>Question: {props.hotspot.question}</p>
+          <input
+            type="text"
+            value={answer}
+            onChange={(e) => {
+              setAnswer(e.target.value);
+            }}
+          />
+          <button
+            onClick={() => {
+              if (
+                answer.trim().toLowerCase() ===
+                hotspotAnswer.trim().toLowerCase()
+              ) {
+                setFeedback("Correct!");
+              } else {
+                setFeedback("Incorrect! Try again.");
+              }
+            }}
+          >
+            Submit
+          </button>
+          <p>{feedback}</p>
+        </div>
+      );
+    }
     default:
       break;
   }

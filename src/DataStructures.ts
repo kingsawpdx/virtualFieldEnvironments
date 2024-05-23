@@ -59,7 +59,7 @@ export interface Hotspot2D {
 
 // Hotspot3D: a clickable resource that is inside a 360 photosphere (pitch, yaw)
 export interface Hotspot3D {
-  id: string
+  id: string;
   pitch: number;
   yaw: number;
   tooltip: string;
@@ -69,7 +69,14 @@ export interface Hotspot3D {
 }
 
 // HotspotData: types of media resources for a hotspot within a photosphere
-export type HotspotData = Image | Audio | Video | URL | Doc | PhotosphereLink | Quiz;
+export type HotspotData =
+  | Image
+  | Audio
+  | Video
+  | URL
+  | Doc
+  | PhotosphereLink
+  | Quiz;
 
 // media objects
 export interface Image {
@@ -108,4 +115,3 @@ export interface Quiz {
   question: string;
   answer: string;
 }
-

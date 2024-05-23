@@ -6,13 +6,13 @@ import { useNavigate } from "react-router-dom";
 
 import { Hotspot3D, NavMap, Photosphere, VFE } from "./DataStructures.ts";
 import { deleteStoredVFE, save } from "./FileOperations.ts";
+import { VisitedState } from "./HandleVisit.tsx";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
 import { convertNetworkToLocal, convertVFE } from "./VFEConversion.ts";
 import AddAudio from "./buttons/AddAudio.tsx";
 import AddHotspot from "./buttons/AddHotspot.tsx";
 import AddNavmap from "./buttons/AddNavmap";
 import AddPhotosphere from "./buttons/AddPhotosphere.tsx";
-import {VisitedState} from "./HandleVisit.tsx";
 import ChangePhotosphere from "./buttons/ChangePhotosphere.tsx";
 import RemoveHotspot from "./buttons/RemoveHotspot.tsx";
 import RemoveNavMap from "./buttons/RemoveNavmap.tsx";
@@ -52,7 +52,9 @@ function PhotosphereEditor({
   const [showChangeFeatures, setShowChangeFeatures] = useState(false);
   const [showRemoveFeatures, setShowRemoveFeatures] = useState(false);
 
-  const visitedState = JSON.parse(localStorage.getItem('visitedState') ?? '{}') as VisitedState;
+  const visitedState = JSON.parse(
+    localStorage.getItem("visitedState") ?? "{}",
+  ) as VisitedState;
   const [showChangePhotosphere, setShowChangePhotosphere] = useState(false);
 
   const [audioFile, setAudioFile] = useState<File | null>(null); // for MuiInputFile
@@ -292,7 +294,7 @@ function PhotosphereEditor({
 
     //making currentPS entry with name
     updatedPhotospheres[name] = { ...currentPhotosphere, id: name };
-    const updatedVisitedState: VisitedState = {...visitedState};
+    const updatedVisitedState: VisitedState = { ...visitedState };
     updatedVisitedState[name] = visitedState[currentPS];
 
     const updatedDefaultPhotosphereID =
@@ -309,7 +311,7 @@ function PhotosphereEditor({
       photospheres: updatedPhotospheres,
     };
 
-    localStorage.setItem('visitedState', JSON.stringify(updatedVisitedState));
+    localStorage.setItem("visitedState", JSON.stringify(updatedVisitedState));
 
     onChangePS(name); //set currentPS index to new name to access it correctly moving forward
     onUpdateVFE(updatedVFE);

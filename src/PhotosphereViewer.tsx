@@ -22,7 +22,7 @@ import {
   VirtualTourPlugin,
   VirtualTourPluginConfig,
 } from "react-photo-sphere-viewer";
-import { useVisitedState} from './HandleVisit';
+
 import AudioToggleButton from "./AudioToggleButton";
 import {
   Hotspot2D,
@@ -31,6 +31,7 @@ import {
   Photosphere,
   VFE,
 } from "./DataStructures";
+import { useVisitedState } from "./HandleVisit";
 import PhotosphereSelector from "./PhotosphereSelector";
 import PopOver from "./PopOver";
 
@@ -217,14 +218,15 @@ function PhotosphereViewer({
   const ready = useRef(false);
   const defaultPanorama = useRef(vfe.photospheres[currentPS].src.path);
 
-  const initialPhotosphereHotspots: Record<string, Hotspot3D[]> = Object.keys(vfe.photospheres).reduce<Record<string, Hotspot3D[]>>((acc, psId) => {
+  const initialPhotosphereHotspots: Record<string, Hotspot3D[]> = Object.keys(
+    vfe.photospheres,
+  ).reduce<Record<string, Hotspot3D[]>>((acc, psId) => {
     acc[psId] = Object.values(vfe.photospheres[psId].hotspots);
     return acc;
   }, {});
-  
-  const [visited, handleVisit] = useVisitedState(initialPhotosphereHotspots); 
-  console.log('in viewer',visited)
 
+  const [visited, handleVisit] = useVisitedState(initialPhotosphereHotspots);
+  console.log("in viewer", visited);
 
   useEffect(() => {
     if (ready.current) {
@@ -277,7 +279,7 @@ function PhotosphereViewer({
       setCurrentPhotosphere((currentState) => {
         const passMarker = currentState.hotspots[marker.config.id];
         setHotspotArray([passMarker]);
-        handleVisit(currentPS,marker.config.id);
+        handleVisit(currentPS, marker.config.id);
         return currentState;
       });
     });
