@@ -60,8 +60,6 @@ function PhotosphereEditor({
   const [showRemoveHotspot, setShowRemoveHotspot] = useState(false);
   const [hotspotToRemove, setHotspotToRemove] = useState<string | null>(null);
 
-  console.log(vfe);
-
   function handleRemoveHotspotClick(hotspotToRemove: string) {
     setHotspotToRemove(hotspotToRemove);
     setShowRemoveHotspot(true);
@@ -300,7 +298,9 @@ function PhotosphereEditor({
     };
 
     //remove photosphere that has been renamed
-    delete updatedPhotospheres[currentPS];
+    if (name != currentPS) {
+      delete updatedPhotospheres[currentPS];
+    }
 
     const updatedVFE: VFE = {
       ...vfe,
