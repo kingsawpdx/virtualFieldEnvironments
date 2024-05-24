@@ -280,7 +280,7 @@ function PhotosphereEditor({
     const currentPhotosphere = vfe.photospheres[currentPS];
 
     //making updated photosphere list minus the currentPS
-    const updatedPhotospheres: Record<string, Photosphere> = updatePhotospheres(
+    let updatedPhotospheres: Record<string, Photosphere> = updatePhotospheres(
       vfe.photospheres,
       currentPS,
       name,
@@ -299,7 +299,8 @@ function PhotosphereEditor({
 
     //remove photosphere that has been renamed
     if (name != currentPS) {
-      delete updatedPhotospheres[currentPS];
+      const { [currentPS]: _, ...withoutCurrentPS } = updatedPhotospheres;
+      updatedPhotospheres = withoutCurrentPS;
     }
 
     const updatedVFE: VFE = {
