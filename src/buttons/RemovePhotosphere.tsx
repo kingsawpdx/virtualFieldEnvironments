@@ -34,7 +34,6 @@ function RemovePhotosphere({
       alert("Please select a photosphere to remove.");
       return;
     }
-    localStorage.removeItem("visitedState");
     onRemovePhotosphere(selectedPhotosphere);
     onClose();
   }

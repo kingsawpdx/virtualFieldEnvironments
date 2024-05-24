@@ -23,7 +23,7 @@ export function useVisitedState(initialHotspots: Record<string, Hotspot3D[]>) {
       );
     }
     return initialVisitedState;
-  };
+  }
 
   // State to manage visited hotspots
   const [visited, setVisited] = useState<VisitedState>(
@@ -49,10 +49,5 @@ export function useVisitedState(initialHotspots: Record<string, Hotspot3D[]>) {
     [],
   );
 
-  /*const resetVisitedState = useCallback(() => {
-    localStorage.removeItem("visitedState");
-    setVisited(initializeVisitedState());
-  }, [initializeVisitedState]);
-*/
   return [visited, handleVisit] as const;
 }

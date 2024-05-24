@@ -279,7 +279,6 @@ function PhotosphereViewer({
       setCurrentPhotosphere((currentState) => {
         const passMarker = currentState.hotspots[marker.config.id];
         setHotspotArray([passMarker]);
-        console.log('current',currentState.id);
         handleVisit(currentState.id, marker.config.id);
         return currentState;
       });

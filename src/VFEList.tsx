@@ -55,6 +55,7 @@ function VFEList() {
     if (toDelete) {
       // removed deleted nav map from record
       const { [toDelete]: _deleted, ...newNavMaps } = navMaps;
+      localStorage.removeItem("visitedState");
       await deleteStoredVFE(toDelete);
 
       setNames(names.filter((n) => n !== toDelete));
