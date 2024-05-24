@@ -10,7 +10,7 @@ function Prototype() {
 
   useEffect(() => {
     async function load() {
-      const vfe = vfeData as VFE;
+      const vfe = vfeData as unknown as VFE;
       await localforage.setItem(vfe.name, vfe);
       navigate(`/viewer/${vfe.name}/${vfe.defaultPhotosphereID}`, {
         replace: true,

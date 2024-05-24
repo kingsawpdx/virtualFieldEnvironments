@@ -268,26 +268,256 @@
               "path": "/VFEdata/Contact.png"
             },
             "hotspots": {
-              "HandLens": {
-                "id": "HandLens",
-                "pitch": -3,
-                "yaw": 20,
-                "icon": {
-                  "tag": "Network",
-                  "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
-                },
-                "tooltip": "HandLens",
+              "HandSample": {
+                "x": 10,
+                "y": 27.5,
+                "id": "HandSample",
+                "tooltip": "HandSample",
+                "color": "#FF0000",
                 "data": {
                   "tag": "Image",
                   "src": {
                     "tag": "Network",
-                    "path": "/VFEdata/handLens.png"
+                    "path": "/VFEdata/hand_sample.png"
                   },
-                  "hotspots": {}
-                },
-                "level": 1
+                  "hotspots": {
+                    "CloserLook": {
+                      "x": 50,
+                      "y": 50,
+                      "id": "CloserLook",
+                      "tooltip": "CloserLook",
+                      "color": "#00FF00",
+                      "data": {
+                        "tag": "Image",
+                        "src": {
+                          "tag": "Network",
+                          "path": "/VFEdata/a-closer-look.jpg"
+                        },
+                        "hotspots": {
+                          "SouthSEMComparison": {
+                            "x": 52.5,
+                            "y": 37.5,
+                            "id": "SouthSEMComparison",
+                            "tooltip": "SouthSEMComparison",
+                            "color": "#00FFFF",
+                            "data": {
+                              "tag": "Image",
+                              "src": {
+                                "tag": "Network",
+                                "path": "/VFEdata/southSEMcomp.png"
+                              },
+                              "hotspots": {}
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
               }
             }
+          },
+          "level": 1
+        },
+        "SouthWaterfront": {
+          "pitch": -1,
+          "yaw": -25,
+          "icon": {
+            "tag": "Network",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+          },
+          "tooltip": "SouthWaterfront",
+          "data": {
+            "tag": "Image",
+            "src": {
+              "tag": "Network",
+              "path": "/VFEdata/SouthwaterFront.png"
+            },
+            "hotspots": {}
+          },
+          "level": 1
+        },
+        "Go West": {
+          "pitch": 0,
+          "yaw": -35,
+          "icon": {
+            "tag": "Network",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+          },
+          "tooltip": "Go West",
+          "data": {
+            "tag": "PhotosphereLink",
+            "photosphereID": "West"
+          },
+          "level": 1
+        },
+        "Go to Entrance": {
+          "pitch": -7,
+          "yaw": 125,
+          "icon": {
+            "tag": "Network",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+          },
+          "tooltip": "Go to Entrance",
+          "data": {
+            "tag": "PhotosphereLink",
+            "photosphereID": "Entrance"
+          },
+          "level": 1
+        }
+      },
+      "backgroundAudio": {
+        "tag": "Network",
+        "path": "/VFEdata/Scene12_UnevenStandTop_LS100146.mp3"
+      }
+    },
+    "Entrance": {
+      "id": "Entrance",
+      "src": {
+        "tag": "Network",
+        "path": "/VFEdata/ERI_Entrance-Scene0-IMG_20231006_080232_00_120.jpg"
+      },
+      "center": { "x": 650, "y": 930 },
+      "hotspots": {
+        "Go East": {
+          "pitch": -2,
+          "yaw": -4,
+          "icon": {
+            "tag": "Network",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+          },
+          "tooltip": "Go East",
+          "data": {
+            "tag": "PhotosphereLink",
+            "photosphereID": "East"
+          },
+          "level": 1
+        },
+        "Go South": {
+          "pitch": -4,
+          "yaw": -78,
+          "icon": {
+            "tag": "Network",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+          },
+          "tooltip": "Go South",
+          "data": {
+            "tag": "PhotosphereLink",
+            "photosphereID": "South"
+          },
+          "level": 1
+        }
+      }
+    },
+    "West": {
+      "id": "West",
+      "src": {
+        "tag": "Network",
+        "path": "/VFEdata/ERI_West-Scene7-IMG_20231006_084114_00_123.jpg"
+      },
+      "center": { "x": 95, "y": 530 },
+      "hotspots": {
+        "Go North": {
+          "pitch": 0,
+          "yaw": 10,
+          "icon": {
+            "tag": "Network",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+          },
+          "tooltip": "Go North",
+          "data": {
+            "tag": "PhotosphereLink",
+            "photosphereID": "North"
+          },
+          "level": 1
+        },
+        "Go South": {
+          "pitch": -3,
+          "yaw": 115,
+          "icon": {
+            "tag": "Network",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+          },
+          "tooltip": "Go South",
+          "data": {
+            "tag": "PhotosphereLink",
+            "photosphereID": "South"
+          },
+          "level": 1
+        }
+      }
+    },
+    "North": {
+      "id": "North",
+      "src": {
+        "tag": "Network",
+        "path": "/VFEdata/ERI_North-Scene8-IMG_20231006_091050_00_124.jpg"
+      },
+      "center": { "x": 390, "y": 50 },
+      "hotspots": {
+        "Go West": {
+          "pitch": 0,
+          "yaw": -130,
+          "icon": {
+            "tag": "Network",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+          },
+          "tooltip": "Go West",
+          "data": {
+            "tag": "PhotosphereLink",
+            "photosphereID": "West"
+          },
+          "level": 1
+        },
+        "Go East": {
+          "pitch": 0,
+          "yaw": 92,
+          "icon": {
+            "tag": "Network",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+          },
+          "tooltip": "Go East",
+          "data": {
+            "tag": "PhotosphereLink",
+            "photosphereID": "East"
+          },
+          "level": 1
+        }
+      }
+    },
+    "East": {
+      "id": "East",
+      "src": {
+        "tag": "Network",
+        "path": "/VFEdata/ERI_East-Scene9-IMG_20231006_092207_00_125.jpg"
+      },
+      "center": { "x": 550, "y": 450 },
+      "hotspots": {
+        "Go North": {
+          "pitch": 3,
+          "yaw": 2,
+          "icon": {
+            "tag": "Network",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+          },
+          "tooltip": "Go North",
+          "data": {
+            "tag": "PhotosphereLink",
+            "photosphereID": "North"
+          },
+          "level": 1
+        },
+        "Go to Entrance": {
+          "pitch": -2,
+          "yaw": -167,
+          "icon": {
+            "tag": "Network",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+          },
+          "tooltip": "Go to Entrance",
+          "data": {
+            "tag": "PhotosphereLink",
+            "photosphereID": "Entrance"
           },
           "level": 1
         }

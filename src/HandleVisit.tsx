@@ -2,7 +2,8 @@ import { useCallback, useEffect, useState } from "react";
 
 import { Hotspot3D } from "./DataStructures";
 
-export type VisitedState = Record<string, Record<string, boolean>>;
+//export type VisitedState = Record<string, Record<string, boolean>>;
+export type VisitedState = Partial<Record<string, Record<string, boolean>>>;
 
 export function useVisitedState(initialHotspots: Record<string, Hotspot3D[]>) {
   // Function to initialize state from local storage or initial hotspots
@@ -18,7 +19,7 @@ export function useVisitedState(initialHotspots: Record<string, Hotspot3D[]>) {
       initialVisitedState[psId] = Object.fromEntries(
         hotspots.map((hotspot) => [
           hotspot.id,
-          parsedStoredState[psId]?.[hotspot.id] || false,
+          parsedStoredState[psId]?.[hotspot.id] ?? false,
         ]),
       );
     }
