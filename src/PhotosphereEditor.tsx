@@ -299,6 +299,9 @@ function PhotosphereEditor({
       src: { tag: "Network", path: background },
     };
 
+    //remove photosphere that has been renamed
+    delete updatedPhotospheres[currentPS];
+
     const updatedVFE: VFE = {
       ...vfe,
       defaultPhotosphereID: updatedDefaultPhotosphereID,
