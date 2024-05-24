@@ -6,7 +6,7 @@ export type VisitedState = Record<string, Record<string, boolean>>;
 
 export function useVisitedState(initialHotspots: Record<string, Hotspot3D[]>) {
   // Function to initialize state from local storage or initial hotspots
-  const initializeVisitedState = useCallback(() => {
+  function initializeVisitedState(): VisitedState {
     const storedState: string | null = localStorage.getItem("visitedState");
     const parsedStoredState: VisitedState = storedState
       ? (JSON.parse(storedState) as VisitedState)
@@ -18,14 +18,12 @@ export function useVisitedState(initialHotspots: Record<string, Hotspot3D[]>) {
       initialVisitedState[psId] = Object.fromEntries(
         hotspots.map((hotspot) => [
           hotspot.id,
-          parsedStoredState[psId]?.[hotspot.id] || false, 
+          parsedStoredState[psId]?.[hotspot.id] || false,
         ]),
       );
     }
-
     return initialVisitedState;
-  }, [initialHotspots]);
- 
+  };
 
   // State to manage visited hotspots
   const [visited, setVisited] = useState<VisitedState>(
@@ -51,11 +49,10 @@ export function useVisitedState(initialHotspots: Record<string, Hotspot3D[]>) {
     [],
   );
 
-  const resetVisitedState = useCallback(() => {
+  /*const resetVisitedState = useCallback(() => {
     localStorage.removeItem("visitedState");
     setVisited(initializeVisitedState());
   }, [initializeVisitedState]);
-
-
-  return [visited, handleVisit, resetVisitedState] as const;
+*/
+  return [visited, handleVisit] as const;
 }

@@ -33,6 +33,7 @@ module.exports = {
         caughtErrorsIgnorePattern: "^_",
       },
     ],
+    "@typescript-eslint/no-unnecessary-condition": "off",
   },
   settings: {
     react: {

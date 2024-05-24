@@ -4,12 +4,12 @@ import { ReactElement, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { VFE } from "./DataStructures";
+//import { useVisitedState } from "./HandleVisit";
 import {
   convertLocalToNetwork,
   convertNetworkToLocal,
   convertVFE,
 } from "./VFEConversion";
-import { useVisitedState } from "./HandleVisit";
 
 export interface ElementProps {
   vfe: VFE;
@@ -29,10 +29,9 @@ function VFELoader({ render }: PhotosphereLoaderProps) {
     photosphereID?: string;
   };
   const [vfe, setVFE] = useState<VFE | null>();
-  
-  const [,, reset] = useVisitedState({});
 
-  
+ // const [, , reset] = useVisitedState({});
+
   useEffect(() => {
     async function load() {
       const vfe = await localforage.getItem<VFE>(vfeID);
@@ -44,12 +43,11 @@ function VFELoader({ render }: PhotosphereLoaderProps) {
 
     void load();
   }, [vfeID]);
-  
 
   async function saveVFE(networkVFE: VFE) {
     const localVFE = await convertVFE(networkVFE, convertNetworkToLocal);
     await localforage.setItem(localVFE.name, localVFE);
-    reset()
+   // reset();
   }
 
   if (!vfe) {
