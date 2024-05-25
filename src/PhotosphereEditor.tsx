@@ -216,7 +216,7 @@ function PhotosphereEditor({
   function handleAddHotspot(newHotspot: Hotspot3D) {
     const photosphere: Photosphere = vfe.photospheres[currentPS];
 
-    photosphere.hotspots[newHotspot.tooltip] = newHotspot;
+    photosphere.hotspots[newHotspot.id] = newHotspot;
 
     onUpdateVFE(vfe);
     setShowAddHotspot(false);
