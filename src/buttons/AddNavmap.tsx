@@ -3,25 +3,11 @@ import { Button, Stack, TextField, Typography } from "@mui/material";
 import { MuiFileInput } from "mui-file-input";
 import React, { useState } from "react";
 
-import { NavMap } from "../DataStructures";
+import { NavMap, calculateImageDimensions } from "../DataStructures";
 
 interface AddNavMapProps {
   onCreateNavMap: (navMap: NavMap) => void;
   onClose: () => void; // Function to close the AddNavMap window
-}
-
-// Calculate image dimensions by creating an image element and waiting for it to load.
-// Since image loading isn't synchronous, it needs to be wrapped in a Promise.
-async function calculateImageDimensions(
-  url: string,
-): Promise<{ width: number; height: number }> {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.onload = () => {
-      resolve({ width: img.width, height: img.height });
-    };
-    img.src = url;
-  });
 }
 
 function AddNavMap({ onCreateNavMap, onClose }: AddNavMapProps): JSX.Element {

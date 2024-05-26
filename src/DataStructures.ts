@@ -11,6 +11,20 @@ export function newID() {
   return crypto.randomUUID();
 }
 
+// Calculate image dimensions by creating an image element and waiting for it to load.
+// Since image loading isn't synchronous, it needs to be wrapped in a Promise.
+export async function calculateImageDimensions(
+  url: string,
+): Promise<{ width: number; height: number }> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      resolve({ width: img.width, height: img.height });
+    };
+    img.src = url;
+  });
+}
+
 export interface LocalAsset {
   tag: "Local";
   path: string;
@@ -83,6 +97,8 @@ export type HotspotData =
 export interface Image {
   tag: "Image";
   src: Asset;
+  width: number;
+  height: number;
   hotspots: Record<string, Hotspot2D>;
 }
 

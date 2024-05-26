@@ -12,7 +12,12 @@ import {
 import { MuiFileInput } from "mui-file-input";
 import { useEffect, useMemo, useState } from "react";
 
-import { Hotspot3D, HotspotData, newID } from "../DataStructures.ts";
+import {
+  Hotspot3D,
+  HotspotData,
+  calculateImageDimensions,
+  newID,
+} from "../DataStructures.ts";
 
 interface ContentInputProps {
   contentType: string;
@@ -185,58 +190,61 @@ export function HotspotDataEditor({
   );
 
   useEffect(() => {
-    if (contentType !== "Message" && content.trim() === "") {
-      // Only message hotspots can have no content.
+    async function setData() {
+      let data: HotspotData | null = null;
+      switch (contentType) {
+        case "Image": {
+          const { width, height } = await calculateImageDimensions(content);
+          data = {
+            tag: "Image",
+            src: { tag: "Network", path: content },
+            width,
+            height,
+            hotspots,
+          };
+          break;
+        }
+        case "Video":
+          data = {
+            tag: "Video",
+            src: { tag: "Network", path: content },
+          };
+          break;
+        case "Audio":
+          data = {
+            tag: "Audio",
+            src: { tag: "Network", path: content },
+          };
+          break;
+        case "Doc":
+          data = {
+            tag: "Doc",
+            src: { tag: "Network", path: content },
+          };
+          break;
+        case "URL":
+          data = {
+            tag: "URL",
+            src: content,
+          };
+          break;
+        case "Message":
+          data = {
+            tag: "Message",
+            content: content,
+          };
+          break;
+      }
+
+      setHotspotData(data);
+    }
+
+    // Only message hotspots can have no content.
+    if (content.trim() !== "" || contentType === "Message") {
+      void setData();
+    } else {
       setHotspotData(null);
-      return;
     }
-
-    let data: HotspotData | null;
-    switch (contentType) {
-      case "Image":
-        data = {
-          tag: "Image",
-          src: { tag: "Network", path: content },
-          hotspots,
-        };
-        break;
-      case "Video":
-        data = {
-          tag: "Video",
-          src: { tag: "Network", path: content },
-        };
-        break;
-      case "Audio":
-        data = {
-          tag: "Audio",
-          src: { tag: "Network", path: content },
-        };
-        break;
-      case "Doc":
-        data = {
-          tag: "Doc",
-          src: { tag: "Network", path: content },
-        };
-        break;
-      case "URL":
-        data = {
-          tag: "URL",
-          src: content,
-        };
-        break;
-      case "Message":
-        data = {
-          tag: "Message",
-          content: content,
-        };
-        break;
-      // should never actually get here
-      default:
-        data = null;
-        break;
-    }
-
-    setHotspotData(data);
   }, [content, contentType, setHotspotData, hotspots]);
 
   return (
