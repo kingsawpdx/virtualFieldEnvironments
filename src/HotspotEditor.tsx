@@ -55,9 +55,10 @@ export interface HotspotEditorProps {
   initialTooltip: string;
   initialData: HotspotData;
 
+  edited: boolean;
+  setEdited: (edited: boolean) => void;
   previewTooltip: string;
   setPreviewTooltip: (tooltip: string) => void;
-
   previewData: HotspotData | null;
   setPreviewData: (data: HotspotData | null) => void;
 
@@ -74,17 +75,16 @@ function HotspotEditor({
   initialTooltip,
   initialData,
 
+  edited,
+  setEdited,
   previewTooltip,
   setPreviewTooltip,
-
   previewData,
   setPreviewData,
 
   onUpdateHotspot,
   pushHotspot,
 }: HotspotEditorProps) {
-  const [edited, setEdited] = useState(false);
-
   const [popperAnchor, setPopperAnchor] = useState<HTMLElement | null>(null);
   const [popperHotspot, setPopperHotspot] = useState<Hotspot2D | null>(null);
 

@@ -181,20 +181,23 @@ export function HotspotDataEditor({
     getHotspotDataContent(hotspotData),
   );
 
-  async function updateData() {
+  async function updateData(newContentType: string, newContent: string) {
+    setContentType(newContentType);
+    setContent(newContent);
+
     // Only message hotspots can have no content.
-    if (content.trim() === "" && contentType !== "Message") {
+    if (newContent.trim() === "" && newContentType !== "Message") {
       setHotspotData(null);
       return;
     }
 
     let data: HotspotData | null = null;
-    switch (contentType) {
+    switch (newContentType) {
       case "Image": {
-        const { width, height } = await calculateImageDimensions(content);
+        const { width, height } = await calculateImageDimensions(newContent);
         data = {
           tag: "Image",
-          src: { tag: "Network", path: content },
+          src: { tag: "Network", path: newContent },
           width,
           height,
           hotspots: hotspotData?.tag === "Image" ? hotspotData.hotspots : {},
@@ -204,37 +207,37 @@ export function HotspotDataEditor({
       case "Video":
         data = {
           tag: "Video",
-          src: { tag: "Network", path: content },
+          src: { tag: "Network", path: newContent },
         };
         break;
       case "Audio":
         data = {
           tag: "Audio",
-          src: { tag: "Network", path: content },
+          src: { tag: "Network", path: newContent },
         };
         break;
       case "Doc":
         data = {
           tag: "Doc",
-          src: { tag: "Network", path: content },
+          src: { tag: "Network", path: newContent },
         };
         break;
       case "URL":
         data = {
           tag: "URL",
-          url: content,
+          url: newContent,
         };
         break;
       case "Message":
         data = {
           tag: "Message",
-          content: content,
+          content: newContent,
         };
         break;
       case "PhotosphereLink":
         data = {
           tag: "PhotosphereLink",
-          photosphereID: content,
+          photosphereID: newContent,
         };
         break;
     }
@@ -251,9 +254,7 @@ export function HotspotDataEditor({
           value={contentType}
           label="Content Type"
           onChange={(e) => {
-            setContent("");
-            setContentType(e.target.value);
-            void updateData();
+            void updateData(e.target.value, "");
           }}
         >
           <MenuItem value="invalid">-- Select --</MenuItem>
@@ -269,9 +270,8 @@ export function HotspotDataEditor({
       <ContentInput
         contentType={contentType}
         content={content}
-        onChangeContent={(content) => {
-          setContent(content);
-          void updateData();
+        onChangeContent={(newContent) => {
+          void updateData(contentType, newContent);
         }}
       />
     </>

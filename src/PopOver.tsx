@@ -144,6 +144,7 @@ export interface PopOverProps {
 }
 
 function PopOver(props: PopOverProps) {
+  const [edited, setEdited] = useState(false);
   const [previewTooltip, setPreviewTooltip] = useState(props.tooltip);
   const [previewData, setPreviewData] = useState<HotspotData | null>(
     props.hotspotData,
@@ -157,6 +158,7 @@ function PopOver(props: PopOverProps) {
       aria-describedby="alert-dialog-description"
       maxWidth={false}
       scroll="body"
+      transitionDuration={0}
     >
       <DialogTitle id="alert-dialog-title">
         <Stack direction="row" alignItems="center">
@@ -189,16 +191,16 @@ function PopOver(props: PopOverProps) {
       </DialogTitle>
 
       <Stack direction="row">
-        <DialogContent>
-          {previewData && (
+        {previewData && (
+          <DialogContent>
             <HotspotContent
               hotspot={previewData}
               pushHotspot={props.pushHotspot}
               popHotspot={props.popHotspot}
               arrayLength={props.hotspotPath.length}
             />
-          )}
-        </DialogContent>
+          </DialogContent>
+        )}
         {props.onUpdateHotspot !== undefined && (
           <Box
             padding="20px 24px"
@@ -214,6 +216,8 @@ function PopOver(props: PopOverProps) {
               hotspotPath={props.hotspotPath}
               initialTooltip={props.tooltip}
               initialData={props.hotspotData}
+              edited={edited}
+              setEdited={setEdited}
               previewTooltip={previewTooltip}
               setPreviewTooltip={setPreviewTooltip}
               previewData={previewData}
