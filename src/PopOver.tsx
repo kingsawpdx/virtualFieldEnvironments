@@ -33,7 +33,7 @@ function HotspotContent(props: HotspotContentProps) {
   switch (props.hotspot.tag) {
     case "Image": {
       return (
-        <Box position="relative">
+        <Box position="relative" overflow="hidden">
           {Object.values(props.hotspot.hotspots).map((hotspot2D) => (
             <Tooltip key={hotspot2D.id} title={hotspot2D.tooltip}>
               <Box
@@ -48,6 +48,7 @@ function HotspotContent(props: HotspotContentProps) {
                 border={"5px solid"}
                 borderColor={alpha(hotspot2D.color, 0.75)}
                 sx={{
+                  transform: "translate(-50%, -50%)",
                   "&:hover": {
                     borderColor: lighten(hotspot2D.color, 0.5),
                     backgroundColor: alpha(hotspot2D.color, 0.25),
@@ -120,7 +121,9 @@ function HotspotContent(props: HotspotContentProps) {
     case "Message":
       return (
         <Box width={"20vw"} maxHeight={"70vh"}>
-          <Typography>{props.hotspot.content}</Typography>
+          <Typography sx={{ wordWrap: "break-word" }}>
+            {props.hotspot.content}
+          </Typography>
         </Box>
       );
     case "PhotosphereLink":
@@ -227,7 +230,7 @@ function PopOver(props: PopOverProps) {
 
       <Stack direction="row">
         {previewData && (
-          <DialogContent>
+          <DialogContent sx={{ paddingTop: 0 }}>
             <HotspotContent
               hotspot={previewData}
               pushHotspot={props.pushHotspot}

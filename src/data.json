@@ -218,8 +218,8 @@
             },
             "hotspots": {
               "HandSample": {
-                "x": 10,
-                "y": 27.5,
+                "x": 12.5,
+                "y": 32.5,
                 "id": "HandSample",
                 "tooltip": "HandSample",
                 "color": "#FF0000",
@@ -233,8 +233,8 @@
                   },
                   "hotspots": {
                     "CloserLook": {
-                      "x": 50,
-                      "y": 50,
+                      "x": 63,
+                      "y": 56,
                       "id": "CloserLook",
                       "tooltip": "CloserLook",
                       "color": "#00FF00",
@@ -248,8 +248,8 @@
                         },
                         "hotspots": {
                           "SouthSEMComparison": {
-                            "x": 52.5,
-                            "y": 37.5,
+                            "x": 52,
+                            "y": 35,
                             "id": "SouthSEMComparison",
                             "tooltip": "SouthSEMComparison",
                             "color": "#00FFFF",
