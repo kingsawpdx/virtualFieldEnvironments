@@ -96,9 +96,9 @@ export type HotspotData =
 // media objects
 export interface Image {
   tag: "Image";
-  src: Asset;
   width: number;
   height: number;
+  src: Asset;
   hotspots: Record<string, Hotspot2D>;
 }
 
