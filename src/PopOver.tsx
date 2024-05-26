@@ -20,6 +20,7 @@ import ReactPlayer from "react-player";
 
 import { Hotspot2D, HotspotData } from "./DataStructures";
 import HotspotEditor from "./HotspotEditor";
+import { confirmMUI } from "./StyledConfirmWrapper";
 
 interface HotspotContentProps {
   hotspot: HotspotData;
@@ -138,7 +139,7 @@ export interface PopOverProps {
   closeAll: () => void;
   onUpdateHotspot?: (
     hotspotPath: string[],
-    tooltip: string,
+    newTooltip: string,
     newData: HotspotData | null,
   ) => void;
 }
@@ -150,10 +151,44 @@ function PopOver(props: PopOverProps) {
     props.hotspotData,
   );
 
+  async function keepChanges() {
+    const confirmed = await confirmMUI(
+      "All changes to the current hotspot will be lost. Continue?",
+    );
+    return !confirmed;
+  }
+
+  async function confirmClose() {
+    if (edited && (await keepChanges())) {
+      return;
+    }
+
+    props.closeAll();
+  }
+
+  async function resetHotspot() {
+    if (edited && (await keepChanges())) {
+      return;
+    }
+
+    setPreviewData(props.hotspotData);
+    setEdited(false);
+  }
+
+  function deleteHotspot() {
+    props.onUpdateHotspot?.(props.hotspotPath, previewTooltip, null);
+  }
+
+  function updateHotspot(newTooltip: string, newData: HotspotData | null) {
+    props.onUpdateHotspot?.(props.hotspotPath, newTooltip, newData);
+  }
+
   return (
     <Dialog
       open={true}
-      onClose={props.closeAll}
+      onClose={() => {
+        void confirmClose();
+      }}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
       maxWidth={false}
@@ -213,17 +248,16 @@ function PopOver(props: PopOverProps) {
             }}
           >
             <HotspotEditor
-              hotspotPath={props.hotspotPath}
-              initialTooltip={props.tooltip}
-              initialData={props.hotspotData}
               edited={edited}
               setEdited={setEdited}
               previewTooltip={previewTooltip}
               setPreviewTooltip={setPreviewTooltip}
               previewData={previewData}
               setPreviewData={setPreviewData}
-              onUpdateHotspot={props.onUpdateHotspot}
-              pushHotspot={props.pushHotspot}
+              openNestedHotspot={props.pushHotspot}
+              resetHotspot={resetHotspot}
+              deleteHotspot={deleteHotspot}
+              updateHotspot={updateHotspot}
             />
           </Box>
         )}

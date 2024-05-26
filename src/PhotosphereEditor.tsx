@@ -11,6 +11,7 @@ import {
 } from "./DataStructures.ts";
 import { deleteStoredVFE, save } from "./FileOperations.ts";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
+import { confirmMUI } from "./StyledConfirmWrapper.tsx";
 import {
   convertNetworkToLocal,
   convertVFE,
@@ -149,8 +150,9 @@ function PhotosphereEditor({
     if (Object.keys(remainingPhotospheres).length === 0) {
       // No more photospheres available
       if (
-        confirm(
-          "This is the last photosphere. The VFE will be deleted and you will return to the home page. Continue?",
+        await confirmMUI(
+          "This is the last photosphere. The VFE will be deleted and you will return to the home page. Delete the VFE?",
+          { accept: "Delete" },
         )
       ) {
         await deleteStoredVFE(vfe.name);

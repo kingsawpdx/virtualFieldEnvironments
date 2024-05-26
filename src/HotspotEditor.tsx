@@ -22,7 +22,7 @@ import {
   Typography,
 } from "@mui/material";
 import Box from "@mui/material/Box";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { HexColorPicker } from "react-colorful";
 import "react-h5-audio-player/lib/styles.css";
 
@@ -51,10 +51,6 @@ function HotspotIcon(props: { hotspotData: HotspotData; color: string }) {
 }
 
 export interface HotspotEditorProps {
-  hotspotPath: string[];
-  initialTooltip: string;
-  initialData: HotspotData;
-
   edited: boolean;
   setEdited: (edited: boolean) => void;
   previewTooltip: string;
@@ -62,19 +58,14 @@ export interface HotspotEditorProps {
   previewData: HotspotData | null;
   setPreviewData: (data: HotspotData | null) => void;
 
-  onUpdateHotspot: (
-    hotspotPath: string[],
-    tooltip: string,
-    newData: HotspotData | null,
-  ) => void;
-  pushHotspot: (add: Hotspot2D) => void;
+  openNestedHotspot: (toOpen: Hotspot2D) => void;
+
+  resetHotspot: () => Promise<void>;
+  deleteHotspot: () => void;
+  updateHotspot: (newTooltip: string, newData: HotspotData | null) => void;
 }
 
 function HotspotEditor({
-  hotspotPath,
-  initialTooltip,
-  initialData,
-
   edited,
   setEdited,
   previewTooltip,
@@ -82,24 +73,19 @@ function HotspotEditor({
   previewData,
   setPreviewData,
 
-  onUpdateHotspot,
-  pushHotspot,
+  openNestedHotspot,
+  resetHotspot,
+  deleteHotspot,
+  updateHotspot,
 }: HotspotEditorProps) {
   const [popperAnchor, setPopperAnchor] = useState<HTMLElement | null>(null);
   const [popperHotspot, setPopperHotspot] = useState<Hotspot2D | null>(null);
-
   const [hotspotsCollapsed, setHotspotsCollapsed] = useState(false);
-  const [nestedHotspotLength, setNestedHotspotLength] = useState(
-    initialData.tag === "Image"
-      ? Object.values(initialData.hotspots).length
-      : 0,
-  );
 
-  useEffect(() => {
-    if (previewData?.tag === "Image") {
-      setNestedHotspotLength(Object.values(previewData.hotspots).length);
-    }
-  }, [previewData]);
+  const nestedHotspotLength =
+    previewData?.tag === "Image"
+      ? Object.values(previewData.hotspots).length
+      : 0;
 
   function removeNestedHotspot(hotspotToRemove: string) {
     if (previewData?.tag === "Image") {
@@ -200,7 +186,6 @@ function HotspotEditor({
                 size="small"
                 onClick={() => {
                   addNestedHotspot();
-                  setNestedHotspotLength(nestedHotspotLength + 1);
                   setHotspotsCollapsed(false);
                 }}
               >
@@ -245,7 +230,7 @@ function HotspotEditor({
                           <IconButton
                             size="small"
                             onClick={() => {
-                              pushHotspot(hotspot2D);
+                              openNestedHotspot(hotspot2D);
                             }}
                           >
                             <Edit />
@@ -301,9 +286,7 @@ function HotspotEditor({
       {edited && (
         <Button
           onClick={() => {
-            setPreviewTooltip(initialTooltip);
-            setPreviewData(initialData);
-            setEdited(false);
+            void resetHotspot();
           }}
         >
           Discard All Changes
@@ -314,9 +297,7 @@ function HotspotEditor({
           variant="outlined"
           color="error"
           sx={{ width: "50%" }}
-          onClick={() => {
-            onUpdateHotspot(hotspotPath, previewTooltip, null);
-          }}
+          onClick={deleteHotspot}
         >
           Delete Hotspot
         </Button>
@@ -325,7 +306,7 @@ function HotspotEditor({
           variant="contained"
           sx={{ width: "50%" }}
           onClick={() => {
-            onUpdateHotspot(hotspotPath, previewTooltip, previewData);
+            updateHotspot(previewTooltip, previewData);
           }}
         >
           Save

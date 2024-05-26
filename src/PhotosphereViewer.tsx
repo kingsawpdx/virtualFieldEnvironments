@@ -199,7 +199,7 @@ export interface PhotosphereViewerProps {
   onViewerClick?: (pitch: number, yaw: number) => void;
   onUpdateHotspot?: (
     hotspotPath: string[],
-    tooltip: string,
+    newTooltip: string,
     newData: HotspotData | null,
   ) => void;
 }

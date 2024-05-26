@@ -1,9 +1,6 @@
 import {
   CardActionArea,
   Container,
-  Dialog,
-  DialogActions,
-  DialogTitle,
   Grid,
   Skeleton,
   Typography,
@@ -19,6 +16,7 @@ import { Link } from "react-router-dom";
 
 import { VFE } from "./DataStructures";
 import { deleteStoredVFE } from "./FileOperations";
+import { confirmMUI } from "./StyledConfirmWrapper";
 import { convertLocalToNetwork } from "./VFEConversion";
 
 type NavMapRecord = Partial<Record<string, string>>;
@@ -26,7 +24,6 @@ type NavMapRecord = Partial<Record<string, string>>;
 function VFEList() {
   const [names, setNames] = useState<string[]>([]);
   const [navMaps, setNavMaps] = useState<NavMapRecord>({});
-  const [toDelete, setToDelete] = useState<string | null>(null);
 
   useEffect(() => {
     async function load() {
@@ -47,19 +44,14 @@ function VFEList() {
     void load();
   }, []);
 
-  function dismissDeletion() {
-    setToDelete(null);
-  }
-
-  async function confirmDeletion() {
-    if (toDelete) {
+  async function deleteVFE(toDelete: string) {
+    if (await confirmMUI(`Delete ${toDelete}?`, { accept: "Delete" })) {
       // removed deleted nav map from record
       const { [toDelete]: _deleted, ...newNavMaps } = navMaps;
       await deleteStoredVFE(toDelete);
 
       setNames(names.filter((n) => n !== toDelete));
       setNavMaps(newNavMaps);
-      setToDelete(null);
     }
   }
 
@@ -93,7 +85,7 @@ function VFEList() {
                   size="small"
                   color="error"
                   onClick={() => {
-                    setToDelete(name);
+                    void deleteVFE(name);
                   }}
                 >
                   Delete
@@ -103,21 +95,6 @@ function VFEList() {
           </Grid>
         ))}
       </Grid>
-
-      <Dialog open={toDelete !== null} onClose={dismissDeletion}>
-        <DialogTitle>Delete {toDelete}?</DialogTitle>
-        <DialogActions>
-          <Button onClick={dismissDeletion}>Cancel</Button>
-          <Button
-            onClick={() => {
-              void confirmDeletion();
-            }}
-            color="error"
-          >
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
     </Container>
   );
 }

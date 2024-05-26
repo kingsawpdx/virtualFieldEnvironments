@@ -7,7 +7,7 @@ import { BrowserRouter } from "react-router-dom";
 import AppRoot from "./App.tsx";
 import "./index.css";
 
-const theme = createTheme({
+export const theme = createTheme({
   typography: {
     button: {
       textTransform: "none",
