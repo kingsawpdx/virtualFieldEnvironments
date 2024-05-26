@@ -131,7 +131,7 @@ function HotspotContent(props: HotspotContentProps) {
               width: "80vw",
               height: "70vh",
             }}
-            src={props.hotspot.src}
+            src={props.hotspot.url}
           />
         </Box>
       );
@@ -487,7 +487,7 @@ function PopOver(props: PopOverProps) {
         <Stack direction="row" alignItems="center">
           {previewData?.tag == "URL" ? (
             <Box flexGrow={1}>
-              <a href={previewData.src} target="_blank" rel="noreferrer">
+              <a href={previewData.url} target="_blank" rel="noreferrer">
                 {previewTooltip}
               </a>
             </Box>

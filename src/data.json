@@ -56,10 +56,7 @@
           "tooltip": "URLDemo",
           "data": {
             "tag": "URL",
-            "src": {
-              "tag": "Network",
-              "path": "https://virtual-field-environments.vercel.app/"
-            },
+            "url": "https://virtual-field-environments.vercel.app/",
             "hotspots": {}
           }
         },

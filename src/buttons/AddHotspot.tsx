@@ -157,7 +157,7 @@ function getHotspotDataContent(data: HotspotData | null): string {
     case "Doc":
       return data.src.path;
     case "URL":
-      return data.src;
+      return data.url;
     case "Message":
       return data.content;
     case "PhotosphereLink":
@@ -225,7 +225,7 @@ export function HotspotDataEditor({
         case "URL":
           data = {
             tag: "URL",
-            src: content,
+            url: content,
           };
           break;
         case "Message":

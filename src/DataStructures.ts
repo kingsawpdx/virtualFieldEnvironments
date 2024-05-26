@@ -119,7 +119,7 @@ export interface Doc {
 
 export interface URL {
   tag: "URL";
-  src: string;
+  url: string;
 }
 
 export interface Message {
