@@ -62,7 +62,7 @@ export interface HotspotEditorProps {
 
   resetHotspot: () => Promise<void>;
   deleteHotspot: () => void;
-  updateHotspot: (newTooltip: string, newData: HotspotData | null) => void;
+  updateHotspot: (newTooltip: string, newData: HotspotData) => void;
 }
 
 function HotspotEditor({
@@ -303,10 +303,13 @@ function HotspotEditor({
         </Button>
 
         <Button
+          disabled={previewData === null}
           variant="contained"
           sx={{ width: "50%" }}
           onClick={() => {
-            updateHotspot(previewTooltip, previewData);
+            if (previewData !== null) {
+              updateHotspot(previewTooltip, previewData);
+            }
           }}
         >
           Save

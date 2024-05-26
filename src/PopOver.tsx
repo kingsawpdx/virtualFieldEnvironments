@@ -179,7 +179,7 @@ function PopOver(props: PopOverProps) {
     props.onUpdateHotspot?.(props.hotspotPath, previewTooltip, null);
   }
 
-  function updateHotspot(newTooltip: string, newData: HotspotData | null) {
+  function updateHotspot(newTooltip: string, newData: HotspotData) {
     props.onUpdateHotspot?.(props.hotspotPath, newTooltip, newData);
   }
 
