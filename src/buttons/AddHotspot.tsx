@@ -234,6 +234,12 @@ export function HotspotDataEditor({
             content: content,
           };
           break;
+        case "PhotosphereLink":
+          data = {
+            tag: "PhotosphereLink",
+            photosphereID: content,
+          };
+          break;
       }
 
       setHotspotData(data);
