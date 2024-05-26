@@ -46,7 +46,7 @@ function HotspotContent(props: HotspotContentProps) {
                 width={50}
                 height={50}
                 border={"5px solid"}
-                borderColor={alpha(hotspot2D.color, 0.5)}
+                borderColor={alpha(hotspot2D.color, 0.75)}
                 sx={{
                   "&:hover": {
                     borderColor: lighten(hotspot2D.color, 0.5),
