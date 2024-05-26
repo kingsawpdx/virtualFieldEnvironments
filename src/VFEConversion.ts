@@ -171,7 +171,7 @@ function updateHotspot<H extends Hotspot3D | Hotspot2D>(
       return null; // marked for deletion in calling function
     }
 
-    return { ...hotspot, tooltip, data, asdasd: 23 } as H;
+    return { ...hotspot, tooltip, data };
   }
 
   if (
