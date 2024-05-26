@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { MuiFileInput } from "mui-file-input";
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 
 import {
   Hotspot3D,
@@ -181,77 +181,66 @@ export function HotspotDataEditor({
     getHotspotDataContent(hotspotData),
   );
 
-  const noHotspots = useMemo(() => {
-    return {};
-  }, []);
-  const hotspots = useMemo(
-    () => (hotspotData?.tag === "Image" ? hotspotData.hotspots : noHotspots),
-    [hotspotData, noHotspots],
-  );
-
-  useEffect(() => {
-    async function setData() {
-      let data: HotspotData | null = null;
-      switch (contentType) {
-        case "Image": {
-          const { width, height } = await calculateImageDimensions(content);
-          data = {
-            tag: "Image",
-            src: { tag: "Network", path: content },
-            width,
-            height,
-            hotspots,
-          };
-          break;
-        }
-        case "Video":
-          data = {
-            tag: "Video",
-            src: { tag: "Network", path: content },
-          };
-          break;
-        case "Audio":
-          data = {
-            tag: "Audio",
-            src: { tag: "Network", path: content },
-          };
-          break;
-        case "Doc":
-          data = {
-            tag: "Doc",
-            src: { tag: "Network", path: content },
-          };
-          break;
-        case "URL":
-          data = {
-            tag: "URL",
-            url: content,
-          };
-          break;
-        case "Message":
-          data = {
-            tag: "Message",
-            content: content,
-          };
-          break;
-        case "PhotosphereLink":
-          data = {
-            tag: "PhotosphereLink",
-            photosphereID: content,
-          };
-          break;
-      }
-
-      setHotspotData(data);
-    }
-
+  async function updateData() {
     // Only message hotspots can have no content.
-    if (content.trim() !== "" || contentType === "Message") {
-      void setData();
-    } else {
+    if (content.trim() === "" && contentType !== "Message") {
       setHotspotData(null);
+      return;
     }
-  }, [content, contentType, setHotspotData, hotspots]);
+
+    let data: HotspotData | null = null;
+    switch (contentType) {
+      case "Image": {
+        const { width, height } = await calculateImageDimensions(content);
+        data = {
+          tag: "Image",
+          src: { tag: "Network", path: content },
+          width,
+          height,
+          hotspots: hotspotData?.tag === "Image" ? hotspotData.hotspots : {},
+        };
+        break;
+      }
+      case "Video":
+        data = {
+          tag: "Video",
+          src: { tag: "Network", path: content },
+        };
+        break;
+      case "Audio":
+        data = {
+          tag: "Audio",
+          src: { tag: "Network", path: content },
+        };
+        break;
+      case "Doc":
+        data = {
+          tag: "Doc",
+          src: { tag: "Network", path: content },
+        };
+        break;
+      case "URL":
+        data = {
+          tag: "URL",
+          url: content,
+        };
+        break;
+      case "Message":
+        data = {
+          tag: "Message",
+          content: content,
+        };
+        break;
+      case "PhotosphereLink":
+        data = {
+          tag: "PhotosphereLink",
+          photosphereID: content,
+        };
+        break;
+    }
+
+    setHotspotData(data);
+  }
 
   return (
     <>
@@ -264,6 +253,7 @@ export function HotspotDataEditor({
           onChange={(e) => {
             setContent("");
             setContentType(e.target.value);
+            void updateData();
           }}
         >
           <MenuItem value="invalid">-- Select --</MenuItem>
@@ -279,7 +269,10 @@ export function HotspotDataEditor({
       <ContentInput
         contentType={contentType}
         content={content}
-        onChangeContent={setContent}
+        onChangeContent={(content) => {
+          setContent(content);
+          void updateData();
+        }}
       />
     </>
   );
