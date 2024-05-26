@@ -214,10 +214,11 @@ function PhotosphereViewer({
   const photoSphereRef = React.createRef<ViewerAPI>();
   const [currentPhotosphere, setCurrentPhotosphere] =
     React.useState<Photosphere>(vfe.photospheres[currentPS]);
+  const [mapStatic, setMapStatic] = useState(false);
   const [hotspotArray, setHotspotArray] = useState<(Hotspot3D | Hotspot2D)[]>(
     [],
   );
-  const [mapStatic, setMapStatic] = useState(false);
+  const hotspotPath = hotspotArray.map((h) => h.id);
 
   // The variable is set to true after handleReady has finished
   const ready = useRef(false);
@@ -370,9 +371,10 @@ function PhotosphereViewer({
 
       {hotspotArray.length > 0 && (
         <PopOver
+          key={hotspotPath.join()}
+          hotspotPath={hotspotPath}
           hotspotData={hotspotArray[hotspotArray.length - 1].data}
           tooltip={hotspotArray[hotspotArray.length - 1].tooltip}
-          hotspotPath={hotspotArray.map((h) => h.id)}
           pushHotspot={(add: Hotspot2D) => {
             setHotspotArray([...hotspotArray, add]);
           }}

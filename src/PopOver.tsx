@@ -171,29 +171,37 @@ function HotspotIcon(props: { hotspotData: HotspotData; color: string }) {
 
 export interface HotspotEditorProps {
   hotspotPath: string[];
-  tooltip: string;
-  hotspotData: HotspotData;
+  initialTooltip: string;
+  initialData: HotspotData;
+
+  previewTooltip: string;
+  setPreviewTooltip: (tooltip: string) => void;
+
+  previewData: HotspotData | null;
+  setPreviewData: (data: HotspotData | null) => void;
+
   onUpdateHotspot: (
     hotspotPath: string[],
     tooltip: string,
     newData: HotspotData | null,
   ) => void;
   pushHotspot: (add: Hotspot2D) => void;
-  setPreviewTooltip: (tooltip: string) => void;
-  setPreviewData: (data: HotspotData) => void;
 }
 
 function HotspotEditor({
   hotspotPath,
-  tooltip,
-  hotspotData,
+  initialTooltip,
+  initialData,
+
+  previewTooltip,
+  setPreviewTooltip,
+
+  previewData,
+  setPreviewData,
+
   onUpdateHotspot,
   pushHotspot,
-  setPreviewTooltip,
-  setPreviewData,
 }: HotspotEditorProps) {
-  const [newTooltip, setNewTooltip] = useState<string>(tooltip);
-  const [newData, setNewData] = useState<HotspotData | null>(hotspotData);
   const [edited, setEdited] = useState(false);
 
   const [popperAnchor, setPopperAnchor] = useState<HTMLElement | null>(null);
@@ -201,32 +209,24 @@ function HotspotEditor({
 
   const [hotspotsCollapsed, setHotspotsCollapsed] = useState(false);
   const [nestedHotspotLength, setNestedHotspotLength] = useState(
-    hotspotData.tag === "Image"
-      ? Object.values(hotspotData.hotspots).length
+    initialData.tag === "Image"
+      ? Object.values(initialData.hotspots).length
       : 0,
   );
 
   useEffect(() => {
-    setPreviewTooltip(newTooltip);
-  }, [setPreviewTooltip, newTooltip]);
-
-  useEffect(() => {
-    if (newData?.tag === "Image") {
-      setNestedHotspotLength(Object.values(newData.hotspots).length);
+    if (previewData?.tag === "Image") {
+      setNestedHotspotLength(Object.values(previewData.hotspots).length);
     }
-
-    if (newData !== null) {
-      setPreviewData(newData);
-    }
-  }, [setPreviewData, newData]);
+  }, [previewData]);
 
   function removeNestedHotspot(hotspotToRemove: string) {
-    if (newData?.tag === "Image") {
+    if (previewData?.tag === "Image") {
       const { [hotspotToRemove]: _removed, ...remainingHotspots } =
-        newData.hotspots;
+        previewData.hotspots;
 
-      setNewData({
-        ...newData,
+      setPreviewData({
+        ...previewData,
         hotspots: remainingHotspots,
       });
       setEdited(true);
@@ -234,7 +234,7 @@ function HotspotEditor({
   }
 
   function addNestedHotspot() {
-    if (newData?.tag === "Image") {
+    if (previewData?.tag === "Image") {
       const newHotspot: Hotspot2D = {
         x: 0,
         y: 0,
@@ -244,21 +244,27 @@ function HotspotEditor({
         data: { tag: "Message", content: "New Hotspot Content" },
       };
 
-      setNewData({
-        ...newData,
-        hotspots: { ...newData.hotspots, [newHotspot.id]: newHotspot },
+      setPreviewData({
+        ...previewData,
+        hotspots: { ...previewData.hotspots, [newHotspot.id]: newHotspot },
       });
       setEdited(true);
     }
   }
 
   function changeNestedHotspotColor(hotspotToChange: string, color: string) {
-    if (newData?.tag === "Image") {
-      const updatedHotspot = { ...newData.hotspots[hotspotToChange], color };
+    if (previewData?.tag === "Image") {
+      const updatedHotspot = {
+        ...previewData.hotspots[hotspotToChange],
+        color,
+      };
 
-      setNewData({
-        ...newData,
-        hotspots: { ...newData.hotspots, [updatedHotspot.id]: updatedHotspot },
+      setPreviewData({
+        ...previewData,
+        hotspots: {
+          ...previewData.hotspots,
+          [updatedHotspot.id]: updatedHotspot,
+        },
       });
       setEdited(true);
     }
@@ -271,13 +277,16 @@ function HotspotEditor({
       </Stack>
       <TextField
         label="Tooltip"
-        value={newTooltip}
+        value={previewTooltip}
         onChange={(e) => {
-          setNewTooltip(e.target.value);
+          setPreviewTooltip(e.target.value);
         }}
       />
-      <HotspotDataEditor hotspotData={newData} setHotspotData={setNewData} />
-      {newData?.tag === "Image" && (
+      <HotspotDataEditor
+        hotspotData={previewData}
+        setHotspotData={setPreviewData}
+      />
+      {previewData?.tag === "Image" && (
         <Stack gap={1}>
           <Stack direction="row">
             {nestedHotspotLength == 0 ? (
@@ -321,7 +330,7 @@ function HotspotEditor({
 
           {!hotspotsCollapsed &&
             nestedHotspotLength > 0 &&
-            Object.values(newData.hotspots).map((hotspot2D) => (
+            Object.values(previewData.hotspots).map((hotspot2D) => (
               <Paper key={hotspot2D.id}>
                 <Box padding={1}>
                   <Stack direction="row" gap={1} alignItems="center">
@@ -411,7 +420,8 @@ function HotspotEditor({
       {edited && (
         <Button
           onClick={() => {
-            setNewData(hotspotData);
+            setPreviewTooltip(initialTooltip);
+            setPreviewData(initialData);
             setEdited(false);
           }}
         >
@@ -424,7 +434,7 @@ function HotspotEditor({
           color="error"
           sx={{ width: "50%" }}
           onClick={() => {
-            onUpdateHotspot(hotspotPath, newTooltip, null);
+            onUpdateHotspot(hotspotPath, previewTooltip, null);
           }}
         >
           Delete Hotspot
@@ -434,7 +444,7 @@ function HotspotEditor({
           variant="contained"
           sx={{ width: "50%" }}
           onClick={() => {
-            onUpdateHotspot(hotspotPath, newTooltip, newData);
+            onUpdateHotspot(hotspotPath, previewTooltip, previewData);
           }}
         >
           Save
@@ -460,7 +470,9 @@ export interface PopOverProps {
 
 function PopOver(props: PopOverProps) {
   const [previewTooltip, setPreviewTooltip] = useState(props.tooltip);
-  const [previewData, setPreviewData] = useState(props.hotspotData);
+  const [previewData, setPreviewData] = useState<HotspotData | null>(
+    props.hotspotData,
+  );
 
   return (
     <Dialog
@@ -473,7 +485,7 @@ function PopOver(props: PopOverProps) {
     >
       <DialogTitle id="alert-dialog-title">
         <Stack direction="row" alignItems="center">
-          {previewData.tag == "URL" ? (
+          {previewData?.tag == "URL" ? (
             <Box flexGrow={1}>
               <a href={previewData.src} target="_blank" rel="noreferrer">
                 {previewTooltip}
@@ -503,12 +515,14 @@ function PopOver(props: PopOverProps) {
 
       <Stack direction="row">
         <DialogContent>
-          <HotspotContent
-            hotspot={previewData}
-            pushHotspot={props.pushHotspot}
-            popHotspot={props.popHotspot}
-            arrayLength={props.hotspotPath.length}
-          />
+          {previewData && (
+            <HotspotContent
+              hotspot={previewData}
+              pushHotspot={props.pushHotspot}
+              popHotspot={props.popHotspot}
+              arrayLength={props.hotspotPath.length}
+            />
+          )}
         </DialogContent>
         {props.onUpdateHotspot !== undefined && (
           <Box
@@ -522,14 +536,15 @@ function PopOver(props: PopOverProps) {
             }}
           >
             <HotspotEditor
-              key={props.hotspotPath.join()}
               hotspotPath={props.hotspotPath}
-              tooltip={props.tooltip}
-              hotspotData={props.hotspotData}
+              initialTooltip={props.tooltip}
+              initialData={props.hotspotData}
+              previewTooltip={previewTooltip}
+              setPreviewTooltip={setPreviewTooltip}
+              previewData={previewData}
+              setPreviewData={setPreviewData}
               onUpdateHotspot={props.onUpdateHotspot}
               pushHotspot={props.pushHotspot}
-              setPreviewTooltip={setPreviewTooltip}
-              setPreviewData={setPreviewData}
             />
           </Box>
         )}
