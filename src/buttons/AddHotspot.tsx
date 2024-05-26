@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { MuiFileInput } from "mui-file-input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   Hotspot3D,
@@ -45,6 +45,10 @@ function ContentInput({
   onChangeContent,
 }: ContentInputProps) {
   const [contentFile, setContentFile] = useState<File | null>(null); // for MuiFileInput
+
+  useEffect(() => {
+    setContentFile(null);
+  }, [contentType]);
 
   function handleFileChange(file: File | null) {
     if (file) {
@@ -180,6 +184,13 @@ export function HotspotDataEditor({
   const [content, setContent] = useState<string>(
     getHotspotDataContent(hotspotData),
   );
+
+  useEffect(() => {
+    if (hotspotData) {
+      setContentType(hotspotData.tag);
+      setContent(getHotspotDataContent(hotspotData));
+    }
+  }, [hotspotData]);
 
   async function updateData(newContentType: string, newContent: string) {
     setContentType(newContentType);

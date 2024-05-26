@@ -151,7 +151,10 @@ function HotspotEditor({
       />
       <HotspotDataEditor
         hotspotData={previewData}
-        setHotspotData={setPreviewData}
+        setHotspotData={(data) => {
+          setPreviewData(data);
+          setEdited(true);
+        }}
       />
       {previewData?.tag === "Image" && (
         <Stack gap={1}>
