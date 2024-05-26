@@ -185,6 +185,12 @@ export function HotspotDataEditor({
   );
 
   useEffect(() => {
+    if (contentType !== "Message" && content.trim() === "") {
+      // Only message hotspots can have no content.
+      setHotspotData(null);
+      return;
+    }
+
     let data: HotspotData | null;
     switch (contentType) {
       case "Image":
