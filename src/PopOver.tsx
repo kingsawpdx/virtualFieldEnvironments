@@ -22,22 +22,20 @@ import { confirmMUI } from "./StyledConfirmWrapper";
 
 interface HotspotContentProps {
   hotspot: HotspotData;
-  pushHotspot: (add: Hotspot2D) => void;
-  popHotspot: () => void;
-  arrayLength: number;
+  openNestedHotspot: (add: Hotspot2D) => void;
 }
 
-function HotspotContent(props: HotspotContentProps) {
-  switch (props.hotspot.tag) {
+function HotspotContent({ hotspot, openNestedHotspot }: HotspotContentProps) {
+  switch (hotspot.tag) {
     case "Image": {
       return (
         <Box position="relative" overflow="hidden">
-          {Object.values(props.hotspot.hotspots).map((hotspot2D) => (
+          {Object.values(hotspot.hotspots).map((hotspot2D) => (
             <Tooltip key={hotspot2D.id} title={hotspot2D.tooltip}>
               <NestedHotspotBox
                 hotspot={hotspot2D}
                 onClick={() => {
-                  props.pushHotspot(hotspot2D);
+                  openNestedHotspot(hotspot2D);
                 }}
               />
             </Tooltip>
@@ -48,7 +46,7 @@ function HotspotContent(props: HotspotContentProps) {
               maxHeight: "70vh",
               objectFit: "contain",
             }}
-            src={props.hotspot.src.path}
+            src={hotspot.src.path}
           />
         </Box>
       );
@@ -56,7 +54,7 @@ function HotspotContent(props: HotspotContentProps) {
     case "Video":
       return (
         <ReactPlayer
-          url={props.hotspot.src.path}
+          url={hotspot.src.path}
           controls={true}
           style={{
             maxWidth: "100%",
@@ -76,11 +74,11 @@ function HotspotContent(props: HotspotContentProps) {
           showSkipControls={false}
           showJumpControls={false}
           showDownloadProgress={false}
-          src={props.hotspot.src.path}
+          src={hotspot.src.path}
         />
       );
     case "Doc": {
-      const docs = [{ uri: props.hotspot.src.path }];
+      const docs = [{ uri: hotspot.src.path }];
       return (
         <DocViewer
           style={{ width: "80vw", height: "70vh" }}
@@ -99,7 +97,7 @@ function HotspotContent(props: HotspotContentProps) {
               width: "80vw",
               height: "70vh",
             }}
-            src={props.hotspot.url}
+            src={hotspot.url}
           />
         </Box>
       );
@@ -107,7 +105,7 @@ function HotspotContent(props: HotspotContentProps) {
       return (
         <Box width={"20vw"} maxHeight={"70vh"}>
           <Typography sx={{ wordWrap: "break-word" }}>
-            {props.hotspot.content}
+            {hotspot.content}
           </Typography>
         </Box>
       );
@@ -144,6 +142,14 @@ function PopOver(props: PopOverProps) {
       "All changes to the current hotspot will be lost. Continue?",
     );
     return !confirmed;
+  }
+
+  async function openNestedHotspot(hotspot2D: Hotspot2D) {
+    if (edited && (await keepChanges())) {
+      return;
+    }
+
+    props.pushHotspot(hotspot2D);
   }
 
   async function confirmClose() {
@@ -218,9 +224,9 @@ function PopOver(props: PopOverProps) {
           <DialogContent sx={{ paddingTop: 0 }}>
             <HotspotContent
               hotspot={previewData}
-              pushHotspot={props.pushHotspot}
-              popHotspot={props.popHotspot}
-              arrayLength={props.hotspotPath.length}
+              openNestedHotspot={(hotspot2D) => {
+                void openNestedHotspot(hotspot2D);
+              }}
             />
           </DialogContent>
         )}
@@ -242,10 +248,12 @@ function PopOver(props: PopOverProps) {
               setPreviewTooltip={setPreviewTooltip}
               previewData={previewData}
               setPreviewData={setPreviewData}
-              openNestedHotspot={props.pushHotspot}
               resetHotspot={resetHotspot}
               deleteHotspot={deleteHotspot}
               updateHotspot={updateHotspot}
+              openNestedHotspot={(hotspot2D) => {
+                void openNestedHotspot(hotspot2D);
+              }}
             />
           </Box>
         )}

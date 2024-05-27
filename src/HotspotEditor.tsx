@@ -214,11 +214,10 @@ export interface HotspotEditorProps {
   previewData: HotspotData | null;
   setPreviewData: (data: HotspotData | null) => void;
 
-  openNestedHotspot: (toOpen: Hotspot2D) => void;
-
   resetHotspot: () => Promise<void>;
   deleteHotspot: () => void;
   updateHotspot: (newTooltip: string, newData: HotspotData) => void;
+  openNestedHotspot: (toOpen: Hotspot2D) => void;
 }
 
 function HotspotEditor({
@@ -229,10 +228,10 @@ function HotspotEditor({
   previewData,
   setPreviewData,
 
-  openNestedHotspot,
   resetHotspot,
   deleteHotspot,
   updateHotspot,
+  openNestedHotspot,
 }: HotspotEditorProps) {
   const [hotspotsCollapsed, setHotspotsCollapsed] = useState(false);
   const [colorAnchor, setColorAnchor] = useState<HTMLElement | null>(null);
