@@ -8,9 +8,7 @@ import {
   Stack,
   Tooltip,
   Typography,
-  alpha,
   colors,
-  lighten,
 } from "@mui/material";
 import Box from "@mui/material/Box";
 import { useState } from "react";
@@ -19,7 +17,7 @@ import "react-h5-audio-player/lib/styles.css";
 import ReactPlayer from "react-player";
 
 import { Hotspot2D, HotspotData } from "./DataStructures";
-import HotspotEditor from "./HotspotEditor";
+import HotspotEditor, { NestedHotspotBox } from "./HotspotEditor";
 import { confirmMUI } from "./StyledConfirmWrapper";
 
 interface HotspotContentProps {
@@ -36,23 +34,10 @@ function HotspotContent(props: HotspotContentProps) {
         <Box position="relative" overflow="hidden">
           {Object.values(props.hotspot.hotspots).map((hotspot2D) => (
             <Tooltip key={hotspot2D.id} title={hotspot2D.tooltip}>
-              <Box
+              <NestedHotspotBox
+                hotspot={hotspot2D}
                 onClick={() => {
                   props.pushHotspot(hotspot2D);
-                }}
-                position="absolute"
-                left={`${hotspot2D.x}%`}
-                top={`${hotspot2D.y}%`}
-                width={50}
-                height={50}
-                border={"5px solid"}
-                borderColor={alpha(hotspot2D.color, 0.75)}
-                sx={{
-                  transform: "translate(-50%, -50%)",
-                  "&:hover": {
-                    borderColor: lighten(hotspot2D.color, 0.5),
-                    backgroundColor: alpha(hotspot2D.color, 0.25),
-                  },
                 }}
               />
             </Tooltip>

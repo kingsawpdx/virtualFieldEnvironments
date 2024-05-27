@@ -12,6 +12,10 @@ import {
 } from "@mui/icons-material";
 import {
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   IconButton,
   Link,
   Paper,
@@ -20,9 +24,11 @@ import {
   TextField,
   Tooltip,
   Typography,
+  alpha,
+  lighten,
 } from "@mui/material";
 import Box from "@mui/material/Box";
-import { useState } from "react";
+import { forwardRef, useState } from "react";
 import { HexColorPicker } from "react-colorful";
 import "react-h5-audio-player/lib/styles.css";
 
@@ -48,6 +54,156 @@ function HotspotIcon(props: { hotspotData: HotspotData; color: string }) {
     case "PhotosphereLink":
       return <></>;
   }
+}
+
+function newBlankHotspot(): Hotspot2D {
+  return {
+    x: 50,
+    y: 50,
+    id: newID(),
+    tooltip: "New Hotspot",
+    color: "#FF0000",
+    data: { tag: "Message", content: "New Hotspot Content" },
+  };
+}
+
+export interface NestedHotspotBoxProps {
+  hotspot: Hotspot2D;
+  onClick?: () => void;
+}
+
+export const NestedHotspotBox = forwardRef<HTMLElement, NestedHotspotBoxProps>(
+  function NestedHotspotBox(props, ref) {
+    const { hotspot, onClick, ...otherProps } = props;
+
+    return (
+      <Box
+        {...otherProps}
+        ref={ref}
+        onClick={onClick}
+        position="absolute"
+        left={`${hotspot.x}%`}
+        top={`${hotspot.y}%`}
+        width={50}
+        height={50}
+        border={"5px solid"}
+        borderColor={alpha(hotspot.color, 0.75)}
+        sx={{
+          transform: "translate(-50%, -50%)",
+          pointerEvents: onClick ? "unset" : "none",
+          "&:hover": onClick && {
+            borderColor: lighten(hotspot.color, 0.5),
+            backgroundColor: alpha(hotspot.color, 0.25),
+          },
+        }}
+      />
+    );
+  },
+);
+
+interface HotspotColorPickerProps {
+  anchor: HTMLElement;
+  hotspot: Hotspot2D;
+  onChange: (hotspot: Hotspot2D) => void;
+  onClose: () => void;
+}
+
+function HotspotColorPicker({
+  anchor,
+  hotspot,
+  onChange,
+  onClose,
+}: HotspotColorPickerProps) {
+  function updateHotspot(color: string) {
+    onChange({ ...hotspot, color });
+  }
+
+  return (
+    <Popover
+      anchorEl={anchor}
+      open={true}
+      anchorOrigin={{
+        vertical: "top",
+        horizontal: "left",
+      }}
+      transformOrigin={{
+        vertical: "bottom",
+        horizontal: "left",
+      }}
+      onClose={onClose}
+    >
+      <Box padding="3px">
+        <HexColorPicker color={hotspot.color} onChange={updateHotspot} />
+      </Box>
+    </Popover>
+  );
+}
+
+interface HotspotLocationPickerProps {
+  image: string;
+  hotspot: Hotspot2D;
+  onSave: (hotspot: Hotspot2D) => void;
+  onClose: () => void;
+}
+
+function HotspotLocationPicker({
+  image,
+  hotspot,
+  onSave,
+  onClose,
+}: HotspotLocationPickerProps) {
+  const [previewHotspot, setPreviewHotspot] = useState(hotspot);
+
+  function updateHotspot() {
+    onSave(previewHotspot);
+    onClose();
+  }
+
+  function offsetPercent(value: number, max: number) {
+    return Math.floor((value / max) * 100);
+  }
+
+  function handleMouseClick(event: React.MouseEvent) {
+    const rect = (event.target as HTMLDivElement).getBoundingClientRect();
+    const x = offsetPercent(event.clientX - rect.left, rect.width);
+    const y = offsetPercent(event.clientY - rect.top, rect.height);
+
+    setPreviewHotspot({ ...previewHotspot, x, y });
+  }
+
+  function handleMouseMove(event: React.MouseEvent) {
+    // Only update when mouse button is pressed.
+    if (event.buttons === 1) {
+      handleMouseClick(event);
+    }
+  }
+
+  return (
+    <Dialog open={true} onClose={onClose} maxWidth={false}>
+      <DialogTitle>Choose Hotspot Location</DialogTitle>
+      <DialogContent>
+        <Box position="relative" overflow="hidden">
+          <NestedHotspotBox hotspot={previewHotspot} />
+          <img
+            onClick={handleMouseClick}
+            onMouseMove={handleMouseMove}
+            draggable={false}
+            style={{
+              maxWidth: "100%",
+              maxHeight: "60vh",
+              objectFit: "contain",
+              userSelect: "none",
+            }}
+            src={image}
+          />
+        </Box>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose}>Cancel</Button>
+        <Button onClick={updateHotspot}>Save</Button>
+      </DialogActions>
+    </Dialog>
+  );
 }
 
 export interface HotspotEditorProps {
@@ -78,9 +234,12 @@ function HotspotEditor({
   deleteHotspot,
   updateHotspot,
 }: HotspotEditorProps) {
-  const [popperAnchor, setPopperAnchor] = useState<HTMLElement | null>(null);
-  const [popperHotspot, setPopperHotspot] = useState<Hotspot2D | null>(null);
   const [hotspotsCollapsed, setHotspotsCollapsed] = useState(false);
+  const [colorAnchor, setColorAnchor] = useState<HTMLElement | null>(null);
+  const [colorHotspot, setColorHotspot] = useState<Hotspot2D | null>(null);
+  const [locationHotspot, setLocationHotspot] = useState<Hotspot2D | null>(
+    null,
+  );
 
   const nestedHotspotLength =
     previewData?.tag === "Image"
@@ -100,32 +259,8 @@ function HotspotEditor({
     }
   }
 
-  function addNestedHotspot() {
+  function updateNestedHotspot(updatedHotspot: Hotspot2D) {
     if (previewData?.tag === "Image") {
-      const newHotspot: Hotspot2D = {
-        x: 0,
-        y: 0,
-        id: newID(),
-        tooltip: "New Hotspot",
-        color: "#FF0000",
-        data: { tag: "Message", content: "New Hotspot Content" },
-      };
-
-      setPreviewData({
-        ...previewData,
-        hotspots: { ...previewData.hotspots, [newHotspot.id]: newHotspot },
-      });
-      setEdited(true);
-    }
-  }
-
-  function changeNestedHotspotColor(hotspotToChange: string, color: string) {
-    if (previewData?.tag === "Image") {
-      const updatedHotspot = {
-        ...previewData.hotspots[hotspotToChange],
-        color,
-      };
-
       setPreviewData({
         ...previewData,
         hotspots: {
@@ -133,192 +268,196 @@ function HotspotEditor({
           [updatedHotspot.id]: updatedHotspot,
         },
       });
+      setHotspotsCollapsed(false);
       setEdited(true);
     }
   }
 
   return (
-    <Stack gap={2} width="300px" height="100%">
-      <Stack alignItems="center">
-        <Typography variant="h5">Hotspot Editor</Typography>
-      </Stack>
-      <TextField
-        label="Tooltip"
-        value={previewTooltip}
-        onChange={(e) => {
-          setPreviewTooltip(e.target.value);
-        }}
-      />
-      <HotspotDataEditor
-        hotspotData={previewData}
-        setHotspotData={(data) => {
-          setPreviewData(data);
-          setEdited(true);
-        }}
-      />
-      {previewData?.tag === "Image" && (
-        <Stack gap={1}>
-          <Stack direction="row">
-            {nestedHotspotLength == 0 ? (
-              <Box width={32} height={32} padding="1px" />
-            ) : (
-              <IconButton
-                size="small"
-                onClick={() => {
-                  setHotspotsCollapsed(!hotspotsCollapsed);
+    <>
+      <Stack gap={2} width="300px" height="100%">
+        <Stack alignItems="center">
+          <Typography variant="h5">Hotspot Editor</Typography>
+        </Stack>
+        <TextField
+          label="Tooltip"
+          value={previewTooltip}
+          onChange={(e) => {
+            setPreviewTooltip(e.target.value);
+          }}
+        />
+        <HotspotDataEditor
+          hotspotData={previewData}
+          setHotspotData={(data) => {
+            setPreviewData(data);
+            setEdited(true);
+          }}
+        />
+        {previewData?.tag === "Image" && (
+          <>
+            {colorHotspot !== null && colorAnchor !== null && (
+              <HotspotColorPicker
+                anchor={colorAnchor}
+                hotspot={colorHotspot}
+                onChange={(updatedHotspot) => {
+                  updateNestedHotspot(updatedHotspot);
                 }}
-              >
-                {hotspotsCollapsed ? <ExpandMore /> : <ExpandLess />}
-              </IconButton>
+                onClose={() => {
+                  setColorHotspot(null);
+                  setColorAnchor(null);
+                }}
+              />
             )}
 
-            <Typography
-              variant="h6"
-              flexGrow={1}
-              textAlign="center"
-              onClick={() => {
-                setHotspotsCollapsed(!hotspotsCollapsed);
-              }}
-              sx={{ cursor: nestedHotspotLength > 0 ? "pointer" : "unset" }}
-            >
-              {`Nested Hotspots (${nestedHotspotLength})`}
-            </Typography>
-
-            <Tooltip title="Add Hotspot">
-              <IconButton
-                size="small"
-                onClick={() => {
-                  addNestedHotspot();
-                  setHotspotsCollapsed(false);
+            {locationHotspot !== null && (
+              <HotspotLocationPicker
+                image={previewData.src.path}
+                hotspot={locationHotspot}
+                onSave={(updatedHotspot) => {
+                  updateNestedHotspot(updatedHotspot);
                 }}
-              >
-                <Add />
-              </IconButton>
-            </Tooltip>
-          </Stack>
+                onClose={() => {
+                  setLocationHotspot(null);
+                }}
+              />
+            )}
 
-          {!hotspotsCollapsed &&
-            nestedHotspotLength > 0 &&
-            Object.values(previewData.hotspots).map((hotspot2D) => (
-              <Paper key={hotspot2D.id}>
-                <Box padding={1}>
-                  <Stack direction="row" gap={1} alignItems="center">
-                    <Tooltip title="Change Color">
-                      <IconButton
-                        size="small"
-                        onClick={(e: React.MouseEvent<HTMLElement>) => {
-                          setPopperAnchor(e.currentTarget);
-                          setPopperHotspot(hotspot2D);
-                        }}
-                      >
-                        <HotspotIcon
-                          hotspotData={hotspot2D.data}
-                          color={hotspot2D.color}
-                        />
-                      </IconButton>
-                    </Tooltip>
+            <Stack gap={1}>
+              <Stack direction="row">
+                {nestedHotspotLength == 0 ? (
+                  <Box width={32} height={32} padding="1px" />
+                ) : (
+                  <IconButton
+                    size="small"
+                    onClick={() => {
+                      setHotspotsCollapsed(!hotspotsCollapsed);
+                    }}
+                  >
+                    {hotspotsCollapsed ? <ExpandMore /> : <ExpandLess />}
+                  </IconButton>
+                )}
 
-                    <Typography
-                      overflow="hidden"
-                      textOverflow="ellipsis"
-                      whiteSpace="nowrap"
-                    >
-                      {hotspot2D.tooltip}
-                    </Typography>
+                <Typography
+                  variant="h6"
+                  flexGrow={1}
+                  textAlign="center"
+                  onClick={() => {
+                    setHotspotsCollapsed(!hotspotsCollapsed);
+                  }}
+                  sx={{ cursor: nestedHotspotLength > 0 ? "pointer" : "unset" }}
+                >
+                  {`Nested Hotspots (${nestedHotspotLength})`}
+                </Typography>
 
-                    <Box flexGrow={1} />
-                    <Stack direction="row">
-                      {!edited && (
-                        <Tooltip title="Edit">
+                <Tooltip title="Add Hotspot">
+                  <IconButton
+                    size="small"
+                    onClick={() => {
+                      setLocationHotspot(newBlankHotspot());
+                    }}
+                  >
+                    <Add />
+                  </IconButton>
+                </Tooltip>
+              </Stack>
+
+              {!hotspotsCollapsed &&
+                nestedHotspotLength > 0 &&
+                Object.values(previewData.hotspots).map((hotspot2D) => (
+                  <Paper key={hotspot2D.id}>
+                    <Box padding={1}>
+                      <Stack direction="row" gap={1} alignItems="center">
+                        <Tooltip title="Change Color">
                           <IconButton
                             size="small"
-                            onClick={() => {
-                              openNestedHotspot(hotspot2D);
+                            onClick={(e: React.MouseEvent<HTMLElement>) => {
+                              setColorAnchor(e.currentTarget);
+                              setColorHotspot(hotspot2D);
                             }}
                           >
-                            <Edit />
+                            <HotspotIcon
+                              hotspotData={hotspot2D.data}
+                              color={hotspot2D.color}
+                            />
                           </IconButton>
                         </Tooltip>
-                      )}
-                      <Tooltip title="Delete">
-                        <IconButton
-                          size="small"
-                          onClick={() => {
-                            removeNestedHotspot(hotspot2D.id);
-                          }}
-                        >
-                          <Delete />
-                        </IconButton>
-                      </Tooltip>
-                    </Stack>
-                  </Stack>
-                </Box>
-              </Paper>
-            ))}
-        </Stack>
-      )}
 
-      <Popover
-        anchorEl={popperAnchor}
-        open={popperAnchor !== null && popperHotspot !== null}
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
-        transformOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
-        onClose={() => {
-          setPopperAnchor(null);
-        }}
-      >
-        <Box padding="3px">
-          <HexColorPicker
-            color={popperHotspot?.color}
-            onChange={(color) => {
-              if (popperHotspot) {
-                changeNestedHotspotColor(popperHotspot.id, color);
+                        <Typography
+                          overflow="hidden"
+                          textOverflow="ellipsis"
+                          whiteSpace="nowrap"
+                        >
+                          {hotspot2D.tooltip}
+                        </Typography>
+
+                        <Box flexGrow={1} />
+                        <Stack direction="row">
+                          {!edited && (
+                            <Tooltip title="Edit">
+                              <IconButton
+                                size="small"
+                                onClick={() => {
+                                  openNestedHotspot(hotspot2D);
+                                }}
+                              >
+                                <Edit />
+                              </IconButton>
+                            </Tooltip>
+                          )}
+                          <Tooltip title="Delete">
+                            <IconButton
+                              size="small"
+                              onClick={() => {
+                                removeNestedHotspot(hotspot2D.id);
+                              }}
+                            >
+                              <Delete />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      </Stack>
+                    </Box>
+                  </Paper>
+                ))}
+            </Stack>
+          </>
+        )}
+
+        <Box flexGrow={1} />
+        {edited && (
+          <Button
+            onClick={() => {
+              void resetHotspot();
+            }}
+          >
+            Discard All Changes
+          </Button>
+        )}
+        <Stack direction="row" gap={1.5}>
+          <Button
+            variant="outlined"
+            color="error"
+            sx={{ width: "50%" }}
+            onClick={deleteHotspot}
+          >
+            Delete Hotspot
+          </Button>
+
+          <Button
+            disabled={previewData === null}
+            variant="contained"
+            sx={{ width: "50%" }}
+            onClick={() => {
+              if (previewData !== null) {
+                updateHotspot(previewTooltip, previewData);
               }
             }}
-          />
-        </Box>
-      </Popover>
-
-      <Box flexGrow={1} />
-      {edited && (
-        <Button
-          onClick={() => {
-            void resetHotspot();
-          }}
-        >
-          Discard All Changes
-        </Button>
-      )}
-      <Stack direction="row" gap={1.5}>
-        <Button
-          variant="outlined"
-          color="error"
-          sx={{ width: "50%" }}
-          onClick={deleteHotspot}
-        >
-          Delete Hotspot
-        </Button>
-
-        <Button
-          disabled={previewData === null}
-          variant="contained"
-          sx={{ width: "50%" }}
-          onClick={() => {
-            if (previewData !== null) {
-              updateHotspot(previewTooltip, previewData);
-            }
-          }}
-        >
-          Save
-        </Button>
+          >
+            Save
+          </Button>
+        </Stack>
       </Stack>
-    </Stack>
+    </>
   );
 }
 
