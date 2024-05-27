@@ -13,6 +13,16 @@ export async function save(vfe: VFE) {
   saveAs(blob, `${vfe.name}.zip`);
 }
 
+export async function load(file: File): Promise<VFE | null> {
+  const zip: JSZip = await JSZip.loadAsync(file);
+  const data = await zip.file("data.json")?.async("string");
+  if (data) {
+    const localVFE = JSON.parse(data) as VFE;
+    return localVFE;
+  }
+  return null;
+}
+
 export async function deleteStoredVFE(vfeID: string) {
   await localforage.removeItem(vfeID);
 }
