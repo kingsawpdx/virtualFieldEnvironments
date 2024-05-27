@@ -193,6 +193,7 @@ function HotspotLocationPicker({
               maxWidth: "100%",
               maxHeight: "60vh",
               objectFit: "contain",
+              borderRadius: "4px",
               userSelect: "none",
             }}
             src={image}
@@ -335,6 +336,9 @@ function HotspotEditor({
                     size="small"
                     onClick={() => {
                       setHotspotsCollapsed(!hotspotsCollapsed);
+                      if (hotspotsCollapsed) {
+                        setExpandedHotspotID(null);
+                      }
                     }}
                   >
                     {hotspotsCollapsed ? <ExpandMore /> : <ExpandLess />}
@@ -422,28 +426,36 @@ function HotspotEditor({
 
                     <Collapse in={expandedHotspotID === hotspot2D.id}>
                       <CardActions>
-                        <Tooltip title="Delete">
-                          <Button
-                            size="small"
-                            color="error"
-                            onClick={() => {
-                              removeNestedHotspot(hotspot2D.id);
-                            }}
-                          >
-                            Delete
-                          </Button>
-                        </Tooltip>
+                        <Box flexGrow={1} />
 
-                        <Tooltip title="Edit">
-                          <Button
-                            size="small"
-                            onClick={() => {
-                              openNestedHotspot(hotspot2D);
-                            }}
-                          >
-                            Edit
-                          </Button>
-                        </Tooltip>
+                        <Button
+                          color="error"
+                          size="small"
+                          onClick={() => {
+                            removeNestedHotspot(hotspot2D.id);
+                          }}
+                        >
+                          Delete
+                        </Button>
+
+                        <Button
+                          size="small"
+                          onClick={() => {
+                            setLocationHotspot(hotspot2D);
+                          }}
+                        >
+                          Move
+                        </Button>
+
+                        <Button
+                          disabled={edited}
+                          size="small"
+                          onClick={() => {
+                            openNestedHotspot(hotspot2D);
+                          }}
+                        >
+                          Edit
+                        </Button>
                       </CardActions>
                     </Collapse>
                   </Card>

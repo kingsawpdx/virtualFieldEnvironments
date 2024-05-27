@@ -46,6 +46,7 @@ function HotspotContent({ hotspot, openNestedHotspot }: HotspotContentProps) {
               maxHeight: "70vh",
               objectFit: "contain",
               borderRadius: "4px",
+              userSelect: "none",
             }}
             src={hotspot.src.path}
           />
@@ -145,14 +146,6 @@ function PopOver(props: PopOverProps) {
     return !confirmed;
   }
 
-  async function openNestedHotspot(hotspot2D: Hotspot2D) {
-    if (edited && (await keepChanges())) {
-      return;
-    }
-
-    props.pushHotspot(hotspot2D);
-  }
-
   async function confirmClose() {
     if (edited && (await keepChanges())) {
       return;
@@ -176,6 +169,12 @@ function PopOver(props: PopOverProps) {
 
   function updateHotspot(newTooltip: string, newData: HotspotData) {
     props.onUpdateHotspot?.(props.hotspotPath, newTooltip, newData);
+  }
+
+  function openNestedHotspot(hotspot2D: Hotspot2D) {
+    if (!edited) {
+      props.pushHotspot(hotspot2D);
+    }
   }
 
   return (
@@ -225,9 +224,7 @@ function PopOver(props: PopOverProps) {
           <DialogContent sx={{ paddingTop: 0 }}>
             <HotspotContent
               hotspot={previewData}
-              openNestedHotspot={(hotspot2D) => {
-                void openNestedHotspot(hotspot2D);
-              }}
+              openNestedHotspot={openNestedHotspot}
             />
           </DialogContent>
         )}
@@ -252,9 +249,7 @@ function PopOver(props: PopOverProps) {
               resetHotspot={resetHotspot}
               deleteHotspot={deleteHotspot}
               updateHotspot={updateHotspot}
-              openNestedHotspot={(hotspot2D) => {
-                void openNestedHotspot(hotspot2D);
-              }}
+              openNestedHotspot={openNestedHotspot}
             />
           </Box>
         )}
