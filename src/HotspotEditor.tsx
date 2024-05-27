@@ -190,6 +190,7 @@ function HotspotLocationPicker({
             onMouseMove={handleMouseMove}
             draggable={false}
             style={{
+              display: "block",
               maxWidth: "100%",
               maxHeight: "60vh",
               objectFit: "contain",
@@ -401,7 +402,6 @@ function HotspotEditor({
                         <IconButton
                           size="small"
                           onClick={() => {
-                            console.log(expandedHotspotID);
                             if (expandedHotspotID === hotspot2D.id) {
                               setExpandedHotspotID(null);
                             } else {
@@ -418,6 +418,7 @@ function HotspotEditor({
                       }
                       sx={{
                         padding: 1,
+                        overflow: "hidden",
                         "& .MuiCardHeader-action": {
                           margin: 0,
                         },

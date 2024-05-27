@@ -5,6 +5,7 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
+  Snackbar,
   Stack,
   Tooltip,
   Typography,
@@ -42,6 +43,7 @@ function HotspotContent({ hotspot, openNestedHotspot }: HotspotContentProps) {
           ))}
           <img
             style={{
+              display: "block",
               maxWidth: "100%",
               maxHeight: "70vh",
               objectFit: "contain",
@@ -138,6 +140,7 @@ function PopOver(props: PopOverProps) {
   const [previewData, setPreviewData] = useState<HotspotData | null>(
     props.hotspotData,
   );
+  const [snackbarMessage, setSnackbarMessage] = useState<string | null>(null);
 
   async function keepChanges() {
     const confirmed = await confirmMUI(
@@ -172,89 +175,123 @@ function PopOver(props: PopOverProps) {
   }
 
   function openNestedHotspot(hotspot2D: Hotspot2D) {
-    if (!edited) {
-      props.pushHotspot(hotspot2D);
+    if (edited) {
+      setSnackbarMessage(
+        "Nested hotspots cannot be opened when there are unsaved changes.",
+      );
+      return;
     }
+
+    props.pushHotspot(hotspot2D);
   }
 
   return (
-    <Dialog
-      open={true}
-      onClose={() => {
-        void confirmClose();
-      }}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
-      maxWidth={false}
-      scroll="body"
-      transitionDuration={0}
-    >
-      <DialogTitle id="alert-dialog-title">
-        <Stack direction="row" alignItems="center">
-          {previewData?.tag == "URL" ? (
-            <Box flexGrow={1}>
-              <a href={previewData.url} target="_blank" rel="noreferrer">
-                {previewTooltip}
-              </a>
-            </Box>
-          ) : (
-            <Box flexGrow={1}>{previewTooltip}</Box>
-          )}
-          {props.hotspotPath.length > 1 && (
-            <Tooltip title="Back" placement="top">
+    <>
+      <Dialog
+        open={true}
+        onClose={() => {
+          void confirmClose();
+        }}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        maxWidth={false}
+        scroll="body"
+        transitionDuration={0}
+      >
+        <DialogTitle id="alert-dialog-title">
+          <Stack direction="row" alignItems="center">
+            {previewData?.tag == "URL" ? (
+              <Box flexGrow={1}>
+                <a href={previewData.url} target="_blank" rel="noreferrer">
+                  {previewTooltip}
+                </a>
+              </Box>
+            ) : (
+              <Box flexGrow={1}>{previewTooltip}</Box>
+            )}
+            {props.hotspotPath.length > 1 && (
+              <Tooltip title="Back" placement="top">
+                <IconButton
+                  onClick={() => {
+                    props.popHotspot();
+                  }}
+                >
+                  <ArrowBack />
+                </IconButton>
+              </Tooltip>
+            )}
+            <Tooltip title="Close" placement="top">
               <IconButton
                 onClick={() => {
-                  props.popHotspot();
+                  void confirmClose();
                 }}
               >
-                <ArrowBack />
+                <Close />
               </IconButton>
             </Tooltip>
+          </Stack>
+        </DialogTitle>
+
+        <Stack direction="row">
+          {previewData && (
+            <DialogContent sx={{ paddingTop: 0 }}>
+              <HotspotContent
+                hotspot={previewData}
+                openNestedHotspot={openNestedHotspot}
+              />
+            </DialogContent>
           )}
+          {props.onUpdateHotspot !== undefined && (
+            <Box
+              padding="20px 24px"
+              bgcolor="#FDFDFD"
+              borderColor={colors.grey[300]}
+              sx={{
+                borderStyle: "solid",
+                borderWidth: "1px 0 0 1px",
+                borderTopLeftRadius: "4px",
+              }}
+            >
+              <HotspotEditor
+                edited={edited}
+                setEdited={setEdited}
+                previewTooltip={previewTooltip}
+                setPreviewTooltip={setPreviewTooltip}
+                previewData={previewData}
+                setPreviewData={setPreviewData}
+                resetHotspot={resetHotspot}
+                deleteHotspot={deleteHotspot}
+                updateHotspot={updateHotspot}
+                openNestedHotspot={openNestedHotspot}
+              />
+            </Box>
+          )}
+        </Stack>
+      </Dialog>
+
+      <Snackbar
+        open={snackbarMessage !== null}
+        message={snackbarMessage}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        autoHideDuration={5000}
+        onClose={() => {
+          setSnackbarMessage(null);
+        }}
+        color="primary"
+        action={
           <Tooltip title="Close" placement="top">
-            <IconButton onClick={props.closeAll}>
+            <IconButton
+              color="inherit"
+              onClick={() => {
+                setSnackbarMessage(null);
+              }}
+            >
               <Close />
             </IconButton>
           </Tooltip>
-        </Stack>
-      </DialogTitle>
-
-      <Stack direction="row">
-        {previewData && (
-          <DialogContent sx={{ paddingTop: 0 }}>
-            <HotspotContent
-              hotspot={previewData}
-              openNestedHotspot={openNestedHotspot}
-            />
-          </DialogContent>
-        )}
-        {props.onUpdateHotspot !== undefined && (
-          <Box
-            padding="20px 24px"
-            bgcolor="#FDFDFD"
-            borderColor={colors.grey[300]}
-            sx={{
-              borderStyle: "solid",
-              borderWidth: "1px 0 0 1px",
-              borderTopLeftRadius: "4px",
-            }}
-          >
-            <HotspotEditor
-              edited={edited}
-              setEdited={setEdited}
-              previewTooltip={previewTooltip}
-              setPreviewTooltip={setPreviewTooltip}
-              previewData={previewData}
-              setPreviewData={setPreviewData}
-              resetHotspot={resetHotspot}
-              deleteHotspot={deleteHotspot}
-              updateHotspot={updateHotspot}
-              openNestedHotspot={openNestedHotspot}
-            />
-          </Box>
-        )}
-      </Stack>
-    </Dialog>
+        }
+      />
+    </>
   );
 }
 
