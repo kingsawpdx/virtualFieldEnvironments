@@ -2,8 +2,6 @@ import {
   Add,
   Article,
   Audiotrack,
-  Delete,
-  Edit,
   ExpandLess,
   ExpandMore,
   Image,
@@ -12,13 +10,16 @@ import {
 } from "@mui/icons-material";
 import {
   Button,
+  Card,
+  CardActions,
+  CardHeader,
+  Collapse,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   IconButton,
   Link,
-  Paper,
   Popover,
   Stack,
   TextField,
@@ -234,6 +235,10 @@ function HotspotEditor({
   openNestedHotspot,
 }: HotspotEditorProps) {
   const [hotspotsCollapsed, setHotspotsCollapsed] = useState(false);
+  const [expandedHotspotID, setExpandedHotspotID] = useState<string | null>(
+    null,
+  );
+
   const [colorAnchor, setColorAnchor] = useState<HTMLElement | null>(null);
   const [colorHotspot, setColorHotspot] = useState<Hotspot2D | null>(null);
   const [locationHotspot, setLocationHotspot] = useState<Hotspot2D | null>(
@@ -363,9 +368,16 @@ function HotspotEditor({
               {!hotspotsCollapsed &&
                 nestedHotspotLength > 0 &&
                 Object.values(previewData.hotspots).map((hotspot2D) => (
-                  <Paper key={hotspot2D.id}>
-                    <Box padding={1}>
-                      <Stack direction="row" gap={1} alignItems="center">
+                  <Card key={hotspot2D.id}>
+                    <CardHeader
+                      title={hotspot2D.tooltip}
+                      titleTypographyProps={{
+                        variant: "body1",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                      avatar={
                         <Tooltip title="Change Color">
                           <IconButton
                             size="small"
@@ -380,43 +392,61 @@ function HotspotEditor({
                             />
                           </IconButton>
                         </Tooltip>
-
-                        <Typography
-                          overflow="hidden"
-                          textOverflow="ellipsis"
-                          whiteSpace="nowrap"
+                      }
+                      action={
+                        <IconButton
+                          size="small"
+                          onClick={() => {
+                            console.log(expandedHotspotID);
+                            if (expandedHotspotID === hotspot2D.id) {
+                              setExpandedHotspotID(null);
+                            } else {
+                              setExpandedHotspotID(hotspot2D.id);
+                            }
+                          }}
                         >
-                          {hotspot2D.tooltip}
-                        </Typography>
-
-                        <Box flexGrow={1} />
-                        <Stack direction="row">
-                          {!edited && (
-                            <Tooltip title="Edit">
-                              <IconButton
-                                size="small"
-                                onClick={() => {
-                                  openNestedHotspot(hotspot2D);
-                                }}
-                              >
-                                <Edit />
-                              </IconButton>
-                            </Tooltip>
+                          {expandedHotspotID === hotspot2D.id ? (
+                            <ExpandLess />
+                          ) : (
+                            <ExpandMore />
                           )}
-                          <Tooltip title="Delete">
-                            <IconButton
-                              size="small"
-                              onClick={() => {
-                                removeNestedHotspot(hotspot2D.id);
-                              }}
-                            >
-                              <Delete />
-                            </IconButton>
-                          </Tooltip>
-                        </Stack>
-                      </Stack>
-                    </Box>
-                  </Paper>
+                        </IconButton>
+                      }
+                      sx={{
+                        padding: 1,
+                        "& .MuiCardHeader-action": {
+                          margin: 0,
+                        },
+                      }}
+                    />
+
+                    <Collapse in={expandedHotspotID === hotspot2D.id}>
+                      <CardActions>
+                        <Tooltip title="Delete">
+                          <Button
+                            size="small"
+                            color="error"
+                            onClick={() => {
+                              removeNestedHotspot(hotspot2D.id);
+                            }}
+                          >
+                            Delete
+                          </Button>
+                        </Tooltip>
+
+                        <Tooltip title="Edit">
+                          <Button
+                            size="small"
+                            onClick={() => {
+                              openNestedHotspot(hotspot2D);
+                            }}
+                          >
+                            Edit
+                          </Button>
+                        </Tooltip>
+                      </CardActions>
+                    </Collapse>
+                  </Card>
                 ))}
             </Stack>
           </>

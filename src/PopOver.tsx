@@ -45,6 +45,7 @@ function HotspotContent({ hotspot, openNestedHotspot }: HotspotContentProps) {
               maxWidth: "100%",
               maxHeight: "70vh",
               objectFit: "contain",
+              borderRadius: "4px",
             }}
             src={hotspot.src.path}
           />
