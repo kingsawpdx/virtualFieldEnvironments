@@ -13,7 +13,7 @@ import {
 } from "./DataStructures.ts";
 import { deleteStoredVFE, save } from "./FileOperations.ts";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
-import { convertNetworkToLocal, convertVFE } from "./VFEConversion.ts";
+import { convertRuntimeToStored, convertVFE } from "./VFEConversion.ts";
 import AddAudio from "./buttons/AddAudio.tsx";
 import AddHotspot from "./buttons/AddHotspot.tsx";
 import AddNavmap from "./buttons/AddNavmap";
@@ -265,7 +265,10 @@ function PhotosphereEditor({
   }
 
   async function handleExport() {
-    const convertedVFE = await convertVFE(vfe, convertNetworkToLocal);
+    const convertedVFE = await convertVFE(
+      vfe,
+      convertRuntimeToStored(vfe.name),
+    );
     await save(convertedVFE);
   }
 

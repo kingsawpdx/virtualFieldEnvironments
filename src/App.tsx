@@ -8,7 +8,7 @@ import LandingPage from "./LandingPage.tsx";
 import PhotosphereEditor from "./PhotosphereEditor.tsx";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
 import Prototype from "./Prototype.tsx";
-import { convertNetworkToLocal, convertVFE } from "./VFEConversion.ts";
+import { convertRuntimeToStored, convertVFE } from "./VFEConversion.ts";
 import VFELoader from "./VFELoader.tsx";
 
 // Main component acts as a main entry point for the application
@@ -26,7 +26,10 @@ function AppRoot() {
   }
 
   async function loadCreatedVFE(networkVFE: VFE) {
-    const localVFE = await convertVFE(networkVFE, convertNetworkToLocal);
+    const localVFE = await convertVFE(
+      networkVFE,
+      convertRuntimeToStored(networkVFE.name),
+    );
     await localforage.setItem(localVFE.name, localVFE);
     navigate(`/editor/${localVFE.name}/${localVFE.defaultPhotosphereID}`);
   }
