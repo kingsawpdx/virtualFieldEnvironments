@@ -4,7 +4,13 @@ import { MuiFileInput } from "mui-file-input";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Hotspot3D, NavMap, Photosphere, VFE } from "./DataStructures.ts";
+import {
+  Hotspot3D,
+  NavMap,
+  Photosphere,
+  VFE,
+  newID,
+} from "./DataStructures.ts";
 import { deleteStoredVFE, save } from "./FileOperations.ts";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
 import { convertNetworkToLocal, convertVFE } from "./VFEConversion.ts";
@@ -294,7 +300,7 @@ function PhotosphereEditor({
 
     updatedPhotospheres[currentPS] = {
       ...currentPhotosphere,
-      src: { tag: "Network", path: background },
+      src: { tag: "Runtime", id: newID(), path: background },
     };
 
     //remove photosphere that has been renamed

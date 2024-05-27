@@ -16,7 +16,7 @@ export async function convertLocalToNetwork(asset: Asset): Promise<Asset> {
     const blob = await result.blob();
     path = URL.createObjectURL(blob);
   }
-  return { tag: "Network", path };
+  return { tag: "Runtime", id: asset.id, path };
 }
 
 export async function convertNetworkToLocal(asset: Asset): Promise<Asset> {
@@ -26,7 +26,7 @@ export async function convertNetworkToLocal(asset: Asset): Promise<Asset> {
     const blob = await result.blob();
     path = await convertBlobToData(blob);
   }
-  return { tag: "Local", path };
+  return { tag: "Stored", id: asset.id, path };
 }
 
 async function convertBlobToData(blob: Blob): Promise<string> {
