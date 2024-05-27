@@ -209,6 +209,122 @@ function HotspotLocationPicker({
   );
 }
 
+interface HotspotCardProps {
+  hotspot: Hotspot2D;
+  edited: boolean;
+  setColorAnchor: (anchor: HTMLElement | null) => void;
+  setColorHotspot: (hotspot: Hotspot2D | null) => void;
+  setLocationHotspot: (hotspot: Hotspot2D | null) => void;
+  removeNestedHotspot: (hotspotID: string) => void;
+  openNestedHotspot: (hotspot: Hotspot2D) => void;
+}
+
+function HotspotCard({
+  hotspot,
+  edited,
+  setColorAnchor,
+  setColorHotspot,
+  setLocationHotspot,
+  removeNestedHotspot,
+  openNestedHotspot,
+}: HotspotCardProps) {
+  const [expandedHotspotID, setExpandedHotspotID] = useState<string | null>(
+    null,
+  );
+
+  function toggleExpanded(hotspotID: string) {
+    if (expandedHotspotID === hotspotID) {
+      setExpandedHotspotID(null);
+    } else {
+      setExpandedHotspotID(hotspotID);
+    }
+  }
+
+  return (
+    <Card key={hotspot.id}>
+      <CardHeader
+        title={hotspot.tooltip}
+        titleTypographyProps={{
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
+          onClick: () => {
+            toggleExpanded(hotspot.id);
+          },
+          sx: {
+            cursor: "pointer",
+          },
+        }}
+        avatar={
+          <Tooltip title="Change Color">
+            <IconButton
+              size="small"
+              onClick={(e: React.MouseEvent<HTMLElement>) => {
+                setColorAnchor(e.currentTarget);
+                setColorHotspot(hotspot);
+              }}
+            >
+              <HotspotIcon hotspotData={hotspot.data} color={hotspot.color} />
+            </IconButton>
+          </Tooltip>
+        }
+        action={
+          <IconButton
+            size="small"
+            onClick={() => {
+              toggleExpanded(hotspot.id);
+            }}
+          >
+            {expandedHotspotID === hotspot.id ? <ExpandLess /> : <ExpandMore />}
+          </IconButton>
+        }
+        sx={{
+          padding: 1,
+          overflow: "hidden",
+          "& .MuiCardHeader-action": {
+            margin: 0,
+          },
+        }}
+      />
+
+      <Collapse in={expandedHotspotID === hotspot.id}>
+        <CardActions>
+          <Box flexGrow={1} />
+
+          <Button
+            color="error"
+            size="small"
+            onClick={() => {
+              removeNestedHotspot(hotspot.id);
+            }}
+          >
+            Delete
+          </Button>
+
+          <Button
+            size="small"
+            onClick={() => {
+              setLocationHotspot(hotspot);
+            }}
+          >
+            Move
+          </Button>
+
+          <Button
+            disabled={edited}
+            size="small"
+            onClick={() => {
+              openNestedHotspot(hotspot);
+            }}
+          >
+            Edit
+          </Button>
+        </CardActions>
+      </Collapse>
+    </Card>
+  );
+}
+
 export interface HotspotEditorProps {
   edited: boolean;
   setEdited: (edited: boolean) => void;
@@ -237,9 +353,6 @@ function HotspotEditor({
   openNestedHotspot,
 }: HotspotEditorProps) {
   const [hotspotsCollapsed, setHotspotsCollapsed] = useState(false);
-  const [expandedHotspotID, setExpandedHotspotID] = useState<string | null>(
-    null,
-  );
 
   const [colorAnchor, setColorAnchor] = useState<HTMLElement | null>(null);
   const [colorHotspot, setColorHotspot] = useState<Hotspot2D | null>(null);
@@ -252,9 +365,9 @@ function HotspotEditor({
       ? Object.values(previewData.hotspots).length
       : 0;
 
-  function removeNestedHotspot(hotspotToRemove: string) {
+  function removeNestedHotspot(hotspotID: string) {
     if (previewData?.tag === "Image") {
-      const { [hotspotToRemove]: _removed, ...remainingHotspots } =
+      const { [hotspotID]: _removed, ...remainingHotspots } =
         previewData.hotspots;
 
       setPreviewData({
@@ -337,9 +450,6 @@ function HotspotEditor({
                     size="small"
                     onClick={() => {
                       setHotspotsCollapsed(!hotspotsCollapsed);
-                      if (hotspotsCollapsed) {
-                        setExpandedHotspotID(null);
-                      }
                     }}
                   >
                     {hotspotsCollapsed ? <ExpandMore /> : <ExpandLess />}
@@ -373,93 +483,16 @@ function HotspotEditor({
               {!hotspotsCollapsed &&
                 nestedHotspotLength > 0 &&
                 Object.values(previewData.hotspots).map((hotspot2D) => (
-                  <Card key={hotspot2D.id}>
-                    <CardHeader
-                      title={hotspot2D.tooltip}
-                      titleTypographyProps={{
-                        variant: "body1",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                      }}
-                      avatar={
-                        <Tooltip title="Change Color">
-                          <IconButton
-                            size="small"
-                            onClick={(e: React.MouseEvent<HTMLElement>) => {
-                              setColorAnchor(e.currentTarget);
-                              setColorHotspot(hotspot2D);
-                            }}
-                          >
-                            <HotspotIcon
-                              hotspotData={hotspot2D.data}
-                              color={hotspot2D.color}
-                            />
-                          </IconButton>
-                        </Tooltip>
-                      }
-                      action={
-                        <IconButton
-                          size="small"
-                          onClick={() => {
-                            if (expandedHotspotID === hotspot2D.id) {
-                              setExpandedHotspotID(null);
-                            } else {
-                              setExpandedHotspotID(hotspot2D.id);
-                            }
-                          }}
-                        >
-                          {expandedHotspotID === hotspot2D.id ? (
-                            <ExpandLess />
-                          ) : (
-                            <ExpandMore />
-                          )}
-                        </IconButton>
-                      }
-                      sx={{
-                        padding: 1,
-                        overflow: "hidden",
-                        "& .MuiCardHeader-action": {
-                          margin: 0,
-                        },
-                      }}
-                    />
-
-                    <Collapse in={expandedHotspotID === hotspot2D.id}>
-                      <CardActions>
-                        <Box flexGrow={1} />
-
-                        <Button
-                          color="error"
-                          size="small"
-                          onClick={() => {
-                            removeNestedHotspot(hotspot2D.id);
-                          }}
-                        >
-                          Delete
-                        </Button>
-
-                        <Button
-                          size="small"
-                          onClick={() => {
-                            setLocationHotspot(hotspot2D);
-                          }}
-                        >
-                          Move
-                        </Button>
-
-                        <Button
-                          disabled={edited}
-                          size="small"
-                          onClick={() => {
-                            openNestedHotspot(hotspot2D);
-                          }}
-                        >
-                          Edit
-                        </Button>
-                      </CardActions>
-                    </Collapse>
-                  </Card>
+                  <HotspotCard
+                    key={hotspot2D.id}
+                    hotspot={hotspot2D}
+                    edited={edited}
+                    setColorAnchor={setColorAnchor}
+                    setColorHotspot={setColorHotspot}
+                    setLocationHotspot={setLocationHotspot}
+                    removeNestedHotspot={removeNestedHotspot}
+                    openNestedHotspot={openNestedHotspot}
+                  />
                 ))}
             </Stack>
           </>
@@ -486,7 +519,7 @@ function HotspotEditor({
           </Button>
 
           <Button
-            disabled={previewData === null}
+            disabled={previewTooltip == "" || previewData === null}
             variant="contained"
             sx={{ width: "50%" }}
             onClick={() => {
