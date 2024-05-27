@@ -5,8 +5,8 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { VFE } from "./DataStructures";
 import {
-  convertLocalToNetwork,
-  convertNetworkToLocal,
+  convertRuntimeToStored,
+  convertStoredToRuntime,
   convertVFE,
 } from "./VFEConversion";
 
@@ -33,7 +33,10 @@ function VFELoader({ render }: PhotosphereLoaderProps) {
     async function load() {
       const vfe = await localforage.getItem<VFE>(vfeID);
       if (vfe) {
-        const networkVFE = await convertVFE(vfe, convertLocalToNetwork);
+        const networkVFE = await convertVFE(
+          vfe,
+          convertStoredToRuntime(vfe.name),
+        );
         setVFE(networkVFE);
       }
     }
@@ -42,7 +45,10 @@ function VFELoader({ render }: PhotosphereLoaderProps) {
   }, [vfeID]);
 
   async function saveVFE(networkVFE: VFE) {
-    const localVFE = await convertVFE(networkVFE, convertNetworkToLocal);
+    const localVFE = await convertVFE(
+      networkVFE,
+      convertRuntimeToStored(networkVFE.name),
+    );
     await localforage.setItem(localVFE.name, localVFE);
   }
 

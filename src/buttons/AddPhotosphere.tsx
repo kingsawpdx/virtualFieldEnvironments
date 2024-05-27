@@ -3,7 +3,7 @@ import { Button, Stack, TextField, Typography } from "@mui/material";
 import { MuiFileInput } from "mui-file-input";
 import { useEffect, useState } from "react";
 
-import { Photosphere } from "../DataStructures";
+import { Photosphere, newID } from "../DataStructures";
 
 /* -----------------------------------------------------------------------
     Add a photosphere to a Virtual Field Environment (VFE) using React.
@@ -117,11 +117,11 @@ function AddPhotosphere({
     // Create new photosphere object
     const newPhotosphere: Photosphere = {
       id: photosphereID,
-      src: { tag: "Network", path: panoImage },
+      src: { tag: "Runtime", id: newID(), path: panoImage },
       center: photosphereCenter ?? undefined,
       hotspots: {},
       backgroundAudio: audioFileStr
-        ? { tag: "Network", path: audioFileStr }
+        ? { tag: "Runtime", id: newID(), path: audioFileStr }
         : undefined,
     };
 
