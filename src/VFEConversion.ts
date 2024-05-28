@@ -15,16 +15,16 @@ export function convertStoredToRuntime(vfeName: string): ConversionFunction {
   const instance = localforage.createInstance({ name: vfeName });
 
   return async (asset: Asset) => {
-    if (asset.path.startsWith("/VFEdata")) {
-      return { tag: "Runtime", id: asset.id, path: asset.path };
+    if (asset.tag === "Stored") {
+      const blob = await instance.getItem<Blob>(asset.id);
+      if (blob === null) {
+        throw new Error(`asset (${asset.id}) is missing from storage instance`);
+      }
+
+      return { tag: "Runtime", id: asset.id, path: URL.createObjectURL(blob) };
     }
 
-    const blob = await instance.getItem<Blob>(asset.id);
-    if (blob === null) {
-      throw new Error("asset is missing from storage instance");
-    }
-
-    return { tag: "Runtime", id: asset.id, path: URL.createObjectURL(blob) };
+    return asset;
   };
 }
 
@@ -36,9 +36,11 @@ export function convertRuntimeToStored(vfeName: string): ConversionFunction {
       const result = await fetch(asset.path);
       const blob = await result.blob();
       await instance.setItem(asset.id, blob);
+
+      return { tag: "Stored", id: asset.id, path: asset.id };
     }
 
-    return { tag: "Stored", id: asset.id, path: asset.id };
+    return asset;
   };
 }
 
@@ -101,7 +103,11 @@ async function convertHotspot3D(
   hotspot: Hotspot3D,
   convert: ConversionFunction,
 ): Promise<Hotspot3D> {
-  return { ...hotspot, data: await convertHotspotData(hotspot.data, convert) };
+  return {
+    ...hotspot,
+    icon: await convert(hotspot.icon),
+    data: await convertHotspotData(hotspot.data, convert),
+  };
 }
 
 async function convertImage(
