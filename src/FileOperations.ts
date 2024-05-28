@@ -22,7 +22,7 @@ export async function save(vfe: VFE) {
   zip.file("data.json", data);
 
   const blob = await zip.generateAsync({ type: "blob" });
-  saveAs(blob, `${vfe.name}.zip`);
+  saveAs(blob, `${vfe.name}.vfe`);
 }
 
 export async function load(file: File): Promise<VFE | null> {

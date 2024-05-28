@@ -14,7 +14,7 @@ function FileDropzone({ onUploadVFE }: FileDropzoneProps) {
       onDrop={(acceptedFiles) => {
         onUploadVFE(acceptedFiles[0]);
       }}
-      accept={{ "application/zip": [".zip"] }}
+      accept={{ "application/whatever": [".vfe"] }}
     >
       {({ getRootProps, getInputProps }) => (
         <section>
