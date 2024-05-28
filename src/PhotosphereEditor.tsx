@@ -62,8 +62,6 @@ function PhotosphereEditor({
   const [hotspotToRemove, setHotspotToRemove] = useState<string | null>(null);
   const [showEditNavMap, setShowEditNavMap] = useState(false);
 
-  console.log(vfe);
-
   function handleEditNavMap(updatedPhotospheres: Record<string, Photosphere>) {
     const updatedVFE: VFE = {
       ...vfe,
@@ -304,7 +302,7 @@ function PhotosphereEditor({
     const currentPhotosphere = vfe.photospheres[currentPS];
 
     //making updated photosphere list minus the currentPS
-    const updatedPhotospheres: Record<string, Photosphere> = updatePhotospheres(
+    let updatedPhotospheres: Record<string, Photosphere> = updatePhotospheres(
       vfe.photospheres,
       currentPS,
       name,
@@ -320,6 +318,12 @@ function PhotosphereEditor({
       ...currentPhotosphere,
       src: { tag: "Network", path: background },
     };
+
+    //remove photosphere that has been renamed
+    if (name != currentPS) {
+      const { [currentPS]: _, ...withoutCurrentPS } = updatedPhotospheres;
+      updatedPhotospheres = withoutCurrentPS;
+    }
 
     const updatedVFE: VFE = {
       ...vfe,
