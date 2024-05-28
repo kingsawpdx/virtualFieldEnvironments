@@ -6,6 +6,18 @@ import { VFE } from "./DataStructures";
 
 export async function save(vfe: VFE) {
   const zip = new JSZip();
+
+  const assets = zip.folder("assets");
+  const instance = localforage.createInstance({ name: vfe.name });
+  const assetKeys = await instance.keys();
+
+  for (const asset in assetKeys) {
+    const result: Blob | null = await instance.getItem(asset);
+    if (result) {
+      assets?.file(asset, result);
+    }
+  }
+
   const data = JSON.stringify(vfe);
   zip.file("data.json", data);
 
