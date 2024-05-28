@@ -35,6 +35,7 @@ export async function load(file: File): Promise<VFE | null> {
   const vfe = JSON.parse(data) as VFE;
 
   const instance = localforage.createInstance({ name: vfe.name });
+  await instance.clear();
   const files: Record<string, JSZipObject> = {};
 
   const assets = zip.folder("assets");
@@ -54,5 +55,6 @@ export async function load(file: File): Promise<VFE | null> {
 }
 
 export async function deleteStoredVFE(vfeID: string) {
+  await localforage.dropInstance({ name: vfeID });
   await localforage.removeItem(vfeID);
 }

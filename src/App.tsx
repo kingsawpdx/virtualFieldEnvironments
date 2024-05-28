@@ -35,11 +35,8 @@ function AppRoot() {
   }
 
   async function handleLoadVFE(file: File) {
-    // const zip: JSZip = await JSZip.loadAsync(file);
-    // const data = await zip.file("data.json")?.async("string");
     const localVFE = await load(file);
     if (localVFE) {
-      // const localVFE = JSON.parse(data) as VFE;
       await localforage.setItem(localVFE.name, localVFE);
       navigate(`/editor/${localVFE.name}/${localVFE.defaultPhotosphereID}`);
     }
