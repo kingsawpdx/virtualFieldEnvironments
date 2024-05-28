@@ -15,6 +15,10 @@ export function convertStoredToRuntime(vfeName: string): ConversionFunction {
   const instance = localforage.createInstance({ name: vfeName });
 
   return async (asset: Asset) => {
+    if (asset.path.startsWith("/VFEdata")) {
+      return { tag: "Runtime", id: asset.id, path: asset.path };
+    }
+
     const blob = await instance.getItem<Blob>(asset.id);
     if (blob === null) {
       throw new Error("asset is missing from storage instance");

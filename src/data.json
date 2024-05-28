@@ -4,8 +4,9 @@
   "map": {
     "id": "navmap",
     "src": {
-      "tag": "Network",
-      "path": "/VFEdata/map.jpg"
+      "tag": "Runtime",
+      "path": "/VFEdata/map.jpg",
+      "id": "map.jpg"
     },
     "rotation": 0,
     "defaultZoom": 20,
@@ -16,8 +17,9 @@
     "South": {
       "id": "South",
       "src": {
-        "tag": "Network",
-        "path": "/VFEdata/ERI_SouthScene_6-IMG_20231006_081813_00_122.jpg"
+        "tag": "Runtime",
+        "path": "/VFEdata/ERI_SouthScene_6-IMG_20231006_081813_00_122.jpg",
+        "id": "SouthScene.jpg"
       },
       "center": { "x": 450, "y": 800 },
       "hotspots": {
@@ -25,15 +27,17 @@
           "pitch": 5,
           "yaw": -5,
           "icon": {
-            "tag": "Network",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
           },
           "tooltip": "OutcropWideView",
           "data": {
             "tag": "Image",
             "src": {
-              "tag": "Network",
-              "path": "/VFEdata/outcropWideView.png"
+              "tag": "Runtime",
+              "path": "/VFEdata/outcropWideView.png",
+              "id": "outcrop.jpg"
             },
             "hotspots": {}
           }
@@ -42,15 +46,17 @@
           "pitch": -3,
           "yaw": 18,
           "icon": {
-            "tag": "Network",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
           },
           "tooltip": "Flowers",
           "data": {
             "tag": "Image",
             "src": {
-              "tag": "Network",
-              "path": "/VFEdata/flowers.png"
+              "tag": "Runtime",
+              "path": "/VFEdata/flowers.png",
+              "id": "flowers.png"
             },
             "hotspots": {}
           }
@@ -59,8 +65,9 @@
           "pitch": -10,
           "yaw": 0,
           "icon": {
-            "tag": "Network",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
           },
           "tooltip": "URLDemo",
           "data": {
@@ -73,15 +80,17 @@
           "pitch": -10,
           "yaw": 10,
           "icon": {
-            "tag": "Network",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
           },
           "tooltip": "Audio Demo - FrogChorus.mp3",
           "data": {
             "tag": "Audio",
             "src": {
-              "tag": "Network",
-              "path": "/VFEdata/FrogChorus.LS100206.mp3"
+              "tag": "Runtime",
+              "path": "/VFEdata/FrogChorus.LS100206.mp3",
+              "id": "frogs.mp3"
             }
           }
         },
@@ -89,28 +98,32 @@
           "pitch": -10,
           "yaw": 20,
           "icon": {
-            "tag": "Network",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
           },
           "tooltip": "Document Demo - VFE Guidelines",
           "data": {
             "tag": "Doc",
-            "content": "/VFEdata/General guide - Virtual Field Environments for Student-based Inquiry.pdf"
+            "content": "/VFEdata/General guide - Virtual Field Environments for Student-based Inquiry.pdf",
+            "id": "inquiry.pdf"
           }
         },
         "ShorelineSOUTH.mp4": {
           "pitch": -32,
           "yaw": 172,
           "icon": {
-            "tag": "Network",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png"
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png",
+            "id": "red-pin.png"
           },
           "tooltip": "ShorelineSOUTH.mp4",
           "data": {
             "tag": "Video",
             "src": {
-              "tag": "Network",
-              "path": "/VFEdata/shorelineSOUTH.mp4"
+              "tag": "Runtime",
+              "path": "/VFEdata/shorelineSOUTH.mp4",
+              "id": "shorelineSouth.mp4"
             }
           }
         },
@@ -118,15 +131,17 @@
           "pitch": -10,
           "yaw": -175,
           "icon": {
-            "tag": "Network",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png"
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png",
+            "id": "red-pin.png"
           },
           "tooltip": "Paddlers.mp4",
           "data": {
             "tag": "Video",
             "src": {
-              "tag": "Network",
-              "path": "/VFEdata/paddlers.mp4"
+              "tag": "Runtime",
+              "path": "/VFEdata/paddlers.mp4",
+              "id": "paddlers.mp4"
             }
           }
         },
@@ -134,15 +149,17 @@
           "pitch": -13,
           "yaw": 100,
           "icon": {
-            "tag": "Network",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
           },
           "tooltip": "SmallPool",
           "data": {
             "tag": "Image",
             "src": {
-              "tag": "Network",
-              "path": "/VFEdata/small_pool.jpg"
+              "tag": "Runtime",
+              "path": "/VFEdata/small_pool.jpg",
+              "id": "small-pool.jpg"
             },
             "hotspots": {}
           }
@@ -151,15 +168,17 @@
           "pitch": -25,
           "yaw": -40,
           "icon": {
-            "tag": "Network",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
           },
           "tooltip": "LogNearShoreline",
           "data": {
             "tag": "Image",
             "src": {
-              "tag": "Network",
-              "path": "/VFEdata/logNEARshoreline.png"
+              "tag": "Runtime",
+              "path": "/VFEdata/logNEARshoreline.png",
+              "id": "logShoreline.png"
             },
             "hotspots": {}
           }
@@ -168,15 +187,17 @@
           "pitch": -17,
           "yaw": -33,
           "icon": {
-            "tag": "Network",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
           },
           "tooltip": "CoolLog",
           "data": {
             "tag": "Image",
             "src": {
-              "tag": "Network",
-              "path": "/VFEdata/cool_log.jpeg"
+              "tag": "Runtime",
+              "path": "/VFEdata/cool_log.jpeg",
+              "id": "cool-log.jpeg"
             },
             "hotspots": {}
           }
@@ -185,15 +206,17 @@
           "pitch": 6,
           "yaw": 5,
           "icon": {
-            "tag": "Network",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png"
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png",
+            "id": "red-pin.png"
           },
           "tooltip": "OutcropTextures",
           "data": {
             "tag": "Video",
             "src": {
-              "tag": "Network",
-              "path": "/VFEdata/outcrop_textures.mp4"
+              "tag": "Runtime",
+              "path": "/VFEdata/outcrop_textures.mp4",
+              "id": "outcrop-textures.mp4"
             }
           }
         },
@@ -201,8 +224,9 @@
           "pitch": -12,
           "yaw": -37,
           "icon": {
-            "tag": "Network",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
           },
           "tooltip": "How did these huge logs get here?",
           "data": {
@@ -214,15 +238,17 @@
           "pitch": 2,
           "yaw": -19,
           "icon": {
-            "tag": "Network",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
           },
           "tooltip": "Mushroom",
           "data": {
             "tag": "Image",
             "src": {
-              "tag": "Network",
-              "path": "/VFEdata/mushroom.png"
+              "tag": "Runtime",
+              "path": "/VFEdata/mushroom.png",
+              "id": "mushroom.png"
             },
             "hotspots": {}
           }
@@ -231,15 +257,17 @@
           "pitch": 2,
           "yaw": -46,
           "icon": {
-            "tag": "Network",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
           },
           "tooltip": "Contact",
           "data": {
             "tag": "Image",
             "src": {
-              "tag": "Network",
-              "path": "/VFEdata/Contact.png"
+              "tag": "Runtime",
+              "path": "/VFEdata/Contact.png",
+              "id": "contact.png"
             },
             "hotspots": {
               "HandSample": {
@@ -251,8 +279,9 @@
                 "data": {
                   "tag": "Image",
                   "src": {
-                    "tag": "Network",
-                    "path": "/VFEdata/hand_sample.png"
+                    "tag": "Runtime",
+                    "path": "/VFEdata/hand_sample.png",
+                    "id": "hand-sample.png"
                   },
                   "hotspots": {
                     "CloserLook": {
@@ -264,8 +293,9 @@
                       "data": {
                         "tag": "Image",
                         "src": {
-                          "tag": "Network",
-                          "path": "/VFEdata/a-closer-look.jpg"
+                          "tag": "Runtime",
+                          "path": "/VFEdata/a-closer-look.jpg",
+                          "id": "a-closer-look.jpg"
                         },
                         "hotspots": {
                           "SouthSEMComparison": {
@@ -277,8 +307,9 @@
                             "data": {
                               "tag": "Image",
                               "src": {
-                                "tag": "Network",
-                                "path": "/VFEdata/southSEMcomp.png"
+                                "tag": "Runtime",
+                                "path": "/VFEdata/southSEMcomp.png",
+                                "id": "southSEMcomp.png"
                               },
                               "hotspots": {}
                             }
@@ -296,15 +327,17 @@
           "pitch": -1,
           "yaw": -25,
           "icon": {
-            "tag": "Network",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
           },
           "tooltip": "SouthWaterfront",
           "data": {
             "tag": "Image",
             "src": {
-              "tag": "Network",
-              "path": "/VFEdata/SouthwaterFront.png"
+              "tag": "Runtime",
+              "path": "/VFEdata/SouthwaterFront.png",
+              "id": "south-waterfront.png"
             },
             "hotspots": {}
           }
@@ -313,8 +346,9 @@
           "pitch": 0,
           "yaw": -35,
           "icon": {
-            "tag": "Network",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
           },
           "tooltip": "Go West",
           "data": {
@@ -326,8 +360,9 @@
           "pitch": -7,
           "yaw": 125,
           "icon": {
-            "tag": "Network",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
           },
           "tooltip": "Go to Entrance",
           "data": {
@@ -337,15 +372,17 @@
         }
       },
       "backgroundAudio": {
-        "tag": "Network",
-        "path": "/VFEdata/Scene12_UnevenStandTop_LS100146.mp3"
+        "tag": "Runtime",
+        "path": "/VFEdata/Scene12_UnevenStandTop_LS100146.mp3",
+        "id": "scene12.mp3"
       }
     },
     "Entrance": {
       "id": "Entrance",
       "src": {
-        "tag": "Network",
-        "path": "/VFEdata/ERI_Entrance-Scene0-IMG_20231006_080232_00_120.jpg"
+        "tag": "Runtime",
+        "path": "/VFEdata/ERI_Entrance-Scene0-IMG_20231006_080232_00_120.jpg",
+        "id": "entrance.jpg"
       },
       "center": { "x": 650, "y": 930 },
       "hotspots": {
@@ -353,8 +390,9 @@
           "pitch": -2,
           "yaw": -4,
           "icon": {
-            "tag": "Network",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
           },
           "tooltip": "Go East",
           "data": {
@@ -366,8 +404,9 @@
           "pitch": -4,
           "yaw": -78,
           "icon": {
-            "tag": "Network",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
           },
           "tooltip": "Go South",
           "data": {
@@ -380,8 +419,9 @@
     "West": {
       "id": "West",
       "src": {
-        "tag": "Network",
-        "path": "/VFEdata/ERI_West-Scene7-IMG_20231006_084114_00_123.jpg"
+        "tag": "Runtime",
+        "path": "/VFEdata/ERI_West-Scene7-IMG_20231006_084114_00_123.jpg",
+        "id": "west.jpg"
       },
       "center": { "x": 95, "y": 530 },
       "hotspots": {
@@ -389,8 +429,9 @@
           "pitch": 0,
           "yaw": 10,
           "icon": {
-            "tag": "Network",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
           },
           "tooltip": "Go North",
           "data": {
@@ -402,8 +443,9 @@
           "pitch": -3,
           "yaw": 115,
           "icon": {
-            "tag": "Network",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
           },
           "tooltip": "Go South",
           "data": {
@@ -416,8 +458,9 @@
     "North": {
       "id": "North",
       "src": {
-        "tag": "Network",
-        "path": "/VFEdata/ERI_North-Scene8-IMG_20231006_091050_00_124.jpg"
+        "tag": "Runtime",
+        "path": "/VFEdata/ERI_North-Scene8-IMG_20231006_091050_00_124.jpg",
+        "id": "north.jpg"
       },
       "center": { "x": 390, "y": 50 },
       "hotspots": {
@@ -425,8 +468,9 @@
           "pitch": 0,
           "yaw": -130,
           "icon": {
-            "tag": "Network",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
           },
           "tooltip": "Go West",
           "data": {
@@ -438,8 +482,9 @@
           "pitch": 0,
           "yaw": 92,
           "icon": {
-            "tag": "Network",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
           },
           "tooltip": "Go East",
           "data": {
@@ -452,8 +497,9 @@
     "East": {
       "id": "East",
       "src": {
-        "tag": "Network",
-        "path": "/VFEdata/ERI_East-Scene9-IMG_20231006_092207_00_125.jpg"
+        "tag": "Runtime",
+        "path": "/VFEdata/ERI_East-Scene9-IMG_20231006_092207_00_125.jpg",
+        "id": "east.jpg"
       },
       "center": { "x": 550, "y": 450 },
       "hotspots": {
@@ -461,8 +507,9 @@
           "pitch": 3,
           "yaw": 2,
           "icon": {
-            "tag": "Network",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
           },
           "tooltip": "Go North",
           "data": {
@@ -474,8 +521,9 @@
           "pitch": -2,
           "yaw": -167,
           "icon": {
-            "tag": "Network",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
           },
           "tooltip": "Go to Entrance",
           "data": {
