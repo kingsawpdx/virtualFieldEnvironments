@@ -12,7 +12,7 @@ import {
 import { MuiFileInput } from "mui-file-input";
 import { useState } from "react";
 
-import { Asset, Hotspot3D, HotspotData } from "../DataStructures.ts";
+import { Asset, Hotspot3D, HotspotData, newID } from "../DataStructures.ts";
 
 interface ContentInputProps {
   contentType: string;
@@ -130,20 +130,20 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
       case "Image":
         data = {
           tag: "Image",
-          src: { tag: "Network", path: content },
+          src: { tag: "Runtime", id: newID(), path: content },
           hotspots: {},
         };
         break;
       case "Video":
         data = {
           tag: "Video",
-          src: { tag: "Network", path: content },
+          src: { tag: "Runtime", id: newID(), path: content },
         };
         break;
       case "Audio":
         data = {
           tag: "Audio",
-          src: { tag: "Network", path: content },
+          src: { tag: "Runtime", id: newID(), path: content },
         };
         break;
       case "Doc":
@@ -179,7 +179,8 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
     }
 
     const iconAsset: Asset = {
-      tag: "Network",
+      tag: "Runtime",
+      id: newID(),
       path: iconData,
     };
 
