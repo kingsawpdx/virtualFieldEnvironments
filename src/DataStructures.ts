@@ -7,17 +7,23 @@
     to micro-environments and associated elements.
    ----------------------------------------------------------------------- */
 
-export interface LocalAsset {
-  tag: "Local";
+export function newID() {
+  return crypto.randomUUID();
+}
+
+export interface StoredAsset {
+  tag: "Stored";
+  id: string;
   path: string;
 }
 
-export interface NetworkAsset {
-  tag: "Network";
+export interface RuntimeAsset {
+  tag: "Runtime";
+  id: string;
   path: string;
 }
 
-export type Asset = LocalAsset | NetworkAsset;
+export type Asset = StoredAsset | RuntimeAsset;
 
 // Virtual Field Environment: the total collection of photosphere environments
 export interface VFE {
@@ -35,6 +41,8 @@ export interface NavMap {
   defaultZoom: number;
   defaultCenter: { x: number; y: number };
   size: number;
+  width: number;
+  height: number;
 }
 
 // Photosphere: a single 360-environment

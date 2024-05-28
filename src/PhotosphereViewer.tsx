@@ -151,7 +151,7 @@ function convertLinks(hotspots: Record<string, Hotspot3D>): VirtualTourLink[] {
         pitch: degToStr(hotspot.pitch),
         yaw: degToStr(hotspot.yaw),
       },
-      data: { tooltip: hotspot.tooltip } as LinkData,
+      data: { tooltip: "Go " + hotspot.data.photosphereID } as LinkData,
     });
   }
 

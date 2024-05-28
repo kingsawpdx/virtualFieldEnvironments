@@ -3,7 +3,7 @@ import { Button, Stack, TextField, Typography } from "@mui/material";
 import { MuiFileInput } from "mui-file-input";
 import { useState } from "react";
 
-import { VFE } from "./DataStructures.ts";
+import { VFE, newID } from "./DataStructures.ts";
 import Header, { HeaderProps } from "./Header.tsx";
 import { PhotosphereCenterFieldset } from "./buttons/AddPhotosphere.tsx";
 
@@ -52,10 +52,12 @@ function CreateVFEForm({ onCreateVFE, header }: CreateVFEFormProps) {
       photospheres: {
         [photosphereName]: {
           id: photosphereName,
-          src: { tag: "Network", path: panoImage },
+          src: { tag: "Runtime", id: newID(), path: panoImage },
           center: photosphereCenter ?? undefined,
           hotspots: {},
-          backgroundAudio: audio ? { tag: "Network", path: audio } : undefined,
+          backgroundAudio: audio
+            ? { tag: "Runtime", id: newID(), path: audio }
+            : undefined,
         },
       },
     };
