@@ -1,11 +1,13 @@
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import { ArrowBack, Close, Delete } from "@mui/icons-material";
 import {
+  Button,
   Dialog,
   DialogContent,
   DialogTitle,
   IconButton,
   Stack,
+  TextField,
   Tooltip,
   alpha,
   lighten,
@@ -115,16 +117,20 @@ function HotspotContent(props: HotspotContentProps) {
     case "Quiz": {
       const hotspotAnswer = props.hotspot.answer;
       return (
-        <div>
-          <p>Question: {props.hotspot.question}</p>
-          <input
-            type="text"
+        <Box>
+          <Box>{"Question: " + props.hotspot.question}</Box>
+          <TextField
+            variant="outlined"
             value={answer}
             onChange={(e) => {
               setAnswer(e.target.value);
             }}
+            fullWidth
+            margin="normal"
           />
-          <button
+          <Button
+            variant="contained"
+            color="primary"
             onClick={() => {
               if (
                 answer.trim().toLowerCase() ===
@@ -137,9 +143,12 @@ function HotspotContent(props: HotspotContentProps) {
             }}
           >
             Submit
-          </button>
-          <p>{feedback}</p>
-        </div>
+          </Button>
+
+          <Box sx={{ mt: 2 }} color={feedback === "Correct!" ? "green" : "red"}>
+            {feedback}
+          </Box>
+        </Box>
       );
     }
     default:
