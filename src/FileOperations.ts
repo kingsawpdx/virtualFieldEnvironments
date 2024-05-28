@@ -40,8 +40,9 @@ export async function load(file: File): Promise<VFE | null> {
 
   const assets = zip.folder("assets");
   if (assets) {
-    assets.forEach((_path, file) => {
-      files[file.name] = file;
+    assets.forEach((path, file) => {
+      // path is relative to current folder (assets), so should just be file name
+      files[path] = file;
     });
   }
 
