@@ -1,5 +1,5 @@
 import { saveAs } from "file-saver";
-import JSZip from "jszip";
+import JSZip, { JSZipObject } from "jszip";
 import localforage from "localforage";
 
 import { VFE } from "./DataStructures";
@@ -11,7 +11,7 @@ export async function save(vfe: VFE) {
   const instance = localforage.createInstance({ name: vfe.name });
   const assetKeys = await instance.keys();
 
-  for (const asset in assetKeys) {
+  for (const asset of assetKeys) {
     const result: Blob | null = await instance.getItem(asset);
     if (result) {
       assets?.file(asset, result);
@@ -27,12 +27,30 @@ export async function save(vfe: VFE) {
 
 export async function load(file: File): Promise<VFE | null> {
   const zip: JSZip = await JSZip.loadAsync(file);
+
   const data = await zip.file("data.json")?.async("string");
-  if (data) {
-    const localVFE = JSON.parse(data) as VFE;
-    return localVFE;
+  if (!data) {
+    return null;
   }
-  return null;
+  const vfe = JSON.parse(data) as VFE;
+
+  const instance = localforage.createInstance({ name: vfe.name });
+  const files: Record<string, JSZipObject> = {};
+
+  const assets = zip.folder("assets");
+  if (assets) {
+    assets.forEach((_path, file) => {
+      files[file.name] = file;
+    });
+  }
+
+  for (const [name, file] of Object.entries(files)) {
+    const blob = await file.async("blob");
+    await instance.setItem(name, blob);
+  }
+
+  await localforage.setItem(vfe.name, vfe);
+  return vfe;
 }
 
 export async function deleteStoredVFE(vfeID: string) {

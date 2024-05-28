@@ -1,4 +1,3 @@
-import JSZip from "jszip";
 import localforage from "localforage";
 import { Route, Routes, useNavigate } from "react-router-dom";
 
