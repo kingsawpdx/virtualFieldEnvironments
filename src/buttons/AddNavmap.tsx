@@ -56,6 +56,8 @@ function AddNavMap({ onCreateNavMap, onClose }: AddNavMapProps): JSX.Element {
       defaultZoom: (navmapSize / maxDimension) * 100,
       defaultCenter: { x: width / 2, y: height / 2 },
       size: navmapSize,
+      width: width,
+      height: height,
     };
     onCreateNavMap(newNavMap); // Pass the new NavMap object directly
     onClose(); // Close the AddNavMap window after creating the Nav Map

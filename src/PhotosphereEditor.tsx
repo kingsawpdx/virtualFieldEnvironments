@@ -13,6 +13,7 @@ import AddHotspot from "./buttons/AddHotspot.tsx";
 import AddNavmap from "./buttons/AddNavmap";
 import AddPhotosphere from "./buttons/AddPhotosphere.tsx";
 import ChangePhotosphere from "./buttons/ChangePhotosphere.tsx";
+import EditNavMap from "./buttons/EditNavMap.tsx";
 import RemoveHotspot from "./buttons/RemoveHotspot.tsx";
 import RemoveNavMap from "./buttons/RemoveNavmap.tsx";
 import RemovePhotosphere from "./buttons/RemovePhotosphere.tsx";
@@ -59,6 +60,18 @@ function PhotosphereEditor({
   const [showRemoveNavMap, setShowRemoveNavMap] = useState(false);
   const [showRemoveHotspot, setShowRemoveHotspot] = useState(false);
   const [hotspotToRemove, setHotspotToRemove] = useState<string | null>(null);
+  const [showEditNavMap, setShowEditNavMap] = useState(false);
+
+  function handleEditNavMap(updatedPhotospheres: Record<string, Photosphere>) {
+    const updatedVFE: VFE = {
+      ...vfe,
+      photospheres: updatedPhotospheres,
+    };
+
+    onUpdateVFE(updatedVFE);
+    setShowEditNavMap(false);
+    setUpdateTrigger((prev) => prev + 1);
+  }
 
   function handleRemoveHotspotClick(hotspotToRemove: string) {
     setHotspotToRemove(hotspotToRemove);
@@ -196,6 +209,7 @@ function PhotosphereEditor({
     setShowChangePhotosphere(false);
     setShowRemoveNavMap(false);
     setShowRemovePhotosphere(false);
+    setShowEditNavMap(false);
     setPitch(0);
     setYaw(0);
   }
@@ -212,6 +226,14 @@ function PhotosphereEditor({
     if (showAddNavMap)
       return (
         <AddNavmap onCreateNavMap={handleCreateNavMap} onClose={resetStates} />
+      );
+    if (showEditNavMap)
+      return (
+        <EditNavMap
+          onClose={resetStates}
+          vfe={vfe}
+          onUpdateVFE={handleEditNavMap}
+        />
       );
     if (showAddHotspot)
       return (
@@ -550,6 +572,16 @@ function PhotosphereEditor({
               variant="contained"
             >
               Change Photosphere
+            </Button>
+            <Button
+              sx={{ margin: "10px 0" }}
+              onClick={() => {
+                resetStates();
+                setShowEditNavMap(true); // Set state to show EditNavmap
+              }}
+              variant="contained"
+            >
+              Edit NavMap
             </Button>
             <Button
               sx={{ margin: "10px 0" }}
