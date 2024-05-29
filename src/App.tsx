@@ -34,11 +34,12 @@ function AppRoot() {
     navigate(`/editor/${localVFE.name}/${localVFE.defaultPhotosphereID}`);
   }
 
-  async function handleLoadVFE(file: File) {
+  async function handleLoadVFE(file: File, openInViewer: boolean) {
     const localVFE = await load(file);
     if (localVFE) {
       await localforage.setItem(localVFE.name, localVFE);
-      navigate(`/editor/${localVFE.name}/${localVFE.defaultPhotosphereID}`);
+      const target = openInViewer ? "viewer" : "editor";
+      navigate(`/${target}/${localVFE.name}/${localVFE.defaultPhotosphereID}`);
     }
   }
 
@@ -50,8 +51,8 @@ function AppRoot() {
           <LandingPage
             onLoadTestVFE={handleLoadTestVFE}
             onCreateVFE={handleCreateVFE}
-            onLoadVFE={(file) => {
-              void handleLoadVFE(file);
+            onLoadVFE={(file, openInViewer) => {
+              void handleLoadVFE(file, openInViewer);
             }}
           />
         }
