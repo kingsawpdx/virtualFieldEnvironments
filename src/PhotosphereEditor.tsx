@@ -465,7 +465,7 @@ function PhotosphereEditor({
               }}
               variant="contained"
             >
-              Change Features
+              Edit Features
             </Button>
             <Button
               sx={{ margin: "10px 0" }}
@@ -549,22 +549,22 @@ function PhotosphereEditor({
             <Button
               sx={{ margin: "10px 0" }}
               onClick={() => {
-                setShowRemoveNavMap(true);
-                //remove nav map
-              }}
-              variant="contained"
-            >
-              Remove nav map
-            </Button>
-            <Button
-              sx={{ margin: "10px 0" }}
-              onClick={() => {
                 //remove photosphere
                 handleRemovePhotosphereClick();
               }}
               variant="contained"
             >
-              Remove photosphere
+              Remove Photosphere
+            </Button>
+            <Button
+              sx={{ margin: "10px 0" }}
+              onClick={() => {
+                setShowRemoveNavMap(true);
+                //remove nav map
+              }}
+              variant="contained"
+            >
+              Remove NavMap
             </Button>
             <Button
               sx={{ margin: "10px 0" }}
@@ -588,7 +588,7 @@ function PhotosphereEditor({
               }}
               variant="contained"
             >
-              Change Photosphere
+              Edit Photosphere
             </Button>
             <Button
               sx={{ margin: "10px 0" }}
