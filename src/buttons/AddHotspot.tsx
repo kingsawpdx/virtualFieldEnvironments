@@ -156,8 +156,8 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
   const [customIconData, setCustomIconData] = useState("");
 
   function handleAddHotspot() {
-    if (tooltip.trim() == "" || contentType == "invalid") {
-      alert("Please provide a tooltip and a valid content type");
+    if (tooltip.trim() == "" || contentType == "invalid" || icon == "") {
+      alert("Please provide a tooltip, a valid content type, and an icon");
       return;
     }
 
