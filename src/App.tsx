@@ -38,7 +38,7 @@ function AppRoot() {
     const localVFE = await load(file);
     if (localVFE) {
       await localforage.setItem(localVFE.name, localVFE);
-      navigate(`/editor/${localVFE.name}/${localVFE.defaultPhotosphereID}`);
+      location.reload();
     }
   }
 
