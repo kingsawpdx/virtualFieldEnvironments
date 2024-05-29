@@ -141,6 +141,7 @@ async function convertHotspotData(
     case "URL":
     case "Doc":
     case "PhotosphereLink":
+    case "Quiz":
       return data;
   }
 }

@@ -1,16 +1,19 @@
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import { ArrowBack, Close, Delete } from "@mui/icons-material";
 import {
+  Button,
   Dialog,
   DialogContent,
   DialogTitle,
   IconButton,
   Stack,
+  TextField,
   Tooltip,
   alpha,
   lighten,
 } from "@mui/material";
 import Box from "@mui/material/Box";
+import { useState } from "react";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import ReactPlayer from "react-player";
@@ -25,6 +28,9 @@ interface HotspotContentProps {
 }
 
 function HotspotContent(props: HotspotContentProps) {
+  const [answer, setAnswer] = useState(""); // State to hold the answer
+  const [feedback, setFeedback] = useState("");
+
   switch (props.hotspot.tag) {
     case "Image": {
       return (
@@ -108,6 +114,43 @@ function HotspotContent(props: HotspotContentProps) {
           />
         </Box>
       );
+    case "Quiz": {
+      const hotspotAnswer = props.hotspot.answer;
+      return (
+        <Box>
+          <Box>{"Question: " + props.hotspot.question}</Box>
+          <TextField
+            variant="outlined"
+            value={answer}
+            onChange={(e) => {
+              setAnswer(e.target.value);
+            }}
+            fullWidth
+            margin="normal"
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              if (
+                answer.trim().toLowerCase() ===
+                hotspotAnswer.trim().toLowerCase()
+              ) {
+                setFeedback("Correct!");
+              } else {
+                setFeedback("Incorrect! Try again.");
+              }
+            }}
+          >
+            Submit
+          </Button>
+
+          <Box sx={{ mt: 2 }} color={feedback === "Correct!" ? "green" : "red"}>
+            {feedback}
+          </Box>
+        </Box>
+      );
+    }
     default:
       break;
   }

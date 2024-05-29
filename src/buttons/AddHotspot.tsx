@@ -17,9 +17,16 @@ import { Asset, Hotspot3D, HotspotData, newID } from "../DataStructures.ts";
 interface ContentInputProps {
   contentType: string;
   onChangeContent: (content: string) => void;
+  onChangeAnswer: (answer: string) => void;
+  onChangeQuestion: (question: string) => void;
 }
 
-function ContentInput({ contentType, onChangeContent }: ContentInputProps) {
+function ContentInput({
+  contentType,
+  onChangeContent,
+  onChangeQuestion,
+  onChangeAnswer,
+}: ContentInputProps) {
   const [contentFile, setContentFile] = useState<File | null>(null); // for MuiFileInput
 
   function handleFileChange(file: File | null) {
@@ -99,6 +106,32 @@ function ContentInput({ contentType, onChangeContent }: ContentInputProps) {
           }}
         />
       );
+      break;
+    case "Quiz":
+      return (
+        <div>
+          <TextField
+            required
+            label="Question"
+            onChange={(e) => {
+              onChangeQuestion(e.target.value);
+            }}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            required
+            label="Answer"
+            onChange={(e) => {
+              onChangeAnswer(e.target.value);
+            }}
+            fullWidth
+            margin="normal"
+          />
+        </div>
+      );
+      break;
+
     default:
       return <Typography>Please select a valid content type</Typography>;
   }
@@ -115,6 +148,9 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
   const [tooltip, setTooltip] = useState("");
   const [contentType, setContentType] = useState("invalid");
   const [content, setContent] = useState("");
+  const [level, setLevel] = useState(0); // State for level
+  const [question, setQuestion] = useState("");
+  const [answer, setAnswer] = useState("");
   const [icon, setIcon] = useState("");
   const [customIcon, setCustomIcon] = useState(false);
   const [customIconData, setCustomIconData] = useState("");
@@ -164,6 +200,13 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
           photosphereID: content,
         };
         break;
+      case "Quiz":
+        data = {
+          tag: "Quiz",
+          question: question,
+          answer: answer,
+        };
+        break;
       // should never actually get here
       default:
         data = { tag: "URL", src: content };
@@ -185,10 +228,12 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
     };
 
     const newHotspot: Hotspot3D = {
+      id: tooltip,
       pitch: pitch,
       yaw: yaw,
       tooltip: tooltip,
       data: data,
+      level: level,
       icon: iconAsset,
     };
 
@@ -257,6 +302,7 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
           <MenuItem value="URL">URL</MenuItem>
           <MenuItem value="Doc">Document</MenuItem>
           <MenuItem value="PhotosphereLink">Photosphere Link</MenuItem>
+          <MenuItem value="Quiz">Quiz</MenuItem>
         </Select>
       </FormControl>
       {contentType == "PhotosphereLink" ? (
@@ -302,8 +348,27 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
         <></>
       )}
 
-      <ContentInput contentType={contentType} onChangeContent={setContent} />
-      <Stack direction="row" sx={{ justifyContent: "space-between" }}>
+      <ContentInput
+        contentType={contentType}
+        onChangeContent={setContent}
+        onChangeAnswer={setAnswer}
+        onChangeQuestion={setQuestion}
+      />
+      <TextField
+        label="Level (optional)"
+        value={level || ""}
+        onChange={(e) => {
+          const newValue = parseInt(e.target.value);
+          if (!isNaN(newValue)) {
+            setLevel(newValue);
+          } else {
+            setLevel(0);
+          }
+        }}
+        fullWidth
+        margin="normal"
+      />
+      <Stack direction="row" sx={{ justifyCointent: "space-between" }}>
         <Button
           variant="contained"
           style={{ width: "49%" }}
