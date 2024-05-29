@@ -109,7 +109,7 @@ function ContentInput({
       break;
     case "Quiz":
       return (
-        <div>
+        <>
           <TextField
             required
             label="Question"
@@ -128,7 +128,7 @@ function ContentInput({
             fullWidth
             margin="normal"
           />
-        </div>
+        </>
       );
       break;
 
@@ -256,7 +256,7 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
         justifyContent: "space-between",
         width: "275px",
       }}
-      spacing={1}
+      spacing={1.2}
     >
       <Typography variant="h5" sx={{ textAlign: "center" }}>
         Add a Hotspot
@@ -370,7 +370,7 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
         fullWidth
         margin="normal"
       />
-      <Stack direction="row" sx={{ justifyCointent: "space-between" }}>
+      <Stack direction="row" sx={{ justifyContent: "space-between" }}>
         <Button
           variant="contained"
           style={{ width: "49%" }}
