@@ -4,6 +4,7 @@ import {
   TerrainSharp,
 } from "@mui/icons-material";
 import { AppBar, Button, IconButton, Stack, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 export interface HeaderProps {
   onCreateVFE: () => void;
@@ -11,11 +12,17 @@ export interface HeaderProps {
 }
 
 function Header({ onCreateVFE, onLoadTestVFE }: HeaderProps) {
+  const navigate = useNavigate();
+
   return (
     <AppBar sx={{ position: "sticky", inset: "top" }}>
       <Stack direction="row" sx={{ justifyContent: "space-between" }}>
         <Stack direction="row">
-          <IconButton>
+          <IconButton
+            onClick={() => {
+              navigate("/");
+            }}
+          >
             <TerrainSharp
               sx={{ color: "primary.contrastText", fontSize: "50px" }}
             />
