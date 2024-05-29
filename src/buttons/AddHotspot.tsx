@@ -256,6 +256,7 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
         justifyContent: "space-between",
         width: "275px",
       }}
+      spacing={1}
     >
       <Typography variant="h5" sx={{ textAlign: "center" }}>
         Add a Hotspot
@@ -280,7 +281,8 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
         />
       </Stack>
       <TextField
-        label="tooltip"
+        required
+        label="Tooltip"
         onChange={(e) => {
           setTooltip(e.target.value);
         }}
@@ -305,11 +307,17 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
           <MenuItem value="Quiz">Quiz</MenuItem>
         </Select>
       </FormControl>
+      <ContentInput
+        contentType={contentType}
+        onChangeContent={setContent}
+        onChangeAnswer={setAnswer}
+        onChangeQuestion={setQuestion}
+      />
       {contentType == "PhotosphereLink" ? (
         <></>
       ) : (
         <FormControl>
-          <InputLabel id="icon">Icon</InputLabel>
+          <InputLabel id="icon">Icon *</InputLabel>
           <Select
             labelId="icon"
             value={icon}
@@ -348,14 +356,8 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
         <></>
       )}
 
-      <ContentInput
-        contentType={contentType}
-        onChangeContent={setContent}
-        onChangeAnswer={setAnswer}
-        onChangeQuestion={setQuestion}
-      />
       <TextField
-        label="Level (optional)"
+        label="Level"
         value={level || ""}
         onChange={(e) => {
           const newValue = parseInt(e.target.value);
