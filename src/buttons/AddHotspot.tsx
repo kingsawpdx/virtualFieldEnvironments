@@ -156,7 +156,11 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
   const [customIconData, setCustomIconData] = useState("");
 
   function handleAddHotspot() {
-    if (tooltip.trim() == "" || contentType == "invalid" || icon == "") {
+    if (
+      tooltip.trim() == "" ||
+      contentType == "invalid" ||
+      (contentType != "PhotosphereLink" && icon == "")
+    ) {
       alert("Please provide a tooltip, a valid content type, and an icon");
       return;
     }
