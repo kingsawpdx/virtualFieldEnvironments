@@ -12,6 +12,7 @@ import {
   newID,
 } from "./DataStructures.ts";
 import { deleteStoredVFE, save } from "./FileOperations.ts";
+import { VisitedState } from "./HandleVisit.tsx";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
 import { convertRuntimeToStored, convertVFE } from "./VFEConversion.ts";
 import AddAudio from "./buttons/AddAudio.tsx";
@@ -58,6 +59,9 @@ function PhotosphereEditor({
   const [showChangeFeatures, setShowChangeFeatures] = useState(false);
   const [showRemoveFeatures, setShowRemoveFeatures] = useState(false);
 
+  const visitedState = JSON.parse(
+    localStorage.getItem("visitedState") ?? "{}",
+  ) as VisitedState;
   const [showChangePhotosphere, setShowChangePhotosphere] = useState(false);
 
   const [audioFile, setAudioFile] = useState<File | null>(null); // for MuiInputFile
@@ -319,6 +323,8 @@ function PhotosphereEditor({
 
     //making currentPS entry with name
     updatedPhotospheres[name] = { ...currentPhotosphere, id: name };
+    const updatedVisitedState: VisitedState = { ...visitedState };
+    updatedVisitedState[name] = visitedState[currentPS];
 
     const updatedDefaultPhotosphereID =
       vfe.defaultPhotosphereID === currentPS ? name : vfe.defaultPhotosphereID;
@@ -339,6 +345,8 @@ function PhotosphereEditor({
       defaultPhotosphereID: updatedDefaultPhotosphereID,
       photospheres: updatedPhotospheres,
     };
+
+    localStorage.setItem("visitedState", JSON.stringify(updatedVisitedState));
 
     onChangePS(name); //set currentPS index to new name to access it correctly moving forward
     onUpdateVFE(updatedVFE);
@@ -457,7 +465,7 @@ function PhotosphereEditor({
               }}
               variant="contained"
             >
-              Change Features
+              Edit Features
             </Button>
             <Button
               sx={{ margin: "10px 0" }}
@@ -541,22 +549,22 @@ function PhotosphereEditor({
             <Button
               sx={{ margin: "10px 0" }}
               onClick={() => {
-                setShowRemoveNavMap(true);
-                //remove nav map
-              }}
-              variant="contained"
-            >
-              Remove nav map
-            </Button>
-            <Button
-              sx={{ margin: "10px 0" }}
-              onClick={() => {
                 //remove photosphere
                 handleRemovePhotosphereClick();
               }}
               variant="contained"
             >
-              Remove photosphere
+              Remove Photosphere
+            </Button>
+            <Button
+              sx={{ margin: "10px 0" }}
+              onClick={() => {
+                setShowRemoveNavMap(true);
+                //remove nav map
+              }}
+              variant="contained"
+            >
+              Remove NavMap
             </Button>
             <Button
               sx={{ margin: "10px 0" }}
@@ -580,7 +588,7 @@ function PhotosphereEditor({
               }}
               variant="contained"
             >
-              Change Photosphere
+              Edit Photosphere
             </Button>
             <Button
               sx={{ margin: "10px 0" }}
