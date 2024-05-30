@@ -199,6 +199,14 @@ function PopOver(props: PopOverProps) {
     props.closeAll();
   }
 
+  async function confirmBack() {
+    if (edited && (await keepChanges())) {
+      return;
+    }
+
+    props.popHotspot();
+  }
+
   async function resetHotspot() {
     if (edited && (await keepChanges())) {
       return;
@@ -255,7 +263,7 @@ function PopOver(props: PopOverProps) {
               <Tooltip title="Back" placement="top">
                 <IconButton
                   onClick={() => {
-                    props.popHotspot();
+                    void confirmBack();
                   }}
                 >
                   <ArrowBack />
