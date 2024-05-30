@@ -13,17 +13,12 @@ import { MuiFileInput } from "mui-file-input";
 import { useEffect, useState } from "react";
 
 import {
+  Asset,
   Hotspot3D,
   HotspotData,
   calculateImageDimensions,
   newID,
 } from "../DataStructures.ts";
-
-interface ContentInputProps {
-  contentType: string;
-  content: string;
-  onChangeContent: (content: string) => void;
-}
 
 // from https://github.com/Alcumus/react-doc-viewer?tab=readme-ov-file#current-renderable-file-types
 const documentAcceptTypes = [
@@ -39,10 +34,20 @@ const documentAcceptTypes = [
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
 ];
 
+interface ContentInputProps {
+  contentType: string;
+  content: string;
+  question: string;
+  answer: string;
+  onUpdate: (content: string, question: string, answer: string) => void;
+}
+
 function ContentInput({
   contentType,
   content,
-  onChangeContent,
+  question,
+  answer,
+  onUpdate,
 }: ContentInputProps) {
   const [contentFile, setContentFile] = useState<File | null>(null); // for MuiFileInput
 
@@ -53,7 +58,7 @@ function ContentInput({
   function handleFileChange(file: File | null) {
     if (file) {
       setContentFile(file);
-      onChangeContent(URL.createObjectURL(file));
+      onUpdate(URL.createObjectURL(file), question, answer);
     }
   }
 
@@ -119,7 +124,7 @@ function ContentInput({
           label="URL"
           value={content}
           onChange={(e) => {
-            onChangeContent(e.target.value);
+            onUpdate(e.target.value, question, answer);
           }}
         />
       );
@@ -130,7 +135,7 @@ function ContentInput({
           label="Message"
           value={content}
           onChange={(e) => {
-            onChangeContent(e.target.value);
+            onUpdate(e.target.value, question, answer);
           }}
           multiline
         />
@@ -142,9 +147,34 @@ function ContentInput({
           label="Photosphere ID"
           value={content}
           onChange={(e) => {
-            onChangeContent(e.target.value);
+            onUpdate(e.target.value, question, answer);
           }}
         />
+      );
+    case "Quiz":
+      return (
+        <>
+          <TextField
+            required
+            label="Question"
+            value={question}
+            onChange={(e) => {
+              onUpdate(content, e.target.value, answer);
+            }}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            required
+            label="Answer"
+            value={answer}
+            onChange={(e) => {
+              onUpdate(content, question, e.target.value);
+            }}
+            fullWidth
+            margin="normal"
+          />
+        </>
       );
     default:
       return <Typography>Please select a valid content type</Typography>;
@@ -152,9 +182,7 @@ function ContentInput({
 }
 
 function getHotspotDataContent(data: HotspotData | null): string {
-  if (data === null) return "";
-
-  switch (data.tag) {
+  switch (data?.tag) {
     case "Image":
     case "Audio":
     case "Video":
@@ -166,6 +194,9 @@ function getHotspotDataContent(data: HotspotData | null): string {
       return data.content;
     case "PhotosphereLink":
       return data.photosphereID;
+    case "Quiz":
+    default:
+      return "";
   }
 }
 
@@ -184,6 +215,12 @@ export function HotspotDataEditor({
   const [content, setContent] = useState<string>(
     getHotspotDataContent(hotspotData),
   );
+  const [question, setQuestion] = useState(
+    hotspotData?.tag === "Quiz" ? hotspotData.question : "",
+  );
+  const [answer, setAnswer] = useState(
+    hotspotData?.tag === "Quiz" ? hotspotData.answer : "",
+  );
 
   useEffect(() => {
     if (hotspotData) {
@@ -192,9 +229,16 @@ export function HotspotDataEditor({
     }
   }, [hotspotData]);
 
-  async function updateData(newContentType: string, newContent: string) {
+  async function updateData(
+    newContentType: string,
+    newContent: string,
+    newQuestion: string,
+    newAnswer: string,
+  ) {
     setContentType(newContentType);
     setContent(newContent);
+    setQuestion(newQuestion);
+    setAnswer(newAnswer);
 
     // Only message hotspots can have no content.
     if (newContent.trim() === "" && newContentType !== "Message") {
@@ -208,7 +252,7 @@ export function HotspotDataEditor({
         const { width, height } = await calculateImageDimensions(newContent);
         data = {
           tag: "Image",
-          src: { tag: "Network", path: newContent },
+          src: { tag: "Runtime", id: newID(), path: newContent },
           width,
           height,
           hotspots: hotspotData?.tag === "Image" ? hotspotData.hotspots : {},
@@ -218,19 +262,19 @@ export function HotspotDataEditor({
       case "Video":
         data = {
           tag: "Video",
-          src: { tag: "Network", path: newContent },
+          src: { tag: "Runtime", id: newID(), path: newContent },
         };
         break;
       case "Audio":
         data = {
           tag: "Audio",
-          src: { tag: "Network", path: newContent },
+          src: { tag: "Runtime", id: newID(), path: newContent },
         };
         break;
       case "Doc":
         data = {
           tag: "Doc",
-          src: { tag: "Network", path: newContent },
+          src: { tag: "Runtime", id: newID(), path: newContent },
         };
         break;
       case "URL":
@@ -251,6 +295,13 @@ export function HotspotDataEditor({
           photosphereID: newContent,
         };
         break;
+      case "Quiz":
+        data = {
+          tag: "Quiz",
+          question,
+          answer,
+        };
+        break;
     }
 
     setHotspotData(data);
@@ -265,7 +316,7 @@ export function HotspotDataEditor({
           value={contentType}
           label="Content Type"
           onChange={(e) => {
-            void updateData(e.target.value, "");
+            void updateData(e.target.value, "", "", "");
           }}
         >
           <MenuItem value="invalid">-- Select --</MenuItem>
@@ -281,8 +332,10 @@ export function HotspotDataEditor({
       <ContentInput
         contentType={contentType}
         content={content}
-        onChangeContent={(newContent) => {
-          void updateData(contentType, newContent);
+        question={question}
+        answer={answer}
+        onUpdate={(newContent, newQuestion, newAnswer) => {
+          void updateData(contentType, newContent, newQuestion, newAnswer);
         }}
       />
     </>
@@ -299,18 +352,37 @@ interface AddHotspotProps {
 function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
   const [tooltip, setTooltip] = useState("");
   const [hotspotData, setHotspotData] = useState<HotspotData | null>(null);
+  const [level, setLevel] = useState(0); // State for level
+  const [icon, setIcon] = useState("");
+  const [customIcon, setCustomIcon] = useState(false);
+  const [customIconData, setCustomIconData] = useState("");
 
   function handleAddHotspot() {
-    if (tooltip.trim() == "" || hotspotData === null) {
-      alert("Please provide a tooltip and a valid content type");
+    if (tooltip.trim() === "" || hotspotData === null || icon === "") {
+      alert("Please provide a tooltip, a valid content type, and an icon");
       return;
     }
 
+    let iconData = "";
+    if (customIconData == "") {
+      iconData = icon;
+    } else {
+      iconData = customIconData;
+    }
+
+    const iconAsset: Asset = {
+      tag: "Runtime",
+      id: newID(),
+      path: iconData,
+    };
+
     const newHotspot: Hotspot3D = {
-      pitch: pitch,
-      yaw: yaw,
       id: newID(),
       tooltip: tooltip,
+      pitch: pitch,
+      yaw: yaw,
+      level: level,
+      icon: iconAsset,
       data: hotspotData,
     };
 
@@ -326,13 +398,14 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
         top: "20px",
         display: "flex",
         flexDirection: "column",
+        flexGrow: "1",
         background: "rgba(255, 255, 255, 0.8)",
         borderRadius: "8px",
         padding: "10px",
         justifyContent: "space-between",
-        height: "360px",
         width: "275px",
       }}
+      spacing={1.2}
     >
       <Typography variant="h5" sx={{ textAlign: "center" }}>
         Add a Hotspot
@@ -357,6 +430,7 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
         />
       </Stack>
       <TextField
+        required
         label="Tooltip"
         onChange={(e) => {
           setTooltip(e.target.value);
@@ -365,6 +439,64 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
       <HotspotDataEditor
         hotspotData={hotspotData}
         setHotspotData={setHotspotData}
+      />
+
+      {hotspotData?.tag === "PhotosphereLink" ? (
+        <></>
+      ) : (
+        <FormControl>
+          <InputLabel id="icon">Icon *</InputLabel>
+          <Select
+            labelId="icon"
+            value={icon}
+            label="Custom Icon"
+            onChange={(e) => {
+              if (e.target.value == "custom") {
+                setCustomIcon(true);
+                setIcon(e.target.value);
+              } else {
+                setIcon(e.target.value);
+                setCustomIcon(false);
+                setCustomIconData("");
+              }
+            }}
+          >
+            <MenuItem value="custom">Custom Link</MenuItem>
+            <MenuItem value="https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png">
+              Blue Icon
+            </MenuItem>
+            <MenuItem value="https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png">
+              Red Icon
+            </MenuItem>
+          </Select>
+        </FormControl>
+      )}
+
+      {customIcon ? (
+        <TextField
+          required
+          label="Link to icon"
+          onChange={(e) => {
+            setCustomIconData(e.target.value);
+          }}
+        />
+      ) : (
+        <></>
+      )}
+
+      <TextField
+        label="Level"
+        value={level || ""}
+        onChange={(e) => {
+          const newValue = parseInt(e.target.value);
+          if (!isNaN(newValue)) {
+            setLevel(newValue);
+          } else {
+            setLevel(0);
+          }
+        }}
+        fullWidth
+        margin="normal"
       />
       <Stack direction="row" sx={{ justifyContent: "space-between" }}>
         <Button

@@ -1,12 +1,14 @@
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import { ArrowBack, Close } from "@mui/icons-material";
 import {
+  Button,
   Dialog,
   DialogContent,
   DialogTitle,
   IconButton,
   Snackbar,
   Stack,
+  TextField,
   Tooltip,
   Typography,
   colors,
@@ -27,6 +29,9 @@ interface HotspotContentProps {
 }
 
 function HotspotContent({ hotspot, openNestedHotspot }: HotspotContentProps) {
+  const [answer, setAnswer] = useState(""); // State to hold the answer
+  const [feedback, setFeedback] = useState("");
+
   switch (hotspot.tag) {
     case "Image": {
       return (
@@ -115,6 +120,43 @@ function HotspotContent({ hotspot, openNestedHotspot }: HotspotContentProps) {
       );
     case "PhotosphereLink":
       break;
+    case "Quiz": {
+      const hotspotAnswer = hotspot.answer;
+      return (
+        <Box>
+          <Box>{"Question: " + hotspot.question}</Box>
+          <TextField
+            variant="outlined"
+            value={answer}
+            onChange={(e) => {
+              setAnswer(e.target.value);
+            }}
+            fullWidth
+            margin="normal"
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              if (
+                answer.trim().toLowerCase() ===
+                hotspotAnswer.trim().toLowerCase()
+              ) {
+                setFeedback("Correct!");
+              } else {
+                setFeedback("Incorrect! Try again.");
+              }
+            }}
+          >
+            Submit
+          </Button>
+
+          <Box sx={{ mt: 2 }} color={feedback === "Correct!" ? "green" : "red"}>
+            {feedback}
+          </Box>
+        </Box>
+      );
+    }
     default:
       break;
   }

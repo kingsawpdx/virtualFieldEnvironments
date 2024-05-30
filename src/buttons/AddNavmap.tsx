@@ -3,7 +3,7 @@ import { Button, Stack, TextField, Typography } from "@mui/material";
 import { MuiFileInput } from "mui-file-input";
 import React, { useState } from "react";
 
-import { NavMap, calculateImageDimensions } from "../DataStructures";
+import { NavMap, calculateImageDimensions, newID } from "../DataStructures";
 
 interface AddNavMapProps {
   onCreateNavMap: (navMap: NavMap) => void;
@@ -36,12 +36,14 @@ function AddNavMap({ onCreateNavMap, onClose }: AddNavMapProps): JSX.Element {
     const { width, height } = await calculateImageDimensions(navmapImage);
     const maxDimension = Math.max(width, height);
     const newNavMap: NavMap = {
-      src: { tag: "Network", path: navmapImage },
+      src: { tag: "Runtime", id: newID(), path: navmapImage },
       id: navmapName,
       rotation: 0,
       defaultZoom: (navmapSize / maxDimension) * 100,
       defaultCenter: { x: width / 2, y: height / 2 },
       size: navmapSize,
+      width: width,
+      height: height,
     };
     onCreateNavMap(newNavMap); // Pass the new NavMap object directly
     onClose(); // Close the AddNavMap window after creating the Nav Map

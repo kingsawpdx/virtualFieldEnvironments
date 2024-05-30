@@ -32,6 +32,7 @@ import {
   Photosphere,
   VFE,
 } from "./DataStructures";
+import { useVisitedState } from "./HandleVisit";
 import PhotosphereSelector from "./PhotosphereSelector";
 import PopOver from "./PopOver";
 
@@ -100,8 +101,7 @@ function convertHotspots(hotspots: Record<string, Hotspot3D>): MarkerConfig[] {
   for (const hotspot of Object.values(hotspots)) {
     if (hotspot.data.tag === "PhotosphereLink") continue;
 
-    let icon =
-      "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"; // default
+    let icon = hotspot.icon.path;
 
     switch (hotspot.data.tag) {
       case "Image":
@@ -152,7 +152,7 @@ function convertLinks(hotspots: Record<string, Hotspot3D>): VirtualTourLink[] {
         pitch: degToStr(hotspot.pitch),
         yaw: degToStr(hotspot.yaw),
       },
-      data: { tooltip: hotspot.tooltip } as LinkData,
+      data: { tooltip: "Go " + hotspot.data.photosphereID } as LinkData,
     });
   }
 
@@ -224,6 +224,16 @@ function PhotosphereViewer({
   const ready = useRef(false);
   const defaultPanorama = useRef(vfe.photospheres[currentPS].src.path);
 
+  const initialPhotosphereHotspots: Record<string, Hotspot3D[]> = Object.keys(
+    vfe.photospheres,
+  ).reduce<Record<string, Hotspot3D[]>>((acc, psId) => {
+    acc[psId] = Object.values(vfe.photospheres[psId].hotspots);
+    return acc;
+  }, {});
+
+  const [visited, handleVisit] = useVisitedState(initialPhotosphereHotspots);
+  console.log("in viewer", visited);
+
   useEffect(() => {
     if (ready.current) {
       const virtualTour =
@@ -275,6 +285,7 @@ function PhotosphereViewer({
       setCurrentPhotosphere((currentState) => {
         const passMarker = currentState.hotspots[marker.config.id];
         setHotspotArray([passMarker]);
+        handleVisit(currentState.id, marker.config.id);
         return currentState;
       });
     });

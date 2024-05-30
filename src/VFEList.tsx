@@ -17,7 +17,7 @@ import { Link } from "react-router-dom";
 import { VFE } from "./DataStructures";
 import { deleteStoredVFE } from "./FileOperations";
 import { confirmMUI } from "./StyledConfirmWrapper";
-import { convertLocalToNetwork } from "./VFEConversion";
+import { convertStoredToRuntime } from "./VFEConversion";
 
 type NavMapRecord = Partial<Record<string, string>>;
 
@@ -34,7 +34,9 @@ function VFEList() {
       for (const key of keys) {
         const localVFE = await localforage.getItem<VFE>(key);
         if (localVFE?.map) {
-          const networkMap = await convertLocalToNetwork(localVFE.map.src);
+          const networkMap = await convertStoredToRuntime(localVFE.name)(
+            localVFE.map.src,
+          );
           newNavMaps[key] = networkMap.path;
         }
       }
@@ -48,6 +50,7 @@ function VFEList() {
     if (await confirmMUI(`Delete ${toDelete}?`, { accept: "Delete" })) {
       // removed deleted nav map from record
       const { [toDelete]: _deleted, ...newNavMaps } = navMaps;
+      localStorage.removeItem("visitedState");
       await deleteStoredVFE(toDelete);
 
       setNames(names.filter((n) => n !== toDelete));

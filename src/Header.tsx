@@ -3,14 +3,8 @@ import {
   LibraryAddSharp,
   TerrainSharp,
 } from "@mui/icons-material";
-import {
-  AppBar,
-  Button,
-  IconButton,
-  Stack,
-  Tooltip,
-  Typography,
-} from "@mui/material";
+import { AppBar, Button, IconButton, Stack, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 export interface HeaderProps {
   onCreateVFE: () => void;
@@ -18,11 +12,17 @@ export interface HeaderProps {
 }
 
 function Header({ onCreateVFE, onLoadTestVFE }: HeaderProps) {
+  const navigate = useNavigate();
+
   return (
     <AppBar sx={{ position: "sticky", inset: "top" }}>
       <Stack direction="row" sx={{ justifyContent: "space-between" }}>
         <Stack direction="row">
-          <IconButton>
+          <IconButton
+            onClick={() => {
+              navigate("/");
+            }}
+          >
             <TerrainSharp
               sx={{ color: "primary.contrastText", fontSize: "50px" }}
             />
@@ -31,12 +31,19 @@ function Header({ onCreateVFE, onLoadTestVFE }: HeaderProps) {
             Virtual Field Guides
           </Typography>
         </Stack>
-        <Stack direction="row">
-          <Tooltip title="Create">
-            <IconButton onClick={onCreateVFE}>
-              <LibraryAddSharp sx={{ color: "primary.contrastText" }} />
-            </IconButton>
-          </Tooltip>
+        <Stack direction="row" spacing={1}>
+          <Stack sx={{ justifyContent: "space-around" }}>
+            <Button
+              onClick={onCreateVFE}
+              endIcon={
+                <LibraryAddSharp sx={{ color: "primary.contrastText" }} />
+              }
+            >
+              <Typography sx={{ color: "primary.contrastText" }}>
+                Create
+              </Typography>
+            </Button>
+          </Stack>
           <Stack sx={{ justifyContent: "space-around", paddingRight: "10px" }}>
             <Button
               sx={{ backgroundColor: "primary.dark" }}

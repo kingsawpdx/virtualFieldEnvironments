@@ -1,3 +1,5 @@
+import localforage from "localforage";
+
 import {
   Asset,
   Hotspot2D,
@@ -9,35 +11,37 @@ import {
   VFE,
 } from "./DataStructures";
 
-export async function convertLocalToNetwork(asset: Asset): Promise<Asset> {
-  let path = asset.path;
-  if (path.startsWith("data:")) {
-    const result = await fetch(asset.path);
-    const blob = await result.blob();
-    path = URL.createObjectURL(blob);
-  }
-  return { tag: "Network", path };
+export function convertStoredToRuntime(vfeName: string): ConversionFunction {
+  const instance = localforage.createInstance({ name: vfeName });
+
+  return async (asset: Asset) => {
+    if (asset.tag === "Stored") {
+      const blob = await instance.getItem<Blob>(asset.id);
+      if (blob === null) {
+        throw new Error(`asset (${asset.id}) is missing from storage instance`);
+      }
+
+      return { tag: "Runtime", id: asset.id, path: URL.createObjectURL(blob) };
+    }
+
+    return asset;
+  };
 }
 
-export async function convertNetworkToLocal(asset: Asset): Promise<Asset> {
-  let path = asset.path;
-  if (path.startsWith("blob:")) {
-    const result = await fetch(asset.path);
-    const blob = await result.blob();
-    path = await convertBlobToData(blob);
-  }
-  return { tag: "Local", path };
-}
+export function convertRuntimeToStored(vfeName: string): ConversionFunction {
+  const instance = localforage.createInstance({ name: vfeName });
 
-async function convertBlobToData(blob: Blob): Promise<string> {
-  return new Promise((resolve) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const URL = reader.result as string;
-      resolve(URL);
-    };
-    reader.readAsDataURL(blob);
-  });
+  return async (asset: Asset) => {
+    if (asset.tag === "Runtime" && asset.path.startsWith("blob:")) {
+      const result = await fetch(asset.path);
+      const blob = await result.blob();
+      await instance.setItem(asset.id, blob);
+
+      return { tag: "Stored", id: asset.id, path: asset.id };
+    }
+
+    return asset;
+  };
 }
 
 export type ConversionFunction = (a: Asset) => Promise<Asset>;
@@ -99,7 +103,11 @@ async function convertHotspot3D(
   hotspot: Hotspot3D,
   convert: ConversionFunction,
 ): Promise<Hotspot3D> {
-  return { ...hotspot, data: await convertHotspotData(hotspot.data, convert) };
+  return {
+    ...hotspot,
+    icon: await convert(hotspot.icon),
+    data: await convertHotspotData(hotspot.data, convert),
+  };
 }
 
 async function convertImage(
@@ -134,6 +142,7 @@ async function convertHotspotData(
     case "URL":
     case "Message":
     case "PhotosphereLink":
+    case "Quiz":
       return data;
   }
 }

@@ -25,17 +25,19 @@ export async function calculateImageDimensions(
   });
 }
 
-export interface LocalAsset {
-  tag: "Local";
+export interface StoredAsset {
+  tag: "Stored";
+  id: string;
   path: string;
 }
 
-export interface NetworkAsset {
-  tag: "Network";
+export interface RuntimeAsset {
+  tag: "Runtime";
+  id: string;
   path: string;
 }
 
-export type Asset = LocalAsset | NetworkAsset;
+export type Asset = StoredAsset | RuntimeAsset;
 
 // Virtual Field Environment: the total collection of photosphere environments
 export interface VFE {
@@ -53,6 +55,8 @@ export interface NavMap {
   defaultZoom: number;
   defaultCenter: { x: number; y: number };
   size: number;
+  width: number;
+  height: number;
 }
 
 // Photosphere: a single 360-environment
@@ -66,20 +70,22 @@ export interface Photosphere {
 
 // Hotspot2D: a clickable resource that is inside a 2D image (x, y)
 export interface Hotspot2D {
-  x: number;
-  y: number;
   id: string;
   tooltip: string;
+  x: number;
+  y: number;
   color: string;
   data: HotspotData;
 }
 
 // Hotspot3D: a clickable resource that is inside a 360 photosphere (pitch, yaw)
 export interface Hotspot3D {
-  pitch: number;
-  yaw: number;
   id: string;
   tooltip: string;
+  pitch: number;
+  yaw: number;
+  level: number;
+  icon: Asset;
   data: HotspotData;
 }
 
@@ -91,7 +97,8 @@ export type HotspotData =
   | Doc
   | URL
   | Message
-  | PhotosphereLink;
+  | PhotosphereLink
+  | Quiz;
 
 // media objects
 export interface Image {
@@ -130,4 +137,10 @@ export interface Message {
 export interface PhotosphereLink {
   tag: "PhotosphereLink";
   photosphereID: string;
+}
+
+export interface Quiz {
+  tag: "Quiz";
+  question: string;
+  answer: string;
 }
