@@ -161,8 +161,6 @@ function ContentInput({
             onChange={(e) => {
               onUpdate(content, e.target.value, answer);
             }}
-            fullWidth
-            margin="normal"
           />
           <TextField
             required
@@ -171,8 +169,6 @@ function ContentInput({
             onChange={(e) => {
               onUpdate(content, question, e.target.value);
             }}
-            fullWidth
-            margin="normal"
           />
         </>
       );
