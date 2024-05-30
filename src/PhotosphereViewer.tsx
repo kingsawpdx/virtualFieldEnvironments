@@ -26,7 +26,7 @@ import {
 } from "./DataStructures";
 import PhotosphereSelector from "./PhotosphereSelector";
 import PopOver from "./PopOver";
-import AccessLevelSelector from './AccessLevelSelector';
+import AccessLevelSelector from './AccessLevelSelector'; // Assuming AccessLevelSelector is a component
 
 /** Convert yaw/pitch degrees from numbers to strings ending in "deg" */
 function degToStr(val: number): string {
@@ -40,22 +40,18 @@ function sizeToStr(val: number): string {
 
 /** Convert non-link hotspots to markers with type-based content/icons */
 function convertHotspots(hotspots: Record<string, Hotspot3D>, accessLevel: number): MarkerConfig[] {
-  console.log("Access level in convertHotspots: ", accessLevel);
-
   const markers: MarkerConfig[] = [];
 
   for (const hotspot of Object.values(hotspots)) {
-    if (hotspot.data.tag === "PhotosphereLink" ) continue;
+    if (hotspot.data.tag === "PhotosphereLink") continue;
 
-    let icon =
-      "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"; // default
+    let icon = "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png"; // default
 
     switch (hotspot.data.tag) {
       case "Image":
         break;
       case "Video":
-        icon =
-          "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png"; // changed to make linter happy until icons are ready
+        icon = "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png"; // changed to make linter happy until icons are ready
         break;
       case "Audio":
         break;
@@ -92,7 +88,7 @@ function convertLinks(hotspots: Record<string, Hotspot3D>): VirtualTourLink[] {
   const links: VirtualTourLink[] = [];
 
   for (const hotspot of Object.values(hotspots)) {
-    if (hotspot.data.tag !== "PhotosphereLink" ) continue; 
+    if (hotspot.data.tag !== "PhotosphereLink") continue;
     links.push({
       nodeId: hotspot.data.photosphereID,
       position: {
@@ -161,7 +157,6 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
   );
 
   useEffect(() => {
-    console.log("Access level in useEffect: ", accessLevel);
     const virtualTour =
       photoSphereRef.current?.getPlugin<VirtualTourPlugin>(VirtualTourPlugin);
     if (virtualTour) {
@@ -175,7 +170,7 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
 
       virtualTour.setNodes(nodes, props.currentPS ? props.currentPS : defaultPhotosphere.id);
     }
-    updateMarkers();
+    updateMarkers(accessLevel);
   }, [accessLevel, props.vfe.photospheres, props.currentPS, defaultPhotosphere.id]);
 
   useEffect(() => {
@@ -266,36 +261,28 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
     });
   }
 
-  // Example function to update access level
-  function updateAccessLevel(newLevel: number) {
-    console.log("New access level: ", newLevel);
-    setAccessLevel(newLevel);
-    // window.location.reload();
-  }
-
-  function updateMarkers() {
-    const virtualTour = photoSphereRef.current?.getPlugin<VirtualTourPlugin>(VirtualTourPlugin);
+  function updateMarkers(accessLevel: number) {
     const markersPlugin = photoSphereRef.current?.getPlugin<MarkersPlugin>(MarkersPlugin);
-    if (virtualTour && markersPlugin) {
-      const nodes: VirtualTourNode[] = Object.values(props.vfe.photospheres).map((p) => {
+    
+    if (markersPlugin) {
+      // Iterate through each photosphere and its hotspots
+      Object.values(props.vfe.photospheres).forEach((p) => {
         Object.values(p.hotspots).forEach(hotspot => {
+          if (hotspot.data.tag === "PhotosphereLink")
+            return
+          
           const isVisible = accessLevel >= (hotspot.accessLevel || 0);
+
           markersPlugin.updateMarker({
-            id: hotspot.tooltip, // hotspot.id is the same as tooltip
+            id: hotspot.tooltip, 
             visible: isVisible
           });
         });
-        console.log('Nodes',nodes);
-        // return {
-        //   id: p.id,
-        //   panorama: p.src,
-        //   name: p.id,
-        //   markers: convertHotspots(p.hotspots, accessLevel),
-        //   links: convertLinks(p.hotspots),
-        // };
       });
+
+      console.log('Markers updated based on access level:', accessLevel);
     }
-  }
+  };
 
   return (
     <>
@@ -330,7 +317,7 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
       )}
       <AccessLevelSelector
         accessLevel={accessLevel}
-        updateAccessLevel={updateAccessLevel}
+        updateAccessLevel={setAccessLevel}
       />
 
       <ReactPhotoSphereViewer
