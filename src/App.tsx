@@ -1,47 +1,46 @@
-import { useState } from "react";
-import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import localforage from "localforage";
+import { Route, Routes, useNavigate } from "react-router-dom";
 
 import CreateVFEForm from "./CreateVFE.tsx";
 import { VFE } from "./DataStructures.ts";
+import { load } from "./FileOperations.ts";
 import LandingPage from "./LandingPage.tsx";
 import PhotosphereEditor from "./PhotosphereEditor.tsx";
-import App from "./Prototype.tsx";
+import PhotosphereViewer from "./PhotosphereViewer.tsx";
+import Prototype from "./Prototype.tsx";
+import { convertRuntimeToStored, convertVFE } from "./VFEConversion.ts";
+import VFELoader from "./VFELoader.tsx";
 
 // Main component acts as a main entry point for the application
 // Should decide what we are doing, going to LandingPage/Rendering VFE
 function AppRoot() {
-  // Decide state, should manage whether the VFE should be displayed or the LandingPage should be displayed
-  const [vfeData, setVFEData] = useState<VFE | null>(null);
-  const [currentPhotosphereID, setCurrentPhotosphereID] = useState(
-    vfeData ? vfeData.defaultPhotosphereID : "invalid",
-  );
-
   const navigate = useNavigate();
 
   //Create a function to set useState true
   function handleLoadTestVFE() {
-    navigate("/viewer");
+    navigate("/prototype");
   }
 
   function handleCreateVFE() {
     navigate("/create");
   }
 
-  function loadCreatedVFE(data: VFE) {
-    setVFEData(data);
-    setCurrentPhotosphereID(
-      currentPhotosphereID == "invalid"
-        ? data.defaultPhotosphereID
-        : currentPhotosphereID,
+  async function loadCreatedVFE(networkVFE: VFE) {
+    const localVFE = await convertVFE(
+      networkVFE,
+      convertRuntimeToStored(networkVFE.name),
     );
-    navigate("/editor");
+    await localforage.setItem(localVFE.name, localVFE);
+    navigate(`/editor/${localVFE.name}/${localVFE.defaultPhotosphereID}`);
   }
 
-  function handleUpdateVFE(updatedVFE: VFE, currentPS?: string) {
-    setVFEData(updatedVFE);
-    setCurrentPhotosphereID(
-      currentPS ? currentPS : updatedVFE.defaultPhotosphereID,
-    );
+  async function handleLoadVFE(file: File, openInViewer: boolean) {
+    const localVFE = await load(file);
+    if (localVFE) {
+      await localforage.setItem(localVFE.name, localVFE);
+      const target = openInViewer ? "viewer" : "editor";
+      navigate(`/${target}/${localVFE.name}/${localVFE.defaultPhotosphereID}`);
+    }
   }
 
   return (
@@ -52,30 +51,43 @@ function AppRoot() {
           <LandingPage
             onLoadTestVFE={handleLoadTestVFE}
             onCreateVFE={handleCreateVFE}
+            onLoadVFE={(file, openInViewer) => {
+              void handleLoadVFE(file, openInViewer);
+            }}
           />
         }
       />
-      <Route path="/viewer" element={<App />} />
+      <Route path="/prototype" element={<Prototype />} />
       <Route
         path="/create"
-        element={<CreateVFEForm onCreateVFE={loadCreatedVFE} />}
-      />
-      <Route
-        path="/editor"
         element={
-          vfeData ? (
-            <PhotosphereEditor
-              currentPS={currentPhotosphereID}
-              onChangePS={setCurrentPhotosphereID}
-              parentVFE={vfeData}
-              onUpdateVFE={handleUpdateVFE}
-            />
-          ) : (
-            // redirect back to the create form if VFE hasn't been created yet
-            <Navigate to="/create" replace={true} />
-          )
+          <CreateVFEForm
+            onCreateVFE={(data) => {
+              void loadCreatedVFE(data);
+            }}
+            header={{
+              onLoadTestVFE: handleLoadTestVFE,
+              onCreateVFE: handleCreateVFE,
+            }}
+          />
         }
       />
+      <Route
+        path="/viewer/:vfeID"
+        element={
+          <VFELoader render={(props) => <PhotosphereViewer {...props} />} />
+        }
+      >
+        <Route path=":photosphereID" element={null} />
+      </Route>
+      <Route
+        path="/editor/:vfeID"
+        element={
+          <VFELoader render={(props) => <PhotosphereEditor {...props} />} />
+        }
+      >
+        <Route path=":photosphereID" element={null} />
+      </Route>
     </Routes>
   );
 }

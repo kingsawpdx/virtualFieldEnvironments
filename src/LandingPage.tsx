@@ -1,55 +1,81 @@
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Stack,
+} from "@mui/material";
+import { useState } from "react";
+
+import FileDropzone from "./FileDropzone";
+import Header from "./Header";
+import VFEList from "./VFEList";
+
 interface LandingPageProps {
   onLoadTestVFE: () => void;
   onCreateVFE: () => void;
+  onLoadVFE: (file: File, openInViewer: boolean) => void;
 }
 
-function LandingPage({ onLoadTestVFE, onCreateVFE }: LandingPageProps) {
+function LandingPage({
+  onLoadTestVFE,
+  onCreateVFE,
+  onLoadVFE,
+}: LandingPageProps) {
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [openDialog, setOpenDialog] = useState(false);
+
+  function handleFileUpload(file: File) {
+    setSelectedFile(file);
+    setOpenDialog(true);
+  }
+
+  function handleCloseDialog() {
+    setOpenDialog(false);
+    setSelectedFile(null);
+  }
+
+  function handleLoadVFEWithChoice(openInViewer: boolean) {
+    if (selectedFile) {
+      onLoadVFE(selectedFile, openInViewer);
+      handleCloseDialog();
+    }
+  }
+
   return (
-    <div
-      style={{
-        height: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        background: "linear-gradient(to right, #4facfe 0%, #00f2fe 100%)",
-      }}
-    >
-      <h1> Welcome to the Virtual Field Enviornment (VFE) </h1>
-      <p> Explore and create virtual field enviornments! </p>
-      <button
-        onClick={onLoadTestVFE}
-        style={{
-          padding: "10px 20px",
-          fontSize: "1rem",
-          cursor: "pointer",
-          margin: "20px",
-          borderRadius: "5px",
-          border: "none",
-          background: "#4facfe",
-          color: "white",
-          boxShadow: "0 4px 14px 0 rgba(0, 0, 0, 0.1)",
-        }}
-      >
-        Load Test VFE
-      </button>
-      <button
-        onClick={onCreateVFE}
-        style={{
-          padding: "10px 20px",
-          fontSize: "1rem",
-          cursor: "pointer",
-          margin: "20px",
-          borderRadius: "5px",
-          border: "none",
-          background: "#4facfe",
-          color: "white",
-          boxShadow: "0 4px 14px 0 rgba(0, 0, 0, 0.1)",
-        }}
-      >
-        Create VFE
-      </button>
-    </div>
+    <>
+      <Header onCreateVFE={onCreateVFE} onLoadTestVFE={onLoadTestVFE} />
+      <Stack sx={{ width: "80%", margin: "auto", padding: 2 }}>
+        <FileDropzone onUploadVFE={handleFileUpload} />
+        <VFEList />
+      </Stack>
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
+        <DialogTitle>Open VFE</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Do you want to open the VFE in Viewer or Editor?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              handleLoadVFEWithChoice(true);
+            }}
+          >
+            Viewer
+          </Button>
+          <Button
+            onClick={() => {
+              handleLoadVFEWithChoice(false);
+            }}
+          >
+            Editor
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 }
 

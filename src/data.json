@@ -1,0 +1,613 @@
+{
+  "name": "prototypeElkIslandVFE",
+  "defaultPhotosphereID": "South",
+  "map": {
+    "id": "navmap",
+    "src": {
+      "tag": "Runtime",
+      "path": "/VFEdata/map.jpg",
+      "id": "map.jpg"
+    },
+    "rotation": 0,
+    "defaultZoom": 20,
+    "defaultCenter": { "x": 592.5, "y": 511.5 },
+    "width": 1185,
+    "height": 1023,
+    "size": 300
+  },
+  "photospheres": {
+    "South": {
+      "id": "South",
+      "src": {
+        "tag": "Runtime",
+        "path": "/VFEdata/ERI_SouthScene_6-IMG_20231006_081813_00_122.jpg",
+        "id": "SouthScene.jpg"
+      },
+      "center": { "x": 450, "y": 800 },
+      "hotspots": {
+        "OutcropWideView": {
+          "id": "OutcropWideView",
+          "pitch": 5,
+          "yaw": -5,
+          "icon": {
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
+          },
+          "tooltip": "OutcropWideView",
+          "data": {
+            "tag": "Image",
+            "width": 3024,
+            "height": 4032,
+            "src": {
+              "tag": "Runtime",
+              "path": "/VFEdata/outcropWideView.png",
+              "id": "outcrop.jpg"
+            },
+            "hotspots": {}
+          },
+          "level": 1
+        },
+        "Flowers": {
+          "id": "Flowers",
+          "pitch": -3,
+          "yaw": 18,
+          "icon": {
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
+          },
+          "tooltip": "Flowers",
+          "data": {
+            "tag": "Image",
+            "width": 3024,
+            "height": 4032,
+            "src": {
+              "tag": "Runtime",
+              "path": "/VFEdata/flowers.png",
+              "id": "flowers.png"
+            },
+            "hotspots": {}
+          },
+          "level": 1
+        },
+        "URLDemo": {
+          "id": "URLDemo",
+          "pitch": -10,
+          "yaw": 0,
+          "icon": {
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
+          },
+          "tooltip": "URLDemo",
+          "data": {
+            "tag": "URL",
+            "url": "https://virtual-field-environments.vercel.app/"
+          },
+          "level": 1
+        },
+        "AudioDemo": {
+          "id": "AudioDemo",
+          "pitch": -10,
+          "yaw": 10,
+          "icon": {
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
+          },
+          "tooltip": "Audio Demo - FrogChorus.mp3",
+          "data": {
+            "tag": "Audio",
+            "src": {
+              "tag": "Runtime",
+              "path": "/VFEdata/FrogChorus.LS100206.mp3",
+              "id": "frogs.mp3"
+            }
+          },
+          "level": 1
+        },
+        "DocumentDemo": {
+          "id": "DocumentDemo",
+          "pitch": -10,
+          "yaw": 20,
+          "icon": {
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
+          },
+          "tooltip": "Document Demo - VFE Guidelines",
+          "data": {
+            "tag": "Doc",
+            "src": {
+              "tag": "Runtime",
+              "path": "/VFEdata/General guide - Virtual Field Environments for Student-based Inquiry.pdf",
+              "id": "inquiry.pdf"
+            }
+          },
+          "level": 1
+        },
+        "ShorelineSOUTH": {
+          "id": "ShorelineSOUTH",
+          "pitch": -32,
+          "yaw": 172,
+          "icon": {
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png",
+            "id": "red-pin.png"
+          },
+          "tooltip": "ShorelineSOUTH.mp4",
+          "data": {
+            "tag": "Video",
+            "src": {
+              "tag": "Runtime",
+              "path": "/VFEdata/shorelineSOUTH.mp4",
+              "id": "shorelineSouth.mp4"
+            }
+          },
+          "level": 1
+        },
+        "Paddlers": {
+          "id": "Paddlers",
+          "pitch": -10,
+          "yaw": -175,
+          "icon": {
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png",
+            "id": "red-pin.png"
+          },
+          "tooltip": "Paddlers.mp4",
+          "data": {
+            "tag": "Video",
+            "src": {
+              "tag": "Runtime",
+              "path": "/VFEdata/paddlers.mp4",
+              "id": "paddlers.mp4"
+            }
+          },
+          "level": 1
+        },
+        "SmallPool": {
+          "id": "SmallPool",
+          "pitch": -13,
+          "yaw": 100,
+          "icon": {
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
+          },
+          "tooltip": "SmallPool",
+          "data": {
+            "tag": "Image",
+            "width": 1344,
+            "height": 1792,
+            "src": {
+              "tag": "Runtime",
+              "path": "/VFEdata/small_pool.jpg",
+              "id": "small-pool.jpg"
+            },
+            "hotspots": {}
+          },
+          "level": 1
+        },
+        "LogNearShoreline": {
+          "id": "LogNearShoreline",
+          "pitch": -25,
+          "yaw": -40,
+          "icon": {
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
+          },
+          "tooltip": "LogNearShoreline",
+          "data": {
+            "tag": "Image",
+            "width": 3024,
+            "height": 4032,
+            "src": {
+              "tag": "Runtime",
+              "path": "/VFEdata/logNEARshoreline.png",
+              "id": "logShoreline.png"
+            },
+            "hotspots": {}
+          },
+          "level": 1
+        },
+        "CoolLog": {
+          "id": "CoolLog",
+          "pitch": -17,
+          "yaw": -33,
+          "icon": {
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
+          },
+          "tooltip": "CoolLog",
+          "data": {
+            "tag": "Image",
+            "width": 1792,
+            "height": 1344,
+            "src": {
+              "tag": "Runtime",
+              "path": "/VFEdata/cool_log.jpeg",
+              "id": "cool-log.jpeg"
+            },
+            "hotspots": {}
+          },
+          "level": 1
+        },
+        "OutcropTextures": {
+          "id": "OutcropTextures",
+          "pitch": 6,
+          "yaw": 5,
+          "icon": {
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png",
+            "id": "red-pin.png"
+          },
+          "tooltip": "OutcropTextures",
+          "data": {
+            "tag": "Video",
+            "src": {
+              "tag": "Runtime",
+              "path": "/VFEdata/outcrop_textures.mp4",
+              "id": "outcrop-textures.mp4"
+            }
+          },
+          "level": 1
+        },
+        "HugeLogs": {
+          "id": "HugeLogs",
+          "pitch": -12,
+          "yaw": -37,
+          "icon": {
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
+          },
+          "tooltip": "How did these huge logs get here?",
+          "data": {
+            "tag": "Message",
+            "content": "How did these huge logs get here?"
+          },
+          "level": 1
+        },
+        "Mushroom": {
+          "id": "Mushroom",
+          "pitch": 2,
+          "yaw": -19,
+          "icon": {
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
+          },
+          "tooltip": "Mushroom",
+          "data": {
+            "tag": "Image",
+            "width": 3024,
+            "height": 4032,
+            "src": {
+              "tag": "Runtime",
+              "path": "/VFEdata/mushroom.png",
+              "id": "mushroom.png"
+            },
+            "hotspots": {}
+          },
+          "level": 1
+        },
+        "Contact": {
+          "id": "Contact",
+          "pitch": 2,
+          "yaw": -46,
+          "icon": {
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
+          },
+          "tooltip": "Contact",
+          "data": {
+            "tag": "Image",
+            "width": 2549,
+            "height": 1694,
+            "src": {
+              "tag": "Runtime",
+              "path": "/VFEdata/Contact.png",
+              "id": "contact.png"
+            },
+            "hotspots": {
+              "HandSample": {
+                "x": 12.5,
+                "y": 32.5,
+                "id": "HandSample",
+                "tooltip": "HandSample",
+                "color": "#FF0000",
+                "data": {
+                  "tag": "Image",
+                  "width": 1342,
+                  "height": 1064,
+                  "src": {
+                    "tag": "Runtime",
+                    "path": "/VFEdata/hand_sample.png",
+                    "id": "hand-sample.png"
+                  },
+                  "hotspots": {
+                    "CloserLook": {
+                      "x": 63,
+                      "y": 56,
+                      "id": "CloserLook",
+                      "tooltip": "CloserLook",
+                      "color": "#00FF00",
+                      "data": {
+                        "tag": "Image",
+                        "width": 4240,
+                        "height": 2832,
+                        "src": {
+                          "tag": "Runtime",
+                          "path": "/VFEdata/a-closer-look.jpg",
+                          "id": "a-closer-look.jpg"
+                        },
+                        "hotspots": {
+                          "SouthSEMComparison": {
+                            "x": 52,
+                            "y": 35,
+                            "id": "SouthSEMComparison",
+                            "tooltip": "SouthSEMComparison",
+                            "color": "#00FFFF",
+                            "data": {
+                              "tag": "Image",
+                              "width": 720,
+                              "height": 312,
+                              "src": {
+                                "tag": "Runtime",
+                                "path": "/VFEdata/southSEMcomp.png",
+                                "id": "southSEMcomp.png"
+                              },
+                              "hotspots": {}
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "level": 1
+        },
+        "SouthWaterfront": {
+          "id": "SouthWaterfront",
+          "pitch": -1,
+          "yaw": -25,
+          "icon": {
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
+          },
+          "tooltip": "SouthWaterfront",
+          "data": {
+            "tag": "Image",
+            "width": 3024,
+            "height": 4032,
+            "src": {
+              "tag": "Runtime",
+              "path": "/VFEdata/SouthwaterFront.png",
+              "id": "south-waterfront.png"
+            },
+            "hotspots": {}
+          },
+          "level": 1
+        },
+        "Go West": {
+          "id": "Go West",
+          "pitch": 0,
+          "yaw": -35,
+          "icon": {
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
+          },
+          "tooltip": "Go West",
+          "data": {
+            "tag": "PhotosphereLink",
+            "photosphereID": "West"
+          },
+          "level": 0
+        },
+        "Go to Entrance": {
+          "id": "Go to Entrance",
+          "pitch": -7,
+          "yaw": 125,
+          "icon": {
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
+          },
+          "tooltip": "Go to Entrance",
+          "data": {
+            "tag": "PhotosphereLink",
+            "photosphereID": "Entrance"
+          },
+          "level": 0
+        }
+      },
+      "backgroundAudio": {
+        "tag": "Runtime",
+        "path": "/VFEdata/Scene12_UnevenStandTop_LS100146.mp3",
+        "id": "scene12.mp3"
+      }
+    },
+    "Entrance": {
+      "id": "Entrance",
+      "src": {
+        "tag": "Runtime",
+        "path": "/VFEdata/ERI_Entrance-Scene0-IMG_20231006_080232_00_120.jpg",
+        "id": "entrance.jpg"
+      },
+      "center": { "x": 650, "y": 930 },
+      "hotspots": {
+        "Go East": {
+          "id": "Go East",
+          "pitch": -2,
+          "yaw": -4,
+          "icon": {
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
+          },
+          "tooltip": "Go East",
+          "data": {
+            "tag": "PhotosphereLink",
+            "photosphereID": "East"
+          },
+          "level": 0
+        },
+        "Go South": {
+          "id": "Go South",
+          "pitch": -4,
+          "yaw": -78,
+          "icon": {
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
+          },
+          "tooltip": "Go South",
+          "data": {
+            "tag": "PhotosphereLink",
+            "photosphereID": "South"
+          },
+          "level": 0
+        }
+      }
+    },
+    "West": {
+      "id": "West",
+      "src": {
+        "tag": "Runtime",
+        "path": "/VFEdata/ERI_West-Scene7-IMG_20231006_084114_00_123.jpg",
+        "id": "west.jpg"
+      },
+      "center": { "x": 95, "y": 530 },
+      "hotspots": {
+        "Go North": {
+          "id": "Go North",
+          "pitch": 0,
+          "yaw": 10,
+          "icon": {
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
+          },
+          "tooltip": "Go North",
+          "data": {
+            "tag": "PhotosphereLink",
+            "photosphereID": "North"
+          },
+          "level": 0
+        },
+        "Go South": {
+          "id": "Go South",
+          "pitch": -3,
+          "yaw": 115,
+          "icon": {
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
+          },
+          "tooltip": "Go South",
+          "data": {
+            "tag": "PhotosphereLink",
+            "photosphereID": "South"
+          },
+          "level": 0
+        }
+      }
+    },
+    "North": {
+      "id": "North",
+      "src": {
+        "tag": "Runtime",
+        "path": "/VFEdata/ERI_North-Scene8-IMG_20231006_091050_00_124.jpg",
+        "id": "north.jpg"
+      },
+      "center": { "x": 390, "y": 50 },
+      "hotspots": {
+        "Go West": {
+          "id": "Go West",
+          "pitch": 0,
+          "yaw": -130,
+          "icon": {
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
+          },
+          "tooltip": "Go West",
+          "data": {
+            "tag": "PhotosphereLink",
+            "photosphereID": "West"
+          },
+          "level": 0
+        },
+        "Go East": {
+          "id": "Go East",
+          "pitch": 0,
+          "yaw": 92,
+          "icon": {
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
+          },
+          "tooltip": "Go East",
+          "data": {
+            "tag": "PhotosphereLink",
+            "photosphereID": "East"
+          },
+          "level": 0
+        }
+      }
+    },
+    "East": {
+      "id": "East",
+      "src": {
+        "tag": "Runtime",
+        "path": "/VFEdata/ERI_East-Scene9-IMG_20231006_092207_00_125.jpg",
+        "id": "east.jpg"
+      },
+      "center": { "x": 550, "y": 450 },
+      "hotspots": {
+        "Go North": {
+          "id": "Go North",
+          "pitch": 3,
+          "yaw": 2,
+          "icon": {
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
+          },
+          "tooltip": "Go North",
+          "data": {
+            "tag": "PhotosphereLink",
+            "photosphereID": "North"
+          },
+          "level": 0
+        },
+        "Go to Entrance": {
+          "id": "Go to Entrance",
+          "pitch": -2,
+          "yaw": -167,
+          "icon": {
+            "tag": "Runtime",
+            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "id": "blue-pin.png"
+          },
+          "tooltip": "Go to Entrance",
+          "data": {
+            "tag": "PhotosphereLink",
+            "photosphereID": "Entrance"
+          },
+          "level": 0
+        }
+      }
+    }
+  }
+}
