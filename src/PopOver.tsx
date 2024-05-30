@@ -286,13 +286,15 @@ function PopOver(props: PopOverProps) {
           {props.onUpdateHotspot !== undefined && (
             <Box
               padding="20px 24px"
-              bgcolor="#FDFDFD"
               borderColor={colors.grey[300]}
-              sx={{
-                borderStyle: "solid",
-                borderWidth: "1px 0 0 1px",
-                borderTopLeftRadius: "4px",
-              }}
+              sx={
+                previewData && {
+                  backgroundColor: "#FDFDFD",
+                  borderStyle: "solid",
+                  borderWidth: "1px 0 0 1px",
+                  borderTopLeftRadius: "4px",
+                }
+              }
             >
               <HotspotEditor
                 edited={edited}
