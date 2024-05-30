@@ -393,146 +393,144 @@ function HotspotEditor({
   }
 
   return (
-    <>
-      <Stack gap={2} width="300px" height="100%">
-        <Stack alignItems="center">
-          <Typography variant="h5">Hotspot Editor</Typography>
-        </Stack>
-        <TextField
-          label="Tooltip"
-          value={previewTooltip}
-          onChange={(e) => {
-            setPreviewTooltip(e.target.value);
-          }}
-        />
-        <HotspotDataEditor
-          hotspotData={previewData}
-          setHotspotData={(data) => {
-            setPreviewData(data);
-            setEdited(true);
-          }}
-        />
-        {previewData?.tag === "Image" && (
-          <>
-            {colorHotspot !== null && colorAnchor !== null && (
-              <HotspotColorPicker
-                anchor={colorAnchor}
-                hotspot={colorHotspot}
-                onChange={(updatedHotspot) => {
-                  updateNestedHotspot(updatedHotspot);
-                }}
-                onClose={() => {
-                  setColorHotspot(null);
-                  setColorAnchor(null);
-                }}
-              />
-            )}
+    <Stack gap={2} width="300px" height="100%">
+      <Stack alignItems="center">
+        <Typography variant="h5">Hotspot Editor</Typography>
+      </Stack>
+      <TextField
+        label="Tooltip"
+        value={previewTooltip}
+        onChange={(e) => {
+          setPreviewTooltip(e.target.value);
+        }}
+      />
+      <HotspotDataEditor
+        hotspotData={previewData}
+        setHotspotData={(data) => {
+          setPreviewData(data);
+          setEdited(true);
+        }}
+      />
+      {previewData?.tag === "Image" && (
+        <>
+          {colorHotspot !== null && colorAnchor !== null && (
+            <HotspotColorPicker
+              anchor={colorAnchor}
+              hotspot={colorHotspot}
+              onChange={(updatedHotspot) => {
+                updateNestedHotspot(updatedHotspot);
+              }}
+              onClose={() => {
+                setColorHotspot(null);
+                setColorAnchor(null);
+              }}
+            />
+          )}
 
-            {locationHotspot !== null && (
-              <HotspotLocationPicker
-                image={previewData.src.path}
-                hotspot={locationHotspot}
-                onSave={(updatedHotspot) => {
-                  updateNestedHotspot(updatedHotspot);
-                }}
-                onClose={() => {
-                  setLocationHotspot(null);
-                }}
-              />
-            )}
+          {locationHotspot !== null && (
+            <HotspotLocationPicker
+              image={previewData.src.path}
+              hotspot={locationHotspot}
+              onSave={(updatedHotspot) => {
+                updateNestedHotspot(updatedHotspot);
+              }}
+              onClose={() => {
+                setLocationHotspot(null);
+              }}
+            />
+          )}
 
-            <Stack gap={1}>
-              <Stack direction="row">
-                {nestedHotspotLength == 0 ? (
-                  <Box width={32} height={32} padding="1px" />
-                ) : (
-                  <IconButton
-                    size="small"
-                    onClick={() => {
-                      setHotspotsCollapsed(!hotspotsCollapsed);
-                    }}
-                  >
-                    {hotspotsCollapsed ? <ExpandMore /> : <ExpandLess />}
-                  </IconButton>
-                )}
-
-                <Typography
-                  variant="h6"
-                  flexGrow={1}
-                  textAlign="center"
+          <Stack gap={1}>
+            <Stack direction="row">
+              {nestedHotspotLength == 0 ? (
+                <Box width={32} height={32} padding="1px" />
+              ) : (
+                <IconButton
+                  size="small"
                   onClick={() => {
                     setHotspotsCollapsed(!hotspotsCollapsed);
                   }}
-                  sx={{ cursor: nestedHotspotLength > 0 ? "pointer" : "unset" }}
                 >
-                  {`Nested Hotspots (${nestedHotspotLength})`}
-                </Typography>
+                  {hotspotsCollapsed ? <ExpandMore /> : <ExpandLess />}
+                </IconButton>
+              )}
 
-                <Tooltip title="Add Hotspot">
-                  <IconButton
-                    size="small"
-                    onClick={() => {
-                      setLocationHotspot(newBlankHotspot());
-                    }}
-                  >
-                    <Add />
-                  </IconButton>
-                </Tooltip>
-              </Stack>
+              <Typography
+                variant="h6"
+                flexGrow={1}
+                textAlign="center"
+                onClick={() => {
+                  setHotspotsCollapsed(!hotspotsCollapsed);
+                }}
+                sx={{ cursor: nestedHotspotLength > 0 ? "pointer" : "unset" }}
+              >
+                {`Nested Hotspots (${nestedHotspotLength})`}
+              </Typography>
 
-              {!hotspotsCollapsed &&
-                nestedHotspotLength > 0 &&
-                Object.values(previewData.hotspots).map((hotspot2D) => (
-                  <HotspotCard
-                    key={hotspot2D.id}
-                    hotspot={hotspot2D}
-                    edited={edited}
-                    setColorAnchor={setColorAnchor}
-                    setColorHotspot={setColorHotspot}
-                    setLocationHotspot={setLocationHotspot}
-                    removeNestedHotspot={removeNestedHotspot}
-                    openNestedHotspot={openNestedHotspot}
-                  />
-                ))}
+              <Tooltip title="Add Hotspot">
+                <IconButton
+                  size="small"
+                  onClick={() => {
+                    setLocationHotspot(newBlankHotspot());
+                  }}
+                >
+                  <Add />
+                </IconButton>
+              </Tooltip>
             </Stack>
-          </>
-        )}
 
-        <Box flexGrow={1} />
-        {edited && (
-          <Button
-            onClick={() => {
-              void resetHotspot();
-            }}
-          >
-            Discard All Changes
-          </Button>
-        )}
-        <Stack direction="row" gap={1.5}>
-          <Button
-            variant="outlined"
-            color="error"
-            sx={{ width: "50%" }}
-            onClick={deleteHotspot}
-          >
-            Delete Hotspot
-          </Button>
+            {!hotspotsCollapsed &&
+              nestedHotspotLength > 0 &&
+              Object.values(previewData.hotspots).map((hotspot2D) => (
+                <HotspotCard
+                  key={hotspot2D.id}
+                  hotspot={hotspot2D}
+                  edited={edited}
+                  setColorAnchor={setColorAnchor}
+                  setColorHotspot={setColorHotspot}
+                  setLocationHotspot={setLocationHotspot}
+                  removeNestedHotspot={removeNestedHotspot}
+                  openNestedHotspot={openNestedHotspot}
+                />
+              ))}
+          </Stack>
+        </>
+      )}
 
-          <Button
-            disabled={previewTooltip == "" || previewData === null}
-            variant="contained"
-            sx={{ width: "50%" }}
-            onClick={() => {
-              if (previewData !== null) {
-                updateHotspot(previewTooltip, previewData);
-              }
-            }}
-          >
-            Save
-          </Button>
-        </Stack>
+      <Box flexGrow={1} />
+      {edited && (
+        <Button
+          onClick={() => {
+            void resetHotspot();
+          }}
+        >
+          Discard All Changes
+        </Button>
+      )}
+      <Stack direction="row" gap={1.5}>
+        <Button
+          variant="outlined"
+          color="error"
+          sx={{ width: "50%" }}
+          onClick={deleteHotspot}
+        >
+          Delete Hotspot
+        </Button>
+
+        <Button
+          disabled={previewTooltip == "" || previewData === null}
+          variant="contained"
+          sx={{ width: "50%" }}
+          onClick={() => {
+            if (previewData !== null) {
+              updateHotspot(previewTooltip, previewData);
+            }
+          }}
+        >
+          Save
+        </Button>
       </Stack>
-    </>
+    </Stack>
   );
 }
 
