@@ -226,6 +226,8 @@ export function HotspotDataEditor({
     if (hotspotData) {
       setContentType(hotspotData.tag);
       setContent(getHotspotDataContent(hotspotData));
+      setQuestion(hotspotData.tag === "Quiz" ? hotspotData.question : "");
+      setAnswer(hotspotData.tag === "Quiz" ? hotspotData.answer : "");
     }
   }, [hotspotData]);
 
@@ -240,10 +242,29 @@ export function HotspotDataEditor({
     setQuestion(newQuestion);
     setAnswer(newAnswer);
 
-    // Only message hotspots can have no content.
-    if (newContent.trim() === "" && newContentType !== "Message") {
-      setHotspotData(null);
-      return;
+    switch (newContentType) {
+      case "Message":
+        // Only message hotspots can have no content.
+        break;
+
+      case "Image":
+      case "Video":
+      case "Audio":
+      case "Doc":
+      case "URL":
+      case "PhotosphereLink":
+        if (newContent.trim() === "") {
+          setHotspotData(null);
+          return;
+        }
+        break;
+
+      case "Quiz":
+        if (newQuestion.trim() === "" || newAnswer.trim() === "") {
+          setHotspotData(null);
+          return;
+        }
+        break;
     }
 
     let data: HotspotData | null = null;
@@ -298,8 +319,8 @@ export function HotspotDataEditor({
       case "Quiz":
         data = {
           tag: "Quiz",
-          question,
-          answer,
+          question: newQuestion,
+          answer: newAnswer,
         };
         break;
     }
@@ -327,6 +348,7 @@ export function HotspotDataEditor({
           <MenuItem value="URL">URL</MenuItem>
           <MenuItem value="Message">Message</MenuItem>
           <MenuItem value="PhotosphereLink">Photosphere Link</MenuItem>
+          <MenuItem value="Quiz">Quiz</MenuItem>
         </Select>
       </FormControl>
       <ContentInput
