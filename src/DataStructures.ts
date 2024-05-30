@@ -87,7 +87,6 @@ export interface Hotspot3D {
   level: number;
   icon: Asset;
   data: HotspotData;
-  accessLevel?: number; // Make accessLevel optional with a default value
 }
 
 // HotspotData: types of media resources for a hotspot within a photosphere

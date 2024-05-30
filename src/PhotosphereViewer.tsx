@@ -129,7 +129,7 @@ function convertHotspots(hotspots: Record<string, Hotspot3D>, accessLevel: numbe
         pitch: degToStr(hotspot.pitch),
       },
       tooltip: hotspot.tooltip,
-      visible: accessLevel >= (hotspot.accessLevel || 0), // true if accessLevel is equal to or greater than hotspot.accessLevel
+      visible: accessLevel >= (hotspot.level || 0), // true if accessLevel is equal to or greater than hotspot.accessLevel
     });
   }
 
@@ -290,6 +290,7 @@ function PhotosphereViewer({
         const passMarker = currentState.hotspots[marker.config.id];
         setHotspotArray([passMarker]);
         handleVisit(currentState.id, marker.config.id);
+        updateMarkers(accessLevel);
         return currentState;
       });
     });
@@ -342,7 +343,7 @@ function PhotosphereViewer({
       Object.values(currentPhotosphereHotspots).forEach(hotspot => {
         if (hotspot.data.tag === "PhotosphereLink") return;
   
-        const isVisible = accessLevel >= (hotspot.accessLevel || 0);
+        const isVisible = accessLevel >= (hotspot.level || 0);
   
         markersPlugin.updateMarker({
           id: hotspot.id, // Updated to use the correct id
