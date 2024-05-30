@@ -137,11 +137,76 @@ async function convertHotspotData(
       return convertImage(data, convert);
     case "Audio":
     case "Video":
+    case "Doc":
       return { ...data, src: await convert(data.src) };
     case "URL":
-    case "Doc":
+    case "Message":
     case "PhotosphereLink":
     case "Quiz":
       return data;
   }
+}
+
+export function updatePhotosphereHotspot(
+  photosphere: Photosphere,
+  hotspotPath: string[],
+  tooltip: string,
+  data: HotspotData | null,
+): Photosphere {
+  const hotspots: Record<string, Hotspot3D> = {};
+  for (const hotspot3D of Object.values(photosphere.hotspots)) {
+    const updated = updateHotspot(hotspot3D, hotspotPath, tooltip, data);
+    if (updated !== null) {
+      // null hotspots are deleted
+      hotspots[updated.id] = updated;
+    }
+  }
+
+  return {
+    ...photosphere,
+    hotspots,
+  };
+}
+
+function updateHotspot<H extends Hotspot3D | Hotspot2D>(
+  hotspot: H,
+  hotspotPath: string[],
+  tooltip: string,
+  data: HotspotData | null,
+): H | null {
+  // Found the hotspot that is being searched for.
+  if (hotspotPath.length === 1 && hotspotPath[0] === hotspot.id) {
+    if (data === null) {
+      return null; // marked for deletion in calling function
+    }
+
+    return { ...hotspot, tooltip, data };
+  }
+
+  if (
+    hotspotPath.length === 0 || // Empty hotspot path will never be found.
+    hotspotPath[0] !== hotspot.id || // First element in hotspot path is already wrong.
+    hotspot.data.tag !== "Image" // Only Image hotspots have nested hotspots.
+  ) {
+    return hotspot;
+  }
+
+  // First path element is correct, so move on to rest of path.
+  const newTargetPath = hotspotPath.slice(1);
+  const hotspots: Record<string, Hotspot2D> = {};
+  for (const hotspot2D of Object.values(hotspot.data.hotspots)) {
+    const updated = updateHotspot(hotspot2D, newTargetPath, tooltip, data);
+    if (updated !== null) {
+      // null hotspots are deleted
+      hotspots[updated.id] = updated;
+    }
+  }
+
+  return {
+    ...hotspot,
+    data: {
+      ...hotspot.data,
+      hotspots,
+    },
+  };
 }

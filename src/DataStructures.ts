@@ -11,6 +11,20 @@ export function newID() {
   return crypto.randomUUID();
 }
 
+// Calculate image dimensions by creating an image element and waiting for it to load.
+// Since image loading isn't synchronous, it needs to be wrapped in a Promise.
+export async function calculateImageDimensions(
+  url: string,
+): Promise<{ width: number; height: number }> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      resolve({ width: img.width, height: img.height });
+    };
+    img.src = url;
+  });
+}
+
 export interface StoredAsset {
   tag: "Stored";
   id: string;
@@ -56,10 +70,10 @@ export interface Photosphere {
 
 // Hotspot2D: a clickable resource that is inside a 2D image (x, y)
 export interface Hotspot2D {
-  x: number;
-  y: number;
   id: string;
   tooltip: string;
+  x: number;
+  y: number;
   color: string;
   data: HotspotData;
 }
@@ -67,12 +81,12 @@ export interface Hotspot2D {
 // Hotspot3D: a clickable resource that is inside a 360 photosphere (pitch, yaw)
 export interface Hotspot3D {
   id: string;
+  tooltip: string;
   pitch: number;
   yaw: number;
-  tooltip: string;
-  data: HotspotData;
   level: number;
   icon: Asset;
+  data: HotspotData;
 }
 
 // HotspotData: types of media resources for a hotspot within a photosphere
@@ -80,14 +94,17 @@ export type HotspotData =
   | Image
   | Audio
   | Video
-  | URL
   | Doc
+  | URL
+  | Message
   | PhotosphereLink
   | Quiz;
 
 // media objects
 export interface Image {
   tag: "Image";
+  width: number;
+  height: number;
   src: Asset;
   hotspots: Record<string, Hotspot2D>;
 }
@@ -102,13 +119,18 @@ export interface Audio {
   src: Asset;
 }
 
-export interface URL {
-  tag: "URL";
-  src: string;
-}
-
 export interface Doc {
   tag: "Doc";
+  src: Asset;
+}
+
+export interface URL {
+  tag: "URL";
+  url: string;
+}
+
+export interface Message {
+  tag: "Message";
   content: string;
 }
 

@@ -27,6 +27,7 @@ import AudioToggleButton from "./AudioToggleButton";
 import {
   Hotspot2D,
   Hotspot3D,
+  HotspotData,
   NavMap,
   Photosphere,
   VFE,
@@ -120,7 +121,7 @@ function convertHotspots(hotspots: Record<string, Hotspot3D>): MarkerConfig[] {
     }
 
     markers.push({
-      id: hotspot.tooltip,
+      id: hotspot.id,
       image: icon,
       size: { width: 64, height: 64 },
       position: {
@@ -196,7 +197,11 @@ export interface PhotosphereViewerProps {
   currentPS: string;
   onChangePS: (id: string) => void;
   onViewerClick?: (pitch: number, yaw: number) => void;
-  onRemoveHotspot?: (hotspotToRemove: string) => void;
+  onUpdateHotspot?: (
+    hotspotPath: string[],
+    newTooltip: string,
+    newData: HotspotData | null,
+  ) => void;
 }
 
 function PhotosphereViewer({
@@ -204,15 +209,16 @@ function PhotosphereViewer({
   currentPS,
   onChangePS,
   onViewerClick,
-  onRemoveHotspot,
+  onUpdateHotspot,
 }: PhotosphereViewerProps) {
   const photoSphereRef = React.createRef<ViewerAPI>();
   const [currentPhotosphere, setCurrentPhotosphere] =
     React.useState<Photosphere>(vfe.photospheres[currentPS]);
+  const [mapStatic, setMapStatic] = useState(false);
   const [hotspotArray, setHotspotArray] = useState<(Hotspot3D | Hotspot2D)[]>(
     [],
   );
-  const [mapStatic, setMapStatic] = useState(false);
+  const hotspotPath = hotspotArray.map((h) => h.id);
 
   // The variable is set to true after handleReady has finished
   const ready = useRef(false);
@@ -376,9 +382,10 @@ function PhotosphereViewer({
 
       {hotspotArray.length > 0 && (
         <PopOver
+          key={hotspotPath.join()}
+          hotspotPath={hotspotPath}
           hotspotData={hotspotArray[hotspotArray.length - 1].data}
-          title={hotspotArray[hotspotArray.length - 1].tooltip}
-          arrayLength={hotspotArray.length}
+          tooltip={hotspotArray[hotspotArray.length - 1].tooltip}
           pushHotspot={(add: Hotspot2D) => {
             setHotspotArray([...hotspotArray, add]);
           }}
@@ -388,10 +395,7 @@ function PhotosphereViewer({
           closeAll={() => {
             setHotspotArray([]);
           }}
-          //isEditorMode={true}
-          onDeleteHotspot={() => {
-            onRemoveHotspot?.(hotspotArray[hotspotArray.length - 1].tooltip);
-          }}
+          onUpdateHotspot={onUpdateHotspot}
         />
       )}
 
