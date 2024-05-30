@@ -41,10 +41,6 @@ function sizeToStr(val: number): string {
 /** Convert non-link hotspots to markers with type-based content/icons */
 function convertHotspots(hotspots: Record<string, Hotspot3D>, accessLevel: number): MarkerConfig[] {
   console.log("Access level in convertHotspots: ", accessLevel);
-  // If access level is -1, return an empty array to disable all markers
-  if (accessLevel === -1) {
-    return [];
-  }
 
   const markers: MarkerConfig[] = [];
 
@@ -80,7 +76,7 @@ function convertHotspots(hotspots: Record<string, Hotspot3D>, accessLevel: numbe
         pitch: degToStr(hotspot.pitch),
       },
       tooltip: hotspot.tooltip,
-      visible: hotspot.accessLevel ? (hotspot.accessLevel > accessLevel ? false: true): true, //if no access level, all visible else only visible if access level is higher
+      visible: accessLevel >= (hotspot.accessLevel || 0), // true if accessLevel is equal to or greater than hotspot.accessLevel
     });
   }
 
@@ -274,20 +270,30 @@ function PhotosphereViewer(props: PhotosphereViewerProps) {
   function updateAccessLevel(newLevel: number) {
     console.log("New access level: ", newLevel);
     setAccessLevel(newLevel);
+    // window.location.reload();
   }
 
   function updateMarkers() {
     const virtualTour = photoSphereRef.current?.getPlugin<VirtualTourPlugin>(VirtualTourPlugin);
-    if (virtualTour) {
-      const nodes: VirtualTourNode[] = Object.values(props.vfe.photospheres).map((p) => ({
-        id: p.id,
-        panorama: p.src,
-        name: p.id,
-        markers: convertHotspots(p.hotspots, accessLevel),
-        links: convertLinks(p.hotspots),
-      }));
-
-      virtualTour.setNodes(nodes, props.currentPS ? props.currentPS : defaultPhotosphere.id);
+    const markersPlugin = photoSphereRef.current?.getPlugin<MarkersPlugin>(MarkersPlugin);
+    if (virtualTour && markersPlugin) {
+      const nodes: VirtualTourNode[] = Object.values(props.vfe.photospheres).map((p) => {
+        Object.values(p.hotspots).forEach(hotspot => {
+          const isVisible = accessLevel >= (hotspot.accessLevel || 0);
+          markersPlugin.updateMarker({
+            id: hotspot.tooltip, // hotspot.id is the same as tooltip
+            visible: isVisible
+          });
+        });
+        console.log('Nodes',nodes);
+        // return {
+        //   id: p.id,
+        //   panorama: p.src,
+        //   name: p.id,
+        //   markers: convertHotspots(p.hotspots, accessLevel),
+        //   links: convertLinks(p.hotspots),
+        // };
+      });
     }
   }
 
