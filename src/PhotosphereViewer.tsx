@@ -25,6 +25,7 @@ import {
 
 import AudioToggleButton from "./AudioToggleButton";
 import {
+  Asset,
   Hotspot2D,
   Hotspot3D,
   HotspotData,
@@ -182,6 +183,7 @@ export interface PhotosphereViewerProps {
     hotspotPath: string[],
     newTooltip: string,
     newData: HotspotData | null,
+    newIcon?: Asset,
   ) => void;
 }
 

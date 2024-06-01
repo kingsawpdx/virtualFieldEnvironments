@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import {
+  Asset,
   Hotspot3D,
   HotspotData,
   NavMap,
@@ -95,6 +96,7 @@ function PhotosphereEditor({
     hotspotPath: string[],
     tooltip: string,
     data: HotspotData | null,
+    newIcon?: Asset,
   ) {
     if (data === null) {
       setHotspotToRemove(hotspotPath);
@@ -107,6 +109,7 @@ function PhotosphereEditor({
       hotspotPath,
       tooltip,
       data,
+      newIcon,
     );
 
     const updatedVFE = {

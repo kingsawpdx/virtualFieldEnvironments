@@ -19,7 +19,7 @@ import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import ReactPlayer from "react-player";
 
-import { Hotspot2D, Hotspot3D, HotspotData } from "./DataStructures";
+import { Asset, Hotspot2D, Hotspot3D, HotspotData } from "./DataStructures";
 import HotspotEditor, { HotspotIcon, NestedHotspotBox } from "./HotspotEditor";
 import { confirmMUI } from "./StyledConfirmWrapper";
 
@@ -172,16 +172,28 @@ export interface PopOverProps {
     hotspotPath: string[],
     newTooltip: string,
     newData: HotspotData | null,
+    newIcon?: Asset,
   ) => void;
 }
 
 function PopOver(props: PopOverProps) {
   const [edited, setEdited] = useState(false);
+
   const [previewTooltip, setPreviewTooltip] = useState(props.hotspot.tooltip);
   const [previewData, setPreviewData] = useState<HotspotData | null>(
     props.hotspot.data,
   );
+  const [previewIcon, setPreviewIcon] = useState<Asset | null>(
+    "icon" in props.hotspot ? props.hotspot.icon : null,
+  );
+
   const [snackbarMessage, setSnackbarMessage] = useState<string | null>(null);
+
+  // Should only be allowed to change icons of 3D hotspots that aren't photosphere links.
+  const previewIconSetter =
+    "icon" in props.hotspot && previewData?.tag !== "PhotosphereLink"
+      ? setPreviewIcon
+      : undefined;
 
   async function keepChanges() {
     const confirmed = await confirmMUI(
@@ -219,8 +231,12 @@ function PopOver(props: PopOverProps) {
     props.onUpdateHotspot?.(props.hotspotPath, previewTooltip, null);
   }
 
-  function updateHotspot(newTooltip: string, newData: HotspotData) {
-    props.onUpdateHotspot?.(props.hotspotPath, newTooltip, newData);
+  function updateHotspot(
+    newTooltip: string,
+    newData: HotspotData,
+    newIcon?: Asset,
+  ) {
+    props.onUpdateHotspot?.(props.hotspotPath, newTooltip, newData, newIcon);
   }
 
   function openNestedHotspot(hotspot2D: Hotspot2D) {
@@ -255,7 +271,7 @@ function PopOver(props: PopOverProps) {
                 color={
                   "color" in props.hotspot ? props.hotspot.color : undefined
                 }
-                icon={"icon" in props.hotspot ? props.hotspot.icon : undefined}
+                icon={previewIcon ?? undefined}
               />
             )}
             {previewData?.tag == "URL" ? (
@@ -319,6 +335,8 @@ function PopOver(props: PopOverProps) {
                 setPreviewTooltip={setPreviewTooltip}
                 previewData={previewData}
                 setPreviewData={setPreviewData}
+                previewIcon={previewIcon}
+                setPreviewIcon={previewIconSetter}
                 resetHotspot={resetHotspot}
                 deleteHotspot={deleteHotspot}
                 updateHotspot={updateHotspot}

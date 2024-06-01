@@ -152,10 +152,11 @@ export function updatePhotosphereHotspot(
   hotspotPath: string[],
   tooltip: string,
   data: HotspotData | null,
+  icon?: Asset,
 ): Photosphere {
   const hotspots: Record<string, Hotspot3D> = {};
   for (const hotspot3D of Object.values(photosphere.hotspots)) {
-    const updated = updateHotspot(hotspot3D, hotspotPath, tooltip, data);
+    const updated = updateHotspot(hotspot3D, hotspotPath, tooltip, data, icon);
     if (updated !== null) {
       // null hotspots are deleted
       hotspots[updated.id] = updated;
@@ -173,6 +174,7 @@ function updateHotspot<H extends Hotspot3D | Hotspot2D>(
   hotspotPath: string[],
   tooltip: string,
   data: HotspotData | null,
+  icon?: Asset,
 ): H | null {
   // Found the hotspot that is being searched for.
   if (hotspotPath.length === 1 && hotspotPath[0] === hotspot.id) {
@@ -180,7 +182,11 @@ function updateHotspot<H extends Hotspot3D | Hotspot2D>(
       return null; // marked for deletion in calling function
     }
 
-    return { ...hotspot, tooltip, data };
+    const result = { ...hotspot, tooltip, data };
+    if (icon && "icon" in result) {
+      result.icon = icon;
+    }
+    return result;
   }
 
   if (

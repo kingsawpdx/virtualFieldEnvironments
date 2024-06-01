@@ -36,7 +36,7 @@ import { HexColorPicker } from "react-colorful";
 import "react-h5-audio-player/lib/styles.css";
 
 import { Asset, Hotspot2D, HotspotData, newID } from "./DataStructures";
-import { HotspotDataEditor } from "./buttons/AddHotspot";
+import { HotspotDataEditor, HotspotIconEditor } from "./buttons/AddHotspot";
 
 export interface HotspotIconProps {
   hotspotData: HotspotData;
@@ -345,10 +345,16 @@ export interface HotspotEditorProps {
   setPreviewTooltip: (tooltip: string) => void;
   previewData: HotspotData | null;
   setPreviewData: (data: HotspotData | null) => void;
+  previewIcon: Asset | null;
+  setPreviewIcon?: (icon: Asset | null) => void;
 
   resetHotspot: () => Promise<void>;
   deleteHotspot: () => void;
-  updateHotspot: (newTooltip: string, newData: HotspotData) => void;
+  updateHotspot: (
+    newTooltip: string,
+    newData: HotspotData,
+    newIcon?: Asset,
+  ) => void;
   openNestedHotspot: (toOpen: Hotspot2D) => void;
 }
 
@@ -359,6 +365,8 @@ function HotspotEditor({
   setPreviewTooltip,
   previewData,
   setPreviewData,
+  previewIcon,
+  setPreviewIcon,
 
   resetHotspot,
   deleteHotspot,
@@ -410,6 +418,7 @@ function HotspotEditor({
       <Stack alignItems="center">
         <Typography variant="h5">Hotspot Editor</Typography>
       </Stack>
+
       <TextField
         label="Tooltip"
         value={previewTooltip}
@@ -424,6 +433,13 @@ function HotspotEditor({
           setEdited(true);
         }}
       />
+      {setPreviewIcon && (
+        <HotspotIconEditor
+          iconAsset={previewIcon}
+          setIconAsset={setPreviewIcon}
+        />
+      )}
+
       {previewData?.tag === "Image" && (
         <>
           {colorHotspot !== null && colorAnchor !== null && (
@@ -535,7 +551,12 @@ function HotspotEditor({
           variant="contained"
           sx={{ width: "50%" }}
           onClick={() => {
-            if (previewData !== null) {
+            if (previewData === null) return;
+            if (setPreviewIcon && previewIcon === null) return;
+
+            if (previewIcon !== null) {
+              updateHotspot(previewTooltip, previewData, previewIcon);
+            } else {
               updateHotspot(previewTooltip, previewData);
             }
           }}
