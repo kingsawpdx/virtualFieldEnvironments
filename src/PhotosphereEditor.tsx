@@ -182,7 +182,11 @@ function PhotosphereEditor({
 
     const updatedVFE = {
       ...vfe,
-      photospheres: remainingPhotospheres,
+      photospheres: updatePhotospheres(
+        remainingPhotospheres,
+        photosphereId,
+        null,
+      ),
       defaultPhotosphereID: newDefaultPhotosphereID,
     };
 

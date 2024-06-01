@@ -1,15 +1,5 @@
 import AttachFileIcon from "@mui/icons-material/AttachFile";
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Button, Stack, TextField, Typography } from "@mui/material";
 import { MuiFileInput } from "mui-file-input";
 import { useState } from "react";
 
@@ -20,6 +10,7 @@ import {
   newID,
 } from "./DataStructures.ts";
 import Header, { HeaderProps } from "./Header.tsx";
+import PhotosphereLocationSelector from "./PhotosphereLocationSelector.tsx";
 
 //import { PhotosphereCenterFieldset } from "./buttons/AddPhotosphere.tsx";
 
@@ -79,7 +70,7 @@ function CreateVFEForm({ onCreateVFE, header, onClose }: CreateVFEFormProps) {
             : undefined,
         },
       },
-      map: navMap ?? undefined,
+      map: navMap,
     };
     onCreateVFE(data);
   }
@@ -115,16 +106,6 @@ function CreateVFEForm({ onCreateVFE, header, onClose }: CreateVFEFormProps) {
       };
       setNavMap(navMapData);
     }
-  }
-  function handleMapClick(event: React.MouseEvent<HTMLDivElement>) {
-    if (!navMap) {
-      return;
-    }
-
-    const rect = (event.target as HTMLDivElement).getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-    setPhotospherePosition({ x, y });
   }
 
   // Add styling to input interface
@@ -184,19 +165,15 @@ function CreateVFEForm({ onCreateVFE, header, onClose }: CreateVFEFormProps) {
             startAdornment: <AttachFileIcon />,
           }}
         />
-        <Button
-          variant="outlined"
-          onClick={() => {
-            setMapDialogOpen(true);
-          }}
-        >
-          Select Photosphere Location
-        </Button>
-        {photospherePosition && (
-          <Typography>
-            Selected Center: X: {photospherePosition.x}, Y:{" "}
-            {photospherePosition.y}
-          </Typography>
+        {navMap && (
+          <Button
+            variant="outlined"
+            onClick={() => {
+              setMapDialogOpen(true);
+            }}
+          >
+            Select Photosphere Location
+          </Button>
         )}
         <Stack direction="row" sx={{ justifyContent: "space-between" }}>
           <Button
@@ -211,67 +188,19 @@ function CreateVFEForm({ onCreateVFE, header, onClose }: CreateVFEFormProps) {
           </Button>
         </Stack>
 
-        <Dialog
-          open={mapDialogOpen}
-          onClose={() => {
-            setMapDialogOpen(false);
-          }}
-        >
-          <DialogTitle>Select Photosphere Location</DialogTitle>
-          <DialogContent>
-            {navMap ? (
-              <Box
-                onClick={handleMapClick}
-                sx={{
-                  background: `url(${navMap.src.path}) no-repeat center/contain`,
-                  width: navMap.width,
-                  height: navMap.height,
-                  border: "1px solid black",
-                  cursor: "crosshair",
-                  position: "relative",
-                }}
-              >
-                {photospherePosition && (
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: `${photospherePosition.y}px`,
-                      left: `${photospherePosition.x}px`,
-                      backgroundColor: "yellow",
-                      width: "10px",
-                      height: "10px",
-                      borderRadius: "50%",
-                      transform: "translate(-50%, -50%)",
-                    }}
-                  />
-                )}
-              </Box>
-            ) : (
-              <div style={{ color: "red" }}>No map available</div>
-            )}
-          </DialogContent>
-          <DialogActions>
-            <Button
-              onClick={() => {
-                if (photospherePosition) {
-                  setPhotospherePosition(photospherePosition);
-                  setMapDialogOpen(false);
-                } else {
-                  alert("Please select a center.");
-                }
-              }}
-            >
-              Select
-            </Button>
-            <Button
-              onClick={() => {
-                setMapDialogOpen(false);
-              }}
-            >
-              Cancel
-            </Button>
-          </DialogActions>
-        </Dialog>
+        {navMap && mapDialogOpen && (
+          <PhotosphereLocationSelector
+            navMap={navMap}
+            initialPosition={photospherePosition}
+            onSelect={(position) => {
+              setPhotospherePosition(position);
+              setMapDialogOpen(false);
+            }}
+            onCancel={() => {
+              setMapDialogOpen(false);
+            }}
+          />
+        )}
       </Stack>
     </>
   );

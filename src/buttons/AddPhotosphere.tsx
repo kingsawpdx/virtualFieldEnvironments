@@ -1,19 +1,10 @@
 import AttachFileIcon from "@mui/icons-material/AttachFile";
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Button, Stack, TextField, Typography } from "@mui/material";
 import { MuiFileInput } from "mui-file-input";
 import { useState } from "react";
 
 import { Photosphere, VFE, newID } from "../DataStructures";
+import PhotosphereLocationSelector from "../PhotosphereLocationSelector.tsx";
 
 interface AddPhotosphereProps {
   onAddPhotosphere: (newPhotosphere: Photosphere) => void;
@@ -55,19 +46,6 @@ function AddPhotosphere({
       setAudioFile(file);
       setAudioFileStr(URL.createObjectURL(file));
     }
-  }
-
-  function handleMapClick(event: React.MouseEvent<HTMLDivElement>) {
-    if (!map) {
-      alert("No map available.");
-      return;
-    }
-
-    const rect = (event.target as HTMLDivElement).getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-
-    setSelectedCenter({ x, y });
   }
 
   function handlePhotosphereAdd() {
@@ -140,18 +118,15 @@ function AddPhotosphere({
           startAdornment: <AttachFileIcon />,
         }}
       />
-      <Button
-        variant="outlined"
-        onClick={() => {
-          setMapDialogOpen(true);
-        }}
-      >
-        Select Photosphere Location
-      </Button>
-      {photosphereCenter && (
-        <Typography>
-          Selected Center: X: {photosphereCenter.x}, Y: {photosphereCenter.y}
-        </Typography>
+      {map && (
+        <Button
+          variant="outlined"
+          onClick={() => {
+            setMapDialogOpen(true);
+          }}
+        >
+          Select Photosphere Location
+        </Button>
       )}
       <Stack direction="row" sx={{ justifyContent: "space-between" }}>
         <Button
@@ -165,68 +140,19 @@ function AddPhotosphere({
           Cancel
         </Button>
       </Stack>
-
-      <Dialog
-        open={mapDialogOpen}
-        onClose={() => {
-          setMapDialogOpen(false);
-        }}
-      >
-        <DialogTitle>Select Photosphere Location</DialogTitle>
-        <DialogContent>
-          {map ? (
-            <Box
-              onClick={handleMapClick}
-              sx={{
-                background: `url(${map.src.path}) no-repeat center/contain`,
-                width: map.width,
-                height: map.height,
-                border: "1px solid black",
-                cursor: "crosshair",
-                position: "relative",
-              }}
-            >
-              {selectedCenter && (
-                <div
-                  style={{
-                    position: "absolute",
-                    top: `${selectedCenter.y}px`,
-                    left: `${selectedCenter.x}px`,
-                    backgroundColor: "yellow",
-                    width: "10px",
-                    height: "10px",
-                    borderRadius: "50%",
-                    transform: "translate(-50%, -50%)",
-                  }}
-                />
-              )}
-            </Box>
-          ) : (
-            <div style={{ color: "red" }}>No map available</div>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={() => {
-              if (selectedCenter) {
-                setPhotosphereCenter(selectedCenter);
-                setMapDialogOpen(false);
-              } else {
-                alert("Please select a center.");
-              }
-            }}
-          >
-            Select
-          </Button>
-          <Button
-            onClick={() => {
-              setMapDialogOpen(false);
-            }}
-          >
-            Cancel
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {map && mapDialogOpen && (
+        <PhotosphereLocationSelector
+          navMap={map}
+          initialPosition={selectedCenter}
+          onSelect={(position) => {
+            setSelectedCenter(position);
+            setMapDialogOpen(false);
+          }}
+          onCancel={() => {
+            setMapDialogOpen(false);
+          }}
+        />
+      )}
     </Stack>
   );
 }
