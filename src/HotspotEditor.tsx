@@ -5,6 +5,8 @@ import {
   ExpandLess,
   ExpandMore,
   Image,
+  Landscape,
+  Quiz,
   Title,
   Videocam,
 } from "@mui/icons-material";
@@ -33,13 +35,22 @@ import { forwardRef, useState } from "react";
 import { HexColorPicker } from "react-colorful";
 import "react-h5-audio-player/lib/styles.css";
 
-import { Hotspot2D, HotspotData, newID } from "./DataStructures";
+import { Asset, Hotspot2D, HotspotData, newID } from "./DataStructures";
 import { HotspotDataEditor } from "./buttons/AddHotspot";
 
-function HotspotIcon(props: { hotspotData: HotspotData; color: string }) {
-  const iconProps = { color: props.color };
+export interface HotspotIconProps {
+  hotspotData: HotspotData;
+  color?: string;
+  icon?: Asset;
+}
 
-  switch (props.hotspotData.tag) {
+export function HotspotIcon({ hotspotData, color, icon }: HotspotIconProps) {
+  if (icon) {
+    return <img src={icon.path} height={24} />;
+  }
+
+  const iconProps = { color };
+  switch (hotspotData.tag) {
     case "Image":
       return <Image sx={iconProps} />;
     case "Audio":
@@ -52,8 +63,10 @@ function HotspotIcon(props: { hotspotData: HotspotData; color: string }) {
       return <Link sx={iconProps} />;
     case "Message":
       return <Title sx={iconProps} />;
+    case "Quiz":
+      return <Quiz sx={iconProps} />;
     case "PhotosphereLink":
-      return <></>;
+      return <Landscape sx={iconProps} />;
   }
 }
 

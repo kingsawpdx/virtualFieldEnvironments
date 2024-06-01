@@ -384,8 +384,7 @@ function PhotosphereViewer({
         <PopOver
           key={hotspotPath.join()}
           hotspotPath={hotspotPath}
-          hotspotData={hotspotArray[hotspotArray.length - 1].data}
-          tooltip={hotspotArray[hotspotArray.length - 1].tooltip}
+          hotspot={hotspotArray[hotspotArray.length - 1]}
           pushHotspot={(add: Hotspot2D) => {
             setHotspotArray([...hotspotArray, add]);
           }}

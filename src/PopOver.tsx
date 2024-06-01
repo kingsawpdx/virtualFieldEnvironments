@@ -19,8 +19,8 @@ import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import ReactPlayer from "react-player";
 
-import { Hotspot2D, HotspotData } from "./DataStructures";
-import HotspotEditor, { NestedHotspotBox } from "./HotspotEditor";
+import { Hotspot2D, Hotspot3D, HotspotData } from "./DataStructures";
+import HotspotEditor, { HotspotIcon, NestedHotspotBox } from "./HotspotEditor";
 import { confirmMUI } from "./StyledConfirmWrapper";
 
 interface HotspotContentProps {
@@ -164,8 +164,7 @@ function HotspotContent({ hotspot, openNestedHotspot }: HotspotContentProps) {
 
 export interface PopOverProps {
   hotspotPath: string[];
-  tooltip: string;
-  hotspotData: HotspotData;
+  hotspot: Hotspot2D | Hotspot3D;
   pushHotspot: (add: Hotspot2D) => void;
   popHotspot: () => void;
   closeAll: () => void;
@@ -178,9 +177,9 @@ export interface PopOverProps {
 
 function PopOver(props: PopOverProps) {
   const [edited, setEdited] = useState(false);
-  const [previewTooltip, setPreviewTooltip] = useState(props.tooltip);
+  const [previewTooltip, setPreviewTooltip] = useState(props.hotspot.tooltip);
   const [previewData, setPreviewData] = useState<HotspotData | null>(
-    props.hotspotData,
+    props.hotspot.data,
   );
   const [snackbarMessage, setSnackbarMessage] = useState<string | null>(null);
 
@@ -212,7 +211,7 @@ function PopOver(props: PopOverProps) {
       return;
     }
 
-    setPreviewData(props.hotspotData);
+    setPreviewData(props.hotspot.data);
     setEdited(false);
   }
 
@@ -249,7 +248,16 @@ function PopOver(props: PopOverProps) {
         transitionDuration={0}
       >
         <DialogTitle id="alert-dialog-title">
-          <Stack direction="row" alignItems="center">
+          <Stack direction="row" alignItems="center" gap={1}>
+            {previewData && (
+              <HotspotIcon
+                hotspotData={previewData}
+                color={
+                  "color" in props.hotspot ? props.hotspot.color : undefined
+                }
+                icon={"icon" in props.hotspot ? props.hotspot.icon : undefined}
+              />
+            )}
             {previewData?.tag == "URL" ? (
               <Box flexGrow={1}>
                 <a href={previewData.url} target="_blank" rel="noreferrer">
