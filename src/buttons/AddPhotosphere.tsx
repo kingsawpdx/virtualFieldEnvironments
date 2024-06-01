@@ -1,97 +1,48 @@
 import AttachFileIcon from "@mui/icons-material/AttachFile";
-import { Button, Stack, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { MuiFileInput } from "mui-file-input";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import { Photosphere, newID } from "../DataStructures";
+import { Photosphere, VFE, newID } from "../DataStructures";
 
-/* -----------------------------------------------------------------------
-    Add a photosphere to a Virtual Field Environment (VFE) using React.
-
-    * Props object allows us to send the new Photosphere back to parent
-    * Pass props object to AddPhotosphere function
-    * Input data
-    * Check for errors
-    * Create newPhotosphere object
-    * Pass it back to parent to update the VFE with the newPhotosphere
-   ----------------------------------------------------------------------- */
-
-export interface PhotosphereCenterFormProps {
-  setPhotosphereCenter: (center: { x: number; y: number } | null) => void;
-}
-
-// Form inputs for setting the photosphere position on the map.
-export function PhotosphereCenterFieldset({
-  setPhotosphereCenter,
-}: PhotosphereCenterFormProps) {
-  const [photosphereCenterX, setPhotosphereCenterX] = useState("");
-  const [photosphereCenterY, setPhotosphereCenterY] = useState("");
-
-  useEffect(() => {
-    const center = {
-      x: parseFloat(photosphereCenterX),
-      y: parseFloat(photosphereCenterY),
-    };
-
-    if (!isNaN(center.x) && !isNaN(center.y)) {
-      setPhotosphereCenter(center);
-    } else {
-      setPhotosphereCenter(null);
-    }
-  }, [photosphereCenterX, photosphereCenterY, setPhotosphereCenter]);
-
-  return (
-    <fieldset>
-      <legend>Photosphere Map Position (Optional):</legend>
-      <div>
-        <label htmlFor="photosphereCenterX">X Coordinate:</label>
-        <input
-          type="number"
-          id="photosphereCenterX"
-          value={photosphereCenterX}
-          onChange={(e) => {
-            setPhotosphereCenterX(e.target.value);
-          }}
-        />
-      </div>
-      <div>
-        <label htmlFor="photosphereCenterY">Y Coordinate:</label>
-        <input
-          type="number"
-          id="photosphereCenterY"
-          value={photosphereCenterY}
-          onChange={(e) => {
-            setPhotosphereCenterY(e.target.value);
-          }}
-        />
-      </div>
-    </fieldset>
-  );
-}
-
-// Properties passed down from parent
 interface AddPhotosphereProps {
   onAddPhotosphere: (newPhotosphere: Photosphere) => void;
   onCancel: () => void;
+  vfe: VFE;
 }
 
-// Create new photosphere
 function AddPhotosphere({
   onAddPhotosphere,
   onCancel,
+  vfe,
 }: AddPhotosphereProps): JSX.Element {
-  // Base states
   const [photosphereID, setPhotosphereID] = useState("");
   const [panoImage, setPanoImage] = useState("");
-  const [panoFile, setPanoFile] = useState<File | null>(null); // for MuiFileInput
+  const [panoFile, setPanoFile] = useState<File | null>(null);
   const [audioFileStr, setAudioFileStr] = useState("");
-  const [audioFile, setAudioFile] = useState<File | null>(null); // for MuiFileInput
+  const [audioFile, setAudioFile] = useState<File | null>(null);
   const [photosphereCenter, setPhotosphereCenter] = useState<{
     x: number;
     y: number;
   } | null>(null);
+  const [mapDialogOpen, setMapDialogOpen] = useState(false);
+  const [selectedCenter, setSelectedCenter] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
 
-  // Add image data
+  const map = vfe.map;
+
   function handleImageChange(file: File | null) {
     if (file) {
       setPanoFile(file);
@@ -99,7 +50,6 @@ function AddPhotosphere({
     }
   }
 
-  // Add audio data
   function handleAudioChange(file: File | null) {
     if (file) {
       setAudioFile(file);
@@ -107,14 +57,25 @@ function AddPhotosphere({
     }
   }
 
-  // Error handling: check to see if required data != null
+  function handleMapClick(event: React.MouseEvent<HTMLDivElement>) {
+    if (!map) {
+      alert("No map available.");
+      return;
+    }
+
+    const rect = (event.target as HTMLDivElement).getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    setSelectedCenter({ x, y });
+  }
+
   function handlePhotosphereAdd() {
     if (!photosphereID || !panoImage) {
       alert("Please, provide a name and source file.");
       return;
     }
 
-    // Create new photosphere object
     const newPhotosphere: Photosphere = {
       id: photosphereID,
       src: { tag: "Runtime", id: newID(), path: panoImage },
@@ -125,13 +86,12 @@ function AddPhotosphere({
         : undefined,
     };
 
-    // Pass newPhotosphere back to parent to update VFE
     onAddPhotosphere(newPhotosphere);
 
-    // Reset the form fields after adding the photosphere
     setPhotosphereID("");
     setPanoImage("");
     setAudioFileStr("");
+    setPhotosphereCenter(null);
   }
 
   return (
@@ -180,7 +140,19 @@ function AddPhotosphere({
           startAdornment: <AttachFileIcon />,
         }}
       />
-      <PhotosphereCenterFieldset setPhotosphereCenter={setPhotosphereCenter} />
+      <Button
+        variant="outlined"
+        onClick={() => {
+          setMapDialogOpen(true);
+        }}
+      >
+        Select Photosphere Location
+      </Button>
+      {photosphereCenter && (
+        <Typography>
+          Selected Center: X: {photosphereCenter.x}, Y: {photosphereCenter.y}
+        </Typography>
+      )}
       <Stack direction="row" sx={{ justifyContent: "space-between" }}>
         <Button
           variant="contained"
@@ -193,6 +165,68 @@ function AddPhotosphere({
           Cancel
         </Button>
       </Stack>
+
+      <Dialog
+        open={mapDialogOpen}
+        onClose={() => {
+          setMapDialogOpen(false);
+        }}
+      >
+        <DialogTitle>Select Photosphere Location</DialogTitle>
+        <DialogContent>
+          {map ? (
+            <Box
+              onClick={handleMapClick}
+              sx={{
+                background: `url(${map.src.path}) no-repeat center/contain`,
+                width: map.width,
+                height: map.height,
+                border: "1px solid black",
+                cursor: "crosshair",
+                position: "relative",
+              }}
+            >
+              {selectedCenter && (
+                <div
+                  style={{
+                    position: "absolute",
+                    top: `${selectedCenter.y}px`,
+                    left: `${selectedCenter.x}px`,
+                    backgroundColor: "yellow",
+                    width: "10px",
+                    height: "10px",
+                    borderRadius: "50%",
+                    transform: "translate(-50%, -50%)",
+                  }}
+                />
+              )}
+            </Box>
+          ) : (
+            <div style={{ color: "red" }}>No map available</div>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              if (selectedCenter) {
+                setPhotosphereCenter(selectedCenter);
+                setMapDialogOpen(false);
+              } else {
+                alert("Please select a center.");
+              }
+            }}
+          >
+            Select
+          </Button>
+          <Button
+            onClick={() => {
+              setMapDialogOpen(false);
+            }}
+          >
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Stack>
   );
 }
