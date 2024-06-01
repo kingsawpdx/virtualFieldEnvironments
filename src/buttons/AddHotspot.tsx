@@ -484,12 +484,8 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
             }}
           >
             <MenuItem value="custom">Custom Link</MenuItem>
-            <MenuItem value="https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png">
-              Blue Icon
-            </MenuItem>
-            <MenuItem value="https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png">
-              Red Icon
-            </MenuItem>
+            <MenuItem value="/pin-blue.png">Blue Icon</MenuItem>
+            <MenuItem value="/pin-red.png">Red Icon</MenuItem>
           </Select>
         </FormControl>
       )}

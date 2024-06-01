@@ -101,28 +101,9 @@ function convertHotspots(hotspots: Record<string, Hotspot3D>): MarkerConfig[] {
   for (const hotspot of Object.values(hotspots)) {
     if (hotspot.data.tag === "PhotosphereLink") continue;
 
-    let icon = hotspot.icon.path;
-
-    switch (hotspot.data.tag) {
-      case "Image":
-        break;
-      case "Video":
-        icon =
-          "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png"; // changed to make linter happy until icons are ready
-        break;
-      case "Audio":
-        break;
-      case "Doc":
-        break;
-      case "URL":
-        break;
-      default:
-        break;
-    }
-
     markers.push({
       id: hotspot.id,
-      image: icon,
+      image: hotspot.icon.path,
       size: { width: 64, height: 64 },
       position: {
         yaw: degToStr(hotspot.yaw),
