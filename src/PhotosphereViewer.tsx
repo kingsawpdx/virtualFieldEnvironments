@@ -25,10 +25,8 @@ import {
 
 import AudioToggleButton from "./AudioToggleButton";
 import {
-  Asset,
   Hotspot2D,
   Hotspot3D,
-  HotspotData,
   NavMap,
   Photosphere,
   VFE,
@@ -36,6 +34,7 @@ import {
 import { useVisitedState } from "./HandleVisit";
 import PhotosphereSelector from "./PhotosphereSelector";
 import PopOver from "./PopOver";
+import { HotspotUpdate } from "./VFEConversion";
 
 // modified from https://mui.com/material-ui/react-switch/#customization 'iOS style'
 const StyledSwitch = styled((props: SwitchProps) => (
@@ -181,9 +180,7 @@ export interface PhotosphereViewerProps {
   onViewerClick?: (pitch: number, yaw: number) => void;
   onUpdateHotspot?: (
     hotspotPath: string[],
-    newTooltip: string,
-    newData: HotspotData | null,
-    newIcon?: Asset,
+    update: HotspotUpdate | null,
   ) => void;
 }
 

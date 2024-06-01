@@ -547,17 +547,20 @@ function HotspotEditor({
         </Button>
 
         <Button
-          disabled={previewTooltip == "" || previewData === null}
+          disabled={
+            previewTooltip == "" ||
+            previewData === null ||
+            (setPreviewIcon && previewIcon === null)
+          }
           variant="contained"
           sx={{ width: "50%" }}
           onClick={() => {
-            if (previewData === null) return;
-            if (setPreviewIcon && previewIcon === null) return;
-
-            if (previewIcon !== null) {
-              updateHotspot(previewTooltip, previewData, previewIcon);
-            } else {
-              updateHotspot(previewTooltip, previewData);
+            if (previewData !== null) {
+              updateHotspot(
+                previewTooltip,
+                previewData,
+                previewIcon ?? undefined,
+              );
             }
           }}
         >

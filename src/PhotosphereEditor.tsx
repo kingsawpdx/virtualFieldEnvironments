@@ -5,9 +5,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import {
-  Asset,
   Hotspot3D,
-  HotspotData,
   NavMap,
   Photosphere,
   VFE,
@@ -18,6 +16,7 @@ import { VisitedState } from "./HandleVisit.tsx";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
 import { confirmMUI } from "./StyledConfirmWrapper.tsx";
 import {
+  HotspotUpdate,
   convertRuntimeToStored,
   convertVFE,
   updatePhotosphereHotspot,
@@ -94,11 +93,9 @@ function PhotosphereEditor({
 
   function handleUpdateHotspot(
     hotspotPath: string[],
-    tooltip: string,
-    data: HotspotData | null,
-    newIcon?: Asset,
+    update: HotspotUpdate | null,
   ) {
-    if (data === null) {
+    if (update === null) {
       setHotspotToRemove(hotspotPath);
       setShowRemoveHotspot(true);
       return;
@@ -107,9 +104,7 @@ function PhotosphereEditor({
     const updatedPhotosphere = updatePhotosphereHotspot(
       vfe.photospheres[currentPS],
       hotspotPath,
-      tooltip,
-      data,
-      newIcon,
+      update,
     );
 
     const updatedVFE = {
@@ -130,7 +125,6 @@ function PhotosphereEditor({
       const updatedPhotosphereWithHotspots = updatePhotosphereHotspot(
         vfe.photospheres[currentPS],
         hotspotPathToRemove,
-        "",
         null,
       );
 

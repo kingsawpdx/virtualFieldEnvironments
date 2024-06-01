@@ -22,6 +22,7 @@ import ReactPlayer from "react-player";
 import { Asset, Hotspot2D, Hotspot3D, HotspotData } from "./DataStructures";
 import HotspotEditor, { HotspotIcon, NestedHotspotBox } from "./HotspotEditor";
 import { confirmMUI } from "./StyledConfirmWrapper";
+import { HotspotUpdate } from "./VFEConversion";
 
 interface HotspotContentProps {
   hotspot: HotspotData;
@@ -170,9 +171,7 @@ export interface PopOverProps {
   closeAll: () => void;
   onUpdateHotspot?: (
     hotspotPath: string[],
-    newTooltip: string,
-    newData: HotspotData | null,
-    newIcon?: Asset,
+    update: HotspotUpdate | null,
   ) => void;
 }
 
@@ -228,15 +227,11 @@ function PopOver(props: PopOverProps) {
   }
 
   function deleteHotspot() {
-    props.onUpdateHotspot?.(props.hotspotPath, previewTooltip, null);
+    props.onUpdateHotspot?.(props.hotspotPath, null);
   }
 
-  function updateHotspot(
-    newTooltip: string,
-    newData: HotspotData,
-    newIcon?: Asset,
-  ) {
-    props.onUpdateHotspot?.(props.hotspotPath, newTooltip, newData, newIcon);
+  function updateHotspot(tooltip: string, data: HotspotData, icon?: Asset) {
+    props.onUpdateHotspot?.(props.hotspotPath, { tooltip, data, icon });
   }
 
   function openNestedHotspot(hotspot2D: Hotspot2D) {
