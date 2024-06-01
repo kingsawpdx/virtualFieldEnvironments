@@ -58,7 +58,6 @@ function CreateVFEForm({ onCreateVFE, header, onClose }: CreateVFEFormProps) {
     x: number;
     y: number;
   } | null>(null);
-  //const [navMapDimensions, setNavMapDimensions] = useState<{ width: number, height: number } | null>(null);
   // Error Handling: Ensure the data is not empty
   function handleCreateVFE() {
     if (vfeName.trim() === "" || photosphereName.trim() === "" || !panoImage) {
