@@ -424,6 +424,7 @@ function HotspotEditor({
         value={previewTooltip}
         onChange={(e) => {
           setPreviewTooltip(e.target.value);
+          setEdited(true);
         }}
       />
       <HotspotDataEditor
@@ -436,7 +437,10 @@ function HotspotEditor({
       {setPreviewIcon && (
         <HotspotIconEditor
           iconAsset={previewIcon}
-          setIconAsset={setPreviewIcon}
+          setIconAsset={(icon) => {
+            setPreviewIcon(icon);
+            setEdited(true);
+          }}
         />
       )}
 

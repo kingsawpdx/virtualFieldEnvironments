@@ -222,7 +222,11 @@ function PopOver(props: PopOverProps) {
       return;
     }
 
+    setPreviewTooltip(props.hotspot.tooltip);
     setPreviewData(props.hotspot.data);
+    if ("icon" in props.hotspot) {
+      setPreviewIcon(props.hotspot.icon);
+    }
     setEdited(false);
   }
 
