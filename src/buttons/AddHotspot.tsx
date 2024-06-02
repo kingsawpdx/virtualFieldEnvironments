@@ -360,6 +360,67 @@ export function HotspotDataEditor({
   );
 }
 
+const bluePin = "/pin-blue.png";
+const redPin = "/pin-red.png";
+
+function defaultIcon(): Asset {
+  return { tag: "Runtime", id: newID(), path: bluePin };
+}
+
+function isDefaultIcon(icon: Asset | null): boolean {
+  return icon?.path === bluePin || icon?.path === redPin;
+}
+
+export interface HotspotIconEditorProps {
+  iconAsset: Asset | null;
+  setIconAsset: (icon: Asset | null) => void;
+}
+
+export function HotspotIconEditor({
+  iconAsset,
+  setIconAsset,
+}: HotspotIconEditorProps) {
+  function updateIcon(icon: string) {
+    if (icon === "" || icon === "custom") {
+      setIconAsset(null);
+      return;
+    }
+
+    setIconAsset({ tag: "Runtime", id: newID(), path: icon });
+  }
+
+  return (
+    <>
+      <FormControl>
+        <InputLabel id="icon">Icon *</InputLabel>
+        <Select
+          labelId="icon"
+          value={isDefaultIcon(iconAsset) ? iconAsset?.path : "custom"}
+          label="Icon *"
+          onChange={(e) => {
+            updateIcon(e.target.value);
+          }}
+        >
+          <MenuItem value="custom">Custom Link</MenuItem>
+          <MenuItem value={bluePin}>Blue Icon</MenuItem>
+          <MenuItem value={redPin}>Red Icon</MenuItem>
+        </Select>
+      </FormControl>
+
+      {!isDefaultIcon(iconAsset) && (
+        <TextField
+          required
+          label="Link to icon"
+          value={iconAsset?.path ?? ""}
+          onChange={(e) => {
+            updateIcon(e.target.value);
+          }}
+        />
+      )}
+    </>
+  );
+}
+
 interface AddHotspotProps {
   onAddHotspot: (newHotspot: Hotspot3D) => void;
   onCancel: () => void;
@@ -371,32 +432,17 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
   const [tooltip, setTooltip] = useState("");
   const [hotspotData, setHotspotData] = useState<HotspotData | null>(null);
   const [level, setLevel] = useState(0); // State for level
-  const [icon, setIcon] = useState("");
-  const [customIcon, setCustomIcon] = useState(false);
-  const [customIconData, setCustomIconData] = useState("");
+  const [iconAsset, setIconAsset] = useState<Asset | null>(defaultIcon());
 
   function handleAddHotspot() {
     if (
       tooltip.trim() === "" ||
       hotspotData === null ||
-      (hotspotData.tag !== "PhotosphereLink" && icon === "")
+      (hotspotData.tag !== "PhotosphereLink" && iconAsset === null)
     ) {
       alert("Please provide a tooltip, a valid content type, and an icon");
       return;
     }
-
-    let iconData = "";
-    if (customIconData == "") {
-      iconData = icon;
-    } else {
-      iconData = customIconData;
-    }
-
-    const iconAsset: Asset = {
-      tag: "Runtime",
-      id: newID(),
-      path: iconData,
-    };
 
     const newHotspot: Hotspot3D = {
       id: newID(),
@@ -404,7 +450,7 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
       pitch: pitch,
       yaw: yaw,
       level: level,
-      icon: iconAsset,
+      icon: iconAsset ?? defaultIcon(), // store default icon for photosphere links
       data: hotspotData,
     };
 
@@ -458,52 +504,14 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
           setTooltip(e.target.value);
         }}
       />
+
       <HotspotDataEditor
         hotspotData={hotspotData}
         setHotspotData={setHotspotData}
       />
 
-      {hotspotData?.tag === "PhotosphereLink" ? (
-        <></>
-      ) : (
-        <FormControl>
-          <InputLabel id="icon">Icon *</InputLabel>
-          <Select
-            labelId="icon"
-            value={icon}
-            label="Custom Icon"
-            onChange={(e) => {
-              if (e.target.value == "custom") {
-                setCustomIcon(true);
-                setIcon(e.target.value);
-              } else {
-                setIcon(e.target.value);
-                setCustomIcon(false);
-                setCustomIconData("");
-              }
-            }}
-          >
-            <MenuItem value="custom">Custom Link</MenuItem>
-            <MenuItem value="https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png">
-              Blue Icon
-            </MenuItem>
-            <MenuItem value="https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png">
-              Red Icon
-            </MenuItem>
-          </Select>
-        </FormControl>
-      )}
-
-      {customIcon ? (
-        <TextField
-          required
-          label="Link to icon"
-          onChange={(e) => {
-            setCustomIconData(e.target.value);
-          }}
-        />
-      ) : (
-        <></>
+      {hotspotData?.tag !== "PhotosphereLink" && (
+        <HotspotIconEditor iconAsset={iconAsset} setIconAsset={setIconAsset} />
       )}
 
       <TextField
