@@ -261,6 +261,7 @@ function PhotosphereEditor({
         <AddPhotosphere
           onAddPhotosphere={handleAddPhotosphere}
           onCancel={resetStates}
+          vfe={vfe}
         />
       );
     if (showAddNavMap)
