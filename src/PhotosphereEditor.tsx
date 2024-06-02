@@ -171,16 +171,15 @@ function PhotosphereEditor({
       return;
     }
 
-    // Determine the next photosphere ID
+    // nextPhotosphereId will never be undefined
     const nextPhotosphereId = Object.keys(remainingPhotospheres)[0];
 
-    // Update the default photosphere ID if the removed photosphere was the default one
     const newDefaultPhotosphereID =
       photosphereId === vfe.defaultPhotosphereID
         ? nextPhotosphereId
         : vfe.defaultPhotosphereID;
 
-    const updatedVFE = {
+    const updatedVFE: VFE = {
       ...vfe,
       photospheres: updatePhotospheres(
         remainingPhotospheres,
@@ -191,14 +190,13 @@ function PhotosphereEditor({
     };
 
     onUpdateVFE(updatedVFE);
-
-    // Ensure the currentPS is valid
-    if (photosphereId === currentPS) {
-      onChangePS(nextPhotosphereId); // Navigate to the new or remaining default photosphere
-    }
-
     // After updating the state
     setUpdateTrigger((prev) => prev + 1);
+    if (photosphereId !== newDefaultPhotosphereID) {
+      onChangePS(newDefaultPhotosphereID); // Navigate to the new or remaining default photosphere
+    } else {
+      onChangePS(nextPhotosphereId);
+    }
     handleCloseRemovePhotosphere();
   }
 
