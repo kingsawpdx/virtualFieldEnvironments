@@ -5,6 +5,7 @@ import {
   DialogContent,
   DialogTitle,
   Stack,
+  Typography,
 } from "@mui/material";
 import { useState } from "react";
 
@@ -50,7 +51,7 @@ function EditNavMap({ onClose, vfe, onUpdateVFE }: EditNavMapProps) {
 
     const updatedPhotospheres = { ...localPhotospheres };
     const photosphere = updatedPhotospheres[selectedPhotosphere];
-    photosphere.center = { x: x, y: y }; // multiply both by 2 because the defaultCenter(x,y) is divinded by 2
+    photosphere.center = { x, y }; // multiply both by 2 because the defaultCenter(x,y) is divinded by 2
 
     setLocalPhotospheres(updatedPhotospheres); // Update local state
     // Do not call onUpdateVFE here
@@ -63,11 +64,17 @@ function EditNavMap({ onClose, vfe, onUpdateVFE }: EditNavMapProps) {
   }
 
   return (
-    <Dialog open={true} onClose={onClose}>
+    <Dialog open={true} onClose={onClose} maxWidth={false} scroll="body">
       <DialogTitle>Edit NavMap</DialogTitle>
       <DialogContent sx={{ overflow: "visible" }}>
         <Stack gap={2}>
-          <PhotosphereSelector {...selectorProps} />
+          <Stack direction="row" alignItems="center" gap={1}>
+            <Typography>
+              Click on the map to change the location of the selected
+              photosphere:
+            </Typography>
+            <PhotosphereSelector {...selectorProps} />
+          </Stack>
           {map ? (
             <div
               onClick={(e) => {

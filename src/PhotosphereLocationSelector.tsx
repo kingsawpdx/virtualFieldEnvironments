@@ -52,7 +52,7 @@ function PhotosphereLocationSelector({
   }
 
   return (
-    <Dialog open={open} onClose={handleClose}>
+    <Dialog open={open} onClose={handleClose} maxWidth={false} scroll="body">
       <DialogTitle>Select Photosphere Location</DialogTitle>
       <DialogContent>
         <Box
@@ -83,14 +83,17 @@ function PhotosphereLocationSelector({
         </Box>
       </DialogContent>
       <DialogActions>
+        <Button variant="outlined" onClick={handleClose}>
+          Cancel
+        </Button>
         <Button
+          variant="contained"
           onClick={() => {
             void handleSelect();
           }}
         >
           Select
         </Button>
-        <Button onClick={handleClose}>Cancel</Button>
       </DialogActions>
     </Dialog>
   );
