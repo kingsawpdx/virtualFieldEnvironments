@@ -1,4 +1,11 @@
-import { Box, Button, Stack } from "@mui/material";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Stack,
+} from "@mui/material";
 import { useState } from "react";
 
 import { Photosphere, VFE } from "../DataStructures";
@@ -53,69 +60,59 @@ function EditNavMap({ onClose, vfe, onUpdateVFE }: EditNavMapProps) {
   }
 
   return (
-    <Box
-      sx={{
-        position: "fixed",
-        zIndex: 1050,
-        left: "50%",
-        top: "50%",
-        transform: "translate(-50%, -50%)",
-        background: "white",
-        borderRadius: "8px",
-        padding: "20px",
-        maxWidth: "80%",
-        maxHeight: "80%",
-        overflowY: "auto",
-      }}
-    >
-      <h2>Edit NavMap</h2>
-      <Stack spacing={2}>
-        <PhotosphereSelector {...selectorProps} />
-        {map ? (
-          <div
-            onClick={handleMapClick}
-            style={{
-              background: `url(${map.src.path}) no-repeat center/contain`,
-              width: map.width,
-              height: map.height,
-              border: "1px solid black",
-              cursor: "crosshair",
-              position: "relative",
-            }}
-          >
-            {Object.values(localPhotospheres).map((photosphere, index) => {
-              if (photosphere.center) {
-                return (
-                  <div
-                    key={index}
-                    style={{
-                      position: "absolute",
-                      top: `${photosphere.center.y}px`,
-                      left: `${photosphere.center.x}px`,
-                      backgroundColor: "yellow",
-                      width: "10px",
-                      height: "10px",
-                      borderRadius: "50%",
-                      transform: "translate(-50%, -50%)", // Center the marker
-                    }}
-                    title={photosphere.id}
-                  />
-                );
-              }
-              return null;
-            })}
-          </div>
-        ) : (
-          <div style={{ color: "red" }}>No map available</div>
-        )}
-        <Button variant="contained" onClick={handleSave}>
-          Save
-        </Button>
+    <Dialog open={true} onClose={onClose}>
+      <DialogTitle>Edit NavMap</DialogTitle>
+      <DialogContent sx={{ overflow: "visible" }}>
+        <Stack gap={2}>
+          <PhotosphereSelector {...selectorProps} />
+          {map ? (
+            <div
+              onClick={handleMapClick}
+              style={{
+                background: `url(${map.src.path}) no-repeat center/contain`,
+                width: map.width,
+                height: map.height,
+                border: "1px solid black",
+                cursor: "crosshair",
+                position: "relative",
+              }}
+            >
+              {Object.values(localPhotospheres).map((photosphere, index) => {
+                if (photosphere.center) {
+                  return (
+                    <div
+                      key={index}
+                      style={{
+                        position: "absolute",
+                        top: `${photosphere.center.y}px`,
+                        left: `${photosphere.center.x}px`,
+                        backgroundColor: "yellow",
+                        width: "10px",
+                        height: "10px",
+                        borderRadius: "50%",
+                        transform: "translate(-50%, -50%)", // Center the marker
+                      }}
+                      title={photosphere.id}
+                    />
+                  );
+                }
+                return null;
+              })}
+            </div>
+          ) : (
+            <div style={{ color: "red" }}>No map available</div>
+          )}
+        </Stack>
+      </DialogContent>
+      <DialogActions>
         <Button variant="outlined" onClick={onClose}>
           Close
         </Button>
-      </Stack>
-    </Box>
+        <Button variant="contained" onClick={handleSave}>
+          Save
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }
 

@@ -1,5 +1,13 @@
 import AttachFileIcon from "@mui/icons-material/AttachFile";
-import { Button, Stack, TextField, Typography } from "@mui/material";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Stack,
+  TextField,
+} from "@mui/material";
 import { MuiFileInput } from "mui-file-input";
 import { useState } from "react";
 
@@ -73,87 +81,72 @@ function AddPhotosphere({
   }
 
   return (
-    <Stack
-      sx={{
-        position: "fixed",
-        zIndex: 1050,
-        left: "50%",
-        top: "50%",
-        transform: "translate(-50%, -50%)",
-        background: "white",
-        borderRadius: "8px",
-        padding: "10px",
-        height: "340px",
-        width: "370px",
-        justifyContent: "space-between",
-      }}
-    >
-      <Typography variant="h5" sx={{ textAlign: "center" }}>
-        Add New Photosphere
-      </Typography>
-      <TextField
-        required
-        label="Photosphere Name"
-        value={photosphereID}
-        onChange={(e) => {
-          setPhotosphereID(e.target.value);
-        }}
-      />
-      <MuiFileInput
-        required
-        placeholder="Upload Panorama *"
-        value={panoFile}
-        onChange={handleImageChange}
-        inputProps={{ accept: "image/*" }}
-        InputProps={{
-          startAdornment: <AttachFileIcon />,
-        }}
-      />
-      <MuiFileInput
-        placeholder="Upload Background Audio"
-        value={audioFile}
-        onChange={handleAudioChange}
-        inputProps={{ accept: "audio/*" }}
-        InputProps={{
-          startAdornment: <AttachFileIcon />,
-        }}
-      />
-      {map && (
-        <Button
-          variant="outlined"
-          onClick={() => {
-            setMapDialogOpen(true);
-          }}
-        >
-          Select Photosphere Location
-        </Button>
-      )}
-      <Stack direction="row" sx={{ justifyContent: "space-between" }}>
-        <Button
-          variant="contained"
-          sx={{ width: "49%" }}
-          onClick={handlePhotosphereAdd}
-        >
-          Create
-        </Button>
-        <Button variant="outlined" sx={{ width: "49%" }} onClick={onCancel}>
+    <Dialog open={true} onClose={onCancel}>
+      <DialogTitle>Add New Photosphere</DialogTitle>
+      <DialogContent sx={{ overflow: "visible" }}>
+        <Stack gap={2}>
+          <TextField
+            required
+            label="Photosphere Name"
+            value={photosphereID}
+            onChange={(e) => {
+              setPhotosphereID(e.target.value);
+            }}
+          />
+          <MuiFileInput
+            required
+            placeholder="Upload Panorama *"
+            value={panoFile}
+            onChange={handleImageChange}
+            inputProps={{ accept: "image/*" }}
+            InputProps={{
+              startAdornment: <AttachFileIcon />,
+            }}
+          />
+          <MuiFileInput
+            placeholder="Upload Background Audio"
+            value={audioFile}
+            onChange={handleAudioChange}
+            inputProps={{ accept: "audio/*" }}
+            InputProps={{
+              startAdornment: <AttachFileIcon />,
+            }}
+          />
+          {map && (
+            <Button
+              variant="outlined"
+              onClick={() => {
+                setMapDialogOpen(true);
+              }}
+            >
+              Select Photosphere Location
+            </Button>
+          )}
+
+          {map && mapDialogOpen && (
+            <PhotosphereLocationSelector
+              navMap={map}
+              initialPosition={selectedCenter}
+              onSelect={(position) => {
+                setSelectedCenter(position);
+                setMapDialogOpen(false);
+              }}
+              onCancel={() => {
+                setMapDialogOpen(false);
+              }}
+            />
+          )}
+        </Stack>
+      </DialogContent>
+      <DialogActions>
+        <Button variant="outlined" onClick={onCancel}>
           Cancel
         </Button>
-      </Stack>
-      {map && mapDialogOpen && (
-        <PhotosphereLocationSelector
-          navMap={map}
-          initialPosition={selectedCenter}
-          onSelect={(position) => {
-            setSelectedCenter(position);
-            setMapDialogOpen(false);
-          }}
-          onCancel={() => {
-            setMapDialogOpen(false);
-          }}
-        />
-      )}
-    </Stack>
+        <Button variant="contained" onClick={handlePhotosphereAdd}>
+          Create
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }
 
