@@ -16,7 +16,7 @@ import { Link } from "react-router-dom";
 
 import { VFE } from "./DataStructures";
 import { deleteStoredVFE } from "./FileOperations";
-import { confirmMUI } from "./StyledConfirmWrapper";
+import { confirmMUI } from "./StyledDialogWrapper";
 import { convertStoredToRuntime } from "./VFEConversion";
 
 type NavMapRecord = Partial<Record<string, string>>;

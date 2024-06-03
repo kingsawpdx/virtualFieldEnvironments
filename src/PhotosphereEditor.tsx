@@ -14,7 +14,7 @@ import {
 import { deleteStoredVFE, save } from "./FileOperations.ts";
 import { VisitedState } from "./HandleVisit.tsx";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
-import { confirmMUI } from "./StyledConfirmWrapper.tsx";
+import { alertMUI, confirmMUI } from "./StyledDialogWrapper.tsx";
 import {
   HotspotUpdate,
   convertRuntimeToStored,
@@ -117,7 +117,7 @@ function PhotosphereEditor({
 
   async function handleRemovePhotosphere(photosphereId: string) {
     if (!photosphereId) {
-      alert("Photosphere not found.");
+      await alertMUI("Photosphere not found.");
       return;
     }
 

@@ -11,6 +11,7 @@ import {
 } from "./DataStructures.ts";
 import Header, { HeaderProps } from "./Header.tsx";
 import PhotosphereLocationSelector from "./PhotosphereLocationSelector.tsx";
+import { alertMUI } from "./StyledDialogWrapper.tsx";
 
 //import { PhotosphereCenterFieldset } from "./buttons/AddPhotosphere.tsx";
 
@@ -50,9 +51,12 @@ function CreateVFEForm({ onCreateVFE, header, onClose }: CreateVFEFormProps) {
     y: number;
   } | null>(null);
   // Error Handling: Ensure the data is not empty
-  function handleCreateVFE() {
+
+  async function handleCreateVFE() {
     if (vfeName.trim() === "" || photosphereName.trim() === "" || !panoImage) {
-      alert("Please, provide a VFE name, Photosphere name, and an image.");
+      await alertMUI(
+        "Please, provide a VFE name, Photosphere name, and an image.",
+      );
       return;
     }
     // Input data into new VFE
@@ -179,7 +183,9 @@ function CreateVFEForm({ onCreateVFE, header, onClose }: CreateVFEFormProps) {
           <Button
             variant="contained"
             sx={{ width: "49%" }}
-            onClick={handleCreateVFE}
+            onClick={() => {
+              void handleCreateVFE();
+            }}
           >
             Create
           </Button>

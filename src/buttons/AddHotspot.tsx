@@ -19,6 +19,7 @@ import {
   calculateImageDimensions,
   newID,
 } from "../DataStructures.ts";
+import { alertMUI } from "../StyledDialogWrapper.tsx";
 
 // from https://github.com/Alcumus/react-doc-viewer?tab=readme-ov-file#current-renderable-file-types
 const documentAcceptTypes = [
@@ -434,13 +435,15 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
   const [level, setLevel] = useState(0); // State for level
   const [iconAsset, setIconAsset] = useState<Asset | null>(defaultIcon());
 
-  function handleAddHotspot() {
+  async function handleAddHotspot() {
     if (
       tooltip.trim() === "" ||
       hotspotData === null ||
       (hotspotData.tag !== "PhotosphereLink" && iconAsset === null)
     ) {
-      alert("Please provide a tooltip, a valid content type, and an icon");
+      await alertMUI(
+        "Please provide a tooltip, a valid content type, and an icon",
+      );
       return;
     }
 
@@ -532,7 +535,9 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
         <Button
           variant="contained"
           style={{ width: "49%" }}
-          onClick={handleAddHotspot}
+          onClick={() => {
+            void handleAddHotspot();
+          }}
         >
           Create
         </Button>

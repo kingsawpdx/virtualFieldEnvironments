@@ -14,6 +14,7 @@ import { VFE } from "../DataStructures";
 import PhotosphereSelector, {
   PhotosphereSelectorProps,
 } from "../PhotosphereSelector";
+import { alertMUI } from "../StyledDialogWrapper";
 
 interface RemovePhotosphereProps {
   onClose: () => void;
@@ -38,9 +39,9 @@ function RemovePhotosphere({
     setValue: setSelectedPhotosphere,
   };
 
-  function handleRemovePhotosphere() {
+  async function handleRemovePhotosphere() {
     if (!selectedPhotosphere) {
-      alert("Please select a photosphere to remove.");
+      await alertMUI("Please select a photosphere to remove.");
       return;
     }
     onRemovePhotosphere(selectedPhotosphere);
@@ -67,7 +68,9 @@ function RemovePhotosphere({
         <Button
           variant="contained"
           color="error"
-          onClick={handleRemovePhotosphere}
+          onClick={() => {
+            void handleRemovePhotosphere();
+          }}
         >
           Remove
         </Button>

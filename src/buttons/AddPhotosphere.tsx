@@ -13,6 +13,7 @@ import { useState } from "react";
 
 import { Photosphere, VFE, newID } from "../DataStructures";
 import PhotosphereLocationSelector from "../PhotosphereLocationSelector.tsx";
+import { alertMUI } from "../StyledDialogWrapper.tsx";
 
 interface AddPhotosphereProps {
   onAddPhotosphere: (newPhotosphere: Photosphere) => void;
@@ -56,9 +57,9 @@ function AddPhotosphere({
     }
   }
 
-  function handlePhotosphereAdd() {
+  async function handlePhotosphereAdd() {
     if (!photosphereID || !panoImage) {
-      alert("Please, provide a name and source file.");
+      await alertMUI("Please, provide a name and source file.");
       return;
     }
 
@@ -142,7 +143,12 @@ function AddPhotosphere({
         <Button variant="outlined" onClick={onCancel}>
           Cancel
         </Button>
-        <Button variant="contained" onClick={handlePhotosphereAdd}>
+        <Button
+          variant="contained"
+          onClick={() => {
+            void handlePhotosphereAdd();
+          }}
+        >
           Create
         </Button>
       </DialogActions>

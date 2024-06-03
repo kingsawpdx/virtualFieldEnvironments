@@ -9,6 +9,7 @@ import {
 import React, { useState } from "react";
 
 import { NavMap } from "./DataStructures.ts";
+import { alertMUI } from "./StyledDialogWrapper.tsx";
 
 interface PhotosphereLocationSelectorProps {
   navMap: NavMap;
@@ -41,12 +42,12 @@ function PhotosphereLocationSelector({
     onCancel();
   }
 
-  function handleSelect() {
+  async function handleSelect() {
     if (photospherePosition) {
       onSelect(photospherePosition);
       setOpen(false);
     } else {
-      alert("Please select a center.");
+      await alertMUI("Please select a center.");
     }
   }
 
@@ -82,7 +83,13 @@ function PhotosphereLocationSelector({
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleSelect}>Select</Button>
+        <Button
+          onClick={() => {
+            void handleSelect();
+          }}
+        >
+          Select
+        </Button>
         <Button onClick={handleClose}>Cancel</Button>
       </DialogActions>
     </Dialog>

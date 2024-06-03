@@ -12,6 +12,7 @@ import { MuiFileInput } from "mui-file-input";
 import React, { useState } from "react";
 
 import { NavMap, calculateImageDimensions, newID } from "../DataStructures";
+import { alertMUI } from "../StyledDialogWrapper";
 
 interface AddNavMapProps {
   onCreateNavMap: (navMap: NavMap) => void;
@@ -36,7 +37,9 @@ function AddNavMap({ onCreateNavMap, onClose }: AddNavMapProps): JSX.Element {
 
   async function handleCreateNavMap() {
     if (navmapName.trim() === "" || !navmapImage) {
-      alert("Please provide a name and select an image for the Nav Map.");
+      await alertMUI(
+        "Please provide a name and select an image for the Nav Map.",
+      );
       return;
     }
 

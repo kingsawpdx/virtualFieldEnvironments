@@ -5,14 +5,57 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Typography,
 } from "@mui/material";
 import { ConfirmDialogProps, confirmable } from "react-confirm";
 
 import { theme } from "./main";
 
+export interface StyledAcceptDialogProps {
+  message: string;
+  accept?: string;
+  details?: string;
+}
+
+function StyledAlert({
+  show,
+  proceed,
+  message,
+  accept,
+  details,
+}: ConfirmDialogProps<StyledAcceptDialogProps, void>) {
+  return (
+    <ThemeProvider theme={theme}>
+      <Dialog
+        open={show}
+        onClose={() => {
+          proceed();
+        }}
+      >
+        <DialogTitle>{message}</DialogTitle>
+        {details && (
+          <DialogContent>
+            <Typography>{details}</Typography>
+          </DialogContent>
+        )}
+        <DialogActions>
+          <Button
+            variant="contained"
+            onClick={() => {
+              proceed();
+            }}
+          >
+            {accept ?? "OK"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </ThemeProvider>
+  );
+}
+
 export interface StyledConfirmDialogProps {
   message: string;
-  accept: string;
+  accept?: string;
   details?: string;
 }
 
@@ -20,8 +63,8 @@ function StyledConfirm({
   show,
   proceed,
   message,
-  details,
   accept,
+  details,
 }: ConfirmDialogProps<StyledConfirmDialogProps, boolean>) {
   return (
     <ThemeProvider theme={theme}>
@@ -32,7 +75,11 @@ function StyledConfirm({
         }}
       >
         <DialogTitle>{message}</DialogTitle>
-        {details && <DialogContent>{details}</DialogContent>}
+        {details && (
+          <DialogContent>
+            <Typography>{details}</Typography>
+          </DialogContent>
+        )}
         <DialogActions>
           <Button
             variant="outlined"
@@ -52,7 +99,7 @@ function StyledConfirm({
               accept === "Delete" || accept === "Remove" ? "error" : "primary"
             }
           >
-            {accept}
+            {accept ?? "Continue"}
           </Button>
         </DialogActions>
       </Dialog>
@@ -60,5 +107,5 @@ function StyledConfirm({
   );
 }
 
-const StyledConfirmDialog = confirmable(StyledConfirm);
-export default StyledConfirmDialog;
+export const StyledAlertDialog = confirmable(StyledAlert);
+export const StyledConfirmDialog = confirmable(StyledConfirm);

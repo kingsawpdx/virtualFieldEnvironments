@@ -12,6 +12,7 @@ import { MuiFileInput } from "mui-file-input";
 import { useState } from "react";
 
 import { Photosphere } from "../DataStructures";
+import { alertMUI } from "../StyledDialogWrapper";
 
 interface ChangePhotosphereProps {
   onChangePhotosphere: (name: string, background: string) => void;
@@ -35,9 +36,9 @@ function ChangePhotosphere({
     }
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
     if (!name || !background) {
-      alert("Please provide a valid name and background image");
+      await alertMUI("Please provide a valid name and background image");
       return;
     }
     onChangePhotosphere(name, background);
@@ -70,7 +71,12 @@ function ChangePhotosphere({
         <Button variant="outlined" onClick={onCancel}>
           Cancel
         </Button>
-        <Button variant="contained" onClick={handleSubmit}>
+        <Button
+          variant="contained"
+          onClick={() => {
+            void handleSubmit();
+          }}
+        >
           Submit
         </Button>
       </DialogActions>

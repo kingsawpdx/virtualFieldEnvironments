@@ -12,6 +12,7 @@ import { Photosphere, VFE } from "../DataStructures";
 import PhotosphereSelector, {
   PhotosphereSelectorProps,
 } from "../PhotosphereSelector";
+import { alertMUI } from "../StyledDialogWrapper";
 
 interface EditNavMapProps {
   onClose: () => void;
@@ -35,9 +36,11 @@ function EditNavMap({ onClose, vfe, onUpdateVFE }: EditNavMapProps) {
 
   const map = vfe.map;
 
-  function handleMapClick(event: React.MouseEvent<HTMLDivElement>) {
+  async function handleMapClick(event: React.MouseEvent<HTMLDivElement>) {
     if (!selectedPhotosphere || !map) {
-      alert("Please select a photosphere and ensure a map is loaded first.");
+      await alertMUI(
+        "Please select a photosphere and ensure a map is loaded first.",
+      );
       return;
     }
 
@@ -67,7 +70,9 @@ function EditNavMap({ onClose, vfe, onUpdateVFE }: EditNavMapProps) {
           <PhotosphereSelector {...selectorProps} />
           {map ? (
             <div
-              onClick={handleMapClick}
+              onClick={(e) => {
+                void handleMapClick(e);
+              }}
               style={{
                 background: `url(${map.src.path}) no-repeat center/contain`,
                 width: map.width,

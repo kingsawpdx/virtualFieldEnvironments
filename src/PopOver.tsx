@@ -21,7 +21,7 @@ import ReactPlayer from "react-player";
 
 import { Asset, Hotspot2D, Hotspot3D, HotspotData } from "./DataStructures";
 import HotspotEditor, { HotspotIcon, NestedHotspotBox } from "./HotspotEditor";
-import { confirmMUI } from "./StyledConfirmWrapper";
+import { confirmMUI } from "./StyledDialogWrapper";
 import { HotspotUpdate } from "./VFEConversion";
 
 interface HotspotContentProps {
