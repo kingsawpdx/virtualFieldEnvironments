@@ -47,15 +47,18 @@ function VFEList() {
   }, []);
 
   async function deleteVFE(toDelete: string) {
-    if (await confirmMUI(`Delete ${toDelete}?`, { accept: "Delete" })) {
-      // removed deleted nav map from record
-      const { [toDelete]: _deleted, ...newNavMaps } = navMaps;
-      localStorage.removeItem("visitedState");
-      await deleteStoredVFE(toDelete);
+    const confirmed = await confirmMUI(`Delete ${toDelete}?`, {
+      accept: "Delete",
+    });
+    if (!confirmed) return;
 
-      setNames(names.filter((n) => n !== toDelete));
-      setNavMaps(newNavMaps);
-    }
+    // removed deleted nav map from record
+    const { [toDelete]: _deleted, ...newNavMaps } = navMaps;
+    localStorage.removeItem("visitedState");
+    await deleteStoredVFE(toDelete);
+
+    setNames(names.filter((n) => n !== toDelete));
+    setNavMaps(newNavMaps);
   }
 
   return (
