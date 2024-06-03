@@ -91,7 +91,7 @@ function PhotosphereEditor({
     if (update === null) {
       const confirmed = await confirmMUI("Remove Hotspot?", {
         details:
-          "The hotspot will be removed permanently and its data will be lost.",
+          "The hotspot will be permanently removed and its data will be lost.",
         accept: "Remove",
       });
       if (!confirmed) return;
@@ -350,7 +350,7 @@ function PhotosphereEditor({
 
   async function handleRemoveNavMap() {
     const confirmed = await confirmMUI("Remove Navigation Map?", {
-      details: "The map will be removed permanently and its data will be lost",
+      details: "The map will be permanently removed and its data will be lost.",
       accept: "Remove",
     });
     if (!confirmed) return;
