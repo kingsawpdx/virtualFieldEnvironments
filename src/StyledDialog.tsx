@@ -1,4 +1,6 @@
 import { ThemeProvider } from "@emotion/react";
+import { ConfirmDialogProps, confirmable } from "react-confirm";
+
 import {
   Button,
   Dialog,
@@ -7,7 +9,6 @@ import {
   DialogTitle,
   Typography,
 } from "@mui/material";
-import { ConfirmDialogProps, confirmable } from "react-confirm";
 
 import { theme } from "./main";
 

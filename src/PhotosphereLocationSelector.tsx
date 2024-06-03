@@ -1,3 +1,5 @@
+import React, { useState } from "react";
+
 import {
   Box,
   Button,
@@ -6,7 +8,6 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
-import React, { useState } from "react";
 
 import { NavMap } from "./DataStructures.ts";
 import { alertMUI } from "./StyledDialogWrapper.tsx";

@@ -1,4 +1,9 @@
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
+import { useState } from "react";
+import AudioPlayer from "react-h5-audio-player";
+import "react-h5-audio-player/lib/styles.css";
+import ReactPlayer from "react-player";
+
 import { ArrowBack, Close } from "@mui/icons-material";
 import {
   Button,
@@ -14,10 +19,6 @@ import {
   colors,
 } from "@mui/material";
 import Box from "@mui/material/Box";
-import { useState } from "react";
-import AudioPlayer from "react-h5-audio-player";
-import "react-h5-audio-player/lib/styles.css";
-import ReactPlayer from "react-player";
 
 import { Asset, Hotspot2D, Hotspot3D, HotspotData } from "./DataStructures";
 import HotspotEditor, { HotspotIcon, NestedHotspotBox } from "./HotspotEditor";

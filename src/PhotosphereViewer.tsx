@@ -1,10 +1,3 @@
-import {
-  FormControlLabel,
-  Stack,
-  Switch,
-  SwitchProps,
-  styled,
-} from "@mui/material";
 import { Point, Viewer, ViewerConfig } from "@photo-sphere-viewer/core";
 import { MapHotspot } from "@photo-sphere-viewer/map-plugin";
 import { MarkerConfig } from "@photo-sphere-viewer/markers-plugin";
@@ -22,6 +15,14 @@ import {
   VirtualTourPlugin,
   VirtualTourPluginConfig,
 } from "react-photo-sphere-viewer";
+
+import {
+  FormControlLabel,
+  Stack,
+  Switch,
+  SwitchProps,
+  styled,
+} from "@mui/material";
 
 import AudioToggleButton from "./AudioToggleButton";
 import {

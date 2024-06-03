@@ -1,5 +1,6 @@
-import { Button, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
+
+import { Button, Stack, Typography } from "@mui/material";
 
 export interface AudioToggleButtonProps {
   src: string;

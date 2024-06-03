@@ -1,3 +1,7 @@
+import localforage from "localforage";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
 import {
   CardActionArea,
   Container,
@@ -10,9 +14,6 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
-import localforage from "localforage";
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 
 import { VFE } from "./DataStructures";
 import { deleteStoredVFE } from "./FileOperations";

@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import {
   Box,
   Button,
@@ -8,7 +10,6 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
 
 import { VFE } from "../DataStructures";
 import PhotosphereSelector, {

@@ -1,3 +1,6 @@
+import { MuiFileInput } from "mui-file-input";
+import React, { useState } from "react";
+
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import {
   Button,
@@ -8,8 +11,6 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import { MuiFileInput } from "mui-file-input";
-import React, { useState } from "react";
 
 import { NavMap, calculateImageDimensions, newID } from "../DataStructures";
 import { alertMUI } from "../StyledDialogWrapper";

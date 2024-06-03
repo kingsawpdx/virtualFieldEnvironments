@@ -1,8 +1,9 @@
-import AttachFileIcon from "@mui/icons-material/AttachFile";
-import { Box, Button, Stack } from "@mui/material";
 import { MuiFileInput } from "mui-file-input";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+import AttachFileIcon from "@mui/icons-material/AttachFile";
+import { Box, Button, Stack } from "@mui/material";
 
 import {
   Hotspot3D,

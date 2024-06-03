@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import {
   Button,
   Dialog,
@@ -7,7 +9,6 @@ import {
   DialogTitle,
   Stack,
 } from "@mui/material";
-import { useState } from "react";
 
 import FileDropzone from "./FileDropzone";
 import Header from "./Header";
