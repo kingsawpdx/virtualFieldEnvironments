@@ -32,7 +32,7 @@ function Header({ onCreateVFE, onLoadTestVFE }: HeaderProps) {
             Virtual Field Guides
           </Typography>
         </Stack>
-        <Stack direction="row" spacing={1}>
+        <Stack direction="row" gap={1}>
           <Stack sx={{ justifyContent: "space-around" }}>
             <Button
               onClick={onCreateVFE}

@@ -330,7 +330,7 @@ function PhotosphereViewer({
           zIndex: 100,
           justifyContent: "space-between",
         }}
-        spacing={1}
+        gap={1}
       >
         <PhotosphereSelector
           options={Object.keys(vfe.photospheres)}
@@ -358,6 +358,7 @@ function PhotosphereViewer({
               sx: { fontSize: "14px", padding: 1, width: "60px" },
             },
           }}
+          sx={{ margin: 0 }}
         />
       </Stack>
 

@@ -118,7 +118,7 @@ function CreateVFEForm({ onCreateVFE, header, onClose }: CreateVFEFormProps) {
   return (
     <>
       <Header {...header} />
-      <Stack sx={{ width: 450, margin: "auto", paddingTop: 10 }} spacing={3}>
+      <Stack sx={{ width: 450, margin: "auto", paddingTop: 10 }} gap={3}>
         <Typography variant="h4">Create a New VFE</Typography>
         <Stack direction="row" gap={1}>
           <TextField
