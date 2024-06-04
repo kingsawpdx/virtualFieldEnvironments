@@ -7,4 +7,4 @@ To find documentation on this project please look at the projects [Wiki](https:/
 
 For developer information: [click here](https://github.com/kingsawpdx/virtualFieldEnvironments/wiki/Developer-Guide)
 
-![Screenshot of VFE](https://imgur.com/a/eRcKsQf)
+![Screenshot of VFE](https://imgur.com/LKokKkU)
