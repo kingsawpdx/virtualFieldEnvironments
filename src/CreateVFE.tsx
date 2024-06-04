@@ -120,10 +120,11 @@ function CreateVFEForm({ onCreateVFE, header, onClose }: CreateVFEFormProps) {
       <Header {...header} />
       <Stack sx={{ width: 450, margin: "auto", paddingTop: 10 }} spacing={3}>
         <Typography variant="h4">Create a New VFE</Typography>
-        <Stack direction="row" spacing={"auto"}>
+        <Stack direction="row" gap={1}>
           <TextField
             required
             label="VFE Name"
+            sx={{ flexGrow: 1 }}
             onChange={(e) => {
               setVFEName(e.target.value);
             }}
@@ -131,6 +132,7 @@ function CreateVFEForm({ onCreateVFE, header, onClose }: CreateVFEFormProps) {
           <TextField
             required
             label="Photosphere Name"
+            sx={{ flexGrow: 1 }}
             onChange={(e) => {
               setPhotosphereName(e.target.value);
             }}
@@ -180,13 +182,13 @@ function CreateVFEForm({ onCreateVFE, header, onClose }: CreateVFEFormProps) {
             Select Photosphere Location
           </Button>
         )}
-        <Stack direction="row" sx={{ justifyContent: "space-between" }}>
-          <Button variant="outlined" sx={{ width: "49%" }} onClick={onClose}>
+        <Stack direction="row" gap={1}>
+          <Button variant="outlined" sx={{ flexGrow: 1 }} onClick={onClose}>
             Cancel
           </Button>
           <Button
             variant="contained"
-            sx={{ width: "49%" }}
+            sx={{ flexGrow: 1 }}
             onClick={() => {
               void handleCreateVFE();
             }}

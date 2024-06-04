@@ -483,14 +483,14 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
         Add a Hotspot
       </Typography>
       <Typography>Click on viewer for pitch and yaw</Typography>
-      <Stack direction="row" sx={{ justifyContent: "space-between" }}>
+      <Stack direction="row" gap={1}>
         <TextField
           label="Pitch"
           InputProps={{
             readOnly: true,
           }}
           defaultValue={String(pitch.toFixed(2))}
-          sx={{ width: "49%" }}
+          sx={{ flexGrow: 1 }}
         />
         <TextField
           label="Yaw"
@@ -498,7 +498,7 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
             readOnly: true,
           }}
           defaultValue={String(yaw.toFixed(2))}
-          sx={{ width: "49%" }}
+          sx={{ flexGrow: 1 }}
         />
       </Stack>
       <TextField
@@ -532,13 +532,13 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
         fullWidth
         margin="normal"
       />
-      <Stack direction="row" sx={{ justifyContent: "space-between" }}>
-        <Button variant="outlined" sx={{ width: "49%" }} onClick={onCancel}>
+      <Stack direction="row" gap={1}>
+        <Button variant="outlined" sx={{ flexGrow: 1 }} onClick={onCancel}>
           Cancel
         </Button>
         <Button
           variant="contained"
-          style={{ width: "49%" }}
+          sx={{ flexGrow: 1 }}
           onClick={() => {
             void handleAddHotspot();
           }}
