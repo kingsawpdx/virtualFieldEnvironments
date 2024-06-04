@@ -181,6 +181,9 @@ function CreateVFEForm({ onCreateVFE, header, onClose }: CreateVFEFormProps) {
           </Button>
         )}
         <Stack direction="row" sx={{ justifyContent: "space-between" }}>
+          <Button variant="outlined" sx={{ width: "49%" }} onClick={onClose}>
+            Cancel
+          </Button>
           <Button
             variant="contained"
             sx={{ width: "49%" }}
@@ -189,9 +192,6 @@ function CreateVFEForm({ onCreateVFE, header, onClose }: CreateVFEFormProps) {
             }}
           >
             Create
-          </Button>
-          <Button variant="outlined" sx={{ width: "49%" }} onClick={onClose}>
-            Cancel
           </Button>
         </Stack>
 
