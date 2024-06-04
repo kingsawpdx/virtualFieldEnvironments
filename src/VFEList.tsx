@@ -1,3 +1,7 @@
+import localforage from "localforage";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
 import {
   CardActionArea,
   Container,
@@ -10,13 +14,10 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
-import localforage from "localforage";
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 
 import { VFE } from "./DataStructures";
 import { deleteStoredVFE } from "./FileOperations";
-import { confirmMUI } from "./StyledConfirmWrapper";
+import { confirmMUI } from "./StyledDialogWrapper";
 import { convertStoredToRuntime } from "./VFEConversion";
 
 type NavMapRecord = Partial<Record<string, string>>;
@@ -47,20 +48,23 @@ function VFEList() {
   }, []);
 
   async function deleteVFE(toDelete: string) {
-    if (await confirmMUI(`Delete ${toDelete}?`, { accept: "Delete" })) {
-      // removed deleted nav map from record
-      const { [toDelete]: _deleted, ...newNavMaps } = navMaps;
-      localStorage.removeItem("visitedState");
-      await deleteStoredVFE(toDelete);
+    const confirmed = await confirmMUI(`Delete ${toDelete}?`, {
+      accept: "Delete",
+    });
+    if (!confirmed) return;
 
-      setNames(names.filter((n) => n !== toDelete));
-      setNavMaps(newNavMaps);
-    }
+    // removed deleted nav map from record
+    const { [toDelete]: _deleted, ...newNavMaps } = navMaps;
+    localStorage.removeItem("visitedState");
+    await deleteStoredVFE(toDelete);
+
+    setNames(names.filter((n) => n !== toDelete));
+    setNavMaps(newNavMaps);
   }
 
   return (
     <Container sx={{ padding: 3 }}>
-      <Grid container spacing={3} alignItems="center" justifyContent="center">
+      <Grid container gap={3} alignItems="center" justifyContent="center">
         {names.map((name) => (
           <Grid item key={name} xs={12} sm={6} md={4} lg={3}>
             <Card>

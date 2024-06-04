@@ -1,3 +1,6 @@
+import { MuiFileInput } from "mui-file-input";
+import { useEffect, useState } from "react";
+
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import {
   Button,
@@ -9,8 +12,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { MuiFileInput } from "mui-file-input";
-import { useEffect, useState } from "react";
 
 import {
   Asset,
@@ -19,6 +20,7 @@ import {
   calculateImageDimensions,
   newID,
 } from "../DataStructures.ts";
+import { alertMUI } from "../StyledDialogWrapper.tsx";
 
 // from https://github.com/Alcumus/react-doc-viewer?tab=readme-ov-file#current-renderable-file-types
 const documentAcceptTypes = [
@@ -434,13 +436,15 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
   const [level, setLevel] = useState(0); // State for level
   const [iconAsset, setIconAsset] = useState<Asset | null>(defaultIcon());
 
-  function handleAddHotspot() {
+  async function handleAddHotspot() {
     if (
       tooltip.trim() === "" ||
       hotspotData === null ||
       (hotspotData.tag !== "PhotosphereLink" && iconAsset === null)
     ) {
-      alert("Please provide a tooltip, a valid content type, and an icon");
+      await alertMUI(
+        "Please provide a tooltip, a valid content type, and an icon",
+      );
       return;
     }
 
@@ -473,20 +477,20 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
         justifyContent: "space-between",
         width: "275px",
       }}
-      spacing={1.2}
+      gap={1.2}
     >
       <Typography variant="h5" sx={{ textAlign: "center" }}>
         Add a Hotspot
       </Typography>
       <Typography>Click on viewer for pitch and yaw</Typography>
-      <Stack direction="row" sx={{ justifyContent: "space-between" }}>
+      <Stack direction="row" gap={1}>
         <TextField
           label="Pitch"
           InputProps={{
             readOnly: true,
           }}
           defaultValue={String(pitch.toFixed(2))}
-          sx={{ width: "49%" }}
+          sx={{ flexGrow: 1 }}
         />
         <TextField
           label="Yaw"
@@ -494,7 +498,7 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
             readOnly: true,
           }}
           defaultValue={String(yaw.toFixed(2))}
-          sx={{ width: "49%" }}
+          sx={{ flexGrow: 1 }}
         />
       </Stack>
       <TextField
@@ -526,18 +530,19 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
           }
         }}
         fullWidth
-        margin="normal"
       />
-      <Stack direction="row" sx={{ justifyContent: "space-between" }}>
+      <Stack direction="row" gap={1}>
+        <Button variant="outlined" sx={{ flexGrow: 1 }} onClick={onCancel}>
+          Cancel
+        </Button>
         <Button
           variant="contained"
-          style={{ width: "49%" }}
-          onClick={handleAddHotspot}
+          sx={{ flexGrow: 1 }}
+          onClick={() => {
+            void handleAddHotspot();
+          }}
         >
           Create
-        </Button>
-        <Button variant="outlined" sx={{ width: "49%" }} onClick={onCancel}>
-          Cancel
         </Button>
       </Stack>
     </Stack>
