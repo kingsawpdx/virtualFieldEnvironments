@@ -49,6 +49,7 @@ function CreateVFEForm({ onCreateVFE, header, onClose }: CreateVFEFormProps) {
     x: number;
     y: number;
   } | null>(null);
+
   // Error Handling: Ensure the data is not empty
   function handleCreateVFE() {
     if (vfeName.trim() === "" || photosphereName.trim() === "" || !panoImage) {
@@ -151,7 +152,7 @@ function CreateVFEForm({ onCreateVFE, header, onClose }: CreateVFEFormProps) {
           }}
         />
         <MuiFileInput
-          placeholder="Upload Navigation Map(optional)"
+          placeholder="Upload Navigation Map"
           value={navMapFile}
           onChange={(file) => {
             if (file) {
