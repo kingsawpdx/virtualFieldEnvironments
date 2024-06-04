@@ -93,6 +93,7 @@ function EditNavMap({ onClose, vfe, onUpdateVFE }: EditNavMapProps) {
                 position: "relative",
                 maxWidth: "550px",
                 maxHeight: `${(550 / map.width) * map.height}px`,
+                margin: "auto",
               }}
             >
               {Object.values(localPhotospheres).map((photosphere, index) => {
