@@ -46,9 +46,7 @@ const DropzoneInput = styled("input", {
 }));
 
 export const MuiDropzone = forwardRef<HTMLDivElement, MuiDropzoneProps>(
-  function MuiDropzone(props: MuiDropzoneProps, ref) {
-    const { label, sx, onInput } = props;
-
+  function MuiDropzone({ label, sx, onInput }: MuiDropzoneProps, ref) {
     const onDrop = useCallback(
       (acceptedFiles: File[]) => {
         onInput(acceptedFiles);
