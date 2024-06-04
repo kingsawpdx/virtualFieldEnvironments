@@ -69,6 +69,10 @@ function AppRoot() {
               onLoadTestVFE: handleLoadTestVFE,
               onCreateVFE: handleCreateVFE,
             }}
+            onClose={() => {
+              // Define what happens when the user clicks the cancel button
+              navigate("/");
+            }}
           />
         }
       />

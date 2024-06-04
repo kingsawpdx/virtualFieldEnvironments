@@ -34,6 +34,7 @@ import {
 import { useVisitedState } from "./HandleVisit";
 import PhotosphereSelector from "./PhotosphereSelector";
 import PopOver from "./PopOver";
+import { HotspotUpdate } from "./VFEConversion";
 
 // modified from https://mui.com/material-ui/react-switch/#customization 'iOS style'
 const StyledSwitch = styled((props: SwitchProps) => (
@@ -100,28 +101,9 @@ function convertHotspots(hotspots: Record<string, Hotspot3D>): MarkerConfig[] {
   for (const hotspot of Object.values(hotspots)) {
     if (hotspot.data.tag === "PhotosphereLink") continue;
 
-    let icon = hotspot.icon.path;
-
-    switch (hotspot.data.tag) {
-      case "Image":
-        break;
-      case "Video":
-        icon =
-          "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png"; // changed to make linter happy until icons are ready
-        break;
-      case "Audio":
-        break;
-      case "Doc":
-        break;
-      case "URL":
-        break;
-      default:
-        break;
-    }
-
     markers.push({
-      id: hotspot.tooltip,
-      image: icon,
+      id: hotspot.id,
+      image: hotspot.icon.path,
       size: { width: 64, height: 64 },
       position: {
         yaw: degToStr(hotspot.yaw),
@@ -196,7 +178,10 @@ export interface PhotosphereViewerProps {
   currentPS: string;
   onChangePS: (id: string) => void;
   onViewerClick?: (pitch: number, yaw: number) => void;
-  onRemoveHotspot?: (hotspotToRemove: string) => void;
+  onUpdateHotspot?: (
+    hotspotPath: string[],
+    update: HotspotUpdate | null,
+  ) => void;
 }
 
 function PhotosphereViewer({
@@ -204,15 +189,16 @@ function PhotosphereViewer({
   currentPS,
   onChangePS,
   onViewerClick,
-  onRemoveHotspot,
+  onUpdateHotspot,
 }: PhotosphereViewerProps) {
   const photoSphereRef = React.createRef<ViewerAPI>();
   const [currentPhotosphere, setCurrentPhotosphere] =
     React.useState<Photosphere>(vfe.photospheres[currentPS]);
+  const [mapStatic, setMapStatic] = useState(false);
   const [hotspotArray, setHotspotArray] = useState<(Hotspot3D | Hotspot2D)[]>(
     [],
   );
-  const [mapStatic, setMapStatic] = useState(false);
+  const hotspotPath = hotspotArray.map((h) => h.id);
 
   // The variable is set to true after handleReady has finished
   const ready = useRef(false);
@@ -376,9 +362,9 @@ function PhotosphereViewer({
 
       {hotspotArray.length > 0 && (
         <PopOver
-          hotspotData={hotspotArray[hotspotArray.length - 1].data}
-          title={hotspotArray[hotspotArray.length - 1].tooltip}
-          arrayLength={hotspotArray.length}
+          key={hotspotPath.join()}
+          hotspotPath={hotspotPath}
+          hotspot={hotspotArray[hotspotArray.length - 1]}
           pushHotspot={(add: Hotspot2D) => {
             setHotspotArray([...hotspotArray, add]);
           }}
@@ -388,10 +374,7 @@ function PhotosphereViewer({
           closeAll={() => {
             setHotspotArray([]);
           }}
-          //isEditorMode={true}
-          onDeleteHotspot={() => {
-            onRemoveHotspot?.(hotspotArray[hotspotArray.length - 1].tooltip);
-          }}
+          onUpdateHotspot={onUpdateHotspot}
         />
       )}
 

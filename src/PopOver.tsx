@@ -1,16 +1,17 @@
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
-import { ArrowBack, Close, Delete } from "@mui/icons-material";
+import { ArrowBack, Close } from "@mui/icons-material";
 import {
   Button,
   Dialog,
   DialogContent,
   DialogTitle,
   IconButton,
+  Snackbar,
   Stack,
   TextField,
   Tooltip,
-  alpha,
-  lighten,
+  Typography,
+  colors,
 } from "@mui/material";
 import Box from "@mui/material/Box";
 import { useState } from "react";
@@ -18,51 +19,44 @@ import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import ReactPlayer from "react-player";
 
-import { Hotspot2D, HotspotData } from "./DataStructures";
+import { Asset, Hotspot2D, Hotspot3D, HotspotData } from "./DataStructures";
+import HotspotEditor, { HotspotIcon, NestedHotspotBox } from "./HotspotEditor";
+import { confirmMUI } from "./StyledConfirmWrapper";
+import { HotspotUpdate } from "./VFEConversion";
 
 interface HotspotContentProps {
   hotspot: HotspotData;
-  pushHotspot: (add: Hotspot2D) => void;
-  popHotspot: () => void;
-  arrayLength: number;
+  openNestedHotspot: (add: Hotspot2D) => void;
 }
 
-function HotspotContent(props: HotspotContentProps) {
+function HotspotContent({ hotspot, openNestedHotspot }: HotspotContentProps) {
   const [answer, setAnswer] = useState(""); // State to hold the answer
   const [feedback, setFeedback] = useState("");
 
-  switch (props.hotspot.tag) {
+  switch (hotspot.tag) {
     case "Image": {
       return (
-        <Box position="relative">
-          {Object.values(props.hotspot.hotspots).map((hotspot2D) => (
-            <Box
-              key={hotspot2D.tooltip}
-              onClick={() => {
-                props.pushHotspot(hotspot2D);
-              }}
-              position="absolute"
-              left={`${hotspot2D.x}%`}
-              top={`${hotspot2D.y}%`}
-              width={50}
-              height={50}
-              border={"5px solid"}
-              borderColor={alpha(hotspot2D.color, 0.5)}
-              sx={{
-                "&:hover": {
-                  borderColor: lighten(hotspot2D.color, 0.5),
-                  backgroundColor: alpha(hotspot2D.color, 0.25),
-                },
-              }}
-            />
+        <Box position="relative" overflow="hidden">
+          {Object.values(hotspot.hotspots).map((hotspot2D) => (
+            <Tooltip key={hotspot2D.id} title={hotspot2D.tooltip}>
+              <NestedHotspotBox
+                hotspot={hotspot2D}
+                onClick={() => {
+                  openNestedHotspot(hotspot2D);
+                }}
+              />
+            </Tooltip>
           ))}
           <img
             style={{
+              display: "block",
               maxWidth: "100%",
               maxHeight: "70vh",
               objectFit: "contain",
+              borderRadius: "4px",
+              userSelect: "none",
             }}
-            src={props.hotspot.src.path}
+            src={hotspot.src.path}
           />
         </Box>
       );
@@ -70,7 +64,7 @@ function HotspotContent(props: HotspotContentProps) {
     case "Video":
       return (
         <ReactPlayer
-          url={props.hotspot.src.path}
+          url={hotspot.src.path}
           controls={true}
           style={{
             maxWidth: "100%",
@@ -81,15 +75,20 @@ function HotspotContent(props: HotspotContentProps) {
     case "Audio":
       return (
         <AudioPlayer
-          style={{ width: "50vh", maxHeight: "70vh" }}
+          style={{
+            width: "50vh",
+            height: "150px",
+            marginTop: 3,
+            borderRadius: 5,
+          }}
           showSkipControls={false}
           showJumpControls={false}
           showDownloadProgress={false}
-          src={props.hotspot.src.path}
+          src={hotspot.src.path}
         />
       );
     case "Doc": {
-      const docs = [{ uri: props.hotspot.content }];
+      const docs = [{ uri: hotspot.src.path }];
       return (
         <DocViewer
           style={{ width: "80vw", height: "70vh" }}
@@ -98,8 +97,6 @@ function HotspotContent(props: HotspotContentProps) {
         />
       );
     }
-    case "PhotosphereLink":
-      break;
     case "URL":
       return (
         <Box width={"80vw"} height={"70vh"} fontFamily={"Helvetica"}>
@@ -110,15 +107,25 @@ function HotspotContent(props: HotspotContentProps) {
               width: "80vw",
               height: "70vh",
             }}
-            src={props.hotspot.src}
+            src={hotspot.url}
           />
         </Box>
       );
+    case "Message":
+      return (
+        <Box width={"20vw"} maxHeight={"70vh"}>
+          <Typography sx={{ wordWrap: "break-word" }}>
+            {hotspot.content}
+          </Typography>
+        </Box>
+      );
+    case "PhotosphereLink":
+      break;
     case "Quiz": {
-      const hotspotAnswer = props.hotspot.answer;
+      const hotspotAnswer = hotspot.answer;
       return (
         <Box>
-          <Box>{"Question: " + props.hotspot.question}</Box>
+          <Box>{"Question: " + hotspot.question}</Box>
           <TextField
             variant="outlined"
             value={answer}
@@ -157,75 +164,211 @@ function HotspotContent(props: HotspotContentProps) {
 }
 
 export interface PopOverProps {
-  hotspotData: HotspotData;
-  title: string;
-  arrayLength: number;
+  hotspotPath: string[];
+  hotspot: Hotspot2D | Hotspot3D;
   pushHotspot: (add: Hotspot2D) => void;
   popHotspot: () => void;
   closeAll: () => void;
-  onDeleteHotspot?: () => void;
+  onUpdateHotspot?: (
+    hotspotPath: string[],
+    update: HotspotUpdate | null,
+  ) => void;
 }
 
 function PopOver(props: PopOverProps) {
+  const [edited, setEdited] = useState(false);
+
+  const [previewTooltip, setPreviewTooltip] = useState(props.hotspot.tooltip);
+  const [previewData, setPreviewData] = useState<HotspotData | null>(
+    props.hotspot.data,
+  );
+  const [previewIcon, setPreviewIcon] = useState<Asset | null>(
+    "icon" in props.hotspot ? props.hotspot.icon : null,
+  );
+
+  const [snackbarMessage, setSnackbarMessage] = useState<string | null>(null);
+
+  // Should only be allowed to change icons of 3D hotspots that aren't photosphere links.
+  const previewIconSetter =
+    "icon" in props.hotspot && previewData?.tag !== "PhotosphereLink"
+      ? setPreviewIcon
+      : undefined;
+
+  async function keepChanges() {
+    const confirmed = await confirmMUI(
+      "All changes to the current hotspot will be lost. Continue?",
+    );
+    return !confirmed;
+  }
+
+  async function confirmClose() {
+    if (edited && (await keepChanges())) {
+      return;
+    }
+
+    props.closeAll();
+  }
+
+  async function confirmBack() {
+    if (edited && (await keepChanges())) {
+      return;
+    }
+
+    props.popHotspot();
+  }
+
+  async function resetHotspot() {
+    if (edited && (await keepChanges())) {
+      return;
+    }
+
+    setPreviewTooltip(props.hotspot.tooltip);
+    setPreviewData(props.hotspot.data);
+    if ("icon" in props.hotspot) {
+      setPreviewIcon(props.hotspot.icon);
+    }
+    setEdited(false);
+  }
+
+  function deleteHotspot() {
+    props.onUpdateHotspot?.(props.hotspotPath, null);
+  }
+
+  function updateHotspot(tooltip: string, data: HotspotData, icon?: Asset) {
+    props.onUpdateHotspot?.(props.hotspotPath, { tooltip, data, icon });
+  }
+
+  function openNestedHotspot(hotspot2D: Hotspot2D) {
+    if (edited) {
+      setSnackbarMessage(
+        "Nested hotspots cannot be opened when there are unsaved changes.",
+      );
+      return;
+    }
+
+    props.pushHotspot(hotspot2D);
+  }
+
   return (
-    <Dialog
-      open={true}
-      onClose={props.closeAll}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
-      maxWidth={false}
-    >
-      <DialogTitle id="alert-dialog-title">
-        <Stack direction="row" alignItems="center">
-          {props.onDeleteHotspot !== undefined && (
-            <Tooltip title="Delete Hotspot" placement="top">
+    <>
+      <Dialog
+        open={true}
+        onClose={() => {
+          void confirmClose();
+        }}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        maxWidth={false}
+        scroll="body"
+        transitionDuration={0}
+      >
+        <DialogTitle id="alert-dialog-title">
+          <Stack direction="row" alignItems="center" gap={1}>
+            {previewData && (
+              <HotspotIcon
+                hotspotData={previewData}
+                color={
+                  "color" in props.hotspot ? props.hotspot.color : undefined
+                }
+                icon={previewIcon ?? undefined}
+              />
+            )}
+            {previewData?.tag == "URL" ? (
+              <Box flexGrow={1}>
+                <a href={previewData.url} target="_blank" rel="noreferrer">
+                  {previewTooltip}
+                </a>
+              </Box>
+            ) : (
+              <Box flexGrow={1}>{previewTooltip}</Box>
+            )}
+            {props.hotspotPath.length > 1 && (
+              <Tooltip title="Back" placement="top">
+                <IconButton
+                  onClick={() => {
+                    void confirmBack();
+                  }}
+                >
+                  <ArrowBack />
+                </IconButton>
+              </Tooltip>
+            )}
+            <Tooltip title="Close" placement="top">
               <IconButton
                 onClick={() => {
-                  // This is where the delete functionality will go
-                  props.onDeleteHotspot?.();
+                  void confirmClose();
                 }}
               >
-                <Delete />
+                <Close />
               </IconButton>
             </Tooltip>
+          </Stack>
+        </DialogTitle>
+
+        <Stack direction="row">
+          {previewData && (
+            <DialogContent sx={{ paddingTop: 0 }}>
+              <HotspotContent
+                hotspot={previewData}
+                openNestedHotspot={openNestedHotspot}
+              />
+            </DialogContent>
           )}
-          {props.hotspotData.tag == "URL" ? (
-            <Box flexGrow={1}>
-              <a href={props.hotspotData.src} target="_blank" rel="noreferrer">
-                {props.title}
-              </a>
+          {props.onUpdateHotspot !== undefined && (
+            <Box
+              padding="20px 24px"
+              borderColor={colors.grey[300]}
+              sx={
+                previewData && {
+                  backgroundColor: "#FDFDFD",
+                  borderStyle: "solid",
+                  borderWidth: "1px 0 0 1px",
+                  borderTopLeftRadius: "4px",
+                }
+              }
+            >
+              <HotspotEditor
+                edited={edited}
+                setEdited={setEdited}
+                previewTooltip={previewTooltip}
+                setPreviewTooltip={setPreviewTooltip}
+                previewData={previewData}
+                setPreviewData={setPreviewData}
+                previewIcon={previewIcon}
+                setPreviewIcon={previewIconSetter}
+                resetHotspot={resetHotspot}
+                deleteHotspot={deleteHotspot}
+                updateHotspot={updateHotspot}
+                openNestedHotspot={openNestedHotspot}
+              />
             </Box>
-          ) : (
-            <Box flexGrow={1}>{props.title}</Box>
           )}
-          {props.arrayLength > 1 && (
-            <Tooltip title="Back" placement="top">
-              <IconButton
-                onClick={() => {
-                  props.popHotspot();
-                }}
-              >
-                <ArrowBack />
-              </IconButton>
-            </Tooltip>
-          )}
+        </Stack>
+      </Dialog>
+
+      <Snackbar
+        open={snackbarMessage !== null}
+        message={snackbarMessage}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        autoHideDuration={5000}
+        onClose={() => {
+          setSnackbarMessage(null);
+        }}
+        color="primary"
+        action={
           <Tooltip title="Close" placement="top">
-            <IconButton onClick={props.closeAll}>
+            <IconButton
+              color="inherit"
+              onClick={() => {
+                setSnackbarMessage(null);
+              }}
+            >
               <Close />
             </IconButton>
           </Tooltip>
-        </Stack>
-      </DialogTitle>
-
-      <DialogContent>
-        <HotspotContent
-          hotspot={props.hotspotData}
-          pushHotspot={props.pushHotspot}
-          popHotspot={props.popHotspot}
-          arrayLength={props.arrayLength}
-        />
-      </DialogContent>
-    </Dialog>
+        }
+      />
+    </>
   );
 }
 

@@ -31,12 +31,14 @@
           "yaw": -5,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "OutcropWideView",
           "data": {
             "tag": "Image",
+            "width": 3024,
+            "height": 4032,
             "src": {
               "tag": "Runtime",
               "path": "/VFEdata/outcropWideView.png",
@@ -52,12 +54,14 @@
           "yaw": 18,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "Flowers",
           "data": {
             "tag": "Image",
+            "width": 3024,
+            "height": 4032,
             "src": {
               "tag": "Runtime",
               "path": "/VFEdata/flowers.png",
@@ -73,13 +77,13 @@
           "yaw": 0,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "URLDemo",
           "data": {
             "tag": "URL",
-            "src": "https://virtual-field-environments.vercel.app/"
+            "url": "https://virtual-field-environments.vercel.app/"
           },
           "level": 1
         },
@@ -89,7 +93,7 @@
           "yaw": 10,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "Audio Demo - FrogChorus.mp3",
@@ -109,14 +113,17 @@
           "yaw": 20,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "Document Demo - VFE Guidelines",
           "data": {
             "tag": "Doc",
-            "content": "/VFEdata/General guide - Virtual Field Environments for Student-based Inquiry.pdf",
-            "id": "inquiry.pdf"
+            "src": {
+              "tag": "Runtime",
+              "path": "/VFEdata/General guide - Virtual Field Environments for Student-based Inquiry.pdf",
+              "id": "inquiry.pdf"
+            }
           },
           "level": 1
         },
@@ -126,7 +133,7 @@
           "yaw": 172,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png",
+            "path": "/pin-red.png",
             "id": "red-pin.png"
           },
           "tooltip": "ShorelineSOUTH.mp4",
@@ -146,7 +153,7 @@
           "yaw": -175,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png",
+            "path": "/pin-red.png",
             "id": "red-pin.png"
           },
           "tooltip": "Paddlers.mp4",
@@ -166,12 +173,14 @@
           "yaw": 100,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "SmallPool",
           "data": {
             "tag": "Image",
+            "width": 1344,
+            "height": 1792,
             "src": {
               "tag": "Runtime",
               "path": "/VFEdata/small_pool.jpg",
@@ -187,12 +196,14 @@
           "yaw": -40,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "LogNearShoreline",
           "data": {
             "tag": "Image",
+            "width": 3024,
+            "height": 4032,
             "src": {
               "tag": "Runtime",
               "path": "/VFEdata/logNEARshoreline.png",
@@ -208,12 +219,14 @@
           "yaw": -33,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "CoolLog",
           "data": {
             "tag": "Image",
+            "width": 1792,
+            "height": 1344,
             "src": {
               "tag": "Runtime",
               "path": "/VFEdata/cool_log.jpeg",
@@ -229,7 +242,7 @@
           "yaw": 5,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png",
+            "path": "/pin-red.png",
             "id": "red-pin.png"
           },
           "tooltip": "OutcropTextures",
@@ -249,12 +262,12 @@
           "yaw": -37,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "How did these huge logs get here?",
           "data": {
-            "tag": "Doc",
+            "tag": "Message",
             "content": "How did these huge logs get here?"
           },
           "level": 1
@@ -265,12 +278,14 @@
           "yaw": -19,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "Mushroom",
           "data": {
             "tag": "Image",
+            "width": 3024,
+            "height": 4032,
             "src": {
               "tag": "Runtime",
               "path": "/VFEdata/mushroom.png",
@@ -286,12 +301,14 @@
           "yaw": -46,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "Contact",
           "data": {
             "tag": "Image",
+            "width": 2549,
+            "height": 1694,
             "src": {
               "tag": "Runtime",
               "path": "/VFEdata/Contact.png",
@@ -299,13 +316,15 @@
             },
             "hotspots": {
               "HandSample": {
-                "x": 10,
-                "y": 27.5,
+                "x": 12.5,
+                "y": 32.5,
                 "id": "HandSample",
                 "tooltip": "HandSample",
                 "color": "#FF0000",
                 "data": {
                   "tag": "Image",
+                  "width": 1342,
+                  "height": 1064,
                   "src": {
                     "tag": "Runtime",
                     "path": "/VFEdata/hand_sample.png",
@@ -313,13 +332,15 @@
                   },
                   "hotspots": {
                     "CloserLook": {
-                      "x": 50,
-                      "y": 50,
+                      "x": 63,
+                      "y": 56,
                       "id": "CloserLook",
                       "tooltip": "CloserLook",
                       "color": "#00FF00",
                       "data": {
                         "tag": "Image",
+                        "width": 4240,
+                        "height": 2832,
                         "src": {
                           "tag": "Runtime",
                           "path": "/VFEdata/a-closer-look.jpg",
@@ -327,13 +348,15 @@
                         },
                         "hotspots": {
                           "SouthSEMComparison": {
-                            "x": 52.5,
-                            "y": 37.5,
+                            "x": 52,
+                            "y": 35,
                             "id": "SouthSEMComparison",
                             "tooltip": "SouthSEMComparison",
                             "color": "#00FFFF",
                             "data": {
                               "tag": "Image",
+                              "width": 720,
+                              "height": 312,
                               "src": {
                                 "tag": "Runtime",
                                 "path": "/VFEdata/southSEMcomp.png",
@@ -358,12 +381,14 @@
           "yaw": -25,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "SouthWaterfront",
           "data": {
             "tag": "Image",
+            "width": 3024,
+            "height": 4032,
             "src": {
               "tag": "Runtime",
               "path": "/VFEdata/SouthwaterFront.png",
@@ -379,7 +404,7 @@
           "yaw": -35,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "Go West",
@@ -395,7 +420,7 @@
           "yaw": 125,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "Go to Entrance",
@@ -427,7 +452,7 @@
           "yaw": -4,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "Go East",
@@ -443,7 +468,7 @@
           "yaw": -78,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "Go South",
@@ -470,7 +495,7 @@
           "yaw": 10,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "Go North",
@@ -486,7 +511,7 @@
           "yaw": 115,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "Go South",
@@ -513,7 +538,7 @@
           "yaw": -130,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "Go West",
@@ -529,7 +554,7 @@
           "yaw": 92,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "Go East",
@@ -556,7 +581,7 @@
           "yaw": 2,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "Go North",
@@ -572,7 +597,7 @@
           "yaw": -167,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "Go to Entrance",

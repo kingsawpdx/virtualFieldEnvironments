@@ -14,7 +14,13 @@ import {
 import { deleteStoredVFE, save } from "./FileOperations.ts";
 import { VisitedState } from "./HandleVisit.tsx";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
-import { convertRuntimeToStored, convertVFE } from "./VFEConversion.ts";
+import { confirmMUI } from "./StyledConfirmWrapper.tsx";
+import {
+  HotspotUpdate,
+  convertRuntimeToStored,
+  convertVFE,
+  updatePhotosphereHotspot,
+} from "./VFEConversion.ts";
 import AddAudio from "./buttons/AddAudio.tsx";
 import AddHotspot from "./buttons/AddHotspot.tsx";
 import AddNavmap from "./buttons/AddNavmap";
@@ -69,8 +75,10 @@ function PhotosphereEditor({
   const [showRemovePhotosphere, setShowRemovePhotosphere] = useState(false);
   const [showRemoveNavMap, setShowRemoveNavMap] = useState(false);
   const [showRemoveHotspot, setShowRemoveHotspot] = useState(false);
-  const [hotspotToRemove, setHotspotToRemove] = useState<string | null>(null);
   const [showEditNavMap, setShowEditNavMap] = useState(false);
+  const [hotspotPathToRemove, setHotspotToRemove] = useState<string[] | null>(
+    null,
+  );
 
   function handleEditNavMap(updatedPhotospheres: Record<string, Photosphere>) {
     const updatedVFE: VFE = {
@@ -83,24 +91,42 @@ function PhotosphereEditor({
     setUpdateTrigger((prev) => prev + 1);
   }
 
-  function handleRemoveHotspotClick(hotspotToRemove: string) {
-    setHotspotToRemove(hotspotToRemove);
-    setShowRemoveHotspot(true);
+  function handleUpdateHotspot(
+    hotspotPath: string[],
+    update: HotspotUpdate | null,
+  ) {
+    if (update === null) {
+      setHotspotToRemove(hotspotPath);
+      setShowRemoveHotspot(true);
+      return;
+    }
+
+    const updatedPhotosphere = updatePhotosphereHotspot(
+      vfe.photospheres[currentPS],
+      hotspotPath,
+      update,
+    );
+
+    const updatedVFE = {
+      ...vfe,
+      photospheres: {
+        ...vfe.photospheres,
+        [currentPS]: updatedPhotosphere,
+      },
+    };
+
+    onUpdateVFE(updatedVFE);
+    setUpdateTrigger((prev) => prev + 1);
   }
 
   function handleRemoveHotspotConfirm() {
-    if (hotspotToRemove) {
-      const updatedPhotosphere = { ...vfe.photospheres[currentPS] };
-
-      // Create a new object without the hotspot to remove
-      const { [hotspotToRemove]: _removed, ...remainingHotspots } =
-        updatedPhotosphere.hotspots;
-
+    if (hotspotPathToRemove) {
       // Update the photosphere with the remaining hotspots
-      const updatedPhotosphereWithHotspots = {
-        ...updatedPhotosphere,
-        hotspots: remainingHotspots,
-      };
+      const updatedPhotosphereWithHotspots = updatePhotosphereHotspot(
+        vfe.photospheres[currentPS],
+        hotspotPathToRemove,
+        null,
+      );
 
       const updatedVFE = {
         ...vfe,
@@ -131,8 +157,9 @@ function PhotosphereEditor({
     if (Object.keys(remainingPhotospheres).length === 0) {
       // No more photospheres available
       if (
-        confirm(
-          "This is the last photosphere. The VFE will be deleted and you will return to the home page. Continue?",
+        await confirmMUI(
+          "This is the last photosphere. The VFE will be deleted and you will return to the home page. Delete the VFE?",
+          { accept: "Delete" },
         )
       ) {
         await deleteStoredVFE(vfe.name);
@@ -198,7 +225,7 @@ function PhotosphereEditor({
   function handleAddHotspot(newHotspot: Hotspot3D) {
     const photosphere: Photosphere = vfe.photospheres[currentPS];
 
-    photosphere.hotspots[newHotspot.tooltip] = newHotspot;
+    photosphere.hotspots[newHotspot.id] = newHotspot;
 
     onUpdateVFE(vfe);
     setShowAddHotspot(false);
@@ -231,6 +258,7 @@ function PhotosphereEditor({
         <AddPhotosphere
           onAddPhotosphere={handleAddPhotosphere}
           onCancel={resetStates}
+          vfe={vfe}
         />
       );
     if (showAddNavMap)
@@ -619,7 +647,7 @@ function PhotosphereEditor({
           onViewerClick={handleLocation}
           key={updateTrigger}
           vfe={vfe}
-          onRemoveHotspot={handleRemoveHotspotClick}
+          onUpdateHotspot={handleUpdateHotspot}
         />
         <ActiveComponent />
       </Box>
