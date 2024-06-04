@@ -1,3 +1,5 @@
+import React, { useState } from "react";
+
 import {
   Box,
   Button,
@@ -6,7 +8,6 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
-import React, { useState } from "react";
 
 import { NavMap } from "./DataStructures.ts";
 
@@ -73,7 +74,7 @@ function PhotosphereLocationSelector({
             cursor: "crosshair",
             position: "relative",
             maxWidth: "550px",
-            maxHeight: `${(1 / (navMap.width / 550)) * navMap.height}px`,
+            maxHeight: `${(550 / navMap.width) * navMap.height}px`,
           }}
         >
           {photospherePosition && (

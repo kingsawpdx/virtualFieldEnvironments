@@ -1,5 +1,6 @@
-import { Box, Button, Stack } from "@mui/material";
 import { useState } from "react";
+
+import { Box, Button, Stack } from "@mui/material";
 
 import { Photosphere, VFE } from "../DataStructures";
 import PhotosphereSelector, {
@@ -85,7 +86,7 @@ function EditNavMap({ onClose, vfe, onUpdateVFE }: EditNavMapProps) {
               cursor: "crosshair",
               position: "relative",
               maxWidth: "550px",
-              maxHeight: `${(1 / (map.width / 550)) * map.height}px`,
+              maxHeight: `${(550 / map.width) * map.height}px`,
             }}
           >
             {Object.values(localPhotospheres).map((photosphere, index) => {
@@ -95,8 +96,8 @@ function EditNavMap({ onClose, vfe, onUpdateVFE }: EditNavMapProps) {
                     key={index}
                     style={{
                       position: "absolute",
-                      top: `${map.width > 550 ? photosphere.center.y * (1 / (map.width / 550)) : photosphere.center.y}px`,
-                      left: `${map.width > 550 ? photosphere.center.x * (1 / (map.width / 550)) : photosphere.center.x}px`,
+                      top: `${map.width > 550 ? photosphere.center.y * (550 / map.width) : photosphere.center.y}px`,
+                      left: `${map.width > 550 ? photosphere.center.x * (550 / map.width) : photosphere.center.x}px`,
                       backgroundColor: "yellow",
                       width: "10px",
                       height: "10px",
