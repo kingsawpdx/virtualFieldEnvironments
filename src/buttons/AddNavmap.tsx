@@ -1,9 +1,19 @@
-import AttachFileIcon from "@mui/icons-material/AttachFile";
-import { Button, Stack, TextField, Typography } from "@mui/material";
 import { MuiFileInput } from "mui-file-input";
 import React, { useState } from "react";
 
+import AttachFileIcon from "@mui/icons-material/AttachFile";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Stack,
+  TextField,
+} from "@mui/material";
+
 import { NavMap, calculateImageDimensions, newID } from "../DataStructures";
+import { alertMUI } from "../StyledDialogWrapper";
 
 interface AddNavMapProps {
   onCreateNavMap: (navMap: NavMap) => void;
@@ -28,7 +38,9 @@ function AddNavMap({ onCreateNavMap, onClose }: AddNavMapProps): JSX.Element {
 
   async function handleCreateNavMap() {
     if (navmapName.trim() === "" || !navmapImage) {
-      alert("Please provide a name and select an image for the Nav Map.");
+      await alertMUI(
+        "Please provide a name and select an image for the Nav Map.",
+      );
       return;
     }
 
@@ -50,56 +62,42 @@ function AddNavMap({ onCreateNavMap, onClose }: AddNavMapProps): JSX.Element {
   }
 
   return (
-    <Stack
-      sx={{
-        position: "fixed",
-        zIndex: 1050,
-        left: "50%",
-        top: "50%",
-        transform: "translate(-50%, -50%)",
-        background: "white",
-        borderRadius: "8px",
-        padding: "10px",
-        overflow: "hidden",
-        width: "300px",
-        height: "200px",
-        justifyContent: "space-between",
-      }}
-    >
-      <Typography variant="h5" sx={{ textAlign: "center" }}>
-        Add New Nav Map
-      </Typography>
-      <TextField
-        required
-        label="Map Name"
-        value={navmapName}
-        onChange={handleNameChange}
-      />
-      <MuiFileInput
-        required
-        placeholder="Upload Image *"
-        value={navmapImgFile}
-        onChange={handleImageChange}
-        inputProps={{ accept: "image/*" }}
-        InputProps={{
-          startAdornment: <AttachFileIcon />,
-        }}
-      />
-      <Stack direction="row" sx={{ justifyContent: "space-between" }}>
+    <Dialog open={true} onClose={onClose}>
+      <DialogTitle> Add New Nav Map</DialogTitle>
+      <DialogContent sx={{ overflow: "visible" }}>
+        <Stack gap={2}>
+          <TextField
+            required
+            label="Map Name"
+            value={navmapName}
+            onChange={handleNameChange}
+          />
+          <MuiFileInput
+            required
+            placeholder="Upload Image *"
+            value={navmapImgFile}
+            onChange={handleImageChange}
+            inputProps={{ accept: "image/*" }}
+            InputProps={{
+              startAdornment: <AttachFileIcon />,
+            }}
+          />
+        </Stack>
+      </DialogContent>
+      <DialogActions>
+        <Button variant="outlined" onClick={onClose}>
+          Cancel
+        </Button>
         <Button
           variant="contained"
           onClick={() => {
             void handleCreateNavMap();
           }}
-          sx={{ width: "49%" }}
         >
           Create
         </Button>
-        <Button variant="outlined" onClick={onClose} sx={{ width: "49%" }}>
-          Cancel
-        </Button>
-      </Stack>
-    </Stack>
+      </DialogActions>
+    </Dialog>
   );
 }
 

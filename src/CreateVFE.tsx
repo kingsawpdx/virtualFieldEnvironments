@@ -1,7 +1,8 @@
-import AttachFileIcon from "@mui/icons-material/AttachFile";
-import { Button, Stack, TextField, Typography } from "@mui/material";
 import { MuiFileInput } from "mui-file-input";
 import { useState } from "react";
+
+import AttachFileIcon from "@mui/icons-material/AttachFile";
+import { Button, Stack, TextField, Typography } from "@mui/material";
 
 import {
   NavMap,
@@ -11,6 +12,7 @@ import {
 } from "./DataStructures.ts";
 import Header, { HeaderProps } from "./Header.tsx";
 import PhotosphereLocationSelector from "./PhotosphereLocationSelector.tsx";
+import { alertMUI } from "./StyledDialogWrapper.tsx";
 
 //import { PhotosphereCenterFieldset } from "./buttons/AddPhotosphere.tsx";
 
@@ -51,9 +53,12 @@ function CreateVFEForm({ onCreateVFE, header, onClose }: CreateVFEFormProps) {
   } | null>(null);
 
   // Error Handling: Ensure the data is not empty
-  function handleCreateVFE() {
+
+  async function handleCreateVFE() {
     if (vfeName.trim() === "" || photosphereName.trim() === "" || !panoImage) {
-      alert("Please, provide a VFE name, Photosphere name, and an image.");
+      await alertMUI(
+        "Please, provide a VFE name, Photosphere name, and an image.",
+      );
       return;
     }
     // Input data into new VFE
@@ -114,12 +119,13 @@ function CreateVFEForm({ onCreateVFE, header, onClose }: CreateVFEFormProps) {
   return (
     <>
       <Header {...header} />
-      <Stack sx={{ width: 450, margin: "auto", paddingTop: 10 }} spacing={3}>
+      <Stack sx={{ width: 450, margin: "auto", paddingTop: 10 }} gap={3}>
         <Typography variant="h4">Create a New VFE</Typography>
-        <Stack direction="row" spacing={"auto"}>
+        <Stack direction="row" gap={1}>
           <TextField
             required
             label="VFE Name"
+            sx={{ flexGrow: 1 }}
             onChange={(e) => {
               setVFEName(e.target.value);
             }}
@@ -127,6 +133,7 @@ function CreateVFEForm({ onCreateVFE, header, onClose }: CreateVFEFormProps) {
           <TextField
             required
             label="Photosphere Name"
+            sx={{ flexGrow: 1 }}
             onChange={(e) => {
               setPhotosphereName(e.target.value);
             }}
@@ -176,16 +183,18 @@ function CreateVFEForm({ onCreateVFE, header, onClose }: CreateVFEFormProps) {
             Select Photosphere Location
           </Button>
         )}
-        <Stack direction="row" sx={{ justifyContent: "space-between" }}>
+        <Stack direction="row" gap={1}>
+          <Button variant="outlined" sx={{ flexGrow: 1 }} onClick={onClose}>
+            Cancel
+          </Button>
           <Button
             variant="contained"
-            sx={{ width: "49%" }}
-            onClick={handleCreateVFE}
+            sx={{ flexGrow: 1 }}
+            onClick={() => {
+              void handleCreateVFE();
+            }}
           >
             Create
-          </Button>
-          <Button variant="outlined" sx={{ width: "49%" }} onClick={onClose}>
-            Cancel
           </Button>
         </Stack>
 

@@ -1,3 +1,7 @@
+import { forwardRef, useState } from "react";
+import { HexColorPicker } from "react-colorful";
+import "react-h5-audio-player/lib/styles.css";
+
 import {
   Add,
   Article,
@@ -31,9 +35,6 @@ import {
   lighten,
 } from "@mui/material";
 import Box from "@mui/material/Box";
-import { forwardRef, useState } from "react";
-import { HexColorPicker } from "react-colorful";
-import "react-h5-audio-player/lib/styles.css";
 
 import { Asset, Hotspot2D, HotspotData, newID } from "./DataStructures";
 import { HotspotDataEditor, HotspotIconEditor } from "./buttons/AddHotspot";

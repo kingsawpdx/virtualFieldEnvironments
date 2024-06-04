@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 
 import { NavMap } from "./DataStructures.ts";
+import { alertMUI } from "./StyledDialogWrapper.tsx";
 
 interface PhotosphereLocationSelectorProps {
   navMap: NavMap;
@@ -42,7 +43,7 @@ function PhotosphereLocationSelector({
     onCancel();
   }
 
-  function handleSelect() {
+  async function handleSelect() {
     if (photospherePosition) {
       onSelect({
         x:
@@ -56,12 +57,12 @@ function PhotosphereLocationSelector({
       });
       setOpen(false);
     } else {
-      alert("Please select a center.");
+      await alertMUI("Please select a center.");
     }
   }
 
   return (
-    <Dialog open={open} onClose={handleClose}>
+    <Dialog open={open} onClose={handleClose} maxWidth={false} scroll="body">
       <DialogTitle>Select Photosphere Location</DialogTitle>
       <DialogContent>
         <Box
@@ -94,8 +95,17 @@ function PhotosphereLocationSelector({
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleSelect}>Select</Button>
-        <Button onClick={handleClose}>Cancel</Button>
+        <Button variant="outlined" onClick={handleClose}>
+          Cancel
+        </Button>
+        <Button
+          variant="contained"
+          onClick={() => {
+            void handleSelect();
+          }}
+        >
+          Select
+        </Button>
       </DialogActions>
     </Dialog>
   );
