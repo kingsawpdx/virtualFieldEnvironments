@@ -52,7 +52,10 @@ function EditNavMap({ onClose, vfe, onUpdateVFE }: EditNavMapProps) {
 
     const updatedPhotospheres = { ...localPhotospheres };
     const photosphere = updatedPhotospheres[selectedPhotosphere];
-    photosphere.center = { x, y }; // multiply both by 2 because the defaultCenter(x,y) is divinded by 2
+    photosphere.center = {
+      x: map.width > 550 ? (x * map.width) / 550 : x,
+      y: map.width > 550 ? (y * map.width) / 550 : y,
+    }; // multiply both by 2 because the defaultCenter(x,y) is divinded by 2
 
     setLocalPhotospheres(updatedPhotospheres); // Update local state
     // Do not call onUpdateVFE here
@@ -88,6 +91,9 @@ function EditNavMap({ onClose, vfe, onUpdateVFE }: EditNavMapProps) {
                 border: "1px solid black",
                 cursor: "crosshair",
                 position: "relative",
+                maxWidth: "550px",
+                maxHeight: `${(550 / map.width) * map.height}px`,
+                margin: "auto",
               }}
             >
               {Object.values(localPhotospheres).map((photosphere, index) => {
@@ -97,8 +103,8 @@ function EditNavMap({ onClose, vfe, onUpdateVFE }: EditNavMapProps) {
                       key={index}
                       style={{
                         position: "absolute",
-                        top: `${photosphere.center.y}px`,
-                        left: `${photosphere.center.x}px`,
+                        top: `${map.width > 550 ? photosphere.center.y * (550 / map.width) : photosphere.center.y}px`,
+                        left: `${map.width > 550 ? photosphere.center.x * (550 / map.width) : photosphere.center.x}px`,
                         backgroundColor: "yellow",
                         width: "10px",
                         height: "10px",

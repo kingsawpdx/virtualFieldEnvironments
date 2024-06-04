@@ -45,7 +45,16 @@ function PhotosphereLocationSelector({
 
   async function handleSelect() {
     if (photospherePosition) {
-      onSelect(photospherePosition);
+      onSelect({
+        x:
+          navMap.width > 550
+            ? (photospherePosition.x * navMap.width) / 550
+            : photospherePosition.x,
+        y:
+          navMap.width > 550
+            ? (photospherePosition.y * navMap.width) / 550
+            : photospherePosition.y,
+      });
       setOpen(false);
     } else {
       await alertMUI("Please select a center.");
@@ -65,6 +74,8 @@ function PhotosphereLocationSelector({
             border: "1px solid black",
             cursor: "crosshair",
             position: "relative",
+            maxWidth: "550px",
+            maxHeight: `${(550 / navMap.width) * navMap.height}px`,
           }}
         >
           {photospherePosition && (

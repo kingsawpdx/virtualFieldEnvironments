@@ -32,10 +32,6 @@ function AddPhotosphere({
   const [panoFile, setPanoFile] = useState<File | null>(null);
   const [audioFileStr, setAudioFileStr] = useState("");
   const [audioFile, setAudioFile] = useState<File | null>(null);
-  const [photosphereCenter, setPhotosphereCenter] = useState<{
-    x: number;
-    y: number;
-  } | null>(null);
   const [mapDialogOpen, setMapDialogOpen] = useState(false);
   const [selectedCenter, setSelectedCenter] = useState<{
     x: number;
@@ -67,7 +63,7 @@ function AddPhotosphere({
     const newPhotosphere: Photosphere = {
       id: photosphereID,
       src: { tag: "Runtime", id: newID(), path: panoImage },
-      center: photosphereCenter ?? undefined,
+      center: selectedCenter ?? undefined,
       hotspots: {},
       backgroundAudio: audioFileStr
         ? { tag: "Runtime", id: newID(), path: audioFileStr }
@@ -79,7 +75,6 @@ function AddPhotosphere({
     setPhotosphereID("");
     setPanoImage("");
     setAudioFileStr("");
-    setPhotosphereCenter(null);
   }
 
   return (
