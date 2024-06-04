@@ -9,8 +9,8 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 
-import FileDropzone from "./FileDropzone";
 import Header from "./Header";
+import MuiDropzone from "./MuiDropzone";
 import VFEList from "./VFEList";
 
 interface LandingPageProps {
@@ -48,9 +48,20 @@ function LandingPage({
     <>
       <Header onCreateVFE={onCreateVFE} onLoadTestVFE={onLoadTestVFE} />
       <Stack sx={{ width: "80%", margin: "auto", padding: 2 }}>
-        <FileDropzone onUploadVFE={handleFileUpload} />
+        <MuiDropzone
+          label="Drag and drop a VFE or click"
+          onInput={(files) => {
+            handleFileUpload(files[0]);
+          }}
+          sx={{
+            height: "300px",
+            width: "80%",
+            margin: "auto",
+          }}
+        />
         <VFEList />
       </Stack>
+
       <Dialog open={openDialog} onClose={handleCloseDialog}>
         <DialogTitle>Open VFE</DialogTitle>
         <DialogContent>
