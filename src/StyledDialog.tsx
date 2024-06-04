@@ -108,5 +108,8 @@ function StyledConfirm({
   );
 }
 
+// These constants are exported only so the wrapper functions in the StyledDialogWrapper.tsx
+// file can use them. They should not be used directly. Splitting the files up is necessary because
+// React Fast Refresh will not work if components and functions are exported from the same file.
 export const StyledAlertDialog = confirmable(StyledAlert);
 export const StyledConfirmDialog = confirmable(StyledConfirm);
