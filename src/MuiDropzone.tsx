@@ -1,7 +1,8 @@
-import { Typography, createTheme } from "@mui/material";
-import { SxProps, styled } from "@mui/material/styles";
 import { forwardRef, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
+
+import { Typography, createTheme } from "@mui/material";
+import { SxProps, styled } from "@mui/material/styles";
 
 /** Calculate a very light version of given color */
 function getBGColor(color: string): string {
