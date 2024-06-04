@@ -20,6 +20,9 @@ import {
   calculateImageDimensions,
   newID,
 } from "../DataStructures.ts";
+import PhotosphereSelector, {
+  PhotosphereSelectorProps,
+} from "../PhotosphereSelector";
 import { alertMUI } from "../StyledDialogWrapper.tsx";
 
 // from https://github.com/Alcumus/react-doc-viewer?tab=readme-ov-file#current-renderable-file-types
@@ -41,6 +44,7 @@ interface ContentInputProps {
   content: string;
   question: string;
   answer: string;
+  photosphereOptions: string[];
   onUpdate: (content: string, question: string, answer: string) => void;
 }
 
@@ -50,6 +54,7 @@ function ContentInput({
   question,
   answer,
   onUpdate,
+  photosphereOptions,
 }: ContentInputProps) {
   const [contentFile, setContentFile] = useState<File | null>(null); // for MuiFileInput
 
@@ -63,6 +68,20 @@ function ContentInput({
       onUpdate(URL.createObjectURL(file), question, answer);
     }
   }
+
+  const [photosphereID, setPhotosphereID] = useState(content);
+
+  useEffect(() => {
+    if (contentType === "PhotosphereLink") {
+      setPhotosphereID(content);
+    }
+  }, [contentType, content]);
+
+  const selectorProps: PhotosphereSelectorProps = {
+    options: photosphereOptions,
+    value: photosphereID,
+    setValue: setPhotosphereID,
+  };
 
   switch (contentType) {
     case "Image":
@@ -143,16 +162,7 @@ function ContentInput({
         />
       );
     case "PhotosphereLink":
-      return (
-        <TextField
-          required
-          label="Photosphere ID"
-          value={content}
-          onChange={(e) => {
-            onUpdate(e.target.value, question, answer);
-          }}
-        />
-      );
+      return <PhotosphereSelector {...selectorProps} />;
     case "Quiz":
       return (
         <>
@@ -201,11 +211,13 @@ function getHotspotDataContent(data: HotspotData | null): string {
 export interface HotspotDataEditorProps {
   hotspotData: HotspotData | null;
   setHotspotData: (data: HotspotData | null) => void;
+  photosphereOptions: string[];
 }
 
 export function HotspotDataEditor({
   hotspotData,
   setHotspotData,
+  photosphereOptions,
 }: HotspotDataEditorProps) {
   const [contentType, setContentType] = useState<string>(
     hotspotData?.tag ?? "invalid",
@@ -357,6 +369,7 @@ export function HotspotDataEditor({
         onUpdate={(newContent, newQuestion, newAnswer) => {
           void updateData(contentType, newContent, newQuestion, newAnswer);
         }}
+        photosphereOptions={photosphereOptions}
       />
     </>
   );
@@ -428,9 +441,16 @@ interface AddHotspotProps {
   onCancel: () => void;
   pitch: number;
   yaw: number;
+  photosphereOptions: string[];
 }
 
-function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
+function AddHotspot({
+  onAddHotspot,
+  onCancel,
+  pitch,
+  yaw,
+  photosphereOptions,
+}: AddHotspotProps) {
   const [tooltip, setTooltip] = useState("");
   const [hotspotData, setHotspotData] = useState<HotspotData | null>(null);
   const [level, setLevel] = useState(0); // State for level
@@ -512,6 +532,7 @@ function AddHotspot({ onAddHotspot, onCancel, pitch, yaw }: AddHotspotProps) {
       <HotspotDataEditor
         hotspotData={hotspotData}
         setHotspotData={setHotspotData}
+        photosphereOptions={photosphereOptions}
       />
 
       {hotspotData?.tag !== "PhotosphereLink" && (
