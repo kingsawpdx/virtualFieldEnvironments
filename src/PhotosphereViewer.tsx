@@ -401,6 +401,10 @@ function PhotosphereViewer({
             setHotspotArray([]);
           }}
           onUpdateHotspot={onUpdateHotspot}
+          changeScene={(id) => {
+            setCurrentPhotosphere(vfe.photospheres[id]);
+            onChangePS(id);
+          }}
         />
       )}
 
