@@ -393,7 +393,7 @@ function PhotosphereEditor({
     return { ...photosphere, hotspots };
   }
 
-  /** Helper for handleChangePhotosphere. Update photosphere name in each photosphere's PhotosphereLink hotspots */
+  /** Update photosphere name in each photosphere's PhotosphereLink hotspots */
   function updatePhotospheres(
     photospheres: Record<string, Photosphere>,
     oldPhotosphereID: string,
