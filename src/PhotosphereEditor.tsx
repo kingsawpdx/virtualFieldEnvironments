@@ -401,7 +401,7 @@ function PhotosphereEditor({
   ): Record<string, Photosphere> {
     return Object.fromEntries(
       Object.entries(photospheres)
-        .filter(([key]) => key !== currentPS)
+        .filter(([key]) => key !== oldPhotosphereID)
         .map(([key, photosphere]) => {
           // update hotspots in the current photosphere
           const updatedPhotosphere = updateHotspots(
