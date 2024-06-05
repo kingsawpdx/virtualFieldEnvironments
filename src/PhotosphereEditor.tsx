@@ -11,6 +11,7 @@ import {
   Photosphere,
   VFE,
   newID,
+  photosphereLinkTooltip,
 } from "./DataStructures.ts";
 import { deleteStoredVFE, save } from "./FileOperations.ts";
 import { VisitedState } from "./HandleVisit.tsx";
@@ -382,6 +383,7 @@ function PhotosphereEditor({
         if (newPhotosphereID !== null) {
           hotspots[id] = {
             ...hotspot,
+            tooltip: photosphereLinkTooltip(newPhotosphereID),
             data: { tag: "PhotosphereLink", photosphereID: newPhotosphereID },
           };
         }

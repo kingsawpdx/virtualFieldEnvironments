@@ -35,7 +35,13 @@ import {
 } from "@mui/material";
 import Box from "@mui/material/Box";
 
-import { Asset, Hotspot2D, HotspotData, newID } from "./DataStructures";
+import {
+  Asset,
+  Hotspot2D,
+  HotspotData,
+  newID,
+  photosphereLinkTooltip,
+} from "./DataStructures";
 import { LinkArrowIcon } from "./LinkArrowIcon";
 import { HotspotDataEditor, HotspotIconEditor } from "./buttons/AddHotspot";
 
@@ -387,6 +393,14 @@ function HotspotEditor({
       ? Object.values(previewData.hotspots).length
       : 0;
 
+  function updateData(newData: HotspotData | null) {
+    setPreviewData(newData);
+    if (newData?.tag === "PhotosphereLink") {
+      setPreviewTooltip(photosphereLinkTooltip(newData.photosphereID));
+    }
+    setEdited(true);
+  }
+
   function removeNestedHotspot(hotspotID: string) {
     if (previewData?.tag === "Image") {
       const { [hotspotID]: _removed, ...remainingHotspots } =
@@ -420,21 +434,22 @@ function HotspotEditor({
         <Typography variant="h5">Hotspot Editor</Typography>
       </Stack>
 
-      <TextField
-        label="Tooltip"
-        value={previewTooltip}
-        onChange={(e) => {
-          setPreviewTooltip(e.target.value);
-          setEdited(true);
-        }}
-      />
+      {previewData?.tag !== "PhotosphereLink" && (
+        <TextField
+          label="Tooltip"
+          value={previewTooltip}
+          onChange={(e) => {
+            setPreviewTooltip(e.target.value);
+            setEdited(true);
+          }}
+        />
+      )}
+
       <HotspotDataEditor
         hotspotData={previewData}
-        setHotspotData={(data) => {
-          setPreviewData(data);
-          setEdited(true);
-        }}
+        setHotspotData={updateData}
       />
+
       {setPreviewIcon && (
         <HotspotIconEditor
           iconAsset={previewIcon}

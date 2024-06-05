@@ -156,7 +156,7 @@ function convertLinks(
         pitch: degToStr(hotspot.pitch),
         yaw: degToStr(hotspot.yaw),
       },
-      data: { tooltip: "Go " + hotspot.data.photosphereID } as LinkData,
+      data: { tooltip: hotspot.tooltip } as LinkData,
     });
   }
 
