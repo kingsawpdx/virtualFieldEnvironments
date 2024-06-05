@@ -253,6 +253,7 @@ function PhotosphereEditor({
           pitch={pitch}
           yaw={yaw}
           photosphereOptions={photosphereOptions}
+          currentPS={currentPS}
         />
       );
     if (showChangePhotosphere) {
