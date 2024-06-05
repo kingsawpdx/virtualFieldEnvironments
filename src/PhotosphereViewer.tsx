@@ -96,11 +96,14 @@ function sizeToStr(val: number): string {
 }
 
 /** Convert non-link hotspots to markers with type-based content/icons */
-function convertHotspots(hotspots: Record<string, Hotspot3D>): MarkerConfig[] {
+function convertHotspots(
+  hotspots: Record<string, Hotspot3D>,
+  isViewerMode: boolean,
+): MarkerConfig[] {
   const markers: MarkerConfig[] = [];
 
   for (const hotspot of Object.values(hotspots)) {
-    if (hotspot.data.tag === "PhotosphereLink") continue;
+    if (isViewerMode && hotspot.data.tag === "PhotosphereLink") continue;
 
     markers.push({
       id: hotspot.id,
@@ -122,7 +125,14 @@ interface LinkData {
 }
 
 /** Convert photosphere-link hotspots to virtual tour links  */
-function convertLinks(hotspots: Record<string, Hotspot3D>): VirtualTourLink[] {
+function convertLinks(
+  hotspots: Record<string, Hotspot3D>,
+  isViewerMode: boolean,
+): VirtualTourLink[] {
+  if (!isViewerMode) {
+    return [];
+  }
+
   const links: VirtualTourLink[] = [];
 
   for (const hotspot of Object.values(hotspots)) {
@@ -215,6 +225,8 @@ function PhotosphereViewer({
   const [visited, handleVisit] = useVisitedState(initialPhotosphereHotspots);
   console.log("in viewer", visited);
 
+  const isViewerMode = onUpdateHotspot === undefined;
+
   useEffect(() => {
     if (ready.current) {
       const virtualTour =
@@ -286,8 +298,8 @@ function PhotosphereViewer({
           id: p.id,
           panorama: p.src.path,
           name: p.id,
-          markers: convertHotspots(p.hotspots),
-          links: convertLinks(p.hotspots),
+          markers: convertHotspots(p.hotspots, isViewerMode),
+          links: convertLinks(p.hotspots, isViewerMode),
         };
       },
     );
