@@ -31,7 +31,7 @@
           "yaw": -5,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "OutcropWideView",
@@ -54,7 +54,7 @@
           "yaw": 18,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "Flowers",
@@ -77,7 +77,7 @@
           "yaw": 0,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "URLDemo",
@@ -93,7 +93,7 @@
           "yaw": 10,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "Audio Demo - FrogChorus.mp3",
@@ -113,7 +113,7 @@
           "yaw": 20,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "Document Demo - VFE Guidelines",
@@ -133,7 +133,7 @@
           "yaw": 172,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png",
+            "path": "/pin-red.png",
             "id": "red-pin.png"
           },
           "tooltip": "ShorelineSOUTH.mp4",
@@ -153,7 +153,7 @@
           "yaw": -175,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png",
+            "path": "/pin-red.png",
             "id": "red-pin.png"
           },
           "tooltip": "Paddlers.mp4",
@@ -173,7 +173,7 @@
           "yaw": 100,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "SmallPool",
@@ -196,7 +196,7 @@
           "yaw": -40,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "LogNearShoreline",
@@ -219,7 +219,7 @@
           "yaw": -33,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "CoolLog",
@@ -242,7 +242,7 @@
           "yaw": 5,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png",
+            "path": "/pin-red.png",
             "id": "red-pin.png"
           },
           "tooltip": "OutcropTextures",
@@ -262,7 +262,7 @@
           "yaw": -37,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "How did these huge logs get here?",
@@ -278,7 +278,7 @@
           "yaw": -19,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "Mushroom",
@@ -301,7 +301,7 @@
           "yaw": -46,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "Contact",
@@ -381,7 +381,7 @@
           "yaw": -25,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "SouthWaterfront",
@@ -404,7 +404,7 @@
           "yaw": -35,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "Go West",
@@ -420,7 +420,7 @@
           "yaw": 125,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "Go to Entrance",
@@ -452,7 +452,7 @@
           "yaw": -4,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "Go East",
@@ -468,7 +468,7 @@
           "yaw": -78,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "Go South",
@@ -495,7 +495,7 @@
           "yaw": 10,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "Go North",
@@ -511,7 +511,7 @@
           "yaw": 115,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "Go South",
@@ -538,7 +538,7 @@
           "yaw": -130,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "Go West",
@@ -554,7 +554,7 @@
           "yaw": 92,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "Go East",
@@ -581,7 +581,7 @@
           "yaw": 2,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "Go North",
@@ -597,7 +597,7 @@
           "yaw": -167,
           "icon": {
             "tag": "Runtime",
-            "path": "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-blue.png",
+            "path": "/pin-blue.png",
             "id": "blue-pin.png"
           },
           "tooltip": "Go to Entrance",

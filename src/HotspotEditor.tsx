@@ -1,3 +1,7 @@
+import { forwardRef, useState } from "react";
+import { HexColorPicker } from "react-colorful";
+import "react-h5-audio-player/lib/styles.css";
+
 import {
   Add,
   Article,
@@ -5,6 +9,8 @@ import {
   ExpandLess,
   ExpandMore,
   Image,
+  Landscape,
+  Quiz,
   Title,
   Videocam,
 } from "@mui/icons-material";
@@ -29,17 +35,23 @@ import {
   lighten,
 } from "@mui/material";
 import Box from "@mui/material/Box";
-import { forwardRef, useState } from "react";
-import { HexColorPicker } from "react-colorful";
-import "react-h5-audio-player/lib/styles.css";
 
-import { Hotspot2D, HotspotData, newID } from "./DataStructures";
-import { HotspotDataEditor } from "./buttons/AddHotspot";
+import { Asset, Hotspot2D, HotspotData, newID } from "./DataStructures";
+import { HotspotDataEditor, HotspotIconEditor } from "./buttons/AddHotspot";
 
-function HotspotIcon(props: { hotspotData: HotspotData; color: string }) {
-  const iconProps = { color: props.color };
+export interface HotspotIconProps {
+  hotspotData: HotspotData;
+  color?: string;
+  icon?: Asset;
+}
 
-  switch (props.hotspotData.tag) {
+export function HotspotIcon({ hotspotData, color, icon }: HotspotIconProps) {
+  if (icon) {
+    return <img src={icon.path} height={24} />;
+  }
+
+  const iconProps = { color };
+  switch (hotspotData.tag) {
     case "Image":
       return <Image sx={iconProps} />;
     case "Audio":
@@ -52,8 +64,10 @@ function HotspotIcon(props: { hotspotData: HotspotData; color: string }) {
       return <Link sx={iconProps} />;
     case "Message":
       return <Title sx={iconProps} />;
+    case "Quiz":
+      return <Quiz sx={iconProps} />;
     case "PhotosphereLink":
-      return <></>;
+      return <Landscape sx={iconProps} />;
   }
 }
 
@@ -332,10 +346,16 @@ export interface HotspotEditorProps {
   setPreviewTooltip: (tooltip: string) => void;
   previewData: HotspotData | null;
   setPreviewData: (data: HotspotData | null) => void;
+  previewIcon: Asset | null;
+  setPreviewIcon?: (icon: Asset | null) => void;
 
   resetHotspot: () => Promise<void>;
   deleteHotspot: () => void;
-  updateHotspot: (newTooltip: string, newData: HotspotData) => void;
+  updateHotspot: (
+    newTooltip: string,
+    newData: HotspotData,
+    newIcon?: Asset,
+  ) => void;
   openNestedHotspot: (toOpen: Hotspot2D) => void;
 }
 
@@ -346,6 +366,8 @@ function HotspotEditor({
   setPreviewTooltip,
   previewData,
   setPreviewData,
+  previewIcon,
+  setPreviewIcon,
 
   resetHotspot,
   deleteHotspot,
@@ -397,11 +419,13 @@ function HotspotEditor({
       <Stack alignItems="center">
         <Typography variant="h5">Hotspot Editor</Typography>
       </Stack>
+
       <TextField
         label="Tooltip"
         value={previewTooltip}
         onChange={(e) => {
           setPreviewTooltip(e.target.value);
+          setEdited(true);
         }}
       />
       <HotspotDataEditor
@@ -411,6 +435,16 @@ function HotspotEditor({
           setEdited(true);
         }}
       />
+      {setPreviewIcon && (
+        <HotspotIconEditor
+          iconAsset={previewIcon}
+          setIconAsset={(icon) => {
+            setPreviewIcon(icon);
+            setEdited(true);
+          }}
+        />
+      )}
+
       {previewData?.tag === "Image" && (
         <>
           {colorHotspot !== null && colorAnchor !== null && (
@@ -518,12 +552,20 @@ function HotspotEditor({
         </Button>
 
         <Button
-          disabled={previewTooltip == "" || previewData === null}
+          disabled={
+            previewTooltip == "" ||
+            previewData === null ||
+            (setPreviewIcon && previewIcon === null)
+          }
           variant="contained"
           sx={{ width: "50%" }}
           onClick={() => {
             if (previewData !== null) {
-              updateHotspot(previewTooltip, previewData);
+              updateHotspot(
+                previewTooltip,
+                previewData,
+                previewIcon ?? undefined,
+              );
             }
           }}
         >

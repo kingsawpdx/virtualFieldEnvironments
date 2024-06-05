@@ -1,10 +1,3 @@
-import {
-  FormControlLabel,
-  Stack,
-  Switch,
-  SwitchProps,
-  styled,
-} from "@mui/material";
 import { Point, Viewer, ViewerConfig } from "@photo-sphere-viewer/core";
 import { MapHotspot } from "@photo-sphere-viewer/map-plugin";
 import { MarkerConfig } from "@photo-sphere-viewer/markers-plugin";
@@ -23,11 +16,18 @@ import {
   VirtualTourPluginConfig,
 } from "react-photo-sphere-viewer";
 
+import {
+  FormControlLabel,
+  Stack,
+  Switch,
+  SwitchProps,
+  styled,
+} from "@mui/material";
+
 import AudioToggleButton from "./AudioToggleButton";
 import {
   Hotspot2D,
   Hotspot3D,
-  HotspotData,
   NavMap,
   Photosphere,
   VFE,
@@ -36,6 +36,7 @@ import { useVisitedState } from "./HandleVisit";
 import PhotosphereSelector from "./PhotosphereSelector";
 import PopOver from "./PopOver";
 import AccessLevelSelector from './AccessLevelSelector'; // Assuming AccessLevelSelector is a component
+import { HotspotUpdate } from "./VFEConversion";
 
 // modified from https://mui.com/material-ui/react-switch/#customization 'iOS style'
 const StyledSwitch = styled((props: SwitchProps) => (
@@ -102,27 +103,9 @@ function convertHotspots(hotspots: Record<string, Hotspot3D>, accessLevel: numbe
   for (const hotspot of Object.values(hotspots)) {
     if (hotspot.data.tag === "PhotosphereLink") continue;
 
-    let icon = hotspot.icon.path;
-
-    switch (hotspot.data.tag) {
-      case "Image":
-        break;
-      case "Video":
-        icon = "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png"; // changed to make linter happy until icons are ready
-        break;
-      case "Audio":
-        break;
-      case "Doc":
-        break;
-      case "URL":
-        break;
-      default:
-        break;
-    }
-
     markers.push({
       id: hotspot.id,
-      image: icon,
+      image: hotspot.icon.path,
       size: { width: 64, height: 64 },
       position: {
         yaw: degToStr(hotspot.yaw),
@@ -199,8 +182,7 @@ export interface PhotosphereViewerProps {
   onViewerClick?: (pitch: number, yaw: number) => void;
   onUpdateHotspot?: (
     hotspotPath: string[],
-    newTooltip: string,
-    newData: HotspotData | null,
+    update: HotspotUpdate | null,
   ) => void;
 }
 
@@ -376,7 +358,7 @@ function PhotosphereViewer({
           zIndex: 100,
           justifyContent: "space-between",
         }}
-        spacing={1}
+        gap={1}
       >
         <PhotosphereSelector
           options={Object.keys(vfe.photospheres)}
@@ -404,6 +386,7 @@ function PhotosphereViewer({
               sx: { fontSize: "14px", padding: 1, width: "60px" },
             },
           }}
+          sx={{ margin: 0 }}
         />
       </Stack>
 
@@ -411,8 +394,7 @@ function PhotosphereViewer({
         <PopOver
           key={hotspotPath.join()}
           hotspotPath={hotspotPath}
-          hotspotData={hotspotArray[hotspotArray.length - 1].data}
-          tooltip={hotspotArray[hotspotArray.length - 1].tooltip}
+          hotspot={hotspotArray[hotspotArray.length - 1]}
           pushHotspot={(add: Hotspot2D) => {
             setHotspotArray([...hotspotArray, add]);
           }}

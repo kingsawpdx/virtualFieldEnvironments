@@ -147,15 +147,20 @@ async function convertHotspotData(
   }
 }
 
+export interface HotspotUpdate {
+  tooltip?: string;
+  data?: HotspotData;
+  icon?: Asset;
+}
+
 export function updatePhotosphereHotspot(
   photosphere: Photosphere,
   hotspotPath: string[],
-  tooltip: string,
-  data: HotspotData | null,
+  update: HotspotUpdate | null,
 ): Photosphere {
   const hotspots: Record<string, Hotspot3D> = {};
   for (const hotspot3D of Object.values(photosphere.hotspots)) {
-    const updated = updateHotspot(hotspot3D, hotspotPath, tooltip, data);
+    const updated = updateHotspot(hotspot3D, hotspotPath, update);
     if (updated !== null) {
       // null hotspots are deleted
       hotspots[updated.id] = updated;
@@ -171,16 +176,25 @@ export function updatePhotosphereHotspot(
 function updateHotspot<H extends Hotspot3D | Hotspot2D>(
   hotspot: H,
   hotspotPath: string[],
-  tooltip: string,
-  data: HotspotData | null,
+  update: HotspotUpdate | null,
 ): H | null {
   // Found the hotspot that is being searched for.
   if (hotspotPath.length === 1 && hotspotPath[0] === hotspot.id) {
-    if (data === null) {
+    if (update === null) {
       return null; // marked for deletion in calling function
     }
 
-    return { ...hotspot, tooltip, data };
+    const result = { ...hotspot };
+    if (update.tooltip) {
+      result.tooltip = update.tooltip;
+    }
+    if (update.data) {
+      result.data = update.data;
+    }
+    if (update.icon && "icon" in result) {
+      result.icon = update.icon;
+    }
+    return result;
   }
 
   if (
@@ -195,7 +209,7 @@ function updateHotspot<H extends Hotspot3D | Hotspot2D>(
   const newTargetPath = hotspotPath.slice(1);
   const hotspots: Record<string, Hotspot2D> = {};
   for (const hotspot2D of Object.values(hotspot.data.hotspots)) {
-    const updated = updateHotspot(hotspot2D, newTargetPath, tooltip, data);
+    const updated = updateHotspot(hotspot2D, newTargetPath, update);
     if (updated !== null) {
       // null hotspots are deleted
       hotspots[updated.id] = updated;

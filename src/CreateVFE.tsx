@@ -1,11 +1,20 @@
-import AttachFileIcon from "@mui/icons-material/AttachFile";
-import { Button, Stack, TextField, Typography } from "@mui/material";
 import { MuiFileInput } from "mui-file-input";
 import { useState } from "react";
 
-import { VFE, newID } from "./DataStructures.ts";
+import AttachFileIcon from "@mui/icons-material/AttachFile";
+import { Button, Stack, TextField, Typography } from "@mui/material";
+
+import {
+  NavMap,
+  VFE,
+  calculateImageDimensions,
+  newID,
+} from "./DataStructures.ts";
 import Header, { HeaderProps } from "./Header.tsx";
-import { PhotosphereCenterFieldset } from "./buttons/AddPhotosphere.tsx";
+import PhotosphereLocationSelector from "./PhotosphereLocationSelector.tsx";
+import { alertMUI } from "./StyledDialogWrapper.tsx";
+
+//import { PhotosphereCenterFieldset } from "./buttons/AddPhotosphere.tsx";
 
 /* -----------------------------------------------------------------------
     Create a Virtual Field Environment (VFE) that will contain many
@@ -23,10 +32,11 @@ import { PhotosphereCenterFieldset } from "./buttons/AddPhotosphere.tsx";
 interface CreateVFEFormProps {
   onCreateVFE: (data: VFE) => void;
   header: HeaderProps;
+  onClose: () => void;
 }
 
 // Add a new VFE
-function CreateVFEForm({ onCreateVFE, header }: CreateVFEFormProps) {
+function CreateVFEForm({ onCreateVFE, header, onClose }: CreateVFEFormProps) {
   // Base states
   const [vfeName, setVFEName] = useState("");
   const [photosphereName, setPhotosphereName] = useState(""); // State for Photosphere Name
@@ -34,15 +44,21 @@ function CreateVFEForm({ onCreateVFE, header }: CreateVFEFormProps) {
   const [panoFile, setPanoFile] = useState<File | null>(null); // needed for MuiFileInput
   const [audio, setAudio] = useState("");
   const [audioFile, setAudioFile] = useState<File | null>(null); // for MuiFileInput
-  const [photosphereCenter, setPhotosphereCenter] = useState<{
+  const [navMap, setNavMap] = useState<NavMap | undefined>(undefined);
+  const [navMapFile, setNavMapFile] = useState<File | null>(null); // for MuiFileInput
+  const [mapDialogOpen, setMapDialogOpen] = useState(false);
+  const [photospherePosition, setPhotospherePosition] = useState<{
     x: number;
     y: number;
   } | null>(null);
 
   // Error Handling: Ensure the data is not empty
-  function handleCreateVFE() {
+
+  async function handleCreateVFE() {
     if (vfeName.trim() === "" || photosphereName.trim() === "" || !panoImage) {
-      alert("Please, provide a VFE name, Photosphere name, and an image.");
+      await alertMUI(
+        "Please, provide a VFE name, Photosphere name, and an image.",
+      );
       return;
     }
     // Input data into new VFE
@@ -53,13 +69,14 @@ function CreateVFEForm({ onCreateVFE, header }: CreateVFEFormProps) {
         [photosphereName]: {
           id: photosphereName,
           src: { tag: "Runtime", id: newID(), path: panoImage },
-          center: photosphereCenter ?? undefined,
+          center: photospherePosition ? photospherePosition : undefined,
           hotspots: {},
           backgroundAudio: audio
             ? { tag: "Runtime", id: newID(), path: audio }
             : undefined,
         },
       },
+      map: navMap,
     };
     onCreateVFE(data);
   }
@@ -78,17 +95,37 @@ function CreateVFEForm({ onCreateVFE, header }: CreateVFEFormProps) {
     }
   }
 
+  async function handleNavMapChange(navmapimage: string | undefined) {
+    if (navmapimage) {
+      const navmapsize = 300;
+      const { width, height } = await calculateImageDimensions(navmapimage);
+      const maxDimension = Math.max(width, height);
+      const navMapData: NavMap = {
+        id: newID(),
+        src: { tag: "Runtime", id: newID(), path: navmapimage },
+        width: width,
+        height: height,
+        rotation: 0, // Set default rotation
+        defaultZoom: (navmapsize / maxDimension) * 100,
+        defaultCenter: { x: width / 2, y: height / 2 }, // Set default center
+        size: navmapsize,
+      };
+      setNavMap(navMapData);
+    }
+  }
+
   // Add styling to input interface
 
   return (
     <>
       <Header {...header} />
-      <Stack sx={{ width: 450, margin: "auto", paddingTop: 10 }} spacing={3}>
+      <Stack sx={{ width: 450, margin: "auto", paddingTop: 10 }} gap={3}>
         <Typography variant="h4">Create a New VFE</Typography>
-        <Stack direction="row" spacing={"auto"}>
+        <Stack direction="row" gap={1}>
           <TextField
             required
             label="VFE Name"
+            sx={{ flexGrow: 1 }}
             onChange={(e) => {
               setVFEName(e.target.value);
             }}
@@ -96,6 +133,7 @@ function CreateVFEForm({ onCreateVFE, header }: CreateVFEFormProps) {
           <TextField
             required
             label="Photosphere Name"
+            sx={{ flexGrow: 1 }}
             onChange={(e) => {
               setPhotosphereName(e.target.value);
             }}
@@ -120,16 +158,59 @@ function CreateVFEForm({ onCreateVFE, header }: CreateVFEFormProps) {
             startAdornment: <AttachFileIcon />,
           }}
         />
-        <PhotosphereCenterFieldset
-          setPhotosphereCenter={setPhotosphereCenter}
+        <MuiFileInput
+          placeholder="Upload Navigation Map"
+          value={navMapFile}
+          onChange={(file) => {
+            if (file) {
+              setNavMapFile(file);
+              const url = URL.createObjectURL(file);
+              void handleNavMapChange(url);
+            }
+          }}
+          inputProps={{ accept: "image/*" }}
+          InputProps={{
+            startAdornment: <AttachFileIcon />,
+          }}
         />
-        <Button
-          sx={{ margin: "auto" }}
-          variant="contained"
-          onClick={handleCreateVFE}
-        >
-          Create
-        </Button>
+        {navMap && (
+          <Button
+            variant="outlined"
+            onClick={() => {
+              setMapDialogOpen(true);
+            }}
+          >
+            Select Photosphere Location
+          </Button>
+        )}
+        <Stack direction="row" gap={1}>
+          <Button variant="outlined" sx={{ flexGrow: 1 }} onClick={onClose}>
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            sx={{ flexGrow: 1 }}
+            onClick={() => {
+              void handleCreateVFE();
+            }}
+          >
+            Create
+          </Button>
+        </Stack>
+
+        {navMap && mapDialogOpen && (
+          <PhotosphereLocationSelector
+            navMap={navMap}
+            initialPosition={photospherePosition}
+            onSelect={(position) => {
+              setPhotospherePosition(position);
+              setMapDialogOpen(false);
+            }}
+            onCancel={() => {
+              setMapDialogOpen(false);
+            }}
+          />
+        )}
       </Stack>
     </>
   );

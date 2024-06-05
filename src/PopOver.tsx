@@ -1,4 +1,9 @@
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
+import { useState } from "react";
+import AudioPlayer from "react-h5-audio-player";
+import "react-h5-audio-player/lib/styles.css";
+import ReactPlayer from "react-player";
+
 import { ArrowBack, Close } from "@mui/icons-material";
 import {
   Button,
@@ -14,14 +19,11 @@ import {
   colors,
 } from "@mui/material";
 import Box from "@mui/material/Box";
-import { useState } from "react";
-import AudioPlayer from "react-h5-audio-player";
-import "react-h5-audio-player/lib/styles.css";
-import ReactPlayer from "react-player";
 
-import { Hotspot2D, HotspotData } from "./DataStructures";
-import HotspotEditor, { NestedHotspotBox } from "./HotspotEditor";
-import { confirmMUI } from "./StyledConfirmWrapper";
+import { Asset, Hotspot2D, Hotspot3D, HotspotData } from "./DataStructures";
+import HotspotEditor, { HotspotIcon, NestedHotspotBox } from "./HotspotEditor";
+import { confirmMUI } from "./StyledDialogWrapper";
+import { HotspotUpdate } from "./VFEConversion";
 
 interface HotspotContentProps {
   hotspot: HotspotData;
@@ -164,25 +166,34 @@ function HotspotContent({ hotspot, openNestedHotspot }: HotspotContentProps) {
 
 export interface PopOverProps {
   hotspotPath: string[];
-  tooltip: string;
-  hotspotData: HotspotData;
+  hotspot: Hotspot2D | Hotspot3D;
   pushHotspot: (add: Hotspot2D) => void;
   popHotspot: () => void;
   closeAll: () => void;
   onUpdateHotspot?: (
     hotspotPath: string[],
-    newTooltip: string,
-    newData: HotspotData | null,
+    update: HotspotUpdate | null,
   ) => void;
 }
 
 function PopOver(props: PopOverProps) {
   const [edited, setEdited] = useState(false);
-  const [previewTooltip, setPreviewTooltip] = useState(props.tooltip);
+
+  const [previewTooltip, setPreviewTooltip] = useState(props.hotspot.tooltip);
   const [previewData, setPreviewData] = useState<HotspotData | null>(
-    props.hotspotData,
+    props.hotspot.data,
   );
+  const [previewIcon, setPreviewIcon] = useState<Asset | null>(
+    "icon" in props.hotspot ? props.hotspot.icon : null,
+  );
+
   const [snackbarMessage, setSnackbarMessage] = useState<string | null>(null);
+
+  // Should only be allowed to change icons of 3D hotspots that aren't photosphere links.
+  const previewIconSetter =
+    "icon" in props.hotspot && previewData?.tag !== "PhotosphereLink"
+      ? setPreviewIcon
+      : undefined;
 
   async function keepChanges() {
     const confirmed = await confirmMUI(
@@ -212,16 +223,20 @@ function PopOver(props: PopOverProps) {
       return;
     }
 
-    setPreviewData(props.hotspotData);
+    setPreviewTooltip(props.hotspot.tooltip);
+    setPreviewData(props.hotspot.data);
+    if ("icon" in props.hotspot) {
+      setPreviewIcon(props.hotspot.icon);
+    }
     setEdited(false);
   }
 
   function deleteHotspot() {
-    props.onUpdateHotspot?.(props.hotspotPath, previewTooltip, null);
+    props.onUpdateHotspot?.(props.hotspotPath, null);
   }
 
-  function updateHotspot(newTooltip: string, newData: HotspotData) {
-    props.onUpdateHotspot?.(props.hotspotPath, newTooltip, newData);
+  function updateHotspot(tooltip: string, data: HotspotData, icon?: Asset) {
+    props.onUpdateHotspot?.(props.hotspotPath, { tooltip, data, icon });
   }
 
   function openNestedHotspot(hotspot2D: Hotspot2D) {
@@ -249,7 +264,16 @@ function PopOver(props: PopOverProps) {
         transitionDuration={0}
       >
         <DialogTitle id="alert-dialog-title">
-          <Stack direction="row" alignItems="center">
+          <Stack direction="row" alignItems="center" gap={1}>
+            {previewData && (
+              <HotspotIcon
+                hotspotData={previewData}
+                color={
+                  "color" in props.hotspot ? props.hotspot.color : undefined
+                }
+                icon={previewIcon ?? undefined}
+              />
+            )}
             {previewData?.tag == "URL" ? (
               <Box flexGrow={1}>
                 <a href={previewData.url} target="_blank" rel="noreferrer">
@@ -311,6 +335,8 @@ function PopOver(props: PopOverProps) {
                 setPreviewTooltip={setPreviewTooltip}
                 previewData={previewData}
                 setPreviewData={setPreviewData}
+                previewIcon={previewIcon}
+                setPreviewIcon={previewIconSetter}
                 resetHotspot={resetHotspot}
                 deleteHotspot={deleteHotspot}
                 updateHotspot={updateHotspot}

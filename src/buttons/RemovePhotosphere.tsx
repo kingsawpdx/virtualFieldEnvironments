@@ -1,10 +1,21 @@
-import { Box, Button, Stack, Typography } from "@mui/material";
 import { useState } from "react";
+
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Stack,
+  Typography,
+} from "@mui/material";
 
 import { VFE } from "../DataStructures";
 import PhotosphereSelector, {
   PhotosphereSelectorProps,
 } from "../PhotosphereSelector";
+import { alertMUI } from "../StyledDialogWrapper";
 
 interface RemovePhotosphereProps {
   onClose: () => void;
@@ -29,9 +40,9 @@ function RemovePhotosphere({
     setValue: setSelectedPhotosphere,
   };
 
-  function handleRemovePhotosphere() {
+  async function handleRemovePhotosphere() {
     if (!selectedPhotosphere) {
-      alert("Please select a photosphere to remove.");
+      await alertMUI("Please select a photosphere to remove.");
       return;
     }
     onRemovePhotosphere(selectedPhotosphere);
@@ -39,43 +50,33 @@ function RemovePhotosphere({
   }
 
   return (
-    <Stack
-      sx={{
-        position: "fixed",
-        zIndex: 1050,
-        left: "50%",
-        top: "50%",
-        transform: "translate(-50%, -50%)",
-        background: "white",
-        borderRadius: "8px",
-        padding: "10px",
-      }}
-    >
-      <Typography variant="h5">Remove Photosphere</Typography>
-      <Typography>
-        Select a photosphere to remove from the list below
-      </Typography>
-      <Box sx={{ margin: "auto", padding: "15px 0 35px" }}>
-        <PhotosphereSelector {...selectorProps} />
-      </Box>
-      <Stack
-        direction="row"
-        sx={{
-          justifyContent: "space-between",
-        }}
-      >
-        <Button onClick={onClose} sx={{ width: "49%" }} variant="outlined">
-          Keep
+    <Dialog open={true} onClose={onClose}>
+      <DialogTitle>Remove Photosphere</DialogTitle>
+      <DialogContent sx={{ overflow: "visible" }}>
+        <Stack gap={2}>
+          <Typography>
+            Select a photosphere to remove from the list below
+          </Typography>
+          <Box sx={{ margin: "auto" }}>
+            <PhotosphereSelector {...selectorProps} />
+          </Box>
+        </Stack>
+      </DialogContent>
+      <DialogActions>
+        <Button variant="outlined" onClick={onClose}>
+          Cancel
         </Button>
         <Button
-          onClick={handleRemovePhotosphere}
-          sx={{ width: "49%" }}
           variant="contained"
+          color="error"
+          onClick={() => {
+            void handleRemovePhotosphere();
+          }}
         >
           Remove
         </Button>
-      </Stack>
-    </Stack>
+      </DialogActions>
+    </Dialog>
   );
 }
 

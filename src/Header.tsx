@@ -1,10 +1,11 @@
+import { useNavigate } from "react-router-dom";
+
 import {
   ExitToAppSharp,
   LibraryAddSharp,
   TerrainSharp,
 } from "@mui/icons-material";
 import { AppBar, Button, IconButton, Stack, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 
 export interface HeaderProps {
   onCreateVFE: () => void;
@@ -31,7 +32,7 @@ function Header({ onCreateVFE, onLoadTestVFE }: HeaderProps) {
             Virtual Field Guides
           </Typography>
         </Stack>
-        <Stack direction="row" spacing={1}>
+        <Stack direction="row" gap={1}>
           <Stack sx={{ justifyContent: "space-around" }}>
             <Button
               onClick={onCreateVFE}

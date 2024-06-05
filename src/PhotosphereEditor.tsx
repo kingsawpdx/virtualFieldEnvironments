@@ -1,12 +1,12 @@
-import AttachFileIcon from "@mui/icons-material/AttachFile";
-import { Box, Button, Stack } from "@mui/material";
 import { MuiFileInput } from "mui-file-input";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import AttachFileIcon from "@mui/icons-material/AttachFile";
+import { Box, Button, Stack } from "@mui/material";
+
 import {
   Hotspot3D,
-  HotspotData,
   NavMap,
   Photosphere,
   VFE,
@@ -15,8 +15,9 @@ import {
 import { deleteStoredVFE, save } from "./FileOperations.ts";
 import { VisitedState } from "./HandleVisit.tsx";
 import PhotosphereViewer from "./PhotosphereViewer.tsx";
-import { confirmMUI } from "./StyledConfirmWrapper.tsx";
+import { alertMUI, confirmMUI } from "./StyledDialogWrapper.tsx";
 import {
+  HotspotUpdate,
   convertRuntimeToStored,
   convertVFE,
   updatePhotosphereHotspot,
@@ -27,8 +28,6 @@ import AddNavmap from "./buttons/AddNavmap";
 import AddPhotosphere from "./buttons/AddPhotosphere.tsx";
 import ChangePhotosphere from "./buttons/ChangePhotosphere.tsx";
 import EditNavMap from "./buttons/EditNavMap.tsx";
-import RemoveHotspot from "./buttons/RemoveHotspot.tsx";
-import RemoveNavMap from "./buttons/RemoveNavmap.tsx";
 import RemovePhotosphere from "./buttons/RemovePhotosphere.tsx";
 
 /** Convert from radians to degrees */
@@ -73,12 +72,7 @@ function PhotosphereEditor({
   const [audioFile, setAudioFile] = useState<File | null>(null); // for MuiInputFile
 
   const [showRemovePhotosphere, setShowRemovePhotosphere] = useState(false);
-  const [showRemoveNavMap, setShowRemoveNavMap] = useState(false);
-  const [showRemoveHotspot, setShowRemoveHotspot] = useState(false);
   const [showEditNavMap, setShowEditNavMap] = useState(false);
-  const [hotspotPathToRemove, setHotspotToRemove] = useState<string[] | null>(
-    null,
-  );
 
   function handleEditNavMap(updatedPhotospheres: Record<string, Photosphere>) {
     const updatedVFE: VFE = {
@@ -91,22 +85,23 @@ function PhotosphereEditor({
     setUpdateTrigger((prev) => prev + 1);
   }
 
-  function handleUpdateHotspot(
+  async function handleUpdateHotspot(
     hotspotPath: string[],
-    tooltip: string,
-    data: HotspotData | null,
+    update: HotspotUpdate | null,
   ) {
-    if (data === null) {
-      setHotspotToRemove(hotspotPath);
-      setShowRemoveHotspot(true);
-      return;
+    if (update === null) {
+      const confirmed = await confirmMUI("Remove Hotspot?", {
+        details:
+          "The hotspot will be permanently removed and its data will be lost.",
+        accept: "Remove",
+      });
+      if (!confirmed) return;
     }
 
     const updatedPhotosphere = updatePhotosphereHotspot(
       vfe.photospheres[currentPS],
       hotspotPath,
-      tooltip,
-      data,
+      update,
     );
 
     const updatedVFE = {
@@ -121,34 +116,9 @@ function PhotosphereEditor({
     setUpdateTrigger((prev) => prev + 1);
   }
 
-  function handleRemoveHotspotConfirm() {
-    if (hotspotPathToRemove) {
-      // Update the photosphere with the remaining hotspots
-      const updatedPhotosphereWithHotspots = updatePhotosphereHotspot(
-        vfe.photospheres[currentPS],
-        hotspotPathToRemove,
-        "",
-        null,
-      );
-
-      const updatedVFE = {
-        ...vfe,
-        photospheres: {
-          ...vfe.photospheres,
-          [currentPS]: updatedPhotosphereWithHotspots,
-        },
-      };
-
-      onUpdateVFE(updatedVFE); // Propagate the change to the parent component
-      setShowRemoveHotspot(false); // Close the RemoveHotspot component
-      setHotspotToRemove(null);
-      setUpdateTrigger((prev) => prev + 1);
-    }
-  }
-
   async function handleRemovePhotosphere(photosphereId: string) {
     if (!photosphereId) {
-      alert("Photosphere not found.");
+      await alertMUI("Photosphere not found.");
       return;
     }
 
@@ -159,12 +129,11 @@ function PhotosphereEditor({
 
     if (Object.keys(remainingPhotospheres).length === 0) {
       // No more photospheres available
-      if (
-        await confirmMUI(
-          "This is the last photosphere. The VFE will be deleted and you will return to the home page. Delete the VFE?",
-          { accept: "Delete" },
-        )
-      ) {
+      const confirmed = await confirmMUI(
+        "This is the last photosphere. The VFE will be deleted and you will return to the home page. Delete the VFE?",
+        { accept: "Delete" },
+      );
+      if (confirmed) {
         await deleteStoredVFE(vfe.name);
         navigate("/"); // Redirect to home
       }
@@ -247,7 +216,6 @@ function PhotosphereEditor({
     setShowAddNavMap(false);
     setShowAddHotspot(false);
     setShowChangePhotosphere(false);
-    setShowRemoveNavMap(false);
     setShowRemovePhotosphere(false);
     setShowEditNavMap(false);
     setPitch(0);
@@ -261,6 +229,7 @@ function PhotosphereEditor({
         <AddPhotosphere
           onAddPhotosphere={handleAddPhotosphere}
           onCancel={resetStates}
+          vfe={vfe}
         />
       );
     if (showAddNavMap)
@@ -301,20 +270,6 @@ function PhotosphereEditor({
           }}
           onClose={handleCloseRemovePhotosphere}
           vfe={vfe}
-        />
-      );
-    if (showRemoveNavMap)
-      return (
-        <RemoveNavMap
-          onClose={handleCloseRemoveNavMap}
-          onRemoveNavmap={handleRemoveNavMap}
-        />
-      );
-    if (showRemoveHotspot)
-      return (
-        <RemoveHotspot
-          onClose={handleCloseHotspotRemove}
-          onRemoveHotspot={handleRemoveHotspotConfirm}
         />
       );
     return null;
@@ -394,22 +349,19 @@ function PhotosphereEditor({
     setShowRemovePhotosphere(false);
   }
 
-  function handleCloseHotspotRemove() {
-    setShowRemoveHotspot(false);
-  }
+  async function handleRemoveNavMap() {
+    const confirmed = await confirmMUI("Remove Navigation Map?", {
+      details: "The map will be permanently removed and its data will be lost.",
+      accept: "Remove",
+    });
+    if (!confirmed) return;
 
-  function handleCloseRemoveNavMap() {
-    setShowRemoveNavMap(false);
-  }
-
-  function handleRemoveNavMap() {
     const updatedVFE: VFE = {
       ...vfe,
       map: undefined,
     };
 
     onUpdateVFE(updatedVFE); // Propagate the change to the parent component
-    setShowRemoveNavMap(false); // Close the RemoveNavMap component
     setUpdateTrigger((prev) => prev + 1);
   }
 
@@ -589,8 +541,7 @@ function PhotosphereEditor({
             <Button
               sx={{ margin: "10px 0" }}
               onClick={() => {
-                setShowRemoveNavMap(true);
-                //remove nav map
+                void handleRemoveNavMap();
               }}
               variant="contained"
             >
@@ -649,7 +600,9 @@ function PhotosphereEditor({
           onViewerClick={handleLocation}
           key={updateTrigger}
           vfe={vfe}
-          onUpdateHotspot={handleUpdateHotspot}
+          onUpdateHotspot={(hotspotPath, update) => {
+            void handleUpdateHotspot(hotspotPath, update);
+          }}
         />
         <ActiveComponent />
       </Box>
