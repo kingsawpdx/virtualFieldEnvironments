@@ -9,7 +9,6 @@ import {
   ExpandLess,
   ExpandMore,
   Image,
-  Landscape,
   Quiz,
   Title,
   Videocam,
@@ -37,6 +36,7 @@ import {
 import Box from "@mui/material/Box";
 
 import { Asset, Hotspot2D, HotspotData, newID } from "./DataStructures";
+import { LinkArrowIcon } from "./LinkArrowIcon";
 import { HotspotDataEditor, HotspotIconEditor } from "./buttons/AddHotspot";
 
 export interface HotspotIconProps {
@@ -46,7 +46,7 @@ export interface HotspotIconProps {
 }
 
 export function HotspotIcon({ hotspotData, color, icon }: HotspotIconProps) {
-  if (icon) {
+  if (icon && hotspotData.tag !== "PhotosphereLink") {
     return <img src={icon.path} height={24} />;
   }
 
@@ -67,7 +67,7 @@ export function HotspotIcon({ hotspotData, color, icon }: HotspotIconProps) {
     case "Quiz":
       return <Quiz sx={iconProps} />;
     case "PhotosphereLink":
-      return <Landscape sx={iconProps} />;
+      return <LinkArrowIcon color={color} size={24} />;
   }
 }
 

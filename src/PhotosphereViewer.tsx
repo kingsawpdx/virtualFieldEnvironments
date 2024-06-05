@@ -21,8 +21,10 @@ import {
   Stack,
   Switch,
   SwitchProps,
+  alpha,
   styled,
 } from "@mui/material";
+import { common } from "@mui/material/colors";
 
 import AudioToggleButton from "./AudioToggleButton";
 import {
@@ -33,6 +35,7 @@ import {
   VFE,
 } from "./DataStructures";
 import { useVisitedState } from "./HandleVisit";
+import { LinkArrowIconHTML } from "./LinkArrowIcon";
 import PhotosphereSelector from "./PhotosphereSelector";
 import PopOver from "./PopOver";
 import { HotspotUpdate } from "./VFEConversion";
@@ -105,16 +108,25 @@ function convertHotspots(
   for (const hotspot of Object.values(hotspots)) {
     if (isViewerMode && hotspot.data.tag === "PhotosphereLink") continue;
 
-    markers.push({
+    const marker: MarkerConfig = {
       id: hotspot.id,
-      image: hotspot.icon.path,
       size: { width: 64, height: 64 },
       position: {
         yaw: degToStr(hotspot.yaw),
         pitch: degToStr(hotspot.pitch),
       },
       tooltip: hotspot.tooltip,
-    });
+    };
+    if (hotspot.data.tag === "PhotosphereLink") {
+      marker.html = LinkArrowIconHTML({
+        color: alpha(common.white, 0.8),
+        size: 80,
+      });
+    } else {
+      marker.image = hotspot.icon.path;
+    }
+
+    markers.push(marker);
   }
 
   return markers;
