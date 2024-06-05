@@ -20,9 +20,7 @@ import {
   calculateImageDimensions,
   newID,
 } from "../DataStructures.ts";
-import PhotosphereSelector, {
-  PhotosphereSelectorProps,
-} from "../PhotosphereSelector";
+import PhotosphereSelector from "../PhotosphereSelector";
 import { alertMUI } from "../StyledDialogWrapper.tsx";
 
 // from https://github.com/Alcumus/react-doc-viewer?tab=readme-ov-file#current-renderable-file-types
@@ -53,8 +51,8 @@ function ContentInput({
   content,
   question,
   answer,
-  onUpdate,
   photosphereOptions,
+  onUpdate,
 }: ContentInputProps) {
   const [contentFile, setContentFile] = useState<File | null>(null); // for MuiFileInput
 
@@ -68,20 +66,6 @@ function ContentInput({
       onUpdate(URL.createObjectURL(file), question, answer);
     }
   }
-
-  const [photosphereID, setPhotosphereID] = useState(content);
-
-  useEffect(() => {
-    if (contentType === "PhotosphereLink") {
-      setPhotosphereID(content);
-    }
-  }, [contentType, content]);
-
-  const selectorProps: PhotosphereSelectorProps = {
-    options: photosphereOptions,
-    value: photosphereID,
-    setValue: setPhotosphereID,
-  };
 
   switch (contentType) {
     case "Image":
@@ -162,7 +146,15 @@ function ContentInput({
         />
       );
     case "PhotosphereLink":
-      return <PhotosphereSelector {...selectorProps} />;
+      return (
+        <PhotosphereSelector
+          options={photosphereOptions}
+          value={content}
+          setValue={(value) => {
+            onUpdate(value, question, answer);
+          }}
+        />
+      );
     case "Quiz":
       return (
         <>
@@ -217,7 +209,7 @@ export interface HotspotDataEditorProps {
 export function HotspotDataEditor({
   hotspotData,
   setHotspotData,
-  photosphereOptions,
+  photosphereOptions, // Add this line
 }: HotspotDataEditorProps) {
   const [contentType, setContentType] = useState<string>(
     hotspotData?.tag ?? "invalid",
@@ -366,10 +358,10 @@ export function HotspotDataEditor({
         content={content}
         question={question}
         answer={answer}
+        photosphereOptions={photosphereOptions} // Ensure it is passed here
         onUpdate={(newContent, newQuestion, newAnswer) => {
           void updateData(contentType, newContent, newQuestion, newAnswer);
         }}
-        photosphereOptions={photosphereOptions}
       />
     </>
   );
@@ -532,7 +524,7 @@ function AddHotspot({
       <HotspotDataEditor
         hotspotData={hotspotData}
         setHotspotData={setHotspotData}
-        photosphereOptions={photosphereOptions}
+        photosphereOptions={photosphereOptions} // Ensure it is passed here
       />
 
       {hotspotData?.tag !== "PhotosphereLink" && (

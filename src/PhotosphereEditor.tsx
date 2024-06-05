@@ -49,6 +49,7 @@ function PhotosphereEditor({
   currentPS,
   onChangePS,
 }: PhotosphereEditorProps): JSX.Element {
+  const photosphereOptions = Object.keys(vfe.photospheres);
   const navigate = useNavigate();
 
   const [updateTrigger, setUpdateTrigger] = useState(0); // used to force refresh after changes
@@ -251,6 +252,7 @@ function PhotosphereEditor({
           onAddHotspot={handleAddHotspot}
           pitch={pitch}
           yaw={yaw}
+          photosphereOptions={photosphereOptions}
         />
       );
     if (showChangePhotosphere) {
