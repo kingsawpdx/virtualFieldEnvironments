@@ -393,7 +393,7 @@ function PhotosphereEditor({
     return { ...photosphere, hotspots };
   }
 
-  /** Helper for handleChangePhotosphere. Update photosphere name in each photosphere's PhotosphereLink hotspots */
+  /** Update photosphere name in each photosphere's PhotosphereLink hotspots */
   function updatePhotospheres(
     photospheres: Record<string, Photosphere>,
     oldPhotosphereID: string,
@@ -401,7 +401,7 @@ function PhotosphereEditor({
   ): Record<string, Photosphere> {
     return Object.fromEntries(
       Object.entries(photospheres)
-        .filter(([key]) => key !== currentPS)
+        .filter(([key]) => key !== oldPhotosphereID)
         .map(([key, photosphere]) => {
           // update hotspots in the current photosphere
           const updatedPhotosphere = updateHotspots(
