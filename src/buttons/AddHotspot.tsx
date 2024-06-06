@@ -19,6 +19,7 @@ import {
   HotspotData,
   calculateImageDimensions,
   newID,
+  photosphereLinkTooltip,
 } from "../DataStructures.ts";
 import PhotosphereSelector from "../PhotosphereSelector";
 import { alertMUI } from "../StyledDialogWrapper.tsx";
@@ -457,8 +458,8 @@ function AddHotspot({
 
   async function handleAddHotspot() {
     if (
-      tooltip.trim() === "" ||
       hotspotData === null ||
+      (hotspotData.tag !== "PhotosphereLink" && tooltip.trim() === "") ||
       (hotspotData.tag !== "PhotosphereLink" && iconAsset === null)
     ) {
       await alertMUI(
@@ -467,12 +468,17 @@ function AddHotspot({
       return;
     }
 
+    let generatedTooltip = tooltip;
+    if (hotspotData.tag === "PhotosphereLink") {
+      generatedTooltip = photosphereLinkTooltip(hotspotData.photosphereID);
+    }
+
     const newHotspot: Hotspot3D = {
       id: newID(),
-      tooltip: tooltip,
-      pitch: pitch,
-      yaw: yaw,
-      level: level,
+      tooltip: generatedTooltip,
+      pitch,
+      yaw,
+      level,
       icon: iconAsset ?? defaultIcon(), // store default icon for photosphere links
       data: hotspotData,
     };
@@ -520,13 +526,16 @@ function AddHotspot({
           sx={{ flexGrow: 1 }}
         />
       </Stack>
-      <TextField
-        required
-        label="Tooltip"
-        onChange={(e) => {
-          setTooltip(e.target.value);
-        }}
-      />
+
+      {hotspotData?.tag !== "PhotosphereLink" && (
+        <TextField
+          required
+          label="Tooltip"
+          onChange={(e) => {
+            setTooltip(e.target.value);
+          }}
+        />
+      )}
 
       <HotspotDataEditor
         hotspotData={hotspotData}

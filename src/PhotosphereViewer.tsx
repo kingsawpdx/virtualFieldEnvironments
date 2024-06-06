@@ -21,8 +21,10 @@ import {
   Stack,
   Switch,
   SwitchProps,
+  alpha,
   styled,
 } from "@mui/material";
+import { common } from "@mui/material/colors";
 
 import AudioToggleButton from "./AudioToggleButton";
 import {
@@ -33,6 +35,7 @@ import {
   VFE,
 } from "./DataStructures";
 import { useVisitedState } from "./HandleVisit";
+import { LinkArrowIconHTML } from "./LinkArrowIcon";
 import PhotosphereSelector from "./PhotosphereSelector";
 import PopOver from "./PopOver";
 import { HotspotUpdate } from "./VFEConversion";
@@ -96,22 +99,34 @@ function sizeToStr(val: number): string {
 }
 
 /** Convert non-link hotspots to markers with type-based content/icons */
-function convertHotspots(hotspots: Record<string, Hotspot3D>): MarkerConfig[] {
+function convertHotspots(
+  hotspots: Record<string, Hotspot3D>,
+  isViewerMode: boolean,
+): MarkerConfig[] {
   const markers: MarkerConfig[] = [];
 
   for (const hotspot of Object.values(hotspots)) {
-    if (hotspot.data.tag === "PhotosphereLink") continue;
+    if (isViewerMode && hotspot.data.tag === "PhotosphereLink") continue;
 
-    markers.push({
+    const marker: MarkerConfig = {
       id: hotspot.id,
-      image: hotspot.icon.path,
       size: { width: 64, height: 64 },
       position: {
         yaw: degToStr(hotspot.yaw),
         pitch: degToStr(hotspot.pitch),
       },
       tooltip: hotspot.tooltip,
-    });
+    };
+    if (hotspot.data.tag === "PhotosphereLink") {
+      marker.html = LinkArrowIconHTML({
+        color: alpha(common.white, 0.8),
+        size: 80,
+      });
+    } else {
+      marker.image = hotspot.icon.path;
+    }
+
+    markers.push(marker);
   }
 
   return markers;
@@ -122,7 +137,14 @@ interface LinkData {
 }
 
 /** Convert photosphere-link hotspots to virtual tour links  */
-function convertLinks(hotspots: Record<string, Hotspot3D>): VirtualTourLink[] {
+function convertLinks(
+  hotspots: Record<string, Hotspot3D>,
+  isViewerMode: boolean,
+): VirtualTourLink[] {
+  if (!isViewerMode) {
+    return [];
+  }
+
   const links: VirtualTourLink[] = [];
 
   for (const hotspot of Object.values(hotspots)) {
@@ -134,7 +156,7 @@ function convertLinks(hotspots: Record<string, Hotspot3D>): VirtualTourLink[] {
         pitch: degToStr(hotspot.pitch),
         yaw: degToStr(hotspot.yaw),
       },
-      data: { tooltip: "Go " + hotspot.data.photosphereID } as LinkData,
+      data: { tooltip: hotspot.tooltip } as LinkData,
     });
   }
 
@@ -217,6 +239,8 @@ function PhotosphereViewer({
   const [visited, handleVisit] = useVisitedState(initialPhotosphereHotspots);
   console.log("in viewer", visited);
 
+  const isViewerMode = onUpdateHotspot === undefined;
+
   useEffect(() => {
     if (ready.current) {
       const virtualTour =
@@ -288,8 +312,8 @@ function PhotosphereViewer({
           id: p.id,
           panorama: p.src.path,
           name: p.id,
-          markers: convertHotspots(p.hotspots),
-          links: convertLinks(p.hotspots),
+          markers: convertHotspots(p.hotspots, isViewerMode),
+          links: convertLinks(p.hotspots, isViewerMode),
         };
       },
     );
@@ -366,22 +390,22 @@ function PhotosphereViewer({
 
       {hotspotArray.length > 0 && (
         <PopOver
-          key={hotspotPath.join()}
-          hotspotPath={hotspotPath}
-          hotspot={hotspotArray[hotspotArray.length - 1]}
-          pushHotspot={(add: Hotspot2D) => {
-            setHotspotArray([...hotspotArray, add]);
-          }}
-          popHotspot={() => {
-            setHotspotArray(hotspotArray.slice(0, -1));
-          }}
-          closeAll={() => {
-            setHotspotArray([]);
-          }}
-          onUpdateHotspot={onUpdateHotspot}
-          photosphereOptions={photosphereOptions}
-          currentPS={currentPS}
-        />
+  key={hotspotPath.join()}
+  hotspotPath={hotspotPath}
+  hotspot={hotspotArray[hotspotArray.length - 1]}
+  pushHotspot={(add: Hotspot2D) => {
+    setHotspotArray([...hotspotArray, add]);
+  }}
+  popHotspot={() => {
+    setHotspotArray(hotspotArray.slice(0, -1));
+  }}
+  closeAll={() => {
+    setHotspotArray([]);
+  }}
+  onUpdateHotspot={onUpdateHotspot}
+  photosphereOptions={photosphereOptions} // Pass down the new props
+  currentPS={currentPS} // Pass down the new props
+/>
       )}
 
       <ReactPhotoSphereViewer

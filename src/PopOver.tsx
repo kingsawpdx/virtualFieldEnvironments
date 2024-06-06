@@ -26,11 +26,18 @@ import { confirmMUI } from "./StyledDialogWrapper";
 import { HotspotUpdate } from "./VFEConversion";
 
 interface HotspotContentProps {
+  tooltip: string;
   hotspot: HotspotData;
   openNestedHotspot: (add: Hotspot2D) => void;
+  changeScene: (id: string) => void;
 }
 
-function HotspotContent({ hotspot, openNestedHotspot }: HotspotContentProps) {
+function HotspotContent({
+  tooltip,
+  hotspot,
+  openNestedHotspot,
+  changeScene,
+}: HotspotContentProps) {
   const [answer, setAnswer] = useState(""); // State to hold the answer
   const [feedback, setFeedback] = useState("");
 
@@ -121,7 +128,24 @@ function HotspotContent({ hotspot, openNestedHotspot }: HotspotContentProps) {
         </Box>
       );
     case "PhotosphereLink":
-      break;
+      return (
+        <Stack
+          width="20vw"
+          height="100%"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Button
+            size="large"
+            variant="contained"
+            onClick={() => {
+              changeScene(hotspot.photosphereID);
+            }}
+          >
+            {tooltip}
+          </Button>
+        </Stack>
+      );
     case "Quiz": {
       const hotspotAnswer = hotspot.answer;
       return (
@@ -159,8 +183,6 @@ function HotspotContent({ hotspot, openNestedHotspot }: HotspotContentProps) {
         </Box>
       );
     }
-    default:
-      break;
   }
 }
 
@@ -176,6 +198,7 @@ export interface PopOverProps {
   ) => void;
   photosphereOptions?: string[];
   currentPS: string;
+  changeScene?: (id: string) => void;
 }
 
 function PopOver({
@@ -319,8 +342,10 @@ function PopOver({
           {previewData && (
             <DialogContent sx={{ paddingTop: 0 }}>
               <HotspotContent
+                tooltip={previewTooltip}
                 hotspot={previewData}
                 openNestedHotspot={openNestedHotspot}
+                changeScene={props.changeScene}
               />
             </DialogContent>
           )}

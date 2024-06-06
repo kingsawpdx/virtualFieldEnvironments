@@ -63,6 +63,16 @@ function VFELoader({ render }: PhotosphereLoaderProps) {
     );
   }
 
+  if (photosphereID && !(photosphereID in vfe.photospheres)) {
+    return (
+      <Stack minHeight="100vh" alignItems="center" justifyContent="center">
+        <Alert variant="filled" severity="error">
+          Photosphere &apos;{photosphereID}&apos; not found.
+        </Alert>
+      </Stack>
+    );
+  }
+
   return render({
     vfe,
     onUpdateVFE: (updatedVFE) => {
