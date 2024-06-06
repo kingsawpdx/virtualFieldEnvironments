@@ -11,6 +11,10 @@ export function newID() {
   return crypto.randomUUID();
 }
 
+export function photosphereLinkTooltip(photosphereID: string) {
+  return `Go to ${photosphereID}`;
+}
+
 // Calculate image dimensions by creating an image element and waiting for it to load.
 // Since image loading isn't synchronous, it needs to be wrapped in a Promise.
 export async function calculateImageDimensions(
