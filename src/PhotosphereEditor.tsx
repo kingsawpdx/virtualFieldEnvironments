@@ -620,6 +620,7 @@ function PhotosphereEditor({
           onViewerClick={handleLocation}
           key={updateTrigger}
           vfe={vfe}
+          photosphereOptions={availablePhotosphereOptions}
           onUpdateHotspot={(hotspotPath, update) => {
             void handleUpdateHotspot(hotspotPath, update);
           }}

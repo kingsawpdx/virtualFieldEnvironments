@@ -183,6 +183,7 @@ export interface PhotosphereViewerProps {
     hotspotPath: string[],
     update: HotspotUpdate | null,
   ) => void;
+  photosphereOptions?: string[];
 }
 
 function PhotosphereViewer({
@@ -191,6 +192,7 @@ function PhotosphereViewer({
   onChangePS,
   onViewerClick,
   onUpdateHotspot,
+  photosphereOptions = [],
 }: PhotosphereViewerProps) {
   const photoSphereRef = React.createRef<ViewerAPI>();
   const [currentPhotosphere, setCurrentPhotosphere] =
@@ -377,6 +379,8 @@ function PhotosphereViewer({
             setHotspotArray([]);
           }}
           onUpdateHotspot={onUpdateHotspot}
+          photosphereOptions={photosphereOptions}
+          currentPS={currentPS}
         />
       )}
 

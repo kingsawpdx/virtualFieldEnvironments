@@ -357,6 +357,8 @@ export interface HotspotEditorProps {
     newIcon?: Asset,
   ) => void;
   openNestedHotspot: (toOpen: Hotspot2D) => void;
+  photosphereOptions: string[]; // Add this line
+  currentPS: string; // Add this line
 }
 
 function HotspotEditor({
@@ -373,6 +375,8 @@ function HotspotEditor({
   deleteHotspot,
   updateHotspot,
   openNestedHotspot,
+  photosphereOptions, // Add this line
+  currentPS, // Add this line
 }: HotspotEditorProps) {
   const [hotspotsCollapsed, setHotspotsCollapsed] = useState(false);
 
@@ -434,6 +438,8 @@ function HotspotEditor({
           setPreviewData(data);
           setEdited(true);
         }}
+        photosphereOptions={photosphereOptions} // Pass down the new props
+        currentPS={currentPS} // Pass down the new props
       />
       {setPreviewIcon && (
         <HotspotIconEditor
