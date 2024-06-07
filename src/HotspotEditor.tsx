@@ -450,14 +450,11 @@ function HotspotEditor({
       )}
 
       <HotspotDataEditor
-  hotspotData={previewData}
-  setHotspotData={(data) => {
-    setPreviewData(data);
-    setEdited(true);
-  }}
-  photosphereOptions={photosphereOptions} // Pass down the new props
-  currentPS={currentPS} // Pass down the new props
-/>
+        hotspotData={previewData}
+        setHotspotData={updateData}
+        photosphereOptions={photosphereOptions} // Pass down the new props
+        currentPS={currentPS} // Pass down the new props
+      />
 
       {setPreviewIcon && (
         <HotspotIconEditor

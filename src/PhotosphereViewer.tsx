@@ -214,7 +214,7 @@ function PhotosphereViewer({
   onChangePS,
   onViewerClick,
   onUpdateHotspot,
-  photosphereOptions = [],
+  photosphereOptions,
 }: PhotosphereViewerProps) {
   const photoSphereRef = React.createRef<ViewerAPI>();
   const [currentPhotosphere, setCurrentPhotosphere] =
@@ -390,22 +390,26 @@ function PhotosphereViewer({
 
       {hotspotArray.length > 0 && (
         <PopOver
-  key={hotspotPath.join()}
-  hotspotPath={hotspotPath}
-  hotspot={hotspotArray[hotspotArray.length - 1]}
-  pushHotspot={(add: Hotspot2D) => {
-    setHotspotArray([...hotspotArray, add]);
-  }}
-  popHotspot={() => {
-    setHotspotArray(hotspotArray.slice(0, -1));
-  }}
-  closeAll={() => {
-    setHotspotArray([]);
-  }}
-  onUpdateHotspot={onUpdateHotspot}
-  photosphereOptions={photosphereOptions} // Pass down the new props
-  currentPS={currentPS} // Pass down the new props
-/>
+          key={hotspotPath.join()}
+          hotspotPath={hotspotPath}
+          hotspot={hotspotArray[hotspotArray.length - 1]}
+          pushHotspot={(add: Hotspot2D) => {
+            setHotspotArray([...hotspotArray, add]);
+          }}
+          popHotspot={() => {
+            setHotspotArray(hotspotArray.slice(0, -1));
+          }}
+          closeAll={() => {
+            setHotspotArray([]);
+          }}
+          onUpdateHotspot={onUpdateHotspot}
+          changeScene={(id) => {
+            setCurrentPhotosphere(vfe.photospheres[id]);
+            onChangePS(id);
+          }}
+          photosphereOptions={photosphereOptions} // Pass down the new props
+          currentPS={currentPS} // Pass down the new props
+        />
       )}
 
       <ReactPhotoSphereViewer

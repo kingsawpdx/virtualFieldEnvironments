@@ -198,7 +198,7 @@ export interface PopOverProps {
   ) => void;
   photosphereOptions?: string[];
   currentPS: string;
-  changeScene?: (id: string) => void;
+  changeScene: (id: string) => void;
 }
 
 function PopOver({
@@ -210,6 +210,7 @@ function PopOver({
   onUpdateHotspot,
   photosphereOptions = [],
   currentPS,
+  changeScene,
 }: PopOverProps) {
   const [edited, setEdited] = useState(false);
 
@@ -345,7 +346,7 @@ function PopOver({
                 tooltip={previewTooltip}
                 hotspot={previewData}
                 openNestedHotspot={openNestedHotspot}
-                changeScene={props.changeScene}
+                changeScene={changeScene}
               />
             </DialogContent>
           )}
