@@ -196,25 +196,35 @@ export interface PopOverProps {
     hotspotPath: string[],
     update: HotspotUpdate | null,
   ) => void;
+  photosphereOptions?: string[];
   changeScene: (id: string) => void;
 }
 
-function PopOver(props: PopOverProps) {
+function PopOver({
+  hotspotPath,
+  hotspot,
+  pushHotspot,
+  popHotspot,
+  closeAll,
+  onUpdateHotspot,
+  photosphereOptions = [],
+  changeScene,
+}: PopOverProps) {
   const [edited, setEdited] = useState(false);
 
-  const [previewTooltip, setPreviewTooltip] = useState(props.hotspot.tooltip);
+  const [previewTooltip, setPreviewTooltip] = useState(hotspot.tooltip);
   const [previewData, setPreviewData] = useState<HotspotData | null>(
-    props.hotspot.data,
+    hotspot.data,
   );
   const [previewIcon, setPreviewIcon] = useState<Asset | null>(
-    "icon" in props.hotspot ? props.hotspot.icon : null,
+    "icon" in hotspot ? hotspot.icon : null,
   );
 
   const [snackbarMessage, setSnackbarMessage] = useState<string | null>(null);
 
   // Should only be allowed to change icons of 3D hotspots that aren't photosphere links.
   const previewIconSetter =
-    "icon" in props.hotspot && previewData?.tag !== "PhotosphereLink"
+    "icon" in hotspot && previewData?.tag !== "PhotosphereLink"
       ? setPreviewIcon
       : undefined;
 
@@ -230,7 +240,7 @@ function PopOver(props: PopOverProps) {
       return;
     }
 
-    props.closeAll();
+    closeAll();
   }
 
   async function confirmBack() {
@@ -238,7 +248,7 @@ function PopOver(props: PopOverProps) {
       return;
     }
 
-    props.popHotspot();
+    popHotspot();
   }
 
   async function resetHotspot() {
@@ -246,20 +256,20 @@ function PopOver(props: PopOverProps) {
       return;
     }
 
-    setPreviewTooltip(props.hotspot.tooltip);
-    setPreviewData(props.hotspot.data);
-    if ("icon" in props.hotspot) {
-      setPreviewIcon(props.hotspot.icon);
+    setPreviewTooltip(hotspot.tooltip);
+    setPreviewData(hotspot.data);
+    if ("icon" in hotspot) {
+      setPreviewIcon(hotspot.icon);
     }
     setEdited(false);
   }
 
   function deleteHotspot() {
-    props.onUpdateHotspot?.(props.hotspotPath, null);
+    onUpdateHotspot?.(hotspotPath, null);
   }
 
   function updateHotspot(tooltip: string, data: HotspotData, icon?: Asset) {
-    props.onUpdateHotspot?.(props.hotspotPath, { tooltip, data, icon });
+    onUpdateHotspot?.(hotspotPath, { tooltip, data, icon });
   }
 
   function openNestedHotspot(hotspot2D: Hotspot2D) {
@@ -270,7 +280,7 @@ function PopOver(props: PopOverProps) {
       return;
     }
 
-    props.pushHotspot(hotspot2D);
+    pushHotspot(hotspot2D);
   }
 
   return (
@@ -291,9 +301,7 @@ function PopOver(props: PopOverProps) {
             {previewData && (
               <HotspotIcon
                 hotspotData={previewData}
-                color={
-                  "color" in props.hotspot ? props.hotspot.color : undefined
-                }
+                color={"color" in hotspot ? hotspot.color : undefined}
                 icon={previewIcon ?? undefined}
               />
             )}
@@ -306,7 +314,7 @@ function PopOver(props: PopOverProps) {
             ) : (
               <Box flexGrow={1}>{previewTooltip}</Box>
             )}
-            {props.hotspotPath.length > 1 && (
+            {hotspotPath.length > 1 && (
               <Tooltip title="Back" placement="top">
                 <IconButton
                   onClick={() => {
@@ -336,11 +344,11 @@ function PopOver(props: PopOverProps) {
                 tooltip={previewTooltip}
                 hotspot={previewData}
                 openNestedHotspot={openNestedHotspot}
-                changeScene={props.changeScene}
+                changeScene={changeScene}
               />
             </DialogContent>
           )}
-          {props.onUpdateHotspot !== undefined && (
+          {onUpdateHotspot !== undefined && (
             <Box
               padding="20px 24px"
               borderColor={colors.grey[300]}
@@ -366,6 +374,7 @@ function PopOver(props: PopOverProps) {
                 deleteHotspot={deleteHotspot}
                 updateHotspot={updateHotspot}
                 openNestedHotspot={openNestedHotspot}
+                photosphereOptions={photosphereOptions} // Pass down the new props
               />
             </Box>
           )}

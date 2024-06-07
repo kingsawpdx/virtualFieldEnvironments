@@ -9,6 +9,7 @@ import {
   Hotspot3D,
   NavMap,
   Photosphere,
+  PhotosphereLink,
   VFE,
   newID,
   photosphereLinkTooltip,
@@ -50,6 +51,10 @@ function PhotosphereEditor({
   currentPS,
   onChangePS,
 }: PhotosphereEditorProps): JSX.Element {
+  const photosphereOptions = Object.keys(vfe.photospheres);
+  // Get existing hotspots from the current photosphere
+  const existingHotspots = vfe.photospheres[currentPS].hotspots;
+
   const navigate = useNavigate();
 
   const [updateTrigger, setUpdateTrigger] = useState(0); // used to force refresh after changes
@@ -74,6 +79,19 @@ function PhotosphereEditor({
 
   const [showRemovePhotosphere, setShowRemovePhotosphere] = useState(false);
   const [showEditNavMap, setShowEditNavMap] = useState(false);
+
+  // Filter hotspots to find used photospheres
+  const usedPhotospheres = Object.values(existingHotspots)
+    .filter(
+      (hotspot): hotspot is Hotspot3D & { data: PhotosphereLink } =>
+        hotspot.data.tag === "PhotosphereLink",
+    )
+    .map((hotspot) => hotspot.data.photosphereID);
+
+  // Filter available photosphere options
+  const availablePhotosphereOptions = photosphereOptions.filter(
+    (option) => option !== currentPS && !usedPhotospheres.includes(option),
+  );
 
   function handleEditNavMap(updatedPhotospheres: Record<string, Photosphere>) {
     const updatedVFE: VFE = {
@@ -252,6 +270,7 @@ function PhotosphereEditor({
           onAddHotspot={handleAddHotspot}
           pitch={pitch}
           yaw={yaw}
+          photosphereOptions={availablePhotosphereOptions}
         />
       );
     if (showChangePhotosphere) {
@@ -602,6 +621,7 @@ function PhotosphereEditor({
           onViewerClick={handleLocation}
           key={updateTrigger}
           vfe={vfe}
+          photosphereOptions={availablePhotosphereOptions}
           onUpdateHotspot={(hotspotPath, update) => {
             void handleUpdateHotspot(hotspotPath, update);
           }}
