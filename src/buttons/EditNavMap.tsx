@@ -31,7 +31,8 @@ function EditNavMap({ onClose, vfe, onUpdateVFE }: EditNavMapProps) {
   const options: string[] = Object.keys(vfe.photospheres);
 
   const selectorProps: PhotosphereSelectorProps = {
-    options: options,
+    size: "small",
+    options,
     value: selectedPhotosphere,
     setValue: setSelectedPhotosphere,
   };

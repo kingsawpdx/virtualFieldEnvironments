@@ -1,51 +1,55 @@
-import {
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  Stack,
-} from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
 export interface PhotosphereSelectorProps {
   options: string[];
   value: string;
   setValue: (value: string) => void;
+  size?: "medium" | "small";
 }
 
-function PhotosphereSelector(props: PhotosphereSelectorProps) {
+function PhotosphereSelector({
+  options,
+  value,
+  setValue,
+  size = "medium",
+}: PhotosphereSelectorProps) {
+  // Helper function to reduce ternary/undefined repetition.
+  function ifSmall<T, D>(value: T, defaultValue?: D): T | D | undefined {
+    return size === "small" ? value : defaultValue;
+  }
+
   return (
-    <Stack
-      sx={{
-        width: "150px",
-        padding: "0 5px",
-        justifyContent: "space-around",
-      }}
-    >
-      <FormControl size="small">
-        <InputLabel id="scene-select" sx={{ fontSize: "14px" }}>
-          Scene
-        </InputLabel>
-        <Select
-          labelId="scene-select"
-          label="Scene"
-          value={props.value}
-          onChange={(e) => {
-            props.setValue(e.target.value);
-          }}
-          sx={{
+    <FormControl size={size}>
+      <InputLabel id="scene-select" sx={ifSmall({ fontSize: "14px" })}>
+        Scene
+      </InputLabel>
+      <Select
+        labelId="scene-select"
+        label="Scene"
+        value={value}
+        onChange={(e) => {
+          setValue(e.target.value);
+        }}
+        sx={ifSmall(
+          {
             fontSize: "14px",
             width: "150px",
             height: "35px",
-          }}
-        >
-          {props.options.map((option) => (
-            <MenuItem key={option} value={option} sx={{ fontSize: "13px" }}>
-              {option}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </Stack>
+          },
+          { minWidth: "150px" },
+        )}
+      >
+        {options.map((option) => (
+          <MenuItem
+            key={option}
+            value={option}
+            sx={ifSmall({ fontSize: "13px" })}
+          >
+            {option}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
   );
 }
 
