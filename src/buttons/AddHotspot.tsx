@@ -44,7 +44,6 @@ interface ContentInputProps {
   question: string;
   answer: string;
   photosphereOptions: string[];
-  currentPS: string;
   onUpdate: (content: string, question: string, answer: string) => void;
 }
 
@@ -54,7 +53,6 @@ function ContentInput({
   question,
   answer,
   photosphereOptions,
-  currentPS,
   onUpdate,
 }: ContentInputProps) {
   const [contentFile, setContentFile] = useState<File | null>(null); // for MuiFileInput
@@ -151,7 +149,7 @@ function ContentInput({
     case "PhotosphereLink":
       return (
         <PhotosphereSelector
-          options={photosphereOptions.filter((option) => option !== currentPS)}
+          options={photosphereOptions}
           value={content}
           setValue={(value) => {
             onUpdate(value, question, answer);
@@ -207,14 +205,12 @@ export interface HotspotDataEditorProps {
   hotspotData: HotspotData | null;
   setHotspotData: (data: HotspotData | null) => void;
   photosphereOptions: string[];
-  currentPS: string;
 }
 
 export function HotspotDataEditor({
   hotspotData,
   setHotspotData,
   photosphereOptions,
-  currentPS,
 }: HotspotDataEditorProps) {
   const [contentType, setContentType] = useState<string>(
     hotspotData?.tag ?? "invalid",
@@ -364,7 +360,6 @@ export function HotspotDataEditor({
         question={question}
         answer={answer}
         photosphereOptions={photosphereOptions}
-        currentPS={currentPS}
         onUpdate={(newContent, newQuestion, newAnswer) => {
           void updateData(contentType, newContent, newQuestion, newAnswer);
         }}
@@ -440,7 +435,6 @@ interface AddHotspotProps {
   pitch: number;
   yaw: number;
   photosphereOptions: string[];
-  currentPS: string;
 }
 
 function AddHotspot({
@@ -449,7 +443,6 @@ function AddHotspot({
   pitch,
   yaw,
   photosphereOptions,
-  currentPS,
 }: AddHotspotProps) {
   const [tooltip, setTooltip] = useState("");
   const [hotspotData, setHotspotData] = useState<HotspotData | null>(null);
@@ -541,7 +534,6 @@ function AddHotspot({
         hotspotData={hotspotData}
         setHotspotData={setHotspotData}
         photosphereOptions={photosphereOptions}
-        currentPS={currentPS}
       />
 
       {hotspotData?.tag !== "PhotosphereLink" && (

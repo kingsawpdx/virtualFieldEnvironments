@@ -407,8 +407,7 @@ function PhotosphereViewer({
             setCurrentPhotosphere(vfe.photospheres[id]);
             onChangePS(id);
           }}
-          photosphereOptions={photosphereOptions} // Pass down the new props
-          currentPS={currentPS} // Pass down the new props
+          photosphereOptions={photosphereOptions}
         />
       )}
 

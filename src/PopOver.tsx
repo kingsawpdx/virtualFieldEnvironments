@@ -197,7 +197,6 @@ export interface PopOverProps {
     update: HotspotUpdate | null,
   ) => void;
   photosphereOptions?: string[];
-  currentPS: string;
   changeScene: (id: string) => void;
 }
 
@@ -209,7 +208,6 @@ function PopOver({
   closeAll,
   onUpdateHotspot,
   photosphereOptions = [],
-  currentPS,
   changeScene,
 }: PopOverProps) {
   const [edited, setEdited] = useState(false);
@@ -377,7 +375,6 @@ function PopOver({
                 updateHotspot={updateHotspot}
                 openNestedHotspot={openNestedHotspot}
                 photosphereOptions={photosphereOptions} // Pass down the new props
-                currentPS={currentPS} // Pass down the new props
               />
             </Box>
           )}
