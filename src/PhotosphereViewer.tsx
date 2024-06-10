@@ -17,6 +17,7 @@ import {
 } from "react-photo-sphere-viewer";
 
 import {
+  Box,
   FormControlLabel,
   Stack,
   Switch,
@@ -355,17 +356,21 @@ function PhotosphereViewer({
           boxShadow: "0 0 4px grey",
           zIndex: 100,
           justifyContent: "space-between",
+          alignItems: "center",
         }}
         gap={1}
       >
-        <PhotosphereSelector
-          options={Object.keys(vfe.photospheres)}
-          value={currentPhotosphere.id}
-          setValue={(id) => {
-            setCurrentPhotosphere(vfe.photospheres[id]);
-            onChangePS(id);
-          }}
-        />
+        <Box sx={{ padding: "0 5px" }}>
+          <PhotosphereSelector
+            size="small"
+            options={Object.keys(vfe.photospheres)}
+            value={currentPhotosphere.id}
+            setValue={(id) => {
+              setCurrentPhotosphere(vfe.photospheres[id]);
+              onChangePS(id);
+            }}
+          />
+        </Box>
         {currentPhotosphere.backgroundAudio && (
           <AudioToggleButton src={currentPhotosphere.backgroundAudio.path} />
         )}

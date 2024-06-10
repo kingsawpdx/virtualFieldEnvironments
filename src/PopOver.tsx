@@ -228,6 +228,11 @@ function PopOver({
       ? setPreviewIcon
       : undefined;
 
+  const availablePhotosphereOptions =
+    hotspot.data.tag === "PhotosphereLink"
+      ? [hotspot.data.photosphereID, ...photosphereOptions]
+      : photosphereOptions;
+
   async function keepChanges() {
     const confirmed = await confirmMUI(
       "All changes to the current hotspot will be lost. Continue?",
@@ -374,7 +379,7 @@ function PopOver({
                 deleteHotspot={deleteHotspot}
                 updateHotspot={updateHotspot}
                 openNestedHotspot={openNestedHotspot}
-                photosphereOptions={photosphereOptions} // Pass down the new props
+                photosphereOptions={availablePhotosphereOptions} // Pass down the new props
               />
             </Box>
           )}
